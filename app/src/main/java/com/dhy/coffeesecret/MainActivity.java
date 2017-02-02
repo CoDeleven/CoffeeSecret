@@ -14,9 +14,6 @@ import com.dhy.coffeesecret.ui.container.ContainerFragment;
 import com.dhy.coffeesecret.ui.cup.CupFragment;
 import com.dhy.coffeesecret.ui.device.DeviceFragment;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class MainActivity extends AppCompatActivity implements DeviceFragment.OnDeviceInteractionListener,
         ContainerFragment.OnContainerInteractionListener, CupFragment.OnCupInteractionListener{
 
@@ -42,11 +39,8 @@ public class MainActivity extends AppCompatActivity implements DeviceFragment.On
      */
     private void initParam(){
         // 初始化fragment视图
-
         mFragments =new Fragment[] {new DeviceFragment(),new ContainerFragment(),new CupFragment()};
-//        mFragments.add(new DeviceFragment());
-//        mFragments.add(new ContainerFragment());
-//        mFragments.add(new CupFragment());
+
 
         // 获取id
         mTabLayout = (TabLayout)findViewById(R.id.id_fragment_tabLayout);
@@ -73,38 +67,6 @@ public class MainActivity extends AppCompatActivity implements DeviceFragment.On
         mViewPager.setCurrentItem(0);
         // 设置tablayout固定
         mTabLayout.setTabMode(TabLayout.MODE_FIXED);
-
-//        // 默认页面滑动监听器
-//        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
-//        // 设置首页
-//        mViewPager.setCurrentItem(0);
-//
-//        // 设置tablayout固定
-//        mTabLayout.setTabMode(TabLayout.MODE_FIXED);
-//        // 设置tablayout布局布满
-//        mTabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-//        // 添加新的三个标签页
-//        mTabLayout.addTab(mTabLayout.newTab().setCustomView(getCustomerView(0)));
-//        mTabLayout.addTab(mTabLayout.newTab().setCustomView(getCustomerView(1)));
-//        mTabLayout.addTab(mTabLayout.newTab().setCustomView(getCustomerView(2)));
-//
-//        // 监听标签页单击事件
-//        mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-//            @Override
-//            public void onTabSelected(TabLayout.Tab tab) {
-//                mViewPager.setCurrentItem(tab.getPosition(), true);
-//            }
-//
-//            @Override
-//            public void onTabUnselected(TabLayout.Tab tab) {
-//
-//            }
-//
-//            @Override
-//            public void onTabReselected(TabLayout.Tab tab) {
-//
-//            }
-//        });
 
     }
 
