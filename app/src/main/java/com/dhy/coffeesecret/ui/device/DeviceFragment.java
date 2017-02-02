@@ -1,4 +1,4 @@
-package com.dhy.coffeesecret.ui.mycontainer;
+package com.dhy.coffeesecret.ui.device;
 
 import android.content.Context;
 import android.net.Uri;
@@ -14,12 +14,12 @@ import com.dhy.coffeesecret.R;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link OnContainerInteractionListener} interface
+ * {@link OnDeviceInteractionListener} interface
  * to handle interaction events.
- * Use the {@link MyContainerFragment#newInstance} factory method to
+ * Use the {@link DeviceFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MyContainerFragment extends Fragment {
+public class DeviceFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -29,9 +29,9 @@ public class MyContainerFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private OnContainerInteractionListener mListener;
+    private OnDeviceInteractionListener mListener;
 
-    public MyContainerFragment() {
+    public DeviceFragment() {
         // Required empty public constructor
     }
 
@@ -41,11 +41,11 @@ public class MyContainerFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment MyContainerFragment.
+     * @return A new instance of fragment DeviceFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static MyContainerFragment newInstance(String param1, String param2) {
-        MyContainerFragment fragment = new MyContainerFragment();
+    public static DeviceFragment newInstance(String param1, String param2) {
+        DeviceFragment fragment = new DeviceFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -60,28 +60,29 @@ public class MyContainerFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        Log.e("codelevex", "11111");
+        Log.e("codelevex", "33333");
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_my_container, container, false);
+        return inflater.inflate(R.layout.fragment_my_device, container, false);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
-            mListener.onContainerInteraction(uri);
+            mListener.onDeviceInteraction(uri);
         }
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnContainerInteractionListener) {
-            mListener = (OnContainerInteractionListener) context;
+        if (context instanceof OnDeviceInteractionListener) {
+            mListener = (OnDeviceInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnContainerInteractionListener");
@@ -104,8 +105,8 @@ public class MyContainerFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnContainerInteractionListener {
+    public interface OnDeviceInteractionListener {
         // TODO: Update argument type and name
-        void onContainerInteraction(Uri uri);
+        void onDeviceInteraction(Uri uri);
     }
 }
