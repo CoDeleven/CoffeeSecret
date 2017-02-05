@@ -1,13 +1,45 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
              tools:context=".ui.container.ContainerFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <RelativeLayout
+        android:id="@+id/topPanel"
+        android:background="@drawable/black_border"
+        android:paddingBottom="1dp"
+        android:paddingTop="1dp"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="myContainer"/>
+        android:layout_height="wrap_content">
 
-</FrameLayout>
+        <Button
+            android:id="@+id/btn_sort"
+            android:text="@string/sort_by_area"
+            android:layout_alignParentLeft="true"
+            android:drawableRight="@drawable/ic_delta"
+            style="@style/WhiteBtn.Min" />
+
+        <Button
+            android:id="@+id/btn_screen"
+            android:text="@string/screen"
+            android:drawableRight="@drawable/ic_screen"
+            android:layout_alignParentRight="true"
+            style="@style/WhiteBtn.Min" />
+
+        <View
+            android:layout_toLeftOf="@id/btn_screen"
+            android:layout_width="0.1dp"
+            android:layout_height="25dp"
+            android:background="#ccc"
+            />
+    </RelativeLayout>
+    <com.andexert.expandablelayout.library.ExpandableLayoutListView
+        android:layout_below="@+id/topPanel"
+        android:id="@+id/lv_beans"
+        android:background="@drawable/lv_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </com.andexert.expandablelayout.library.ExpandableLayoutListView>
+</RelativeLayout>

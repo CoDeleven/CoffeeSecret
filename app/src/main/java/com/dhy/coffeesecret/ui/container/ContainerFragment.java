@@ -4,70 +4,74 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 
+import com.andexert.expandablelayout.library.ExpandableLayoutListView;
 import com.dhy.coffeesecret.R;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link OnContainerInteractionListener} interface
- * to handle interaction events.
- * Use the {@link ContainerFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class ContainerFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     private OnContainerInteractionListener mListener;
 
+    private View mContent;
+    private ExpandableLayoutListView mListView;
+
     public ContainerFragment() {
-        // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ContainerFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ContainerFragment newInstance(String param1, String param2) {
-        ContainerFragment fragment = new ContainerFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-        Log.e("codelevex", "11111");
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_container, container, false);
+
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        ActionBar actionBar = activity.getSupportActionBar();
+
+        mContent = inflater.inflate(R.layout.fragment_container, container, false);
+        mListView = (ExpandableLayoutListView) mContent.findViewById(R.id.lv_beans);
+        mListView.setAdapter(new BaseAdapter() {
+            @Override
+            public int getCount() {
+                return 20;
+            }
+
+            @Override
+            public Object getItem(int i) {
+                return null;
+            }
+
+            @Override
+            public long getItemId(int i) {
+                return 0;
+            }
+
+            @Override
+            public View getView(int i, View view, ViewGroup viewGroup) {
+                LayoutInflater inflater = getActivity().getLayoutInflater();
+                View inflate = inflater.inflate(R.layout.bean_item, null);
+                return inflate;
+            }
+        });
+
+        return mContent;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -105,7 +109,6 @@ public class ContainerFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnContainerInteractionListener {
-        // TODO: Update argument type and name
         void onContainerInteraction(Uri uri);
     }
 }

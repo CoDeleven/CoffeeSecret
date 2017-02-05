@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -9,6 +9,40 @@
         <!--取消点击水波效果 -->
         <item name="android:selectableItemBackground">@null</item>
         <!--<item name="android:selectableItemBackgroundBorderless">@null</item>-->
+    </style>
+
+    <style name="WhiteBtn">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:textSize">@dimen/font_size_primary</item>
+        <item name="android:background">@android:color/white</item>
+        <item name="android:paddingLeft">@dimen/btn_horizontal_padding</item>
+        <item name="android:paddingRight">@dimen/btn_horizontal_padding</item>
+        <item name="android:paddingTop">@dimen/btn_vertical_padding</item>
+        <item name="android:paddingBottom">@dimen/btn_vertical_padding</item>
+    </style>
+
+    <style name="WhiteBtn.Min">
+        <item name="android:minHeight">0dp</item>
+    </style>
+
+    <style name="TextViewCenter">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingTop">@dimen/tv_vertical_padding</item>
+        <item name="android:paddingBottom">@dimen/tv_vertical_padding</item>
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+
+    <style name="TextViewCenter.Left">
+        <item name="android:gravity">center_vertical|left</item>
+        <item name="android:paddingLeft">@dimen/tv_horizontal_padding</item>
+    </style>
+
+    <style name="TextViewCenter.Right">
+        <item name="android:gravity">center_vertical|right</item>
+        <item name="android:paddingRight">@dimen/tv_horizontal_padding</item>
     </style>
 
 </resources>
