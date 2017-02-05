@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ArcProgress">
+        <attr name="arcLabel" format="string"/>
+        <attr name="suffix" format="string"/>
+        <attr name="beginAngle" format="integer"/>
+        <attr name="sweepAngle" format="integer"/>
+        <attr name="finishedBeginAngle" format="integer"/>
+        <attr name="maxValue" format="integer"/>
+    </declare-styleable>
+</resources>

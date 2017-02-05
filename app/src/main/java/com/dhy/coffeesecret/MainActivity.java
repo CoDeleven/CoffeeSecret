@@ -15,7 +15,7 @@ import com.dhy.coffeesecret.ui.cup.CupFragment;
 import com.dhy.coffeesecret.ui.device.DeviceFragment;
 
 public class MainActivity extends AppCompatActivity implements DeviceFragment.OnDeviceInteractionListener,
-        ContainerFragment.OnContainerInteractionListener, CupFragment.OnCupInteractionListener{
+        ContainerFragment.OnContainerInteractionListener, CupFragment.OnCupInteractionListener {
 
     // 标签页
     private TabLayout mTabLayout;
@@ -37,14 +37,14 @@ public class MainActivity extends AppCompatActivity implements DeviceFragment.On
     /**
      * 初始化默认参数
      */
-    private void initParam(){
+    private void initParam() {
         // 初始化fragment视图
-        mFragments =new Fragment[] {new DeviceFragment(),new ContainerFragment(),new CupFragment()};
+        mFragments = new Fragment[]{new DeviceFragment(), new ContainerFragment(), new CupFragment()};
 
 
         // 获取id
-        mTabLayout = (TabLayout)findViewById(R.id.id_fragment_tabLayout);
-        mViewPager = (ViewPager)findViewById(R.id.id_fragment_viewPager);
+        mTabLayout = (TabLayout) findViewById(R.id.id_fragment_tabLayout);
+        mViewPager = (ViewPager) findViewById(R.id.id_fragment_viewPager);
 
         // 为viewPager设置Adapter
         mViewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
@@ -72,10 +72,11 @@ public class MainActivity extends AppCompatActivity implements DeviceFragment.On
 
     /**
      * 获取标签的自定义视图
+     *
      * @param position
      * @return
      */
-    private View getCustomerView(int position){
+    private View getCustomerView(int position) {
         View view = getLayoutInflater().inflate(R.layout.tab_view, null);
         ImageView imageView = (ImageView) view.findViewById(R.id.id_tab_img);
         imageView.setImageResource(imgSelectorIds[position]);
@@ -84,6 +85,7 @@ public class MainActivity extends AppCompatActivity implements DeviceFragment.On
 
     /**
      * MainActivity和MyDeviceFragment交互的方法
+     *
      * @param uri
      */
     @Override
@@ -93,6 +95,7 @@ public class MainActivity extends AppCompatActivity implements DeviceFragment.On
 
     /**
      * MainActivity和MyContainerFragment交互的方法
+     *
      * @param uri
      */
     @Override
@@ -102,6 +105,7 @@ public class MainActivity extends AppCompatActivity implements DeviceFragment.On
 
     /**
      * MainActivity和MyCupFragment交互的方法
+     *
      * @param uri
      */
     @Override

@@ -2,5 +2,35 @@
     <string name="app_name">CoffeeSecret</string>
 
     <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_device_child_activity">某曲线</string>
 
+    <!-- ReportInfoPagePart-->
+    <string name="produce_area">产区:%1$#12s</string>
+    <string name="level">等级:%1$#12s</string>
+    <string name="type">品种:%1$#12s</string>
+    <string name="handler">处理:%1$#12s</string>
+    <string name="beanDate">豆种日期:%1$#12s</string>
+    <string name="author">烘焙师:%1$#12s</string>
+    <string name="device">设备:%1$#12s</string>
+    <string name="bakeDate">烘焙日期:%1$#12s</string>
+    <string name="cookedWeight">熟豆重量:%1$#12s</string>
+    <string name="rawWeight">生豆重量:%1$#12s</string>
+    <string name="devTime">发展时间:%1$#12s</string>
+    <string name="endTemp">结束温度:%1$#12s</string>
+    <string name="devRate">发展率:%1$#12s</string>
+    <string name="startTemp">入豆温度:%1$#12s</string>
+    <string name="envTime">环境温度:%1$#12s</string>
+    <string name="eventTime">时间:</string>
+    <string name="eventDetail">事件:</string>
+    <string name="eventRemark">备注:</string>
+    <!-- ArcProgress -->
+    <string name="label_beanProgress">豆温</string>
+    <string name="label_inWindProgress">进风温</string>
+    <string name="label_outWindProgress">出风温</string>
+    <string name="suffix_arcProgress">℃</string>
+    <integer name="begin_arcProgress">120</integer>
+    <integer name="sweep_arcProgress">300</integer>
+    <integer name="finished_begin_arcProgress">120</integer>
+    <integer name="maxValue_arcProgress">350</integer>
 </resources>

@@ -6,8 +6,16 @@
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
+        android:id="@+id/id_test_temp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="myDevice"/>
+        android:text="@string/hello_blank_fragment"/>
+
+    <Button
+        android:id="@+id/btn_test_enter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/id_test_temp"
+        android:text="enter"/>
 
 </FrameLayout>
