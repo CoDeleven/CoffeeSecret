@@ -7,7 +7,8 @@ import android.widget.TextView;
 
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.interfaces.ToolbarOperation;
-import com.dhy.coffeesecret.ui.device.fragments.LineDetailFragment;
+import com.dhy.coffeesecret.ui.container.fragments.LinesSelectedFragment;
+import com.dhy.coffeesecret.utils.FragmentTool;
 
 public class DeviceChildActivity extends AppCompatActivity implements ToolbarOperation {
 
@@ -23,9 +24,11 @@ public class DeviceChildActivity extends AppCompatActivity implements ToolbarOpe
         toolbar.setNavigationIcon(R.drawable.back);
         setSupportActionBar(toolbar);
 
-        LineDetailFragment fragment = new LineDetailFragment();
+        LinesSelectedFragment fragment = new LinesSelectedFragment();
+
         fragment.setToolbarOperation(this);
-        getSupportFragmentManager().beginTransaction().add(R.id.id_device_child, fragment, "lineDetail").commit();
+        FragmentTool fragmentTool = FragmentTool.getFragmentToolInstance(this);
+        fragmentTool.add(R.id.id_device_child, fragment, false);
     }
 
     @Override
@@ -43,4 +46,5 @@ public class DeviceChildActivity extends AppCompatActivity implements ToolbarOpe
     public float getToolbarHeight() {
         return 112;
     }
+
 }

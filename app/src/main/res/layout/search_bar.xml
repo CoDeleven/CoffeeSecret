@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/pageinfo_text_horizontal_margin"
+        android:layout_marginRight="@dimen/pageinfo_text_horizontal_margin">
+
+        <com.dhy.coffeesecret.ui.device.views.SearchEditText
+            android:id="@+id/lines_selected_srh"
+            android:layout_width="match_parent"
+            android:layout_height="34dp"
+            android:layout_weight="5"
+            android:background="@drawable/rect_input_search"
+            android:drawableLeft="@drawable/ic_container_search"
+            android:drawableRight="@drawable/ic_container_del"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:hint="搜索"
+            android:imeOptions="actionSearch"
+            android:paddingBottom="5dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:paddingTop="5dp"
+            android:singleLine="true"
+            android:textColor="#333"
+            android:textColorHint="#aaa"
+            android:textSize="14sp">
+        </com.dhy.coffeesecret.ui.device.views.SearchEditText>
+
+        <ImageButton
+            android:id="@+id/lines_selected_del"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_container_del"
+            android:visibility="gone"/>
+    </RelativeLayout>
+</RelativeLayout>
