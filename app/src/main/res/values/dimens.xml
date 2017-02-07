@@ -7,6 +7,7 @@
     <dimen name="tv_horizontal_padding">3dp</dimen>
     <dimen name="tv_vertical_padding">3dp</dimen>
     <dimen name="lv_item_padding">8dp</dimen>
+    <dimen name="view_horizontal_padding">12dp</dimen>
     <dimen name="font_size_primary">13sp</dimen>
     <dimen name="actionbar_title_font_size">18sp</dimen>
 

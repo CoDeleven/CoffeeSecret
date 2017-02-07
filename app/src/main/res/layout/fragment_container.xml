@@ -42,4 +42,13 @@
         android:layout_height="match_parent">
 
     </com.andexert.expandablelayout.library.ExpandableLayoutListView>
+
+    <View
+        android:id="@+id/shade"
+        android:visibility="gone"
+        android:background="@color/trans_dark"
+        android:layout_below="@+id/topPanel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"/>
 </RelativeLayout>
