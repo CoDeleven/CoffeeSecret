@@ -1,8 +1,11 @@
 package com.dhy.coffeesecret.ui.container;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -67,6 +70,13 @@ public class ContainerFragment extends Fragment {
             public View getView(int i, View view, ViewGroup viewGroup) {
                 LayoutInflater inflater = getActivity().getLayoutInflater();
                 View inflate = inflater.inflate(R.layout.bean_item, null);
+                inflate.findViewById(R.id.btn_details).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(getActivity(),BeanInfoActivity.class);
+                        startActivity(intent);
+                    }
+                });
                 return inflate;
             }
         });
@@ -82,6 +92,7 @@ public class ContainerFragment extends Fragment {
         mShade = mContent.findViewById(R.id.shade);
     }
 
+    @TargetApi(Build.VERSION_CODES.CUPCAKE)
     public void initPopupWindow(){
         LayoutInflater inflater = getActivity().getLayoutInflater();
         int width = getActivity().getWindowManager().getDefaultDisplay().getWidth();

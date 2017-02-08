@@ -1,5 +1,9 @@
 package com.dhy.coffeesecret.model;
 
+import android.os.Bundle;
+import android.os.IBinder;
+
+import java.io.Serializable;
 import java.sql.Time;
 import java.util.Date;
 
@@ -7,7 +11,7 @@ import java.util.Date;
  * Created by CoDeleven on 17-2-7.
  */
 
-public class BakeReport {
+public class BakeReport implements Serializable{
     private int reportId;
     private CoffeeBeanInfo coffeeBeanInfo;
     private String name;

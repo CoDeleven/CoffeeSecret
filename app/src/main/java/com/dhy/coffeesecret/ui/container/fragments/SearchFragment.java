@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -16,16 +18,16 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 
 import com.dhy.coffeesecret.R;
-import com.dhy.coffeesecret.interfaces.ToolbarOperation;
 import com.dhy.coffeesecret.utils.FragmentTool;
 
 
 public class SearchFragment extends Fragment {
     private EditText editText;
-    private ToolbarOperation toolbarOperation;
+    private Toolbar toolbar;
     private Button cancel;
     private ImageButton clear;
     private InputMethodManager imm;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,8 +58,10 @@ public class SearchFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 editText.setText("");
-                FragmentTool.getFragmentToolInstance(getContext()).hideCur();
-                toolbarOperation.getToolbar().setVisibility(View.VISIBLE);
+                FragmentTransaction tx = getFragmentManager().beginTransaction();
+                tx.hide(SearchFragment.this);
+                tx.commit();
+                toolbar.setVisibility(View.VISIBLE);
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             }
         });
@@ -95,24 +99,24 @@ public class SearchFragment extends Fragment {
         });
     }
 
-    public void setToolbarOperation(ToolbarOperation toolbarOperation) {
-        this.toolbarOperation = toolbarOperation;
+    public void setToolbar(Toolbar toolbar) {
+        this.toolbar = toolbar;
     }
 
-    @Override
+/*    @Override
     public void onStart() {
         super.onStart();
         editText.requestFocus();
         imm.showSoftInput(editText, InputMethodManager.SHOW_FORCED);
-        toolbarOperation.getToolbar().setVisibility(View.GONE);
+        toolbar.setVisibility(View.GONE);
 
-    }
+    }*/
 
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         if (!hidden) {
-            toolbarOperation.getToolbar().setVisibility(View.GONE);
+            toolbar.setVisibility(View.GONE);
             editText.requestFocus();
             imm.showSoftInput(editText, InputMethodManager.SHOW_FORCED);
         }

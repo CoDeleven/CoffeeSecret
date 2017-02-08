@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/lv_bg"
+    tools:context="com.dhy.coffeesecret.ui.container.BeanInfoActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        app:navigationIcon="@drawable/ic_back"></android.support.v7.widget.Toolbar>
+
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolBar"
+        android:adjustViewBounds="true"
+        android:src="@mipmap/hourbon" />
+
+    <TextView
+        android:id="@+id/bean_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/image"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:text="巴西黄波旁"
+        android:textSize="@dimen/actionbar_title_font_size" />
+
+    <View
+        style="@style/HorizontalLine"
+        android:layout_below="@id/bean_name"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp" />
+
+    <ScrollView
+        android:layout_below="@id/bean_name"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <include
+                android:id="@+id/bean_info"
+                layout="@layout/include_bean_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <Button
+                android:id="@+id/btn_curve"
+                android:background="@drawable/bg_round_pricolor_selector"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/pageinfo_horizontal_margin"
+                android:layout_marginBottom="@dimen/pageinfo_text_vertical_margin"
+                android:text="@string/curve" />
+        </LinearLayout>
+
+    </ScrollView>
+
+</RelativeLayout>

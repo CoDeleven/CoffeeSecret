@@ -7,6 +7,7 @@ import java.util.Date;
  */
 
 public class LineChartInfo {
+
     private String productionArea;
     private int level;
     private String type;

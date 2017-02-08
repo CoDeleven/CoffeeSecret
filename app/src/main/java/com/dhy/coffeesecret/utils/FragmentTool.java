@@ -72,9 +72,6 @@ public class FragmentTool {
         return this;
     }
 
-    public void popStack() {
-        fragmentManager.popBackStackImmediate();
-    }
 
     public void removeKey(Object key) {
         managerMap.remove(key);

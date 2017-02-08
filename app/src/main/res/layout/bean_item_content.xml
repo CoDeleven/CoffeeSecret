@@ -2,7 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/lv_item_padding">
+    android:paddingBottom="@dimen/lv_item_padding"
+    android:paddingRight="@dimen/lv_item_padding"
+    android:paddingLeft="@dimen/lv_item_padding">
 
     <LinearLayout
         android:id="@+id/first"
@@ -10,46 +12,23 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:padding="@dimen/lv_item_padding"
-
         android:weightSum="2">
 
-        <LinearLayout
+
+        <TextView
+            style="@style/TextViewCenter.Left"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:orientation="horizontal"
-            android:padding="@dimen/lv_item_padding">
+            android:text="@string/area"
+            android:textColor="@android:color/darker_gray" />
 
-            <TextView
-                style="@style/TextViewCenter"
-                android:gravity="right"
-                android:text="@string/area"
-                android:textColor="@android:color/darker_gray" />
-
-            <TextView
-                style="@style/TextViewCenter.Left"
-                android:text="巴西"
-                android:textColor="@android:color/darker_gray" />
-
-        </LinearLayout>
-
-        <LinearLayout
+        <TextView
+            style="@style/TextViewCenter.Left"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:orientation="horizontal"
-            android:padding="@dimen/lv_item_padding">
+            android:text="@string/level"
+            android:textColor="@android:color/darker_gray" />
 
-            <TextView
-                style="@style/TextViewCenter"
-                android:text="@string/level"
-                android:textColor="@android:color/darker_gray" />
-
-            <TextView
-                style="@style/TextViewCenter.Left"
-                android:text="30kg"
-                android:textColor="@android:color/darker_gray" />
-        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
@@ -61,48 +40,25 @@
         android:padding="@dimen/lv_item_padding"
         android:weightSum="2">
 
-        <LinearLayout
+        <TextView
+            style="@style/TextViewCenter.Left"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="horizontal"
-            android:padding="@dimen/lv_item_padding">
+            android:text="@string/type"
+            android:textColor="@android:color/darker_gray" />
 
-            <TextView
-                style="@style/TextViewCenter"
-                android:gravity="right"
-                android:text="@string/type"
-                android:textColor="@android:color/darker_gray" />
 
-            <TextView
-                style="@style/TextViewCenter.Left"
-                android:text="巴西豆子"
-                android:textColor="@android:color/darker_gray" />
-
-        </LinearLayout>
-
-        <LinearLayout
+        <TextView
+            style="@style/TextViewCenter.Left"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="horizontal"
-            android:padding="@dimen/lv_item_padding">
-
-            <TextView
-                style="@style/TextViewCenter"
-                android:text="@string/treatment"
-                android:textColor="@android:color/darker_gray" />
-
-            <TextView
-                style="@style/TextViewCenter.Left"
-                android:text="30kg"
-                android:textColor="@android:color/darker_gray" />
-        </LinearLayout>
+            android:text="@string/treatment"
+            android:textColor="@android:color/darker_gray" />
 
     </LinearLayout>
 
     <Button
-        android:id="@+id/id_home_container_detail"
+        android:id="@+id/btn_details"
         style="@style/WhiteBtn.Min"
         android:layout_alignParentRight="true"
         android:layout_below="@id/second"
