@@ -1,0 +1,109 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+
+                tools:context="com.dhy.coffeesecret.ui.device.fragments.LineChartPart">
+
+    <!-- TODO: Update blank fragment layout -->
+    <com.dhy.coffeesecret.ui.device.views.BaseChart4Coffee
+        android:id="@+id/id_line_chart"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"></com.dhy.coffeesecret.ui.device.views.BaseChart4Coffee>
+
+    <RelativeLayout
+        android:id="@+id/id_report_lineinfo_part1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/id_line_chart"
+        android:layout_marginLeft="17dp">
+
+        <LinearLayout
+            android:id="@+id/id_report_lineinfo_mode1_first"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/pageinfo_text_vertical_margin"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/devTime"
+                android:textSize="12sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/endTemp"
+                android:textSize="12sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/id_report_lineinfo_mode2_second"
+            android:layout_width="match_parent"
+
+            android:layout_height="wrap_content"
+            android:layout_below="@id/id_report_lineinfo_mode1_first"
+            android:layout_marginBottom="@dimen/pageinfo_text_vertical_margin"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/devRate"
+
+                android:textSize="12sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/startTemp"
+
+                android:textSize="12sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/envTime"
+
+                android:textSize="12sp"/>
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/id_report_lineinfo_part2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/id_line_chart"
+        android:layout_marginLeft="17dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/id_report_lineinfo_mode2_first"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/eventTime"
+                android:textSize="12sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/eventDetail"
+                android:textSize="12sp"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/eventRemark"
+            android:textSize="12sp"/>
+    </LinearLayout>
+</RelativeLayout>

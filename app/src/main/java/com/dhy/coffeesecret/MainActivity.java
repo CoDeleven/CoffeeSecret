@@ -17,12 +17,14 @@ import com.dhy.coffeesecret.ui.cup.CupFragment;
 import com.dhy.coffeesecret.ui.device.DeviceFragment;
 
 public class MainActivity extends AppCompatActivity implements DeviceFragment.OnDeviceInteractionListener,
-        ContainerFragment.OnContainerInteractionListener, CupFragment.OnCupInteractionListener{
+        ContainerFragment.OnContainerInteractionListener, CupFragment.OnCupInteractionListener {
 
     // 默认图标id
     private static final int[] IMG_SELECTOR_IDS = {R.drawable.nav_device_selector, R.drawable.nav_container_selector, R.drawable.nav_cup_selector};
     // 标签页
     private TabLayout mTabLayout;
+    // 默认图标id
+    private int[] imgSelectorIds = {R.drawable.nav_device_selector, R.drawable.nav_container_selector, R.drawable.nav_cup_selector};
     // 滑动页面视图
     private ViewPager mViewPager;
     // fragment集合 //
@@ -49,6 +51,7 @@ public class MainActivity extends AppCompatActivity implements DeviceFragment.On
 
         // 初始化fragment视图
         mFragments =new Fragment[] {new DeviceFragment(),new ContainerFragment(),new CupFragment()};
+
 
         // 获取id
         mTabLayout = (TabLayout)findViewById(R.id.id_fragment_tabLayout);
