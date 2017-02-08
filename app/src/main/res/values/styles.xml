@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/status_bar</item>
         <item name="colorPrimaryDark">@color/status_bar</item>
@@ -13,4 +13,90 @@
         <!--<item name="android:selectableItemBackgroundBorderless">@null</item>-->
     </style>
 
+    <style name="WhiteBtn">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:textSize">@dimen/font_size_primary</item>
+        <item name="android:background">@android:color/white</item>
+        <item name="android:paddingLeft">@dimen/btn_horizontal_padding</item>
+        <item name="android:paddingRight">@dimen/btn_horizontal_padding</item>
+        <item name="android:paddingTop">@dimen/btn_vertical_padding</item>
+        <item name="android:paddingBottom">@dimen/btn_vertical_padding</item>
+    </style>
+
+    <style name="WhiteBtn.Min">
+        <item name="android:minHeight">0dp</item>
+    </style>
+
+    <style name="TextViewCenter">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingTop">@dimen/tv_vertical_padding</item>
+        <item name="android:paddingBottom">@dimen/tv_vertical_padding</item>
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+
+    <style name="TextViewCenter.Left">
+        <item name="android:gravity">center_vertical|left</item>
+        <item name="android:paddingLeft">@dimen/tv_horizontal_padding</item>
+    </style>
+
+    <style name="TextViewCenter.Right">
+        <item name="android:gravity">center_vertical|right</item>
+        <item name="android:paddingRight">@dimen/tv_horizontal_padding</item>
+    </style>
+
+    <style name="SelectionRadioButton">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:button">@null</item>
+        <item name="android:textSize">@dimen/font_size_primary</item>
+        <item name="android:paddingLeft">@dimen/lv_item_padding</item>
+        <item name="android:paddingRight">@dimen/lv_item_padding</item>
+        <item name="android:paddingTop">@dimen/lv_item_padding</item>
+        <item name="android:paddingBottom">@dimen/lv_item_padding</item>
+        <item name="android:background">@android:color/white</item>
+        <item name="android:textColor">@drawable/rb_font_selector</item>
+        <item name="android:drawableRight">@drawable/rb_tick_selector</item>
+    </style>
+
+    <style name="SelectionRadioButton.DrawableRound">
+        <item name="android:textColor" >@drawable/rb_font_selector</item>
+        <item name="android:drawableRight">@drawable/rb_round_selector</item>
+        <item name="android:layout_marginLeft" >@dimen/view_horizontal_padding</item>
+        <item name="android:layout_marginRight" >@dimen/view_horizontal_padding</item>
+        <item name="android:paddingLeft">@dimen/view_horizontal_padding</item>
+        <item name="android:paddingRight">@dimen/view_horizontal_padding</item>
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingBottom">0dp</item>
+    </style>
+
+    <style name="HorizontalLine">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">@android:color/darker_gray</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginRight">10dp</item>
+    </style>
+    <style name="PopupWindowAnimation" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/popup_enter</item>
+        <item name="android:windowExitAnimation">@anim/popup_exit</item>
+    </style>
+
+    <style name="ToggleButtonTitle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@android:color/darker_gray</item>
+        <item name="android:drawableRight">@drawable/tb_tick_selector</item>
+        <item name="android:gravity">left|center_vertical</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="android:textSize">@dimen/font_size_primary</item>
+        <item name="android:paddingLeft">@dimen/btn_horizontal_padding</item>
+        <item name="android:paddingRight">@dimen/btn_horizontal_padding</item>
+        <item name="android:paddingTop" >0dp</item>
+        <item name="android:paddingBottom" >0dp</item>
+        <item name="android:layout_margin">2dp</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
 </resources>

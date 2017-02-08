@@ -33,4 +33,14 @@
     <integer name="sweep_arcProgress">300</integer>
     <integer name="finished_begin_arcProgress">120</integer>
     <integer name="maxValue_arcProgress">350</integer>
+    <string name="sort_by_area">产地排序</string>
+    <string name="screen">筛选</string>
+    <string name="bean_name">豆名:</string>
+    <string name="weight">重量:</string>
+    <string name="details">详情:</string>
+    <string name="area">产区:</string>
+    <string name="level">等级:</string>
+    <string name="type">豆种:</string>
+    <string name="treatment">处理:</string>
+    <string name="conta_title">我的货柜</string>
 </resources>

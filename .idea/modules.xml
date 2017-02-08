@@ -5,6 +5,8 @@
       <module fileurl="file://$PROJECT_DIR$/CoffeeSecret.iml" filepath="$PROJECT_DIR$/CoffeeSecret.iml" />
       <module fileurl="file://$PROJECT_DIR$/MPChartLib/MPChartLib.iml" filepath="$PROJECT_DIR$/MPChartLib/MPChartLib.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/expandableview/expandableview.iml" filepath="$PROJECT_DIR$/expandableview/expandableview.iml" />
     </modules>
   </component>
 </project>
