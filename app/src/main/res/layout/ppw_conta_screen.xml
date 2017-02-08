@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:mstb="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@android:color/transparent"
-    android:orientation="vertical">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@android:color/transparent"
+              android:orientation="vertical">
 
     <TextView
         android:layout_width="50dp"
@@ -51,11 +50,11 @@
 
                 <com.kyleduo.switchbutton.SwitchButton
                     android:layout_width="wrap_content"
-                    android:scaleY=".8"
-                    android:scaleX=".8"
                     android:minWidth="0dp"
                     android:paddingLeft="@dimen/view_horizontal_padding"
                     android:paddingRight="@dimen/view_horizontal_padding"
+                    android:scaleX=".8"
+                    android:scaleY=".8"
                     android:switchMinWidth="0dp"
                     app:kswTextOff="off"
                     app:kswTextOn="on"
@@ -63,7 +62,7 @@
 
             </TableRow>
 
-            <View style="@style/HorizontalLine" />
+            <View style="@style/HorizontalLine"/>
 
             <TableRow
                 android:layout_width="match_parent"
@@ -96,7 +95,7 @@
 
             </TableRow>
 
-            <View style="@style/HorizontalLine" />
+            <View style="@style/HorizontalLine"/>
 
             <TableRow
                 android:layout_width="match_parent"
@@ -160,31 +159,31 @@
                     style="@style/SelectionRadioButton.DrawableRound"
                     android:text="品种" />
 
-                <View style="@style/HorizontalLine" />
+                <View style="@style/HorizontalLine"/>
 
                 <RadioButton
                     style="@style/SelectionRadioButton.DrawableRound"
                     android:text="品种" />
 
-                <View style="@style/HorizontalLine" />
+                <View style="@style/HorizontalLine"/>
 
                 <RadioButton
                     style="@style/SelectionRadioButton.DrawableRound"
                     android:text="品种" />
 
-                <View style="@style/HorizontalLine" />
+                <View style="@style/HorizontalLine"/>
 
                 <RadioButton
                     style="@style/SelectionRadioButton.DrawableRound"
                     android:text="品种" />
 
-                <View style="@style/HorizontalLine" />
+                <View style="@style/HorizontalLine"/>
 
                 <RadioButton
                     style="@style/SelectionRadioButton.DrawableRound"
                     android:text="品种" />
 
-                <View style="@style/HorizontalLine" />
+                <View style="@style/HorizontalLine"/>
 
                 <RadioButton
                     style="@style/SelectionRadioButton.DrawableRound"

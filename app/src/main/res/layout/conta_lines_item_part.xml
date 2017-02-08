@@ -12,14 +12,14 @@
         android:paddingTop="10dp">
 
         <TextView
-            android:layout_alignParentLeft="true"
             android:id="@+id/id_lines_item_name"
             style="@style/LineItemText"
+            android:layout_alignParentLeft="true"
             />
 
         <TextView
-            android:layout_alignParentRight="true"
             android:id="@+id/id_lines_item_date"
-            style="@style/LineItemText"/>
+            style="@style/LineItemText"
+            android:layout_alignParentRight="true"/>
     </RelativeLayout>
 </RelativeLayout>

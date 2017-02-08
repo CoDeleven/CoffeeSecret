@@ -6,49 +6,49 @@
 
     <RelativeLayout
         android:id="@+id/topPanel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:background="@drawable/black_border"
         android:paddingBottom="1dp"
-        android:paddingTop="1dp"
         android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:paddingTop="1dp">
 
         <Button
             android:id="@+id/btn_sort"
-            android:text="@string/sort_by_area"
+            style="@style/WhiteBtn.Min"
             android:layout_alignParentLeft="true"
             android:drawableRight="@drawable/ic_delta"
-            style="@style/WhiteBtn.Min" />
+            android:text="@string/sort_by_area"/>
 
         <Button
             android:id="@+id/btn_screen"
-            android:text="@string/screen"
-            android:drawableRight="@drawable/ic_screen"
+            style="@style/WhiteBtn.Min"
             android:layout_alignParentRight="true"
-            style="@style/WhiteBtn.Min" />
+            android:drawableRight="@drawable/ic_screen"
+            android:text="@string/screen"/>
 
         <View
-            android:layout_toLeftOf="@id/btn_screen"
             android:layout_width="0.1dp"
             android:layout_height="25dp"
+            android:layout_toLeftOf="@id/btn_screen"
             android:background="#ccc"
             />
     </RelativeLayout>
     <com.andexert.expandablelayout.library.ExpandableLayoutListView
-        android:layout_below="@+id/topPanel"
         android:id="@+id/lv_beans"
-        android:background="@mipmap/lv_bg"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@+id/topPanel"
+        android:background="@mipmap/lv_bg">
 
     </com.andexert.expandablelayout.library.ExpandableLayoutListView>
 
     <View
         android:id="@+id/shade"
-        android:visibility="gone"
-        android:background="@color/trans_dark"
-        android:layout_below="@+id/topPanel"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:clickable="true"/>
+        android:layout_below="@+id/topPanel"
+        android:background="@color/trans_dark"
+        android:clickable="true"
+        android:visibility="gone"/>
 </RelativeLayout>

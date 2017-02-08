@@ -36,7 +36,7 @@
         <item name="android:paddingBottom">@dimen/tv_vertical_padding</item>
         <item name="android:textColor">@android:color/black</item>
     </style>
-    
+
     <style name="TextViewCenter.Left">
         <item name="android:gravity">center_vertical|left</item>
         <item name="android:paddingLeft">@dimen/tv_horizontal_padding</item>
@@ -46,8 +46,8 @@
         <item name="android:gravity">center_vertical|right</item>
         <item name="android:paddingRight">@dimen/tv_horizontal_padding</item>
     </style>
-    
-    <style name="ItemTextView" >
+
+    <style name="ItemTextView">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:gravity">center_vertical</item>
@@ -56,7 +56,7 @@
         <item name="android:paddingLeft">@dimen/activity_horizontal_margin</item>
         <item name="android:paddingRight">@dimen/activity_horizontal_margin</item>
         <item name="android:textColor">@android:color/white</item>
-        <item name="android:textSize" >@dimen/font_size_primary</item>
+        <item name="android:textSize">@dimen/font_size_primary</item>
     </style>
 
     <style name="SelectionRadioButton">

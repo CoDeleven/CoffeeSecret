@@ -73,7 +73,7 @@ public class ContainerFragment extends Fragment {
                 inflate.findViewById(R.id.btn_details).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent intent = new Intent(getActivity(),BeanInfoActivity.class);
+                        Intent intent = new Intent(getActivity(), BeanInfoActivity.class);
                         startActivity(intent);
                     }
                 });

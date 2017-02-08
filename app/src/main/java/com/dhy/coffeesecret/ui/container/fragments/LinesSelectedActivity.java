@@ -28,6 +28,7 @@ public class LinesSelectedActivity extends AppCompatActivity implements View.OnC
     private SearchFragment searchFragment = new SearchFragment();
     private Toolbar toolbar;
     private boolean isAddSearchFragment = false;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,7 +47,7 @@ public class LinesSelectedActivity extends AppCompatActivity implements View.OnC
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                BakeReport report = (BakeReport)adapterView.getItemAtPosition(i);
+                BakeReport report = (BakeReport) adapterView.getItemAtPosition(i);
                 Intent intent = new Intent(LinesSelectedActivity.this, ReportActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("bakeReport", report);
@@ -81,10 +82,10 @@ public class LinesSelectedActivity extends AppCompatActivity implements View.OnC
     @Override
     public void starSearchPage() {
         FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
-        if(!isAddSearchFragment){
+        if (!isAddSearchFragment) {
             tx.add(R.id.id_lines_container, searchFragment, "search_line");
             isAddSearchFragment = true;
-        }else{
+        } else {
             tx.show(searchFragment);
         }
         tx.commit();

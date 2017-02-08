@@ -7,7 +7,6 @@ import android.widget.TextView;
 
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.interfaces.ToolbarOperation;
-import com.dhy.coffeesecret.ui.device.fragments.ReportActivity;
 import com.dhy.coffeesecret.utils.FragmentTool;
 
 public class DeviceChildActivity extends AppCompatActivity implements ToolbarOperation {

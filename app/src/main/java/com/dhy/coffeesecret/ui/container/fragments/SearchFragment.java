@@ -18,7 +18,6 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 
 import com.dhy.coffeesecret.R;
-import com.dhy.coffeesecret.utils.FragmentTool;
 
 
 public class SearchFragment extends Fragment {
