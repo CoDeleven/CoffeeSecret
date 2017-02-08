@@ -3,7 +3,6 @@ package com.dhy.coffeesecret.ui.container.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +38,7 @@ public class LinesSelectedFragment extends Fragment implements View.OnClickListe
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_lines_selected, container, false);
+        View view = inflater.inflate(R.layout.conta_lines, container, false);
 
         return view;
     }
@@ -47,7 +46,7 @@ public class LinesSelectedFragment extends Fragment implements View.OnClickListe
     @Override
     public void onStart() {
         super.onStart();
-        listView = (ListView) getActivity().findViewById(R.id.lines_selected_list);
+        listView = (ListView) getActivity().findViewById(R.id.id_lines_list);
         init();
         searchFragment = (SearchFragment) FragmentTool.getFragmentToolInstance(getActivity()).getFragment(DeviceChildActivity.FRAGMENT_TAG[2]);
         if (searchFragment == null) {
@@ -61,7 +60,7 @@ public class LinesSelectedFragment extends Fragment implements View.OnClickListe
 
     private void init() {
         listView.setAdapter(new LinesAdapter(getDatas(), getContext()));
-        View searchBarLayout = View.inflate(getContext(), R.layout.search_bar, null);
+        View searchBarLayout = View.inflate(getContext(), R.layout.conta_lines_searchbar_part, null);
         listView.addHeaderView(searchBarLayout);
         listView.setHeaderDividersEnabled(false);
 
@@ -98,7 +97,6 @@ public class LinesSelectedFragment extends Fragment implements View.OnClickListe
     @Override
     public void onResume() {
         super.onResume();
-        Log.e("codelevex", "lines onresume");
     }
 
     @Override

@@ -7,7 +7,7 @@
                 tools:context="com.dhy.coffeesecret.ui.device.fragments.ThreeCirclesPart">
 
     <!-- TODO: Update blank fragment layout -->
-    <com.dhy.coffeesecret.ui.device.views.ArcProgress
+    <com.dhy.coffeesecret.views.ArcProgress
         android:id="@+id/id_arcprogress_bean"
         android:layout_width="100dp"
         android:layout_height="100dp"
@@ -19,7 +19,7 @@
         arc:suffix="@string/suffix_arcProgress"
         arc:sweepAngle="@integer/sweep_arcProgress"/>
 
-    <com.dhy.coffeesecret.ui.device.views.ArcProgress
+    <com.dhy.coffeesecret.views.ArcProgress
         android:id="@+id/id_arcprogress_inwind"
         android:layout_width="100dp"
         android:layout_height="100dp"
@@ -31,7 +31,7 @@
         arc:suffix="@string/suffix_arcProgress"
         arc:sweepAngle="@integer/sweep_arcProgress"/>
 
-    <com.dhy.coffeesecret.ui.device.views.ArcProgress
+    <com.dhy.coffeesecret.views.ArcProgress
         android:id="@+id/id_arcprogress_outwind"
         android:layout_width="100dp"
         android:layout_height="100dp"

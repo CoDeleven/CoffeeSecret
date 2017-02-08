@@ -4,36 +4,42 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
 
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.interfaces.ToolbarOperation;
-import com.dhy.coffeesecret.ui.device.views.ScrollViewContainer;
+import com.dhy.coffeesecret.views.ScrollViewContainer;
 import com.github.mikephil.charting.charts.BarLineChartBase;
 
 
-public class LineDetailFragment extends Fragment implements BarLineChartBase.InterceptorView {
+public class ReportFragment extends Fragment implements BarLineChartBase.InterceptorView {
     private ScrollViewContainer scrollContainer;
     private ToolbarOperation toolbarOperation;
+    private TableLayout tableLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_line_detail, container, false);
-
+        View view = inflater.inflate(R.layout.conta_report, container, false);
+        tableLayout = (TableLayout) view.findViewById(R.id.id_report_table);
 
         // 为图表添加拦截器
-        scrollContainer = (ScrollViewContainer) view.findViewById(R.id.sl_1);
-        ViewPager viewPager = (ViewPager) view.findViewById(R.id.linechart_device_activity).findViewById(R.id.id_report_viewpager);
+        scrollContainer = (ScrollViewContainer) view.findViewById(R.id.id_conta_report_svc);
+        ViewPager viewPager = (ViewPager) view.findViewById(R.id.id_report_linechart).findViewById(R.id.id_report_viewpager);
         FragmentPagerAdapter adapter = (FragmentPagerAdapter) viewPager.getAdapter();
         LineChartPart chart = (LineChartPart) adapter.getItem(0);
         LineChartPart chart2 = (LineChartPart) adapter.getItem(1);
         chart.setInterceptorView(this);
         chart2.setInterceptorView(this);
+        init();
         return view;
     }
 
@@ -52,5 +58,23 @@ public class LineDetailFragment extends Fragment implements BarLineChartBase.Int
 
     public void setToolbarOperation(ToolbarOperation operation) {
         this.toolbarOperation = operation;
+    }
+
+    private void init() {
+        for (int i = 0; i < 40; ++i) {
+            TableRow tableRow = new TableRow(getContext());
+            tableRow.setPadding(10, 10, 10, 10);
+            TableLayout.LayoutParams p = new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT);
+            tableRow.setLayoutParams(p);
+            for (int j = 0; j < 5; ++j) {
+                TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1);
+                TextView textView = new TextView(getContext());
+                textView.setGravity(Gravity.CENTER);
+                textView.setText("ggggg");
+                tableRow.addView(textView, lp);
+            }
+            tableRow.setGravity(Gravity.CENTER);
+            tableLayout.addView(tableRow, p);
+        }
     }
 }

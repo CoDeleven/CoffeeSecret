@@ -6,11 +6,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.PopupWindow;
@@ -18,7 +15,6 @@ import android.widget.PopupWindow;
 import com.andexert.expandablelayout.library.ExpandableLayoutListView;
 import com.dhy.coffeesecret.R;
 
-import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 public class ContainerFragment extends Fragment {
@@ -30,7 +26,7 @@ public class ContainerFragment extends Fragment {
     private Button mScreenButton;
     private PopupWindow mSortPopupWindow;
     private ExpandableLayoutListView mListView;
-    private View shade;
+    private View mShade;
 
     private boolean isSortWindowShowing = false;
 
@@ -83,7 +79,7 @@ public class ContainerFragment extends Fragment {
         mListView = (ExpandableLayoutListView) mContent.findViewById(R.id.lv_beans);
         mScreenButton = (Button) mContent.findViewById(R.id.btn_screen);
         mSortButton = (Button) mContent.findViewById(R.id.btn_sort);
-        shade = mContent.findViewById(R.id.shade);
+        mShade = mContent.findViewById(R.id.shade);
     }
 
     public void initPopupWindow(){
@@ -102,7 +98,7 @@ public class ContainerFragment extends Fragment {
                     mSortPopupWindow.dismiss();
                 }else {
                     mSortPopupWindow.showAsDropDown(mScreenButton);
-                    shade.setVisibility(View.VISIBLE);
+                    mShade.setVisibility(View.VISIBLE);
                 }
                 isSortWindowShowing = !isSortWindowShowing;
             }
@@ -111,7 +107,7 @@ public class ContainerFragment extends Fragment {
         mSortPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
             public void onDismiss() {
-                shade.setVisibility(View.GONE);
+                mShade.setVisibility(View.GONE);
             }
         });
     }

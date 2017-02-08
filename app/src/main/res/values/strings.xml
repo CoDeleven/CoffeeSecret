@@ -7,8 +7,6 @@
 
     <!-- ReportInfoPagePart-->
     <string name="produce_area">产区:%1$#12s</string>
-    <string name="level">等级:%1$#12s</string>
-    <string name="type">品种:%1$#12s</string>
     <string name="handler">处理:%1$#12s</string>
     <string name="beanDate">豆种日期:%1$#12s</string>
     <string name="author">烘焙师:%1$#12s</string>
@@ -33,6 +31,7 @@
     <integer name="sweep_arcProgress">300</integer>
     <integer name="finished_begin_arcProgress">120</integer>
     <integer name="maxValue_arcProgress">350</integer>
+    <!-- containerHome-->
     <string name="sort_by_area">产地排序</string>
     <string name="screen">筛选</string>
     <string name="bean_name">豆名:</string>
@@ -43,4 +42,10 @@
     <string name="type">豆种:</string>
     <string name="treatment">处理:</string>
     <string name="conta_title">我的货柜</string>
+    <!-- 温度图表详情数据-->
+    <string name="reportTime">时间</string>
+    <string name="reportEnvTime">环境温度</string>
+    <string name="reportBeanTemp">豆温</string>
+    <string name="reportDryTemp">脱水温度</string>
+    <string name="reportUpTemp">豆子升温</string>
 </resources>

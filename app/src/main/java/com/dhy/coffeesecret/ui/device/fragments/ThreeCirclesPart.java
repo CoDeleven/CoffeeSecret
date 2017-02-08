@@ -14,7 +14,7 @@ public class ThreeCirclesPart extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_three_circles_part, container, false);
+        return inflater.inflate(R.layout.device_progress_circles, container, false);
     }
 
 }

@@ -9,7 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.dhy.coffeesecret.R;
-import com.dhy.coffeesecret.ui.device.views.BaseChart4Coffee;
+import com.dhy.coffeesecret.views.BaseChart4Coffee;
 import com.github.mikephil.charting.charts.BarLineChartBase;
 
 public class LineChartPart extends Fragment {
@@ -29,7 +29,7 @@ public class LineChartPart extends Fragment {
                              Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_line_chart_part, container, false);
+        View view = inflater.inflate(R.layout.conta_report_chart_info, container, false);
         chart = (BaseChart4Coffee) view.findViewById(R.id.id_line_chart);
         rl = (RelativeLayout) view.findViewById(R.id.id_report_lineinfo_part1);
         ll = (LinearLayout) view.findViewById(R.id.id_report_lineinfo_part2);

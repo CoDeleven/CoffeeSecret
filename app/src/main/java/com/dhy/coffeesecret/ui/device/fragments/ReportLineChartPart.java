@@ -22,7 +22,7 @@ public class ReportLineChartPart extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_report_line_chart_part, container, false);
+        View view = inflater.inflate(R.layout.conta_report_chart_nav, container, false);
         mViewPager = (ViewPager) view.findViewById(R.id.id_report_viewpager);
         mLeftBtn = (ImageButton) view.findViewById(R.id.id_report_leftbtn);
         mRightBtn = (ImageButton) view.findViewById(R.id.id_report_rightbtn);

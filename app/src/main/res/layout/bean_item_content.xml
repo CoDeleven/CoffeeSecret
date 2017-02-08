@@ -102,6 +102,7 @@
     </LinearLayout>
 
     <Button
+        android:id="@+id/id_home_container_detail"
         style="@style/WhiteBtn.Min"
         android:layout_alignParentRight="true"
         android:layout_below="@id/second"

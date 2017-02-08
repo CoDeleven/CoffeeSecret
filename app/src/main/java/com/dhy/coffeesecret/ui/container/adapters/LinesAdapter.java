@@ -45,7 +45,7 @@ public class LinesAdapter extends BaseAdapter {
         ViewHolder viewHolder = null;
         if (view == null) {
             viewHolder = new ViewHolder();
-            view = inflater.inflate(R.layout.lines_seach_item, viewGroup, false);
+            view = inflater.inflate(R.layout.conta_lines_item_part, viewGroup, false);
             viewHolder.lineName = (TextView) view.findViewById(R.id.id_lines_item_name);
             viewHolder.dateName = (TextView) view.findViewById(R.id.id_lines_item_date);
             view.setTag(viewHolder);

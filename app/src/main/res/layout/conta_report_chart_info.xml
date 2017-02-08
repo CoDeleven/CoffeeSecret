@@ -6,10 +6,10 @@
                 tools:context="com.dhy.coffeesecret.ui.device.fragments.LineChartPart">
 
     <!-- TODO: Update blank fragment layout -->
-    <com.dhy.coffeesecret.ui.device.views.BaseChart4Coffee
+    <com.dhy.coffeesecret.views.BaseChart4Coffee
         android:id="@+id/id_line_chart"
         android:layout_width="match_parent"
-        android:layout_height="250dp"></com.dhy.coffeesecret.ui.device.views.BaseChart4Coffee>
+        android:layout_height="250dp"></com.dhy.coffeesecret.views.BaseChart4Coffee>
 
     <RelativeLayout
         android:id="@+id/id_report_lineinfo_part1"

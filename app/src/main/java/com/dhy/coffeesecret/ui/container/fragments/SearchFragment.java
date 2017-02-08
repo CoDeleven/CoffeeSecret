@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,15 +21,15 @@ import com.dhy.coffeesecret.utils.FragmentTool;
 
 
 public class SearchFragment extends Fragment {
-    EditText editText;
+    private EditText editText;
     private ToolbarOperation toolbarOperation;
     private Button cancel;
     private ImageButton clear;
-
+    private InputMethodManager imm;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.e("codelevex", "searchFragment");
+        imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
     }
 
     @Override
@@ -44,6 +43,7 @@ public class SearchFragment extends Fragment {
         RelativeLayout rl = (RelativeLayout) view.findViewById(R.id.rl_2);
         editText = (EditText) rl.getChildAt(0);
 
+
         initCancel();
         initClear();
         initEditText();
@@ -55,17 +55,15 @@ public class SearchFragment extends Fragment {
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FragmentTool.getFragmentToolInstance(getContext()).popStack();
-                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                editText.setText("");
+                FragmentTool.getFragmentToolInstance(getContext()).hideCur();
+                toolbarOperation.getToolbar().setVisibility(View.VISIBLE);
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             }
         });
     }
 
     private void initEditText() {
-        editText.requestFocus();
-        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
         editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -99,5 +97,24 @@ public class SearchFragment extends Fragment {
 
     public void setToolbarOperation(ToolbarOperation toolbarOperation) {
         this.toolbarOperation = toolbarOperation;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        editText.requestFocus();
+        imm.showSoftInput(editText, InputMethodManager.SHOW_FORCED);
+        toolbarOperation.getToolbar().setVisibility(View.GONE);
+
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (!hidden) {
+            toolbarOperation.getToolbar().setVisibility(View.GONE);
+            editText.requestFocus();
+            imm.showSoftInput(editText, InputMethodManager.SHOW_FORCED);
+        }
     }
 }

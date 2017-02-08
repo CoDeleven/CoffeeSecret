@@ -8,4 +8,7 @@
         <attr name="finishedBeginAngle" format="integer"/>
         <attr name="maxValue" format="integer"/>
     </declare-styleable>
+    <declare-styleable name="FormView">
+        <attr name="gridWidth" format="integer"></attr>
+    </declare-styleable>
 </resources>

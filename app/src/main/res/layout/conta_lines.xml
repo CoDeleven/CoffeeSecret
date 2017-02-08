@@ -6,7 +6,7 @@
                 tools:context="com.dhy.coffeesecret.ui.container.fragments.LinesSelectedFragment">
 
     <ListView
-        android:id="@+id/lines_selected_list"
+        android:id="@+id/id_lines_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
     </ListView>
