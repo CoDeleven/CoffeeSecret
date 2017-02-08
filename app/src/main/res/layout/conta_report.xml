@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_device_child"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_reportinfo"
+    tools:context="com.dhy.coffeesecret.ui.device.fragments.ReportFragment">
+
+
+    <com.dhy.coffeesecret.views.ScrollViewContainer
+        android:id="@+id/id_conta_report_svc"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar_device_activtiy">
+
+        <ScrollView
+            android:id="@+id/id_report_scroll1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+
+                <include
+
+                    android:id="@+id/reportinfo_device_activity"
+                    layout="@layout/conta_report_bean_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"></include>
+
+                <fragment
+                    android:id="@+id/id_report_linechart"
+                    android:name="com.dhy.coffeesecret.ui.device.fragments.ReportLineChartPart"
+                    style="@style/LineChart"
+                    android:layout_below="@id/reportinfo_device_activity">
+                </fragment>
+
+                <com.dhy.coffeesecret.views.DownRefresh
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_below="@id/id_report_linechart"
+                    android:layout_marginLeft="@dimen/pageinfo_horizontal_margin"
+                    android:layout_marginRight="@dimen/pageinfo_horizontal_margin"/>
+            </RelativeLayout>
+        </ScrollView>
+
+        <ScrollView
+            android:id="@+id/id_report_scroll2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#F3F3F3">
+
+            <TableLayout
+                android:id="@+id/id_report_table"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="?attr/actionBarSize"
+                    android:background="#936743"
+                    android:gravity="center"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="10dp">
+
+                    <TextView
+                        style="@style/GridSize"
+                        android:layout_weight="1"
+                        android:text="@string/reportTime"/>
+
+                    <TextView
+                        style="@style/GridSize"
+
+                        android:layout_weight="1"
+                        android:text="@string/reportEnvTime"/>
+
+                    <TextView
+                        style="@style/GridSize"
+
+
+                        android:layout_weight="1"
+                        android:text="@string/reportBeanTemp"
+                        />
+
+                    <TextView
+                        style="@style/GridSize"
+
+                        android:layout_weight="1"
+                        android:text="@string/reportDryTemp"/>
+
+                    <TextView
+                        style="@style/GridSize"
+
+                        android:layout_weight="1"
+                        android:text="@string/reportUpTemp"/>
+                </TableRow>
+
+            </TableLayout>
+        </ScrollView>
+    </com.dhy.coffeesecret.views.ScrollViewContainer>
+</RelativeLayout>
