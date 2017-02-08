@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#936743</color>
-    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorPrimaryLight">#d2936743</color>
+    <color name="colorPrimaryDark">#936743</color>
     <color name="colorAccent">#000</color>
-    <color name="colorAccent">#FF4081</color>
-    <color name="white">#FFFFFF</color>
     <color name="tab_underline">#FFFFFF</color>
     <color name="tab_selected">#936743</color>
     <color name="tab_default">#7e858f</color>

@@ -37,7 +37,7 @@
     <com.andexert.expandablelayout.library.ExpandableLayoutListView
         android:layout_below="@+id/topPanel"
         android:id="@+id/lv_beans"
-        android:background="@drawable/lv_bg"
+        android:background="@mipmap/lv_bg"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 

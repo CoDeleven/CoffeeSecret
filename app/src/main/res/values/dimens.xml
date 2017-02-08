@@ -6,9 +6,6 @@
     <dimen name="pageinfo_text_vertical_margin">8dp</dimen>
     <dimen name="pageinfo_text_horizontal_margin">32dp</dimen>
     <dimen name="pageinfo_vertical_margin">14dp</dimen>
-
-    <dimen name="activity_horizontal_margin">16dp</dimen>
-    <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="btn_horizontal_padding">16dp</dimen>
     <dimen name="btn_vertical_padding">0dp</dimen>
     <dimen name="tv_horizontal_padding">3dp</dimen>

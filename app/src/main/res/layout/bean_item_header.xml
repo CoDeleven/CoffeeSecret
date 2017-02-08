@@ -19,10 +19,6 @@
             android:gravity="right"
             android:text="@string/bean_name" />
 
-        <TextView
-            style="@style/TextViewCenter.Left"
-            android:layout_width="wrap_content"
-            android:text="巴西" />
     </LinearLayout>
 
     <LinearLayout
@@ -35,11 +31,6 @@
             style="@style/TextViewCenter.Right"
             android:layout_width="wrap_content"
             android:text="@string/weight" />
-
-        <TextView
-            style="@style/TextViewCenter.Left"
-            android:layout_width="wrap_content"
-            android:text="30kg" />
 
         <Space
             android:layout_width="0dp"
