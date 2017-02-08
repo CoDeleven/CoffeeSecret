@@ -14,8 +14,9 @@ import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.interfaces.ToolbarOperation;
 import com.dhy.coffeesecret.model.BakeReport;
 import com.dhy.coffeesecret.ui.container.adapters.LinesAdapter;
-import com.dhy.coffeesecret.ui.device.views.SearchEditText;
+import com.dhy.coffeesecret.ui.device.DeviceChildActivity;
 import com.dhy.coffeesecret.utils.FragmentTool;
+import com.dhy.coffeesecret.views.SearchEditText;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -26,11 +27,12 @@ public class LinesSelectedFragment extends Fragment implements View.OnClickListe
     private ToolbarOperation toolbarOperation;
     private ListView listView;
     private SearchEditText searchBar;
+    private SearchFragment searchFragment;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.e("codelevex", "onCreate");
+
     }
 
     @Override
@@ -38,9 +40,19 @@ public class LinesSelectedFragment extends Fragment implements View.OnClickListe
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_lines_selected, container, false);
-        listView = (ListView) view.findViewById(R.id.lines_selected_list);
-        init();
+
         return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        listView = (ListView) getActivity().findViewById(R.id.lines_selected_list);
+        init();
+        searchFragment = (SearchFragment) FragmentTool.getFragmentToolInstance(getActivity()).getFragment(DeviceChildActivity.FRAGMENT_TAG[2]);
+        if (searchFragment == null) {
+            searchFragment = new SearchFragment();
+        }
     }
 
     public void setToolbarOperation(ToolbarOperation toolbarOperation) {
@@ -57,7 +69,6 @@ public class LinesSelectedFragment extends Fragment implements View.OnClickListe
         searchBar.setSearchBarListener(this);
         ImageButton imgBtn = (ImageButton) searchBarLayout.findViewById(R.id.lines_selected_del);
 
-
         imgBtn.setOnClickListener(this);
     }
 
@@ -65,7 +76,7 @@ public class LinesSelectedFragment extends Fragment implements View.OnClickListe
         List<BakeReport> reportList = new ArrayList<>();
         for (int i = 0; i < 30; ++i) {
             BakeReport report = new BakeReport();
-            report.setName(i + "fda" + i);
+            report.setName(i + " -> " + Math.random() * 100);
             report.setBakeDate(new Date());
             reportList.add(report);
         }
@@ -79,9 +90,19 @@ public class LinesSelectedFragment extends Fragment implements View.OnClickListe
 
     @Override
     public void starSearchPage() {
-        SearchFragment searchFragment = new SearchFragment();
-        toolbarOperation.getToolbar().setVisibility(View.GONE);
+
         searchFragment.setToolbarOperation(toolbarOperation);
-        FragmentTool.getFragmentToolInstance(getActivity()).replace(R.id.id_device_child, searchFragment, true);
+        FragmentTool.getFragmentToolInstance(getActivity()).add(R.id.id_device_child, searchFragment, false, DeviceChildActivity.FRAGMENT_TAG[2]);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.e("codelevex", "lines onresume");
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
     }
 }
