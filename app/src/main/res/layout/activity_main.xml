@@ -1,44 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:clipChildren="false"
     tools:context="com.dhy.coffeesecret.MainActivity">
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolBar"
-        android:background="@color/colorPrimary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:navigationIcon="@drawable/ic_conta_home"
+        android:background="@color/colorPrimary"
         app:contentInsetStartWithNavigation="0dp"
+        app:navigationIcon="@drawable/ic_conta_home"
         >
         <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:gravity="center"
             android:text="@string/conta_title"
             android:textColor="@android:color/white"
-            android:textSize="@dimen/actionbar_title_font_size"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:textSize="@dimen/actionbar_title_font_size"/>
     </android.support.v7.widget.Toolbar>
-    <android.support.design.widget.TabLayout
-        android:layout_alignParentBottom="true"
-        android:id="@+id/id_fragment_tabLayout"
-        android:layout_width="match_parent"
-        android:layout_height="55dp"
-        android:background="@drawable/black_border"
-        app:tabIndicatorColor="@color/tab_underline"
-        app:tabSelectedTextColor="@color/tab_selected"
-        app:tabTextColor="@color/tab_default">
-    </android.support.design.widget.TabLayout>
-
+    <!--    <android.support.design.widget.TabLayout
+            android:layout_alignParentBottom="true"
+            android:id="@+id/id_fragment_tabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:background="@drawable/black_border"
+            app:tabIndicatorColor="@color/tab_underline"
+            app:tabSelectedTextColor="@color/tab_selected"
+            app:tabTextColor="@color/tab_default">
+        </android.support.design.widget.TabLayout>-->
     <android.support.v4.view.ViewPager
-        android:layout_below="@id/toolBar"
-        android:layout_above="@id/id_fragment_tabLayout"
         android:id="@+id/id_fragment_viewPager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolBar">
     </android.support.v4.view.ViewPager>
+
+    <LinearLayout
+        android:id="@+id/id_fragment_tabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/black_border"
+        android:clipChildren="false"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/image_1"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:padding="10dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/nav_container_selector"/>
+
+        <ImageView
+            android:id="@+id/image_2"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="10dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/nav_device_selector"/>
+
+        <FrameLayout
+            android:id="@+id/image_3"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="bottom"
+            android:layout_weight="1"
+            android:clipChildren="false">
+
+            <ImageView
+                android:layout_width="wrap_content"
+
+                android:layout_height="64dp"
+                android:layout_gravity="bottom"
+                android:src="@drawable/test"/>
+        </FrameLayout>
+
+        <ImageView
+            android:id="@+id/image_4"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:padding="10dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/nav_cup_selector"/>
+
+        <ImageView
+            android:id="@+id/image_5"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:padding="10dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/nav_cup_selector"/>
+    </LinearLayout>
+
+
 </RelativeLayout>

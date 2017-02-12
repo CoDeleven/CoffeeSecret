@@ -11,7 +11,7 @@
     <string name="produce_area">产区:%1$#12s</string>
     <string name="handler">处理:%1$#12s</string>
     <string name="beanDate">豆种日期:%1$#12s</string>
-    <string name="author">烘焙师:%1$#12s</string>
+    <string name="baker">烘焙师:%1$#12s</string>
     <string name="device">设备:%1$#12s</string>
     <string name="bakeDate">烘焙日期:%1$#12s</string>
     <string name="cookedWeight">熟豆重量:%1$#12s</string>

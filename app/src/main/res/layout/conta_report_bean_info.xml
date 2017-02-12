@@ -69,7 +69,7 @@
             android:id="@+id/id_report_author"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/author"
+            android:text="@string/baker"
             android:textSize="12sp"/>
 
     </LinearLayout>
