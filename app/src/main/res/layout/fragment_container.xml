@@ -1,27 +1,55 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".ui.container.ContainerFragment">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context=".ui.container.ContainerFragment">
 
-    <include layout="@layout/title_container" />
-
-    <com.astuetz.PagerSlidingTabStrip
-        android:id="@+id/container_tabs"
+    <RelativeLayout
+        android:id="@+id/topPanel"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:background="@color/colorPrimary"
-        app:pstsDividerColor="@color/white"
-        app:pstsIndicatorColor="@color/white"
-        app:pstsUnderlineColor="@color/colorPrimary"
-        app:pstsUnderlineHeight="6dp" />
+        android:layout_height="wrap_content"
+        android:background="@drawable/black_border"
+        android:paddingBottom="1dp"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingTop="1dp">
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/container_pager"
+        <Button
+            android:id="@+id/btn_sort"
+            style="@style/WhiteBtn.Min"
+            android:layout_alignParentLeft="true"
+            android:drawableRight="@drawable/ic_delta"
+            android:text="@string/sort_by_area"/>
+
+        <Button
+            android:id="@+id/btn_screen"
+            style="@style/WhiteBtn.Min"
+            android:layout_alignParentRight="true"
+            android:drawableRight="@drawable/ic_screen"
+            android:text="@string/screen"/>
+
+        <View
+            android:layout_width="0.1dp"
+            android:layout_height="25dp"
+            android:layout_toLeftOf="@id/btn_screen"
+            android:background="#ccc"
+            />
+    </RelativeLayout>
+
+    <com.andexert.expandablelayout.library.ExpandableLayoutListView
+        android:id="@+id/lv_beans"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@+id/topPanel"
+        android:background="@mipmap/lv_bg">
 
-    </android.support.v4.view.ViewPager>
-</LinearLayout>
+    </com.andexert.expandablelayout.library.ExpandableLayoutListView>
+
+    <View
+        android:id="@+id/shade"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/topPanel"
+        android:background="@color/trans_dark"
+        android:clickable="true"
+        android:visibility="gone"/>
+</RelativeLayout>

@@ -4,7 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.util.AttributeSet;
 
-import com.dhy.coffeesecret.model.UniversalConfiguration;
+import com.dhy.coffeesecret.pojo.UniversalConfiguration;
 import com.dhy.coffeesecret.ui.device.formatter.XAxisFormatter4Time;
 import com.dhy.coffeesecret.utils.SettingTool;
 import com.github.mikephil.charting.charts.LineChart;

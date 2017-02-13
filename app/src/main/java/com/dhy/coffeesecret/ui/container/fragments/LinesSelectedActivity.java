@@ -6,13 +6,14 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
 import com.dhy.coffeesecret.R;
-import com.dhy.coffeesecret.model.BakeReport;
+import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.ui.container.adapters.LinesAdapter;
 import com.dhy.coffeesecret.ui.device.fragments.ReportActivity;
 import com.dhy.coffeesecret.views.SearchEditText;
@@ -38,6 +39,18 @@ public class LinesSelectedActivity extends AppCompatActivity implements View.OnC
         init();
     }
 
+    @Override
+    public void onBackPressed() {
+        // super.onBackPressed();
+        if (searchFragment != null && !searchFragment.isHidden()) {
+            FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
+            tx.hide(searchFragment);
+            tx.commit();
+        } else {
+            finish();
+        }
+        Log.e("codelevex", "被按下");
+    }
 
     private void init() {
         listView.setAdapter(new LinesAdapter(getDatas(), this));
@@ -57,7 +70,6 @@ public class LinesSelectedActivity extends AppCompatActivity implements View.OnC
 
         searchBar = (SearchEditText) searchBarLayout.findViewById(R.id.lines_selected_srh);
         searchBar.setSearchBarListener(this);
-        searchFragment.setToolbar(toolbar);
         ImageButton imgBtn = (ImageButton) searchBarLayout.findViewById(R.id.lines_selected_del);
 
         imgBtn.setOnClickListener(this);
@@ -67,7 +79,7 @@ public class LinesSelectedActivity extends AppCompatActivity implements View.OnC
         List<BakeReport> reportList = new ArrayList<>();
         for (int i = 0; i < 30; ++i) {
             BakeReport report = new BakeReport();
-            report.setName(i + " -> " + Math.random() * 100);
+            report.setBeanName(i + " -> " + Math.random() * 100);
             report.setBakeDate(new Date());
             reportList.add(report);
         }

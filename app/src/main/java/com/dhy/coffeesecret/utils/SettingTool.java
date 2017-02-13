@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 
-import com.dhy.coffeesecret.model.UniversalConfiguration;
+import com.dhy.coffeesecret.pojo.UniversalConfiguration;
 
 /**
  * Created by CoDeleven on 17-2-3.
