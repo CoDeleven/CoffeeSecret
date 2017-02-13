@@ -1,4 +1,4 @@
-package com.dhy.coffeesecret.views;
+package com.dhy.coffeesecret.ui.device.views;
 
 import android.content.Context;
 import android.graphics.Color;

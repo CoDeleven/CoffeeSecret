@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingBottom="@dimen/lv_item_padding"
-                android:paddingLeft="@dimen/lv_item_padding"
-                android:paddingRight="@dimen/lv_item_padding">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/lv_item_padding"
+    android:paddingLeft="@dimen/lv_item_padding"
+    android:paddingRight="@dimen/lv_item_padding">
 
     <LinearLayout
         android:id="@+id/first"
@@ -20,14 +20,14 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:text="@string/area"
-            android:textColor="@android:color/darker_gray"/>
+            android:textColor="@android:color/darker_gray" />
 
         <TextView
             style="@style/TextViewCenter.Left"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:text="@string/level"
-            android:textColor="@android:color/darker_gray"/>
+            android:textColor="@android:color/darker_gray" />
 
     </LinearLayout>
 
@@ -45,7 +45,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:text="@string/type"
-            android:textColor="@android:color/darker_gray"/>
+            android:textColor="@android:color/darker_gray" />
 
 
         <TextView
@@ -53,7 +53,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:text="@string/treatment"
-            android:textColor="@android:color/darker_gray"/>
+            android:textColor="@android:color/darker_gray" />
 
     </LinearLayout>
 

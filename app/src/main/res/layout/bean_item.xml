@@ -5,11 +5,11 @@
     android:layout_height="match_parent">
 
     <com.andexert.expandablelayout.library.ExpandableLayoutItem
-        expandable:el_contentLayout="@layout/bean_item_content"
-        expandable:el_headerLayout="@layout/bean_item_header"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/white">
+        android:background="@android:color/white"
+        expandable:el_contentLayout="@layout/bean_item_content"
+        expandable:el_headerLayout="@layout/bean_item_header">
 
     </com.andexert.expandablelayout.library.ExpandableLayoutItem>
 

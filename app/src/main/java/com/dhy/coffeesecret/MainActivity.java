@@ -10,14 +10,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 
-import com.dhy.coffeesecret.ui.community.CommunityFragment;
 import com.dhy.coffeesecret.ui.container.ContainerFragment;
 import com.dhy.coffeesecret.ui.cup.CupFragment;
 import com.dhy.coffeesecret.ui.device.DeviceFragment;
-import com.dhy.coffeesecret.ui.mine.MineFragment;
 
 public class MainActivity extends AppCompatActivity implements DeviceFragment.OnDeviceInteractionListener,
         ContainerFragment.OnContainerInteractionListener, CupFragment.OnCupInteractionListener {
@@ -33,35 +30,33 @@ public class MainActivity extends AppCompatActivity implements DeviceFragment.On
     // fragment集合 //
     private Fragment[] mFragments;
 
-    private View[] mBtns;
     private Toolbar mToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        initParam();
-        initViews();
-        select(0);
 
+        initParam();
     }
 
     /**
      * 初始化默认参数
      */
-    private void initParam() {
+    private void initParam(){
 
         mToolbar = (Toolbar) findViewById(R.id.toolBar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         // 初始化fragment视图
-        mFragments = new Fragment[]{new DeviceFragment(), new ContainerFragment(), new CupFragment(), new CommunityFragment(), new MineFragment()};
+        mFragments =new Fragment[] {new DeviceFragment(),new ContainerFragment(),new CupFragment()};
+
 
         // 获取id
-        // mTabLayout = (TabLayout)findViewById(R.id.id_fragment_tabLayout);
-        mViewPager = (ViewPager) findViewById(R.id.id_fragment_viewPager);
-        mViewPager.setOffscreenPageLimit(4);
+        mTabLayout = (TabLayout)findViewById(R.id.id_fragment_tabLayout);
+        mViewPager = (ViewPager)findViewById(R.id.id_fragment_viewPager);
+
         // 为viewPager设置Adapter
         mViewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
             @Override
@@ -75,45 +70,18 @@ public class MainActivity extends AppCompatActivity implements DeviceFragment.On
             }
         });
 
-        // mTabLayout.setupWithViewPager(mViewPager);
+        mTabLayout.setupWithViewPager(mViewPager);
 
-/*        for (int i = 0; i < mTabLayout.getTabCount(); i++){
+        for (int i = 0; i < mTabLayout.getTabCount(); i++){
             mTabLayout.getTabAt(i).setCustomView(getCustomerView(i));
-        }*/
-        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
+        }
 
-            @Override
-            public void onPageSelected(int position) {
-                switch (position) {
-                    case 0:
-                        select(0);
-                        break;
-                    case 1:
-                        select(1);
-                        break;
-                    case 2:
-                        select(2);
-                        break;
-                    case 3:
-                        select(3);
-                        break;
-                    case 4:
-                        select(4);
-                        break;
-                }
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-            }
-        });
-
+//        mTabLayout.getTabAt(0).setCustomView(getCustomerView(0));
+//        mTabLayout.getTabAt(1).setCustomView(getCustomerView(1));
+//        mTabLayout.getTabAt(2).setCustomView(getCustomerView(2));
         mViewPager.setCurrentItem(0);
         // 设置tablayout固定
-        // mTabLayout.setTabMode(TabLayout.MODE_FIXED);
+        mTabLayout.setTabMode(TabLayout.MODE_FIXED);
 
     }
 
@@ -125,25 +93,18 @@ public class MainActivity extends AppCompatActivity implements DeviceFragment.On
 
     /**
      * 获取标签的自定义视图
-     *
      * @param position
      * @return
      */
-    private View getCustomerView(int position) {
+    private View getCustomerView(int position){
         View view = getLayoutInflater().inflate(R.layout.tab_view, null);
         ImageView imageView = (ImageView) view.findViewById(R.id.id_tab_img);
-
-        if (position == 2) {
-
-        }
-
         imageView.setImageResource(IMG_SELECTOR_IDS[position]);
         return view;
     }
 
     /**
      * MainActivity和MyDeviceFragment交互的方法
-     *
      * @param uri
      */
     @Override
@@ -153,7 +114,6 @@ public class MainActivity extends AppCompatActivity implements DeviceFragment.On
 
     /**
      * MainActivity和MyContainerFragment交互的方法
-     *
      * @param uri
      */
     @Override
@@ -163,35 +123,10 @@ public class MainActivity extends AppCompatActivity implements DeviceFragment.On
 
     /**
      * MainActivity和MyCupFragment交互的方法
-     *
      * @param uri
      */
     @Override
     public void onCupInteraction(Uri uri) {
 
-    }
-
-    private void initViews() {
-        mBtns = new View[]{findViewById(R.id.image_1), findViewById(R.id.image_2), ((FrameLayout) findViewById(R.id.image_3)).getChildAt(0), findViewById(R.id.image_4), findViewById(R.id.image_5)};
-        for (int i = 0; i < mBtns.length; ++i) {
-            final int j = i;
-            mBtns[i].setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mViewPager.setCurrentItem(j);
-                }
-            });
-        }
-
-    }
-
-    private void select(int position) {
-        for (int i = 0; i < mBtns.length; ++i) {
-            if (position == i) {
-                mBtns[i].setSelected(true);
-            } else {
-                mBtns[i].setSelected(false);
-            }
-        }
     }
 }

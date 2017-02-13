@@ -1,4 +1,4 @@
-package com.dhy.coffeesecret.views;
+package com.dhy.coffeesecret.ui.device.views;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -111,6 +111,7 @@ public class ArcProgress extends View {
             arcPaint.setColor(Color.RED);
             canvas.drawArc(rectF, finishBeginAngle, finishSweepAngle, false, arcPaint);
         }
+
 
         // 绘制中间的进度内容
         textPaint.setTextSize(contentSize);

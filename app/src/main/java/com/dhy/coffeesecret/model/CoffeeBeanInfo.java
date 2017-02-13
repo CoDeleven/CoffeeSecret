@@ -21,6 +21,13 @@ public class CoffeeBeanInfo {
     private float price;
     private Date purchase;
 
+    public CoffeeBeanInfo() {
+    }
+
+    public CoffeeBeanInfo(String beanName) {
+        this.beanName = beanName;
+    }
+
     public int getBeanId() {
         return beanId;
     }

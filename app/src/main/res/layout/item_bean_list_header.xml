@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/bean_list_header"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/list_header"
+    android:orientation="horizontal"
+    android:paddingTop="6dp"
+    android:paddingBottom="6dp"
+    android:paddingLeft="36dp"
+    android:textColor="@color/tab_default"
+    android:textSize="16sp"
+    android:textStyle="bold"
+    tools:context=".MainActivity"
+    tools:text="A" />

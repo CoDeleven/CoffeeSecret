@@ -8,7 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.dhy.coffeesecret.R;
-import com.dhy.coffeesecret.pojo.BakeReport;
+import com.dhy.coffeesecret.model.BakeReport;
 
 import java.util.List;
 
@@ -52,7 +52,7 @@ public class LinesAdapter extends BaseAdapter {
         } else {
             viewHolder = (ViewHolder) view.getTag();
         }
-        viewHolder.lineName.setText(reports.get(i).getBeanName());
+        viewHolder.lineName.setText(reports.get(i).getName());
         viewHolder.dateName.setText("日期:" + String.format("%1$tY-%1$tm-%1$te", reports.get(i).getBakeDate()));
         return view;
     }

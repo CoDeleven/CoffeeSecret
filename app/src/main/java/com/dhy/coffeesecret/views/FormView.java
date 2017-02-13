@@ -6,7 +6,7 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.dhy.coffeesecret.pojo.BakeReport;
+import com.dhy.coffeesecret.model.BakeReport;
 import com.dhy.coffeesecret.utils.UnitConvert;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.dhy.coffeesecret.pojo;
+package com.dhy.coffeesecret.model;
 
 /**
  * Created by CoDeleven on 17-2-3.

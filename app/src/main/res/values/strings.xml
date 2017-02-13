@@ -8,10 +8,11 @@
     <!-- ReportInfoPagePart-->
     <string name="type">豆种:</string>
     <string name="level">等级:</string>
-    <string name="produce_area">产区:%1$#12s</string>
-    <string name="handler">处理:%1$#12s</string>
+    <string name="produce_area">产区:巴西</string>
+    <string name="manor">庄园:米纳斯</string>
+    <string name="handler">处理:日晒</string>
     <string name="beanDate">豆种日期:%1$#12s</string>
-    <string name="baker">烘焙师:%1$#12s</string>
+    <string name="author">烘焙师:%1$#12s</string>
     <string name="device">设备:%1$#12s</string>
     <string name="bakeDate">烘焙日期:%1$#12s</string>
     <string name="cookedWeight">熟豆重量:%1$#12s</string>
@@ -22,7 +23,7 @@
     <string name="startTemp">入豆温度:%1$#12s</string>
     <string name="envTime">环境温度:%1$#12s</string>
     <string name="bean_name">豆名:%1$#12s</string>
-    <string name="weight">重量:%1$#12s</string>
+    <string name="weight">重量:10kg</string>
     <string name="area">产区:%1$#12s</string>
     <string name="treatment">处理:%1$#12s</string>
     <string name="details">详情</string>
