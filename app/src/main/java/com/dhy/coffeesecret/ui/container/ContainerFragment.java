@@ -2,36 +2,42 @@ package com.dhy.coffeesecret.ui.container;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.PopupWindow;
 
-import com.andexert.expandablelayout.library.ExpandableLayoutListView;
+import com.astuetz.PagerSlidingTabStrip;
+import com.dhy.coffeesecret.MainActivity;
 import com.dhy.coffeesecret.R;
+import com.dhy.coffeesecret.ui.container.fragments.BeanListFragment;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 public class ContainerFragment extends Fragment {
 
+    private static final String TAG = "ContainerFragment";
+    private final String[] TITLES = {"全部", "中美", "南美", "大洋", "亚洲", "非洲", "其它"};
+
     private OnContainerInteractionListener mListener;
-
     private View mContent;
-    private Button mSortButton;
-    private Button mScreenButton;
+    private ViewPager containerPager = null;
+    private PagerSlidingTabStrip containerTabs = null;
     private PopupWindow mSortPopupWindow;
-    private ExpandableLayoutListView mListView;
-    private View mShade;
-
+    private List<Fragment> fragments = null;
+    private Context context;
     private boolean isSortWindowShowing = false;
 
     public ContainerFragment() {
@@ -41,58 +47,58 @@ public class ContainerFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.e("codelevex", "containerFragment生成");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.e("codelevex", "containerFragment啦啦啦啦啦");
 
         mContent = inflater.inflate(R.layout.fragment_container, container, false);
+        context = getActivity();
+        Log.d(TAG, "onCreateView: " + getActivity());
 
         initView();
-        initPopupWindow();
-        mListView.setAdapter(new BaseAdapter() {
-            @Override
-            public int getCount() {
-                return 20;
-            }
-
-            @Override
-            public Object getItem(int i) {
-                return null;
-            }
-
-            @Override
-            public long getItemId(int i) {
-                return 0;
-            }
-
-            @Override
-            public View getView(int i, View view, ViewGroup viewGroup) {
-                LayoutInflater inflater = getActivity().getLayoutInflater();
-                View inflate = inflater.inflate(R.layout.bean_item, null);
-                inflate.findViewById(R.id.btn_details).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent intent = new Intent(getActivity(), BeanInfoActivity.class);
-                        startActivity(intent);
-                    }
-                });
-                return inflate;
-            }
-        });
+        initPager();
 
         return mContent;
     }
 
-
     public void initView() {
-        mListView = (ExpandableLayoutListView) mContent.findViewById(R.id.lv_beans);
-        mScreenButton = (Button) mContent.findViewById(R.id.btn_screen);
-        mSortButton = (Button) mContent.findViewById(R.id.btn_sort);
-        mShade = mContent.findViewById(R.id.shade);
+        containerPager = (ViewPager) mContent.findViewById(R.id.container_pager);
+        containerPager.setAdapter(new MyPagerAdapter(((MainActivity) context).getSupportFragmentManager()));
+        containerPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                int currentPage = containerPager.getCurrentItem();
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
+        // Bind the tabs to the ViewPager
+        containerTabs = (PagerSlidingTabStrip) mContent.findViewById(R.id.container_tabs);
+        containerTabs.setTextColor(getResources().getColor(R.color.white));
+        containerTabs.setViewPager(containerPager);
+    }
+
+    private void initPager() {
+
+        fragments = new ArrayList<>();
+
+        for (int i = 0; i < TITLES.length; i++) {
+            BeanListFragment fragment = new BeanListFragment();
+            fragment.setTitle(TITLES[i]);
+            fragment.setContext(context);
+            fragments.add(fragment);
+        }
     }
 
     @TargetApi(Build.VERSION_CODES.CUPCAKE)
@@ -105,25 +111,25 @@ public class ContainerFragment extends Fragment {
         mSortPopupWindow.setBackgroundDrawable(new BitmapDrawable());
         mSortPopupWindow.setOutsideTouchable(true);
         mSortPopupWindow.setFocusable(true);
-        mScreenButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (isSortWindowShowing) {
-                    mSortPopupWindow.dismiss();
-                } else {
-                    mSortPopupWindow.showAsDropDown(mScreenButton);
-                    mShade.setVisibility(View.VISIBLE);
-                }
-                isSortWindowShowing = !isSortWindowShowing;
-            }
-        });
-
-        mSortPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
-            @Override
-            public void onDismiss() {
-                mShade.setVisibility(View.GONE);
-            }
-        });
+//        mScreenButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                if (isSortWindowShowing) {
+//                    mSortPopupWindow.dismiss();
+//                } else {
+//                    mSortPopupWindow.showAsDropDown(mScreenButton);
+//                    mShade.setVisibility(View.VISIBLE);
+//                }
+//                isSortWindowShowing = !isSortWindowShowing;
+//            }
+//        });
+//
+//        mSortPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+//            @Override
+//            public void onDismiss() {
+//                mShade.setVisibility(View.GONE);
+//            }
+//        });
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -162,5 +168,29 @@ public class ContainerFragment extends Fragment {
      */
     public interface OnContainerInteractionListener {
         void onContainerInteraction(Uri uri);
+    }
+
+    public class MyPagerAdapter extends FragmentPagerAdapter {
+
+
+        public MyPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return TITLES[position];
+        }
+
+        @Override
+        public int getCount() {
+            return TITLES.length;
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return fragments.get(position);
+        }
+
     }
 }
