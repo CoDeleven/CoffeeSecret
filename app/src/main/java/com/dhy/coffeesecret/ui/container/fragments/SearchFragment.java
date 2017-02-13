@@ -2,7 +2,6 @@ package com.dhy.coffeesecret.ui.container.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
@@ -26,12 +25,6 @@ public class SearchFragment extends Fragment {
     private Button cancel;
     private ImageButton clear;
     private InputMethodManager imm;
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -60,7 +53,6 @@ public class SearchFragment extends Fragment {
                 FragmentTransaction tx = getFragmentManager().beginTransaction();
                 tx.hide(SearchFragment.this);
                 tx.commit();
-                toolbar.setVisibility(View.VISIBLE);
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             }
         });
@@ -98,24 +90,23 @@ public class SearchFragment extends Fragment {
         });
     }
 
-    public void setToolbar(Toolbar toolbar) {
-        this.toolbar = toolbar;
-    }
 
-/*    @Override
+    @Override
     public void onStart() {
         super.onStart();
         editText.requestFocus();
+        // toolbar.setVisibility(View.GONE);
+        if (imm == null) {
+            imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        }
         imm.showSoftInput(editText, InputMethodManager.SHOW_FORCED);
-        toolbar.setVisibility(View.GONE);
 
-    }*/
+    }
 
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         if (!hidden) {
-            toolbar.setVisibility(View.GONE);
             editText.requestFocus();
             imm.showSoftInput(editText, InputMethodManager.SHOW_FORCED);
         }

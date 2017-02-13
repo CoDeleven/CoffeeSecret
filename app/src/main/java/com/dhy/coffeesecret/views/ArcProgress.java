@@ -112,6 +112,7 @@ public class ArcProgress extends View {
             canvas.drawArc(rectF, finishBeginAngle, finishSweepAngle, false, arcPaint);
         }
 
+
         // 绘制中间的进度内容
         textPaint.setTextSize(contentSize);
         float textWidth1 = textPaint.measureText(content);
