@@ -1,10 +1,7 @@
 package com.dhy.coffeesecret.ui.container;
 
-import android.annotation.TargetApi;
 import android.content.Context;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -14,7 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.PopupWindow;
+import android.widget.LinearLayout;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.dhy.coffeesecret.MainActivity;
@@ -24,21 +21,17 @@ import com.dhy.coffeesecret.ui.container.fragments.BeanListFragment;
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
-
-public class ContainerFragment extends Fragment {
+public class ContainerFragment extends Fragment{
 
     private static final String TAG = "ContainerFragment";
     private final String[] TITLES = {"全部", "中美", "南美", "大洋", "亚洲", "非洲", "其它"};
 
     private OnContainerInteractionListener mListener;
-    private View mContent;
+    private View containerView;
     private ViewPager containerPager = null;
     private PagerSlidingTabStrip containerTabs = null;
-    private PopupWindow mSortPopupWindow;
     private List<Fragment> fragments = null;
     private Context context;
-    private boolean isSortWindowShowing = false;
 
     public ContainerFragment() {
     }
@@ -53,18 +46,19 @@ public class ContainerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        mContent = inflater.inflate(R.layout.fragment_container, container, false);
+        containerView = inflater.inflate(R.layout.fragment_container, container, false);
         context = getActivity();
         Log.d(TAG, "onCreateView: " + getActivity());
 
         initView();
         initPager();
 
-        return mContent;
+        return containerView;
     }
 
     public void initView() {
-        containerPager = (ViewPager) mContent.findViewById(R.id.container_pager);
+        containerPager = (ViewPager) containerView.findViewById(R.id.container_pager);
+
         containerPager.setAdapter(new MyPagerAdapter(((MainActivity) context).getSupportFragmentManager()));
         containerPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -84,7 +78,7 @@ public class ContainerFragment extends Fragment {
         });
 
         // Bind the tabs to the ViewPager
-        containerTabs = (PagerSlidingTabStrip) mContent.findViewById(R.id.container_tabs);
+        containerTabs = (PagerSlidingTabStrip) containerView.findViewById(R.id.container_tabs);
         containerTabs.setTextColor(getResources().getColor(R.color.white));
         containerTabs.setViewPager(containerPager);
     }
@@ -96,40 +90,8 @@ public class ContainerFragment extends Fragment {
         for (int i = 0; i < TITLES.length; i++) {
             BeanListFragment fragment = new BeanListFragment();
             fragment.setTitle(TITLES[i]);
-            fragment.setContext(context);
             fragments.add(fragment);
         }
-    }
-
-    @TargetApi(Build.VERSION_CODES.CUPCAKE)
-    public void initPopupWindow() {
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-        int width = getActivity().getWindowManager().getDefaultDisplay().getWidth();
-        final View contentView = inflater.inflate(R.layout.ppw_conta_screen, null);
-
-        mSortPopupWindow = new PopupWindow(contentView, width * 2 / 3, WRAP_CONTENT);
-        mSortPopupWindow.setBackgroundDrawable(new BitmapDrawable());
-        mSortPopupWindow.setOutsideTouchable(true);
-        mSortPopupWindow.setFocusable(true);
-//        mScreenButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                if (isSortWindowShowing) {
-//                    mSortPopupWindow.dismiss();
-//                } else {
-//                    mSortPopupWindow.showAsDropDown(mScreenButton);
-//                    mShade.setVisibility(View.VISIBLE);
-//                }
-//                isSortWindowShowing = !isSortWindowShowing;
-//            }
-//        });
-//
-//        mSortPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
-//            @Override
-//            public void onDismiss() {
-//                mShade.setVisibility(View.GONE);
-//            }
-//        });
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -155,7 +117,6 @@ public class ContainerFragment extends Fragment {
         super.onDetach();
         mListener = null;
     }
-
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated

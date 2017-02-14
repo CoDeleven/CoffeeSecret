@@ -30,8 +30,6 @@ public class MainActivity extends AppCompatActivity implements DeviceFragment.On
     // fragment集合 //
     private Fragment[] mFragments;
 
-    private Toolbar mToolbar;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,10 +42,6 @@ public class MainActivity extends AppCompatActivity implements DeviceFragment.On
      * 初始化默认参数
      */
     private void initParam() {
-
-        mToolbar = (Toolbar) findViewById(R.id.toolBar);
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         // 初始化fragment视图
         mFragments = new Fragment[]{new DeviceFragment(), new ContainerFragment(), new CupFragment(), new CommunityFragment(), new MineFragment()};

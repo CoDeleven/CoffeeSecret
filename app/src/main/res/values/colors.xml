@@ -1,18 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#936743</color>
-    <color name="colorPrimaryLight">#d2936743</color>
+    <color name="colorPrimaryLight">#D2936743</color>
     <color name="colorPrimaryDark">#936743</color>
     <color name="colorAccent">#000</color>
     <color name="tab_underline">#FFFFFF</color>
     <color name="tab_selected">#936743</color>
-    <color name="tab_default">#7e858f</color>
+    <color name="tab_default">#7E858F</color>
     <color name="status_bar">#936743</color>
     <color name="white">#FFFFFF</color>
-    <color name="btn_border_gray">#cccccc</color>
+    <color name="btn_border_gray">#CCCCCC</color>
     <color name="trans_dark" >#cc000000</color>
     <color name="bg_reportinfo">#F3F3F3</color>
     <color name="bg_activity">#F3F3F3</color>
+
     <color name="list_header">#EDEEE9</color>
     <color name="list_text_color">#676767</color>
+    <color name="list_text_color_2">#7C7B7B</color>
+    <!--按下时的颜色-->
+    <color name="color_pressed">#FFF5F5F5</color>
+    <color name="press_gray">#B8B8B8</color>
+
 </resources>
