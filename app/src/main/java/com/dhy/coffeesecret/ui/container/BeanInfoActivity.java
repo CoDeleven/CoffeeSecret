@@ -6,24 +6,25 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.ui.container.fragments.LinesSelectedActivity;
 
 public class BeanInfoActivity extends AppCompatActivity {
-    private Toolbar mToolbar;
-    private Button btn;
+    private ImageView mImageBack;
+    private Button mButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bean_info);
-        mToolbar = (Toolbar) findViewById(R.id.toolBar);
-        btn = (Button) findViewById(R.id.btn_curve);
-
-        setSupportActionBar(mToolbar);
-
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+        mImageBack = (ImageView) findViewById(R.id.btn_back);
+        mButton = (Button) findViewById(R.id.btn_curve);
         init();
 
     }
@@ -35,14 +36,13 @@ public class BeanInfoActivity extends AppCompatActivity {
     }
 
     private void init() {
-        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+        mImageBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
             }
         });
-
-        btn.setOnClickListener(new View.OnClickListener() {
+        mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(BeanInfoActivity.this, LinesSelectedActivity.class);

@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.dhy.coffeesecret.ui.community.CommunityFragment;
@@ -37,7 +38,8 @@ public class MainActivity extends AppCompatActivity implements DeviceFragment.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initParam();
-
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
     }
 
     /**
