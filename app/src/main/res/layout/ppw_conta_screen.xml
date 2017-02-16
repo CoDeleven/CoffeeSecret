@@ -3,8 +3,13 @@
               xmlns:app="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
               android:layout_height="200dp"
-              android:background="@color/colorPrimary"
+              android:background="@android:color/transparent"
               android:orientation="vertical">
+    <View
+        android:layout_width="120dp"
+        android:layout_height="0.5dp"
+        android:layout_gravity="right"
+        android:background="@color/white" />
 
     <LinearLayout
         android:layout_width="match_parent"

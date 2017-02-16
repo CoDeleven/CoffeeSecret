@@ -17,17 +17,17 @@
             android:id="@+id/btn_country_choose"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingLeft="25dp"
             android:layout_weight="1"
-            android:clickable="true"
             android:background="@drawable/option_selector"
+            android:clickable="true"
             android:gravity="center_vertical|left"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingLeft="25dp">
 
             <TextView
+                android:id="@+id/country_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-
                 android:text="中国"
                 android:textColor="@android:color/black" />
 
@@ -42,11 +42,11 @@
             android:id="@+id/btn_screen"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingRight="25dp"
             android:layout_weight="1"
             android:background="@drawable/option_selector"
             android:clickable="true"
-            android:gravity="center_vertical|right">
+            android:gravity="center_vertical|right"
+            android:paddingRight="25dp">
 
             <TextView
                 android:id="@+id/textView"
@@ -64,11 +64,25 @@
 
     </LinearLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/bean_list"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/refresh_bean_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/filter_header" />
+        android:layout_below="@+id/filter_header">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/bean_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_below="@+id/filter_header"
+        android:background="@color/colorPrimary" />
+
     <!-- 这个是浮动的提示 ，配合字母栏实现放大浮动提示滑动到哪个字母-->
     <!--下面的自定义属性都是默认的,可以不写-->
     <!--app:sidebarBackgroundColor 浮动框颜色-->

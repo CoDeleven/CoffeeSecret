@@ -6,8 +6,13 @@ import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -16,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.TextView;
 
 import com.bigkoo.quicksidebar.QuickSideBarTipsView;
 import com.bigkoo.quicksidebar.QuickSideBarView;
@@ -24,10 +30,15 @@ import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BeanInfo;
 import com.dhy.coffeesecret.ui.container.BeanInfoActivity;
 import com.dhy.coffeesecret.ui.container.adapters.BeanListAdapter;
+import com.dhy.coffeesecret.ui.container.adapters.CountryListAdapter;
+import com.dhy.coffeesecret.utils.T;
+import com.dhy.coffeesecret.utils.TestData;
 import com.dhy.coffeesecret.views.DividerDecoration;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
@@ -41,22 +52,21 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 public class BeanListFragment extends Fragment implements OnQuickSideBarTouchListener {
 
     private static final String TAG = "BeanListFragment";
-    private final String[] beanLst = {"All", "Asia", "Asia", "Africa", "Baby", "Central American", "Death", "Destroy"
-            , "E", "Fate", "Great", "Grand", "Handsome", "I", "Joker", "Joker", "Joker", "Joker", "Joker", "Joker"
-            , "Joker", "Joker", "Joker", "Joker", "Joker", "Joker", "Joker", "Joker", "Joker", "Joker", "Joker", "Joker", "Joker", "King", "Luna", "Morning", "North American"
-            , "Oceania", "Other", "Person", "Queen", "Read", "Real", "Strange", "Trouble"};
     private HashMap<String, Integer> letters = new HashMap<>();
-
     private View beanListView;
     private LinearLayout btnCountryChoose = null;
     private LinearLayout btnScreen = null;
-    private RecyclerView beanListRecycler;
-    private QuickSideBarView quickSideBarView;
-    private QuickSideBarTipsView quickSideBarTipsView;
+    private TextView countryName = null;
+    private RecyclerView beanListRecycler = null;
+    private SwipeRefreshLayout refreshBeanList = null;
+    private QuickSideBarView quickSideBarView = null;
+    private QuickSideBarTipsView quickSideBarTipsView = null;
     private PopupWindow mSortPopupWindow;
+    private PopupWindow mScreenPopupWindow;
     private Context context;
     private String title;
-    private boolean isSortWindowShowing = false;
+    private boolean isPopupWindowShowing = false;
+    private boolean isRefresh = false;
 
     public BeanListFragment() {
         super();
@@ -66,14 +76,17 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         init();
-        initPopupWindow();
+        initCountryPopupWindow();
+        initScreenPopupWindow();
     }
 
     private void init() {
 
         btnCountryChoose = (LinearLayout) beanListView.findViewById(R.id.btn_country_choose);
         btnScreen = (LinearLayout) beanListView.findViewById(R.id.btn_screen);
+        countryName = (TextView) beanListView.findViewById(R.id.country_name);
         beanListRecycler = (RecyclerView) beanListView.findViewById(R.id.bean_list);
+        refreshBeanList = (SwipeRefreshLayout) beanListView.findViewById(R.id.refresh_bean_list);
         quickSideBarView = (QuickSideBarView) beanListView.findViewById(R.id.quickSideBarView);
         quickSideBarTipsView = (QuickSideBarTipsView) beanListView.findViewById(R.id.quickSideBarTipsView);
 
@@ -81,18 +94,7 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         beanListRecycler.setLayoutManager(layoutManager);
 
-        ArrayList<BeanInfo> coffeeBeanInfos = new ArrayList<>();
-        for (int i = 0; i < beanLst.length; i++) {
-            BeanInfo beanInfo = new BeanInfo();
-            beanInfo.setName(beanLst[i]);
-
-            coffeeBeanInfos.add(beanInfo);
-
-            if (!letters.containsKey(beanLst[i].substring(0, 1))) {
-
-                letters.put(beanLst[i].substring(0, 1), i);
-            }
-        }
+        ArrayList<BeanInfo> coffeeBeanInfos = getBeanInfos();
         BeanListAdapter adapter = new BeanListAdapter(context, coffeeBeanInfos, new BeanListAdapter.OnItemClickListener() {
             @Override
             public void onItemClicked(int position) {
@@ -110,36 +112,161 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
         beanListRecycler.addItemDecoration(new DividerDecoration(context));
 
         quickSideBarView.setOnQuickSideBarTouchListener(this);
+
+
+        refreshBeanList.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mHandler.sendEmptyMessage(LOADING);
+                mHandler.sendEmptyMessageDelayed(GET_BEAN_INFOS, 3000);
+                mHandler.sendEmptyMessageDelayed(NO_LOADING, 6000);
+            }
+        });
+    }
+
+    @NonNull
+    private ArrayList<BeanInfo> getBeanInfos() {
+        ArrayList<BeanInfo> coffeeBeanInfos = new ArrayList<>();
+        String[] beanLists = null;
+        switch (title) {
+            case "全部":
+                beanLists = TestData.beanList1;
+                break;
+            case "中美":
+                beanLists = TestData.beanList2;
+                break;
+            case "南美":
+                beanLists = TestData.beanList3;
+                break;
+            case "大洋":
+                beanLists = TestData.beanList4;
+                break;
+            case "亚洲":
+                beanLists = TestData.beanList5;
+                break;
+            case "非洲":
+                beanLists = TestData.beanList6;
+                break;
+            default:
+                beanLists = TestData.beanList7;
+                break;
+        }
+
+        for (int i = 0; i < beanLists.length; i++) {
+            BeanInfo beanInfo = new BeanInfo();
+            beanInfo.setName(beanLists[i]);
+
+            coffeeBeanInfos.add(beanInfo);
+
+            if (!letters.containsKey(beanLists[i].substring(0, 1))) {
+                letters.put(beanLists[i].substring(0, 1), i);
+            }
+        }
+        return coffeeBeanInfos;
     }
 
     @TargetApi(Build.VERSION_CODES.CUPCAKE)
-    public void initPopupWindow() {
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-        int width = getActivity().getWindowManager().getDefaultDisplay().getWidth();
-        final View contentView = inflater.inflate(R.layout.ppw_conta_screen, null);
-
-        mSortPopupWindow = new PopupWindow(contentView, MATCH_PARENT, WRAP_CONTENT);
-        mSortPopupWindow.setBackgroundDrawable(new BitmapDrawable());
-        mSortPopupWindow.setOutsideTouchable(true);
-        mSortPopupWindow.setFocusable(true);
-        btnScreen.setOnClickListener(new View.OnClickListener() {
+    public void initCountryPopupWindow() {
+        initPopupWindow("country");
+        btnCountryChoose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (isSortWindowShowing) {
+                if (isPopupWindowShowing) {
                     mSortPopupWindow.dismiss();
                 } else {
-                    mSortPopupWindow.showAsDropDown(btnScreen);
-                    isSortWindowShowing = true;
+                    mSortPopupWindow.showAsDropDown(btnCountryChoose);
+                    isPopupWindowShowing = true;
                 }
             }
         });
+    }
 
-        mSortPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+    @TargetApi(Build.VERSION_CODES.CUPCAKE)
+    public void initScreenPopupWindow() {
+        initPopupWindow("screen");
+        btnScreen.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onDismiss() {
-                isSortWindowShowing = false;
+            public void onClick(View view) {
+                if (isPopupWindowShowing) {
+                    mScreenPopupWindow.dismiss();
+                } else {
+                    mScreenPopupWindow.showAsDropDown(btnScreen);
+                    isPopupWindowShowing = true;
+                }
             }
         });
+    }
+
+    private void initPopupWindow(String type) {
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        View contentView = null;
+        switch (type) {
+            case "country":
+                contentView = inflater.inflate(R.layout.ppw_conta_country, null);
+                setCountryList(contentView);
+                mSortPopupWindow = getPopupWindow(contentView);
+                break;
+            case "screen":
+                contentView = inflater.inflate(R.layout.ppw_conta_screen, null);
+                mScreenPopupWindow = getPopupWindow(contentView);
+                break;
+            default:
+                break;
+        }
+    }
+
+    private PopupWindow getPopupWindow(View contentView) {
+        PopupWindow popupWindow = new PopupWindow(contentView, MATCH_PARENT, WRAP_CONTENT);
+        popupWindow.setOutsideTouchable(true);
+        popupWindow.setFocusable(true);
+        popupWindow.setBackgroundDrawable(new BitmapDrawable(getResources()));
+        popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                isPopupWindowShowing = false;
+            }
+        });
+        return popupWindow;
+    }
+
+    private void setCountryList(View contentView) {
+        RecyclerView countryList = (RecyclerView) contentView.findViewById(R.id.country_list);
+        GridLayoutManager layoutManager = new GridLayoutManager(context, 4);
+        countryList.setLayoutManager(layoutManager);
+        final ArrayList<String> countries = new ArrayList<String>();
+        String[] countryArray = null;
+        switch (title) {
+            case "全部":
+                countryArray = TestData.countryList1;
+                break;
+            case "中美":
+                countryArray = TestData.countryList2;
+                break;
+            case "南美":
+                countryArray = TestData.countryList3;
+                break;
+            case "大洋":
+                countryArray = TestData.countryList4;
+                break;
+            case "亚洲":
+                countryArray = TestData.countryList5;
+                break;
+            case "非洲":
+                countryArray = TestData.countryList6;
+                break;
+            default:
+                countryArray = TestData.countryList7;
+                break;
+        }
+        Collections.addAll(countries, countryArray);
+        countryList.setAdapter(new CountryListAdapter(context, countries, new CountryListAdapter.OnCountryClickListener() {
+            @Override
+            public void onCountryClicked(int position) {
+                countryName.setText(countries.get(position));
+                mSortPopupWindow.dismiss();
+            }
+        }));
+        countryName.setText(countries.get(0));
     }
 
     public void setTitle(String title) {
@@ -168,4 +295,39 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
         //可以自己加入动画效果渐显渐隐
         quickSideBarTipsView.setVisibility(touching ? View.VISIBLE : View.INVISIBLE);
     }
+    private static final int GET_BEAN_INFOS = 111;
+    private static final int LOADING = 222;
+    private static final int NO_LOADING = 333;
+    private Handler mHandler = new BeanListHandler(this);
+
+    private class BeanListHandler extends Handler {
+
+        private final WeakReference<BeanListFragment> mActivity;
+
+        public BeanListHandler(BeanListFragment activity) {
+            mActivity = new WeakReference<>(activity);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            final BeanListFragment activity = mActivity.get();
+            switch (msg.what) {
+                case GET_BEAN_INFOS:
+                    T.showShort(context, "start to get bean info");
+                    break;
+                case LOADING:
+                    T.showShort(context, "refresh start");
+                    break;
+                case NO_LOADING:
+                    refreshBeanList.setRefreshing(false);
+                    T.showShort(context, "refresh over");
+                    break;
+                default:
+                    T.showShort(context, "you send a wrong message");
+                    break;
+            }
+        }
+    }
+
 }
