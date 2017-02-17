@@ -12,8 +12,8 @@
         android:layout_width="207dp"
         android:layout_height="207dp"
         android:layout_gravity="center_horizontal"
+        android:layout_marginTop="30dp"
         arc:firstCircleRadius="5dp"
         arc:secondCircleRadius="4dp"
-        android:layout_marginTop="30dp"
         arc:suffix="@string/suffix_arcProgress"/>
 </FrameLayout>

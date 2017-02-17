@@ -75,6 +75,10 @@ public class BeanListAdapter extends RecyclerView.Adapter<BeanListAdapter.BeanLi
         return coffeeBeanInfoList.size();
     }
 
+    public interface OnItemClickListener {
+        void onItemClicked(int position);
+    }
+
     class BeanListViewHolder extends RecyclerView.ViewHolder{
 
         private TextView beanName = null;
@@ -85,9 +89,5 @@ public class BeanListAdapter extends RecyclerView.Adapter<BeanListAdapter.BeanLi
             beanName = (TextView) itemView.findViewById(R.id.list_bean_produceArea);
             itemBeanLayout = (LinearLayout) itemView.findViewById(R.id.item_bean_layout);
         }
-    }
-
-    public interface OnItemClickListener {
-        void onItemClicked(int position);
     }
 }

@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +19,7 @@ import com.dhy.coffeesecret.views.SearchEditText;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ContainerFragment extends Fragment{
+public class ContainerFragment extends Fragment {
 
     private static final String TAG = "ContainerFragment";
     private final String[] TITLES = {"全部", "中美", "南美", "大洋", "亚洲", "非洲", "其它"};

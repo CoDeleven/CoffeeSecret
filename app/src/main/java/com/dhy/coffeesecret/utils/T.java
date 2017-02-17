@@ -11,10 +11,6 @@ import android.widget.Toast;
  */
 public class T {
 
-    private T() {
-        throw new UnsupportedOperationException("cannot be instantiated");
-    }
-
     public static boolean isShow = true; // 是否需要显示
     private static Toast mToast;
     private static Handler mHandler = new Handler();
@@ -23,6 +19,10 @@ public class T {
             mToast.cancel();
         }
     };
+
+    private T() {
+        throw new UnsupportedOperationException("cannot be instantiated");
+    }
 
     public static void showToast(Context mContext, CharSequence text, Integer message, int toastDuration, int duration) {
         mHandler.removeCallbacks(runnable);

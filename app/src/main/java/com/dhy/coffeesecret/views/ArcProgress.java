@@ -23,25 +23,17 @@ public class ArcProgress extends View {
     private Paint arcPaint = new Paint();
     private Paint textPaint = new Paint();
     private float strokeWidth;
-    private float progress;
     private String accContent = "0";
     private float accContentSize;
-    // arcProgress的标签
-    private String label;
     private String content = "0";
     private String suffix;
     private float radius;
-    private float bottomHeight;
-    // 起始角度
-    private float beginAngle;
-    // 划过角度
-    private float sweepAngle;
-    private float finishBeginAngle;
-    private float finishSweepAngle;
     private float contentSize;
     private float suffixSize;
-    private float labelSize;
-    private float maxProgress;
+    private float width;
+    private float height;
+    private float fisrtArcRadius;
+    private float secondArcRadius;
 
     public ArcProgress(Context context) {
         this(context, null);
@@ -55,19 +47,18 @@ public class ArcProgress extends View {
         super(context, attrs, defStyleAttr);
 
         initParam(attrs);
-
-        initPaint();
     }
 
     public void initPaint() {
         // 初始化arcProgress图形画笔
         arcPaint.setAntiAlias(true);
-        arcPaint.setStyle(Paint.Style.STROKE);
+        arcPaint.setStyle(Paint.Style.FILL);
         arcPaint.setStrokeCap(Paint.Cap.ROUND);
         arcPaint.setStrokeWidth(strokeWidth);
 
         // 初始化arcProgress文字画笔
         textPaint.setColor(Color.BLACK);
+
     }
 
     /**
@@ -78,60 +69,42 @@ public class ArcProgress extends View {
     private void initParam(AttributeSet attrs) {
         // 参数初始化
         TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.ArcProgress);
-        label = typedArray.getString(R.styleable.ArcProgress_arcLabel);
         suffix = typedArray.getString(R.styleable.ArcProgress_suffix);
-        beginAngle = typedArray.getInteger(R.styleable.ArcProgress_beginAngle, 120);
-        sweepAngle = typedArray.getInteger(R.styleable.ArcProgress_sweepAngle, 300);
-        finishBeginAngle = typedArray.getInteger(R.styleable.ArcProgress_finishedBeginAngle, 120);
-        maxProgress = typedArray.getInteger(R.styleable.ArcProgress_maxValue, 350);
+        fisrtArcRadius = typedArray.getDimension(R.styleable.ArcProgress_firstCircleRadius, 0);
+        secondArcRadius = typedArray.getDimension(R.styleable.ArcProgress_secondCircleRadius, 0);
 
         Resources res = getResources();
         contentSize = UnitConvert.sp2px(res, 24);
         suffixSize = UnitConvert.sp2px(res, 10);
-        labelSize = UnitConvert.sp2px(res, 12);
         strokeWidth = UnitConvert.dp2px(res, 3f);
         accContentSize = UnitConvert.sp2px(res, 16);
+
+
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        float width = MeasureSpec.getSize(widthMeasureSpec);
-        rectF.set(strokeWidth / 2, strokeWidth / 2, width - strokeWidth / 2, width - strokeWidth / 2);
-        radius = (width - strokeWidth) / 2;
-        float angle = (360 - sweepAngle) / 2;
-        bottomHeight = (float) Math.cos(angle / 180 * Math.PI) * radius;
+        width = MeasureSpec.getSize(widthMeasureSpec);
+        height = MeasureSpec.getSize(heightMeasureSpec);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        // arcPaint.setColor(Color.BLUE);
-        // canvas.drawArc(rectF, beginAngle, sweepAngle, false, arcPaint);
-        arcPaint.setColor(Color.BLACK);
-        arcPaint.setStyle(Paint.Style.FILL);
-        canvas.drawOval(new RectF(8, 8, 247, 247), arcPaint);
+        // 初始化画笔
+        initPaint();
 
-        arcPaint.setColor(Color.WHITE);
-        canvas.drawOval(new RectF(15, 15, 240, 240), arcPaint);
+        drawCircle(canvas);
 
-
-        arcPaint.setStyle(Paint.Style.STROKE);
-        arcPaint.setColor(Color.GREEN);
-        SweepGradient sweepGradient = new SweepGradient(130, 130, new int[]{Color.parseColor("#635b42"), Color.parseColor("#c3b9b4")}, null);
-        arcPaint.setShader(sweepGradient);
-        canvas.drawArc(new RectF(5, 5, 250, 250), 0, 360, false, arcPaint);
-
-
-
-
-        // 绘制中间的进度内容
+/*        // 绘制中间的进度内容
         textPaint.setTextSize(contentSize);
         float textWidth1 = textPaint.measureText(content);
         float height = radius * 2;
         float textHeight = textPaint.descent() + textPaint.ascent();
         float baseline = height / 2;
         canvas.drawText(content, height / 2 - textWidth1 / 2 + strokeWidth / 2, baseline, textPaint);
+
 
         // 绘制后缀
         textPaint.setTextSize(suffixSize);
@@ -144,15 +117,41 @@ public class ArcProgress extends View {
         float accTextWidth = textPaint.measureText(accContent);
         float accTextHeight = textPaint.descent() - textPaint.ascent();
         baseline = height / 2 + Math.abs(accTextHeight);
-        canvas.drawText(accContent, height / 2 - accTextWidth / 2 + strokeWidth / 2, baseline, textPaint);
+        canvas.drawText(accContent, height / 2 - accTextWidth / 2 + strokeWidth / 2, baseline, textPaint);*/
 
 
-        // 绘制底部标签
-        textPaint.setTextSize(labelSize);
-        textWidth1 = textPaint.measureText(label);
-        textHeight = textPaint.descent() + textPaint.ascent();
-        baseline = height / 2 + bottomHeight - textHeight / 2;
-        canvas.drawText(label, height / 2 - textWidth1 / 2 + strokeWidth / 2, baseline + strokeWidth / 2, textPaint);
+    }
+
+    private void drawTitle() {
+
+    }
+
+    private void drawCenterTemprature() {
+
+    }
+
+    private void drawAccTemprature() {
+
+    }
+
+    private void drawBottomLabel() {
+
+    }
+
+    private void drawCircle(Canvas canvas) {
+        // 绘制外圈渐变
+        SweepGradient sweepGradient = new SweepGradient(width / 2, height / 2, new int[]{Color.parseColor("#635b42"), Color.parseColor("#c3b9b4")}, null);
+        arcPaint.setShader(sweepGradient);
+        canvas.drawArc(new RectF(0, 0, width, width), 0, 360, false, arcPaint);
+
+        // 取消shader
+        arcPaint.setShader(null);
+        // 绘制第二个圈
+        arcPaint.setColor(Color.BLACK);
+        canvas.drawOval(new RectF(fisrtArcRadius, fisrtArcRadius, width - fisrtArcRadius, height - fisrtArcRadius), arcPaint);
+        // 绘制最内圈
+        arcPaint.setColor(Color.WHITE);
+        canvas.drawOval(new RectF(fisrtArcRadius + secondArcRadius, fisrtArcRadius + secondArcRadius, width - fisrtArcRadius - secondArcRadius, height - fisrtArcRadius - secondArcRadius), arcPaint);
 
 
     }
@@ -164,10 +163,8 @@ public class ArcProgress extends View {
      * @param acceleration
      */
     public void setProgress(float progress, float acceleration) {
-        this.progress = progress;
         this.accContent = (acceleration > 0 ? "↑" : "↓") + String.format("%.2f", acceleration) + suffix + "/s";
         this.content = "" + progress;
-        finishSweepAngle = (progress / maxProgress) * sweepAngle;
         invalidate();
     }
 

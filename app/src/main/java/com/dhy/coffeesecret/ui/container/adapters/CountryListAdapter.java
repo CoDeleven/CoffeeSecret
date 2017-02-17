@@ -52,6 +52,10 @@ public class CountryListAdapter extends RecyclerView.Adapter<CountryListAdapter.
         return countryList.size();
     }
 
+    public interface OnCountryClickListener {
+        void onCountryClicked(int position);
+    }
+
     class ViewHolder extends RecyclerView.ViewHolder {
         private TextView countryTV = null;
         private LinearLayout countryLayout = null;
@@ -61,9 +65,5 @@ public class CountryListAdapter extends RecyclerView.Adapter<CountryListAdapter.
             countryTV = (TextView) itemView.findViewById(R.id.country_text);
             countryLayout = (LinearLayout) itemView.findViewById(R.id.country_layout);
         }
-    }
-
-    public interface OnCountryClickListener {
-        void onCountryClicked(int position);
     }
 }
