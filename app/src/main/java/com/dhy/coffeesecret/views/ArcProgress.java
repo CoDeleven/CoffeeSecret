@@ -3,6 +3,8 @@ package com.dhy.coffeesecret.views;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -32,9 +34,12 @@ public class ArcProgress extends View {
     private float suffixSize;
     private float width;
     private float height;
-    private float fisrtArcRadius;
-    private float secondArcRadius;
-
+    private float mFisrtArcRadius;
+    private float mSecondArcRadius;
+    private String mTitle;
+    private Bitmap mBitmap;
+    private float mBlankSpace = 10;
+    private Resources res;
     public ArcProgress(Context context) {
         this(context, null);
     }
@@ -45,7 +50,7 @@ public class ArcProgress extends View {
 
     public ArcProgress(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-
+        res = getResources();
         initParam(attrs);
     }
 
@@ -58,7 +63,7 @@ public class ArcProgress extends View {
 
         // 初始化arcProgress文字画笔
         textPaint.setColor(Color.BLACK);
-
+        textPaint.setTextSize(UnitConvert.sp2px(res, 20));
     }
 
     /**
@@ -67,13 +72,16 @@ public class ArcProgress extends View {
      * @param attrs
      */
     private void initParam(AttributeSet attrs) {
+
         // 参数初始化
         TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.ArcProgress);
         suffix = typedArray.getString(R.styleable.ArcProgress_suffix);
-        fisrtArcRadius = typedArray.getDimension(R.styleable.ArcProgress_firstCircleRadius, 0);
-        secondArcRadius = typedArray.getDimension(R.styleable.ArcProgress_secondCircleRadius, 0);
+        mFisrtArcRadius = typedArray.getDimension(R.styleable.ArcProgress_firstCircleRadius, 0);
+        mSecondArcRadius = typedArray.getDimension(R.styleable.ArcProgress_secondCircleRadius, 0);
+        mBitmap = BitmapFactory.decodeResource(res, typedArray.getResourceId(R.styleable.ArcProgress_titleIcon, 0));
+        mTitle = typedArray.getString(R.styleable.ArcProgress_titleValue);
 
-        Resources res = getResources();
+
         contentSize = UnitConvert.sp2px(res, 24);
         suffixSize = UnitConvert.sp2px(res, 10);
         strokeWidth = UnitConvert.dp2px(res, 3f);
@@ -94,7 +102,6 @@ public class ArcProgress extends View {
         super.onDraw(canvas);
         // 初始化画笔
         initPaint();
-
         drawCircle(canvas);
 
 /*        // 绘制中间的进度内容
@@ -122,10 +129,6 @@ public class ArcProgress extends View {
 
     }
 
-    private void drawTitle() {
-
-    }
-
     private void drawCenterTemprature() {
 
     }
@@ -142,16 +145,16 @@ public class ArcProgress extends View {
         // 绘制外圈渐变
         SweepGradient sweepGradient = new SweepGradient(width / 2, height / 2, new int[]{Color.parseColor("#635b42"), Color.parseColor("#c3b9b4")}, null);
         arcPaint.setShader(sweepGradient);
-        canvas.drawArc(new RectF(0, 0, width, width), 0, 360, false, arcPaint);
+        canvas.drawArc(new RectF(0, 0, width, height), 0, 360, false, arcPaint);
 
         // 取消shader
         arcPaint.setShader(null);
         // 绘制第二个圈
         arcPaint.setColor(Color.BLACK);
-        canvas.drawOval(new RectF(fisrtArcRadius, fisrtArcRadius, width - fisrtArcRadius, height - fisrtArcRadius), arcPaint);
+        canvas.drawOval(new RectF(mFisrtArcRadius, mFisrtArcRadius, width - mFisrtArcRadius, height - mFisrtArcRadius), arcPaint);
         // 绘制最内圈
         arcPaint.setColor(Color.WHITE);
-        canvas.drawOval(new RectF(fisrtArcRadius + secondArcRadius, fisrtArcRadius + secondArcRadius, width - fisrtArcRadius - secondArcRadius, height - fisrtArcRadius - secondArcRadius), arcPaint);
+        canvas.drawOval(new RectF(mFisrtArcRadius + mSecondArcRadius, mFisrtArcRadius + mSecondArcRadius, width - mFisrtArcRadius - mSecondArcRadius, height - mFisrtArcRadius - mSecondArcRadius), arcPaint);
 
 
     }

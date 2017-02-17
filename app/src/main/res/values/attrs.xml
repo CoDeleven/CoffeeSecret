@@ -4,6 +4,8 @@
         <attr name="suffix" format="string"/>
         <attr name="firstCircleRadius" format="dimension"/>
         <attr name="secondCircleRadius" format="dimension"/>
+        <attr name="titleIcon" format="reference"/>
+        <attr name="titleValue" format="string"/>
     </declare-styleable>
     <declare-styleable name="FormView">
         <attr name="gridWidth" format="integer"></attr>

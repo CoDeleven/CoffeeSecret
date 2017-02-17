@@ -1,19 +1,354 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:arc="http://schemas.android.com/apk/res-auto"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:background="@color/white"
-             tools:context=".ui.device.DeviceFragment">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:arc="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                tools:context=".ui.device.DeviceFragment">
+
+    <include layout="@layout/normal_title_noback"></include>
 
     <!-- TODO: Update blank fragment layout -->
-    <com.dhy.coffeesecret.views.ArcProgress
-        android:id="@+id/id_arcprogress_bean"
-        android:layout_width="207dp"
-        android:layout_height="207dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="30dp"
-        arc:firstCircleRadius="5dp"
-        arc:secondCircleRadius="4dp"
-        arc:suffix="@string/suffix_arcProgress"/>
-</FrameLayout>
+    <RelativeLayout
+        android:id="@+id/device_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="20dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="?attr/actionBarSize">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/ic_bake_conect"/>
+
+        <RelativeLayout
+            android:id="@+id/device_bake_circle1"
+            android:layout_width="207dp"
+            android:layout_height="207dp"
+            android:layout_centerHorizontal="true">
+
+            <com.dhy.coffeesecret.views.ArcProgress
+                android:id="@+id/id_arcprogress_bean"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                arc:firstCircleRadius="5dp"
+                arc:secondCircleRadius="4dp"
+                arc:suffix="@string/suffix_arcProgress"
+                arc:titleValue="豆温"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:orientation="vertical"
+                android:paddingBottom="20dp"
+                android:paddingTop="20dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/ic_bake_bean"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:paddingLeft="10dp"
+                        android:text="豆温"
+                        android:textColor="#000"
+                        android:textSize="20sp"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="371℃"
+                        android:textColor="#000000"
+                        android:textSize="24sp"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:drawablePadding="10dp"
+                            android:src="@drawable/ic_bake_up"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:text="0.1℃/min"
+                            android:textSize="19sp"/>
+
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_bake_seprator"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="已连接"
+                        android:textColor="#000000"
+                        android:textSize="19sp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="切换"
+                        android:textSize="11sp"/>
+
+                </LinearLayout>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <!-- 参考物-->
+        <View
+            android:id="@+id/bake_vetical_refer"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:background="@android:color/transparent"></View>
+
+        <View
+            android:id="@+id/bake_horizontal_refer"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_centerVertical="true"
+            android:background="@android:color/transparent"></View>
+
+
+        <RelativeLayout
+            android:id="@+id/device_bake_circle2"
+            android:layout_width="114dp"
+            android:layout_height="114dp"
+            android:layout_below="@id/device_bake_circle1"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@id/bake_vetical_refer">
+
+            <com.dhy.coffeesecret.views.ArcProgress
+                android:id="@+id/id_arcprogress_inwind"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                arc:firstCircleRadius="3dp"
+                arc:secondCircleRadius="2dp"
+                arc:suffix="@string/suffix_arcProgress"
+                arc:titleValue="入风温"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:orientation="vertical"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/ic_bake_inwind"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:paddingLeft="5dp"
+                        android:text="入风温"
+                        android:textColor="#000"
+                        android:textSize="11sp"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="256℃"
+                        android:textColor="#000000"
+                        android:textSize="13sp"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:drawablePadding="10dp"
+                            android:scaleType="fitCenter"
+                            android:scaleX="0.625"
+                            android:scaleY="0.625"
+                            android:src="@drawable/ic_bake_up"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:text="0.1℃/min"
+                            android:textSize="10sp"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/device_bake_circle3"
+            android:layout_width="114dp"
+            android:layout_height="114dp"
+            android:layout_alignRight="@id/bake_vetical_refer"
+            android:layout_below="@id/bake_horizontal_refer"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="20dp">
+
+            <com.dhy.coffeesecret.views.ArcProgress
+                android:id="@+id/id_arcprogress_outwind"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                arc:firstCircleRadius="3dp"
+                arc:secondCircleRadius="2dp"
+                arc:suffix="@string/suffix_arcProgress"
+                arc:titleValue="出风温"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:orientation="vertical"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/ic_bake_outwind"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:paddingLeft="5dp"
+                        android:text="出风温"
+                        android:textColor="#000"
+                        android:textSize="11sp"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="256℃"
+                        android:textColor="#000000"
+                        android:textSize="13sp"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:drawablePadding="10dp"
+                            android:scaleType="fitCenter"
+                            android:scaleX="0.625"
+                            android:scaleY="0.625"
+                            android:src="@drawable/ic_bake_up"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:text="0.1℃/min"
+                            android:textSize="10sp"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+        </RelativeLayout>
+
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/bg_round_pricolor"/>
+    </RelativeLayout>
+
+
+</RelativeLayout>
