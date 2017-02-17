@@ -1,0 +1,141 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/bg_reportinfo"
+                android:elevation="4dp"
+                android:paddingLeft="@dimen/pageinfo_horizontal_margin"
+                android:paddingRight="@dimen/pageinfo_horizontal_margin"
+                android:paddingTop="@dimen/pageinfo_vertical_margin">
+
+    <!-- TODO: Update blank fragment layout -->
+
+
+    <LinearLayout
+        android:id="@+id/first_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/pageinfo_text_vertical_margin"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/id_report_area"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/pageinfo_text_horizontal_margin"
+            android:text="@string/produce_area"
+            android:textSize="12sp"/>
+
+        <TextView
+            android:id="@+id/id_report_level"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/level"
+            android:textSize="12sp"/>
+
+        <TextView
+            android:id="@+id/id_report_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/type"
+            android:textSize="12sp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/second_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/first_row"
+        android:layout_marginBottom="@dimen/pageinfo_text_vertical_margin"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/id_report_handler"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/pageinfo_text_horizontal_margin"
+
+            android:text="@string/handler"
+            android:textSize="12sp"/>
+
+        <TextView
+            android:id="@+id/id_report_bean_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/beanDate"
+            android:textSize="12sp"/>
+
+        <TextView
+            android:id="@+id/id_report_author"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/bakeDate"
+            android:textSize="12sp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/third_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/second_row"
+        android:layout_marginBottom="@dimen/pageinfo_text_vertical_margin"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/id_report_device"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/pageinfo_text_horizontal_margin"
+
+            android:text="@string/device"
+            android:textSize="12sp"/>
+
+        <TextView
+            android:id="@+id/id_report_bake_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/bakeDate"
+            android:textSize="12sp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/fourth_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/third_row"
+        android:layout_marginBottom="@dimen/pageinfo_text_vertical_margin"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/id_report_cookedbean"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/pageinfo_text_horizontal_margin"
+
+            android:text="@string/cookedWeight"
+            android:textSize="12sp"/>
+
+        <TextView
+            android:id="@+id/id_report_rawbean"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/rawWeight"
+            android:textSize="12sp"/>
+    </LinearLayout>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/fourth_row"
+        android:layout_marginBottom="9dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/shape"
+        android:minHeight="21dp"
+        android:text="查看对应杯测"
+        android:textColor="#FFFFFF"
+
+        android:textSize="11sp"/>
+</RelativeLayout>

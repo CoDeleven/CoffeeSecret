@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/pageinfo_text_horizontal_margin"
+        android:layout_marginRight="@dimen/pageinfo_text_horizontal_margin">
+
+        <com.dhy.coffeesecret.views.SearchEditText
+            android:id="@+id/lines_selected_srh"
+            style="@style/SearchBar"
+            android:layout_weight="5">
+        </com.dhy.coffeesecret.views.SearchEditText>
+
+        <ImageButton
+            android:id="@+id/lines_selected_del"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_container_del"
+            android:visibility="gone"/>
+    </RelativeLayout>
+</RelativeLayout>

@@ -1,0 +1,3 @@
+<resources>
+    <dimen beanName="activity_horizontal_margin">64dp</dimen>
+</resources>

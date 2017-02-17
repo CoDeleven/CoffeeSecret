@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <TextView
+        style="@style/ItemTextView"
+        android:text="咖啡国别:%1$#12s"/>
+
+    <TextView
+        style="@style/ItemTextView"
+        android:text="咖啡产区:%1$#12s"/>
+
+    <TextView
+        style="@style/ItemTextView"
+        android:text="咖啡庄园:%1$#12s"/>
+
+    <TextView
+        style="@style/ItemTextView"
+        android:text="产地海拔:%1$#12s"/>
+
+    <TextView
+        style="@style/ItemTextView"
+        android:text="咖啡种属:%1$#12s"/>
+
+    <TextView
+        style="@style/ItemTextView"
+        android:text="咖啡等级:%1$#12s"/>
+
+    <TextView
+        style="@style/ItemTextView"
+        android:text="处理方式:%1$#12s"/>
+
+    <TextView
+        style="@style/ItemTextView"
+        android:text="库存重量:%1$#12s"/>
+
+    <TextView
+        style="@style/ItemTextView"
+        android:text="含水量:%1$#12s"/>
+
+    <TextView
+        style="@style/ItemTextView"
+        android:text="供应商:%1$#12s"/>
+
+    <TextView
+        style="@style/ItemTextView"
+        android:text="价格:%1$#12s"/>
+
+    <TextView
+        style="@style/ItemTextView"
+        android:text="购买时间:%1$#12s"/>
+
+</LinearLayout>

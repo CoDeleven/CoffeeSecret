@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#936743</color>
+    <color name="colorPrimaryLight">#d2936743</color>
+    <color name="colorPrimaryDark">#936743</color>
+    <color name="colorAccent">#000</color>
+    <color name="tab_underline">#FFFFFF</color>
+    <color name="tab_selected">#936743</color>
+    <color name="tab_default">#7e858f</color>
+    <color name="status_bar">#936743</color>
+    <color name="white">#FFFFFF</color>
+    <color name="btn_border_gray">#cccccc</color>
+    <color name="trans_dark" >#cc000000</color>
+    <color name="bg_reportinfo">#F3F3F3</color>
+    <color name="bg_activity">#F3F3F3</color>
+    <color name="list_header">#EDEEE9</color>
+    <color name="list_text_color">#676767</color>
+</resources>

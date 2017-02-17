@@ -1,0 +1,23 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:arc="http://schemas.android.com/apk/res-auto"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             tools:context=".ui.device.DeviceFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <com.dhy.coffeesecret.views.ArcProgress
+        android:id="@+id/id_arcprogress_inwind"
+        android:layout_width="255dp"
+        android:layout_height="255dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="30dp"
+        arc:arcLabel="@string/label_inWindProgress"
+        arc:beginAngle="@integer/begin_arcProgress"
+        arc:finishedBeginAngle="@integer/finished_begin_arcProgress"
+        arc:maxValue="@integer/maxValue_arcProgress"
+        arc:suffix="@string/suffix_arcProgress"
+        arc:sweepAngle="@integer/sweep_arcProgress"/>
+
+</FrameLayout>
