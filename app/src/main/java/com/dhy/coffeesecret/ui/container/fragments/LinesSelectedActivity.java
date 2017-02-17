@@ -14,8 +14,8 @@ import android.widget.ListView;
 
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BakeReport;
-import com.dhy.coffeesecret.ui.device.fragments.ReportActivity;
 import com.dhy.coffeesecret.ui.container.adapters.LinesAdapter;
+import com.dhy.coffeesecret.ui.device.fragments.ReportActivity;
 import com.dhy.coffeesecret.views.SearchEditText;
 
 import java.util.ArrayList;

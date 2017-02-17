@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest package="com.github.mikephil.charting">
 
-    <!--  <uses-permission android:beanName="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!--  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
        <application
            android:allowBackup="true"

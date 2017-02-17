@@ -12,26 +12,23 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.dhy.coffeesecret.ui.container.ContainerFragment;
-import com.dhy.coffeesecret.ui.device.DeviceFragment;
 import com.dhy.coffeesecret.ui.community.CommunityFragment;
+import com.dhy.coffeesecret.ui.container.ContainerFragment;
 import com.dhy.coffeesecret.ui.cup.CupFragment;
+import com.dhy.coffeesecret.ui.device.DeviceFragment;
 import com.dhy.coffeesecret.ui.mine.MineFragment;
 
-// Test修改
-public class MainActivity extends AppCompatActivity implements
+public class MainActivity extends AppCompatActivity implements DeviceFragment.OnDeviceInteractionListener,
         ContainerFragment.OnContainerInteractionListener, CupFragment.OnCupInteractionListener {
 
     // 默认图标id
-    private static final int[] IMG_SELECTOR_IDS = {R.drawable.nav_container_selector, R.drawable.nav_cup_selector, R.drawable.nav_device_selector, R.drawable.nav_community_selector, R.drawable.nav_mine_selector};
+    private static final int[] IMG_SELECTOR_IDS = {R.drawable.nav_device_selector, R.drawable.nav_container_selector, R.drawable.nav_cup_selector, R.drawable.nav_cup_selector, R.drawable.nav_cup_selector};
     // 标签页
     private TabLayout mTabLayout;
     // 滑动页面视图
     private ViewPager mViewPager;
     // fragment集合 //
     private Fragment[] mFragments;
-
-    private Toolbar mToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,12 +43,8 @@ public class MainActivity extends AppCompatActivity implements
      */
     private void initParam() {
 
-        mToolbar = (Toolbar) findViewById(R.id.toolBar);
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-
         // 初始化fragment视图
-        mFragments = new Fragment[]{new ContainerFragment(), new CupFragment(), new DeviceFragment(), new CommunityFragment(), new MineFragment()};
+        mFragments = new Fragment[]{new DeviceFragment(), new ContainerFragment(), new CupFragment(), new CommunityFragment(), new MineFragment()};
 
         // 获取id
         mTabLayout = (TabLayout) findViewById(R.id.id_fragment_tabLayout);
@@ -102,6 +95,15 @@ public class MainActivity extends AppCompatActivity implements
         return view;
     }
 
+    /**
+     * MainActivity和MyDeviceFragment交互的方法
+     *
+     * @param uri
+     */
+    @Override
+    public void onDeviceInteraction(Uri uri) {
+
+    }
 
     /**
      * MainActivity和MyContainerFragment交互的方法

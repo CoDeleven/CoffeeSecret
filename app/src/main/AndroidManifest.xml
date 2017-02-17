@@ -18,7 +18,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.device.DeviceChildActivity"></activity>
-        <activity android:name=".ui.container.ContainerActivity"></activity>
+        <activity android:name=".ui.container.BeanInfoActivity"></activity>
         <activity android:name=".ui.container.fragments.LinesSelectedActivity"></activity>
         <activity android:name=".ui.device.fragments.ReportActivity"></activity>
     </application>

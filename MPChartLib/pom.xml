@@ -22,7 +22,7 @@
     <version>1.4.2-SNAPSHOT</version>
     <groupId>com.github.mikephil</groupId>
     <artifactId>MPAndroidChart</artifactId>
-    <beanName>MPAndroidChart</beanName>
+    <name>MPAndroidChart</name>
     <description>A simple Android chart view/graph view library, supporting line- bar- and piecharts
         as well as scaling, dragging and animations
     </description>
@@ -70,7 +70,7 @@
 
     <licenses>
         <license>
-            <beanName>Apache License Version 2.0</beanName>
+            <name>Apache License Version 2.0</name>
             <url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
             <distribution>repo</distribution>
         </license>
@@ -84,7 +84,7 @@
 
     <developers>
         <developer>
-            <beanName>Philipp Jahoda</beanName>
+            <name>Philipp Jahoda</name>
             <email>philjay.librarysup@gmail.com</email>
             <url>http://stackoverflow.com/users/1590502/philipp-jahoda</url>
             <id>PhilJay</id>

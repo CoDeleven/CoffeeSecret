@@ -11,7 +11,7 @@
         android:layout_weight="1" />
 
     <com.dhy.coffeesecret.views.SearchEditText
-        android:id="@+id/lines_selected_srh"
+        android:id="@+id/search_bean"
         style="@style/SearchBar"
         android:layout_gravity="center"
         android:layout_weight="0.5">
