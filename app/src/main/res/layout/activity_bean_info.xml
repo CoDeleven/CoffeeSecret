@@ -11,7 +11,7 @@
         <ImageView
             android:id="@+id/image"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="175dp"
             android:adjustViewBounds="true"
             android:scaleType="fitXY"
             android:src="@mipmap/poly"/>
@@ -28,13 +28,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:padding="@dimen/activity_horizontal_margin"
+            android:paddingLeft="50dp"
+            android:paddingBottom="21dp"
             android:text="巴西黄波旁"
             android:textColor="@android:color/white"
             android:textSize="@dimen/bean_info_title_font_size"/>
     </RelativeLayout>
 
     <ScrollView
+        android:id="@+id/sv"
+        android:background="#EDEEE9"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/header">
@@ -43,18 +46,31 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-
+            <include
+                layout="@layout/include_bean_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
             <Button
                 android:id="@+id/btn_curve"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
+                android:layout_width="155dp"
+                android:layout_height="33dp"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="@dimen/pageinfo_text_vertical_margin"
-                android:layout_marginTop="@dimen/pageinfo_horizontal_margin"
+                android:layout_marginBottom="12dp"
+                android:layout_marginTop="12dp"
+                android:textSize="14sp"
+                android:minHeight="33dp"
                 android:background="@drawable/bg_round_pricolor_selector"
+                android:textColor="@android:color/white"
                 android:text="@string/curve"/>
         </LinearLayout>
-
     </ScrollView>
-
+    <ImageView
+        android:id="@+id/edit"
+        android:src="@drawable/ic_pen"
+        android:layout_above="@id/sv"
+        android:layout_alignParentRight="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:translationY="25dp"/>
 </RelativeLayout>

@@ -1,0 +1,74 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:scrollbars="none"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingLeft="22dp"
+        android:paddingRight="22dp"
+        android:paddingTop="14dp">
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="口感"
+            android:textSize="@dimen/font_size_primary" />
+
+        <View style="@style/HorizontalLine" />
+
+        <GridView
+            android:background="@drawable/black_border"
+            android:id="@+id/gv_feel"
+            android:layout_width="306dp"
+            android:layout_height="193dp"
+            android:layout_marginBottom="14dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="6dp"
+            android:horizontalSpacing="4dp"
+            android:verticalSpacing="9dp"
+            android:columnWidth="67dp"
+            android:numColumns="4"></GridView>
+
+        <TextView
+            android:background="@drawable/black_border"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="瑕疵"
+            android:textSize="@dimen/font_size_primary" />
+
+        <View style="@style/HorizontalLine"  />
+
+        <GridView
+            android:id="@+id/gv_flaw"
+            android:layout_width="306dp"
+            android:layout_height="193dp"
+            android:layout_marginBottom="14dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="6dp"
+            android:horizontalSpacing="3dp"
+            android:verticalSpacing="7dp"
+            android:columnWidth="67dp"
+            android:numColumns="4"></GridView>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="结果"
+            android:textSize="@dimen/font_size_primary" />
+
+        <View style="@style/HorizontalLine" />
+
+        <GridView
+            android:layout_width="wrap_content"
+            android:layout_height="131dp"></GridView>
+    </LinearLayout>
+</ScrollView>

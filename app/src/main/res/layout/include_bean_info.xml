@@ -1,55 +1,174 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <TextView
-        style="@style/ItemTextView"
-        android:text="咖啡国别:%1$#12s"/>
+    <LinearLayout style="@style/ItemLayout">
 
-    <TextView
-        style="@style/ItemTextView"
-        android:text="咖啡产区:%1$#12s"/>
+        <TextView
+            style="@style/ItemTextView"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:text="产地" />
 
-    <TextView
-        style="@style/ItemTextView"
-        android:text="咖啡庄园:%1$#12s"/>
+        <TextView
+            style="@style/ItemTextView"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:text="%1$#12s" />
+    </LinearLayout>
 
-    <TextView
-        style="@style/ItemTextView"
-        android:text="产地海拔:%1$#12s"/>
+    <LinearLayout style="@style/ItemLayout">
 
-    <TextView
-        style="@style/ItemTextView"
-        android:text="咖啡种属:%1$#12s"/>
+        <TextView
+            style="@style/ItemTextView"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:text="庄园" />
 
-    <TextView
-        style="@style/ItemTextView"
-        android:text="咖啡等级:%1$#12s"/>
+        <TextView
+            style="@style/ItemTextView"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:text="%1$#12s" />
+    </LinearLayout>
 
-    <TextView
-        style="@style/ItemTextView"
-        android:text="处理方式:%1$#12s"/>
+    <LinearLayout style="@style/ItemLayout"
+        android:layout_marginBottom="13dp">
 
-    <TextView
-        style="@style/ItemTextView"
-        android:text="库存重量:%1$#12s"/>
+        <TextView
+            style="@style/ItemTextView"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:text="海拔" />
 
-    <TextView
-        style="@style/ItemTextView"
-        android:text="含水量:%1$#12s"/>
+        <TextView
+            style="@style/ItemTextView"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:text="%1$#12s" />
+    </LinearLayout>
 
-    <TextView
-        style="@style/ItemTextView"
-        android:text="供应商:%1$#12s"/>
+    <LinearLayout style="@style/ItemLayout">
 
-    <TextView
-        style="@style/ItemTextView"
-        android:text="价格:%1$#12s"/>
+        <TextView
+            style="@style/ItemTextView"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:text="豆种" />
 
-    <TextView
-        style="@style/ItemTextView"
-        android:text="购买时间:%1$#12s"/>
+        <TextView
+            style="@style/ItemTextView"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:text="%1$#12s" />
+    </LinearLayout>
+
+    <LinearLayout style="@style/ItemLayout">
+
+        <TextView
+            style="@style/ItemTextView"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:text="等级" />
+
+        <TextView
+            style="@style/ItemTextView"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:text="%1$#12s" />
+    </LinearLayout>
+
+    <LinearLayout style="@style/ItemLayout">
+
+        <TextView
+            style="@style/ItemTextView"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:text="含水量" />
+
+        <TextView
+            style="@style/ItemTextView"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:text="%1$#12s" />
+    </LinearLayout>
+
+    <LinearLayout style="@style/ItemLayout"
+        android:layout_marginBottom="13dp">
+
+        <TextView
+            style="@style/ItemTextView"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:text="处理方式" />
+
+        <TextView
+            style="@style/ItemTextView"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:text="%1$#12s" />
+    </LinearLayout>
+
+    <LinearLayout style="@style/ItemLayout">
+
+        <TextView
+            style="@style/ItemTextView"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:text="厂家" />
+
+        <TextView
+            style="@style/ItemTextView"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:text="%1$#12s" />
+    </LinearLayout>
+
+    <LinearLayout style="@style/ItemLayout">
+
+        <TextView
+            style="@style/ItemTextView"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:text="价格" />
+
+        <TextView
+            style="@style/ItemTextView"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:text="%1$#12s" />
+    </LinearLayout>
+
+    <LinearLayout style="@style/ItemLayout">
+
+        <TextView
+            style="@style/ItemTextView"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:text="库存量" />
+
+        <TextView
+            style="@style/ItemTextView"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:text="%1$#12s" />
+    </LinearLayout>
+
+    <LinearLayout style="@style/ItemLayout">
+
+        <TextView
+            style="@style/ItemTextView"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:text="购买日期" />
+
+        <TextView
+            style="@style/ItemTextView"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:text="%1$#12s" />
+    </LinearLayout>
 
 </LinearLayout>

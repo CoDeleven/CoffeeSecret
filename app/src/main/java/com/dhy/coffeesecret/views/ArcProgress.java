@@ -18,6 +18,7 @@ import com.dhy.coffeesecret.utils.UnitConvert;
  */
 
 public class ArcProgress extends View {
+
     private RectF rectF = new RectF();
     private Paint arcPaint = new Paint();
     private Paint textPaint = new Paint();
@@ -64,7 +65,6 @@ public class ArcProgress extends View {
         arcPaint.setStyle(Paint.Style.STROKE);
         arcPaint.setStrokeCap(Paint.Cap.ROUND);
         arcPaint.setStrokeWidth(strokeWidth);
-
         // 初始化arcProgress文字画笔
         textPaint.setColor(Color.BLACK);
     }

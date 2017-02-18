@@ -44,6 +44,7 @@
     <string name="screen">筛选</string>
 
     <string name="conta_title">我的货柜</string>
+    <string name="new_cupping_title">添加杯测</string>
     <!-- 温度图表详情数据-->
     <string name="reportTime">时间</string>
     <string name="reportEnvTime">环境温度</string>
@@ -51,4 +52,5 @@
     <string name="reportDryTemp">脱水温度</string>
     <string name="reportUpTemp">豆子升温</string>
     <string name="curve">烘焙曲线</string>
+    <string name="save">保存</string>
 </resources>
