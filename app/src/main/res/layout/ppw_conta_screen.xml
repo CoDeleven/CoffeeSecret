@@ -1,196 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
-              android:layout_height="wrap_content"
+              android:layout_height="200dp"
               android:background="@android:color/transparent"
               android:orientation="vertical">
 
-    <TextView
-        android:layout_width="50dp"
-        android:layout_height="30dp"
+    <View
+        android:layout_width="120dp"
+        android:layout_height="0.5dp"
         android:layout_gravity="right"
-        android:layout_marginRight="25dp"
-        android:background="@drawable/shape_delta_l" />
+        android:background="@color/white"/>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/bg_round"
+        android:layout_height="200dp"
+        android:background="@color/colorPrimary"
         android:orientation="vertical"
         android:padding="@dimen/view_horizontal_padding">
-
-        <RadioGroup
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"></RadioGroup>
-
-        <ToggleButton
-            android:id="@+id/tb"
-            style="@style/ToggleButtonTitle"
-            android:textOff="处理"
-            android:textOn="处理" />
-
-        <TableLayout
-            android:id="@+id/tl"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/bg_round">
-
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="@dimen/view_horizontal_padding"
-                android:paddingRight="@dimen/view_horizontal_padding">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="蜜处理" />
-
-                <com.kyleduo.switchbutton.SwitchButton
-                    android:layout_width="wrap_content"
-                    android:minWidth="0dp"
-                    android:paddingLeft="@dimen/view_horizontal_padding"
-                    android:paddingRight="@dimen/view_horizontal_padding"
-                    android:scaleX=".8"
-                    android:scaleY=".8"
-                    android:switchMinWidth="0dp"
-                    app:kswTextOff="off"
-                    app:kswTextOn="on"
-                    app:kswThumbColor="@android:color/white" />
-
-            </TableRow>
-
-            <View style="@style/HorizontalLine"/>
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="@dimen/view_horizontal_padding"
-                android:paddingRight="@dimen/view_horizontal_padding">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="日晒" />
-
-                <com.kyleduo.switchbutton.SwitchButton
-                    android:layout_width="wrap_content"
-                    android:layout_gravity="center"
-                    android:minWidth="0dp"
-                    android:paddingBottom="@dimen/tv_vertical_padding"
-                    android:paddingLeft="@dimen/view_horizontal_padding"
-                    android:paddingRight="@dimen/view_horizontal_padding"
-                    android:paddingTop="@dimen/tv_vertical_padding"
-                    android:switchMinWidth="0dp"
-                    app:kswThumbHeight="6dp"
-                    app:kswThumbMargin="@dimen/tv_vertical_padding"
-                    app:kswThumbWidth="30dp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="半日晒" />
-
-            </TableRow>
-
-            <View style="@style/HorizontalLine"/>
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="@dimen/view_horizontal_padding"
-                android:paddingRight="@dimen/view_horizontal_padding">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="水洗" />
-
-                <com.kyleduo.switchbutton.SwitchButton
-                    android:layout_width="wrap_content"
-                    android:layout_gravity="center"
-                    android:minWidth="0dp"
-                    android:paddingBottom="@dimen/tv_vertical_padding"
-                    android:paddingLeft="@dimen/view_horizontal_padding"
-                    android:paddingRight="@dimen/view_horizontal_padding"
-                    android:paddingTop="@dimen/tv_vertical_padding"
-                    android:switchMinWidth="0dp"
-                    app:kswThumbColor="@android:color/white"
-                    app:kswThumbHeight="6dp"
-                    app:kswThumbMargin="@dimen/tv_vertical_padding"
-                    app:kswThumbWidth="30dp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="半水洗" />
-
-            </TableRow>
-        </TableLayout>
-
-        <ToggleButton
-            style="@style/ToggleButtonTitle"
-            android:textOff="品种"
-            android:textOn="品种" />
-
-        <TableLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bg_round_black_border"
-                android:hint="搜索"
-                android:paddingBottom="@dimen/tv_vertical_padding"
-                android:paddingLeft="@dimen/lv_item_padding"
-                android:paddingRight="@dimen/lv_item_padding"
-                android:paddingTop="@dimen/tv_vertical_padding"
-                android:textColor="@color/colorPrimary"
-                android:textCursorDrawable="@null"
-                android:textSize="@dimen/font_size_primary" />
-
-            <RadioGroup>
-
-                <RadioButton
-                    style="@style/SelectionRadioButton.DrawableRound"
-                    android:text="品种" />
-
-                <View style="@style/HorizontalLine"/>
-
-                <RadioButton
-                    style="@style/SelectionRadioButton.DrawableRound"
-                    android:text="品种" />
-
-                <View style="@style/HorizontalLine"/>
-
-                <RadioButton
-                    style="@style/SelectionRadioButton.DrawableRound"
-                    android:text="品种" />
-
-                <View style="@style/HorizontalLine"/>
-
-                <RadioButton
-                    style="@style/SelectionRadioButton.DrawableRound"
-                    android:text="品种" />
-
-                <View style="@style/HorizontalLine"/>
-
-                <RadioButton
-                    style="@style/SelectionRadioButton.DrawableRound"
-                    android:text="品种" />
-
-                <View style="@style/HorizontalLine"/>
-
-                <RadioButton
-                    style="@style/SelectionRadioButton.DrawableRound"
-                    android:text="品种" />
-
-            </RadioGroup>
-        </TableLayout>
 
     </LinearLayout>
 

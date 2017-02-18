@@ -30,6 +30,8 @@
     <string name="eventTime">时间:</string>
     <string name="eventDetail">事件:</string>
     <string name="eventRemark">备注:</string>
+
+    <string name="weight_number">30kg</string>
     <!-- ArcProgress -->
     <string name="label_beanProgress">豆温</string>
     <string name="label_inWindProgress">进风温</string>

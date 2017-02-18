@@ -1,22 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="60dp"
-    android:background="@color/white"
-    android:gravity="center_vertical"
-    android:orientation="horizontal">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:id="@+id/item_bean_layout"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@drawable/option_selector"
+              android:gravity="center_vertical"
+              android:orientation="horizontal">
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="36dp"
+        android:id="@+id/imageView"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginLeft="25dp"
         android:src="@mipmap/ic_launcher" />
-
 
     <com.zhy.android.percent.support.PercentLinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="40dp"
+        android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <LinearLayout
@@ -25,7 +27,7 @@
             android:layout_marginLeft="9dp"
             android:gravity="center_vertical"
             android:orientation="vertical"
-            app:layout_widthPercent="50%">
+            app:layout_widthPercent="70%">
 
             <TextView
                 android:id="@+id/list_bean_produceArea"
@@ -34,25 +36,27 @@
                 android:maxLength="7"
                 android:text="@string/produce_area"
                 android:textColor="@color/list_text_color"
-                android:textSize="16sp" />
+                android:textSize="11.5sp"/>
 
             <TextView
                 android:id="@+id/list_bean_manor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
                 android:maxLength="7"
                 android:text="@string/manor"
-                android:textColor="@color/list_text_color"
-                android:textSize="16sp" />
+                android:textColor="@color/list_text_color_2"
+                android:textSize="10.5sp"/>
         </LinearLayout>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center|left"
-            android:text="@string/weight"
-            android:textColor="@color/list_text_color"
-            android:textSize="21sp"
-            app:layout_widthPercent="50%" />
+            android:text="@string/weight_number"
+            android:textColor="@color/colorPrimary"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            app:layout_widthPercent="30%"/>
     </com.zhy.android.percent.support.PercentLinearLayout>
 </LinearLayout>

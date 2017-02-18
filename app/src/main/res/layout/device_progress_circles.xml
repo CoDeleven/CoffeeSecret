@@ -1,47 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:arc="http://schemas.android.com/apk/res-auto"
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/white"
                 tools:context="com.dhy.coffeesecret.ui.device.fragments.ThreeCirclesPart">
-
-    <!-- TODO: Update blank fragment layout -->
-    <com.dhy.coffeesecret.views.ArcProgress
-        android:id="@+id/id_arcprogress_bean"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_alignParentLeft="true"
-        arc:arcLabel="@string/label_beanProgress"
-        arc:beginAngle="@integer/begin_arcProgress"
-        arc:finishedBeginAngle="@integer/finished_begin_arcProgress"
-        arc:maxValue="@integer/maxValue_arcProgress"
-        arc:suffix="@string/suffix_arcProgress"
-        arc:sweepAngle="@integer/sweep_arcProgress"/>
-
-    <com.dhy.coffeesecret.views.ArcProgress
-        android:id="@+id/id_arcprogress_inwind"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_centerHorizontal="true"
-        arc:arcLabel="@string/label_inWindProgress"
-        arc:beginAngle="@integer/begin_arcProgress"
-        arc:finishedBeginAngle="@integer/finished_begin_arcProgress"
-        arc:maxValue="@integer/maxValue_arcProgress"
-        arc:suffix="@string/suffix_arcProgress"
-        arc:sweepAngle="@integer/sweep_arcProgress"/>
-
-    <com.dhy.coffeesecret.views.ArcProgress
-        android:id="@+id/id_arcprogress_outwind"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_alignParentRight="true"
-        arc:arcLabel="@string/label_outWindProgress"
-        arc:beginAngle="@integer/begin_arcProgress"
-        arc:finishedBeginAngle="@integer/finished_begin_arcProgress"
-        arc:maxValue="@integer/maxValue_arcProgress"
-        arc:suffix="@string/suffix_arcProgress"
-        arc:sweepAngle="@integer/sweep_arcProgress"/>
-
 
 </RelativeLayout>

@@ -13,7 +13,6 @@
         android:id="@+id/toolBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fitsSystemWindows="true"
         android:background="@color/colorPrimary"
         app:contentInsetStartWithNavigation="0dp"
         app:navigationIcon="@drawable/ic_conta_home"
@@ -43,8 +42,7 @@
         android:id="@+id/id_fragment_viewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/id_fragment_tabLayout"
-        android:layout_below="@id/toolBar">
+        android:layout_above="@id/id_fragment_tabLayout">
     </android.support.v4.view.ViewPager>
 
 
