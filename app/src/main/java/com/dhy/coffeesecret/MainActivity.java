@@ -5,8 +5,11 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.WindowManager;
@@ -17,6 +20,7 @@ import com.dhy.coffeesecret.ui.container.ContainerFragment;
 import com.dhy.coffeesecret.ui.cup.CupFragment;
 import com.dhy.coffeesecret.ui.device.DeviceFragment;
 import com.dhy.coffeesecret.ui.mine.MineFragment;
+import com.dhy.coffeesecret.utils.UIUtils;
 
 public class MainActivity extends AppCompatActivity implements CupFragment.OnCupInteractionListener {
 
@@ -28,14 +32,19 @@ public class MainActivity extends AppCompatActivity implements CupFragment.OnCup
     private ViewPager mViewPager;
     // fragment集合 //
     private Fragment[] mFragments;
+    private DeviceFragment deviceFragment;
+    private ContainerFragment containerFragment;
+    private CupFragment cupFragment;
+    private CommunityFragment communityFragment;
+    private MineFragment mineFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initParam();
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+
+        UIUtils.steepToolBar(this);
     }
 
     /**
@@ -43,8 +52,14 @@ public class MainActivity extends AppCompatActivity implements CupFragment.OnCup
      */
     private void initParam() {
 
+        deviceFragment = new DeviceFragment();
+        containerFragment = new ContainerFragment();
+        cupFragment = new CupFragment();
+        communityFragment = new CommunityFragment();
+        mineFragment = new MineFragment();
+
         // 初始化fragment视图
-        mFragments = new Fragment[]{new ContainerFragment(), new CupFragment(), new DeviceFragment(), new CommunityFragment(), new MineFragment()};
+        mFragments = new Fragment[]{containerFragment, cupFragment, deviceFragment, communityFragment, mineFragment};
 
         // 获取id
         mTabLayout = (TabLayout) findViewById(R.id.id_fragment_tabLayout);
@@ -105,4 +120,10 @@ public class MainActivity extends AppCompatActivity implements CupFragment.OnCup
 
     }
 
+    @Override
+    public void onBackPressed() {
+        if (containerFragment != null) {
+            containerFragment.onBackPressed();
+        }
+    }
 }

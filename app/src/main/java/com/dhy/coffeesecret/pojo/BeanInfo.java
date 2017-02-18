@@ -1,9 +1,10 @@
 package com.dhy.coffeesecret.pojo;
 
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class BeanInfo {
+public class BeanInfo implements Serializable{
     private int id;
     //咖啡名称
     private String name;
@@ -155,4 +156,24 @@ public class BeanInfo {
         this.date = date;
     }
 
+    @Override
+    public String toString() {
+        return "BeanInfo{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", country='" + country + '\'' +
+                ", area='" + area + '\'' +
+                ", manor='" + manor + '\'' +
+                ", altitude='" + altitude + '\'' +
+                ", species='" + species + '\'' +
+                ", level='" + level + '\'' +
+                ", process='" + process + '\'' +
+                ", stockWeight=" + stockWeight +
+                ", eachUseAmount=" + eachUseAmount +
+                ", waterContent=" + waterContent +
+                ", supplier='" + supplier + '\'' +
+                ", price=" + price +
+                ", date=" + date +
+                '}';
+    }
 }
