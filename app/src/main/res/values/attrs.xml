@@ -6,6 +6,7 @@
         <attr name="secondCircleRadius" format="dimension"/>
         <attr name="titleIcon" format="reference"/>
         <attr name="titleValue" format="string"/>
+        <attr name="rotateAngle" format="float"/>
     </declare-styleable>
     <declare-styleable name="FormView">
         <attr name="gridWidth" format="integer"></attr>

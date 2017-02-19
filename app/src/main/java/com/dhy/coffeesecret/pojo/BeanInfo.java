@@ -1,9 +1,10 @@
 package com.dhy.coffeesecret.pojo;
 
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class BeanInfo {
+public class BeanInfo implements Serializable {
     private int id;
     //咖啡名称
     private String name;
@@ -17,14 +18,14 @@ public class BeanInfo {
     private String altitude;
     //咖啡种属
     private String species;
+    //咖啡大类
+    private String oneSpecies;
     //咖啡等级
     private String level;
     //处理方式
     private String process;
     //库存重量
     private double stockWeight;
-    //每次使用量
-    private float eachUseAmount;
     //含水量
     private float waterContent;
     //供应商
@@ -115,13 +116,6 @@ public class BeanInfo {
         this.stockWeight = stockWeight;
     }
 
-    public float getEachUseAmount() {
-        return eachUseAmount;
-    }
-
-    public void setEachUseAmount(float eachUseAmount) {
-        this.eachUseAmount = eachUseAmount;
-    }
 
     public float getWaterContent() {
         return waterContent;
@@ -155,4 +149,11 @@ public class BeanInfo {
         this.date = date;
     }
 
+    public String getOneSpecies() {
+        return oneSpecies;
+    }
+
+    public void setOneSpecies(String oneSpecies) {
+        this.oneSpecies = oneSpecies;
+    }
 }

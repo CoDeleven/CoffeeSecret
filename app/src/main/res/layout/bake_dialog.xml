@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="#F5F5F5"
+              android:orientation="vertical">
+    <!-- 标题栏-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFF"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="34dp"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/ic_bake_dialog_line"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="准备烘焙"
+                android:textSize="12sp"/>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#DBD8D7"/>
+    </LinearLayout>
+
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="9dp"
+        android:background="#FFF"
+        android:orientation="vertical">
+
+        <ListView
+            android:id="@+id/id_bake_dialog_scroll"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginLeft="17.4375dp"
+            android:scrollbars="none"></ListView>
+
+        <Button
+            android:id="@+id/id_bake_dialog_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginBottom="9.5625dp"
+            android:layout_marginTop="9.5625dp"
+            android:background="@android:color/transparent"
+            android:minHeight="15dp"
+            android:paddingRight="17.4375dp"
+            android:text="添加"
+            android:textColor="#936743"
+            android:textSize="12sp"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#DBD8D7"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="9dp"
+        android:background="#FFF"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="55.125dp"
+            android:paddingRight="55.125dp">
+
+            <CheckBox
+                android:id="@+id/id_bake_dialog_checkbox"
+                style="@style/dialogCheckbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:padding="3dp"
+                android:paddingLeft="10dp"
+                android:text="启用参考曲线"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/id_bake_dialog_refer_selector"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#DBDCD8"></View>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingLeft="55.125dp"
+                android:paddingRight="55.125dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingBottom="8.4375dp"
+                    android:paddingTop="8.4375dp"
+                    android:src="@drawable/ic_bake_dialog_collection"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingBottom="8.4375dp"
+                    android:paddingTop="8.4375dp"
+                    android:src="@drawable/ic_bake_dialog_history"/>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#DBD8D7"/>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="9dp"
+        android:background="#FFF"
+        android:paddingBottom="7.3125dp"
+        android:paddingLeft="70dp"
+        android:paddingRight="70dp"
+        android:paddingTop="7.3125dp">
+
+        <Button
+            android:id="@+id/id_bake_dialog_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:background="@drawable/bg_round_5radius"
+            android:minHeight="25dp"
+            android:minWidth="50dp"
+            android:text="取消"
+            android:textColor="#FFF"/>
+
+        <Button
+            android:id="@+id/id_bake_dialog_confirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/bg_round_5radius"
+            android:minHeight="25dp"
+            android:minWidth="50dp"
+            android:text="确定"
+            android:textColor="#FFF"/>
+    </RelativeLayout>
+</LinearLayout>

@@ -22,6 +22,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:paddingLeft="48dp"
+            android:paddingTop="70dp"
             android:src="@drawable/ic_bake_conect"/>
 
         <RelativeLayout
@@ -29,12 +31,12 @@
             android:layout_width="207dp"
             android:layout_height="207dp"
             android:layout_centerHorizontal="true">
-
             <com.dhy.coffeesecret.views.ArcProgress
                 android:id="@+id/id_arcprogress_bean"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 arc:firstCircleRadius="5dp"
+                arc:rotateAngle="-90"
                 arc:secondCircleRadius="4dp"
                 arc:suffix="@string/suffix_arcProgress"
                 arc:titleValue="豆温"/>
@@ -115,24 +117,30 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="top"
                     android:layout_weight="1"
                     android:gravity="center_horizontal"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:paddingBottom="10dp">
 
                     <TextView
+                        android:id="@+id/bluetooth_status"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
+                        android:gravity="center_vertical"
                         android:text="已连接"
                         android:textColor="#000000"
                         android:textSize="19sp"/>
 
                     <TextView
+                        android:id="@+id/bluetooth_operator"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
+                        android:gravity="center_vertical"
+                        android:padding="10dp"
                         android:text="切换"
+                        android:textColor="@color/colorPrimary"
                         android:textSize="11sp"/>
 
                 </LinearLayout>
@@ -154,7 +162,7 @@
             android:layout_centerVertical="true"
             android:background="@android:color/transparent"></View>
 
-
+        <!-- 第二个圈，入风温-->
         <RelativeLayout
             android:id="@+id/device_bake_circle2"
             android:layout_width="114dp"
@@ -168,6 +176,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 arc:firstCircleRadius="3dp"
+                arc:rotateAngle="60"
                 arc:secondCircleRadius="2dp"
                 arc:suffix="@string/suffix_arcProgress"
                 arc:titleValue="入风温"/>
@@ -177,8 +186,8 @@
                 android:layout_height="match_parent"
                 android:layout_centerInParent="true"
                 android:orientation="vertical"
-                android:paddingBottom="10dp"
-                android:paddingTop="10dp">
+                android:paddingBottom="20dp"
+                android:paddingTop="20dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -247,21 +256,22 @@
             </LinearLayout>
         </RelativeLayout>
 
-
+        <!-- 第三个圈，出风温-->
         <RelativeLayout
             android:id="@+id/device_bake_circle3"
             android:layout_width="114dp"
             android:layout_height="114dp"
             android:layout_alignRight="@id/bake_vetical_refer"
             android:layout_below="@id/bake_horizontal_refer"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="20dp">
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="70dp">
 
             <com.dhy.coffeesecret.views.ArcProgress
                 android:id="@+id/id_arcprogress_outwind"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 arc:firstCircleRadius="3dp"
+                arc:rotateAngle="120"
                 arc:secondCircleRadius="2dp"
                 arc:suffix="@string/suffix_arcProgress"
                 arc:titleValue="出风温"/>
@@ -271,8 +281,8 @@
                 android:layout_height="match_parent"
                 android:layout_centerInParent="true"
                 android:orientation="vertical"
-                android:paddingBottom="10dp"
-                android:paddingTop="10dp">
+                android:paddingBottom="20dp"
+                android:paddingTop="20dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -343,11 +353,14 @@
 
 
         <Button
+            android:id="@+id/id_device_prepare_bake"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="20dp"
-            android:background="@drawable/bg_round_pricolor"/>
+            android:layout_below="@id/device_bake_circle3"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/bg_round_pricolor"
+            android:text="准备烘焙"
+            android:textColor="#FFF"/>
     </RelativeLayout>
 
 

@@ -3,8 +3,6 @@ package com.dhy.coffeesecret.views;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -21,25 +19,16 @@ import com.dhy.coffeesecret.utils.UnitConvert;
  */
 
 public class ArcProgress extends View {
-    private RectF rectF = new RectF();
     private Paint arcPaint = new Paint();
     private Paint textPaint = new Paint();
     private float strokeWidth;
-    private String accContent = "0";
-    private float accContentSize;
-    private String content = "0";
     private String suffix;
-    private float radius;
-    private float contentSize;
-    private float suffixSize;
     private float width;
     private float height;
     private float mFisrtArcRadius;
     private float mSecondArcRadius;
-    private String mTitle;
-    private Bitmap mBitmap;
-    private float mBlankSpace = 10;
     private Resources res;
+    private float mRotateAngle;
     public ArcProgress(Context context) {
         this(context, null);
     }
@@ -78,16 +67,9 @@ public class ArcProgress extends View {
         suffix = typedArray.getString(R.styleable.ArcProgress_suffix);
         mFisrtArcRadius = typedArray.getDimension(R.styleable.ArcProgress_firstCircleRadius, 0);
         mSecondArcRadius = typedArray.getDimension(R.styleable.ArcProgress_secondCircleRadius, 0);
-        mBitmap = BitmapFactory.decodeResource(res, typedArray.getResourceId(R.styleable.ArcProgress_titleIcon, 0));
-        mTitle = typedArray.getString(R.styleable.ArcProgress_titleValue);
+        mRotateAngle = typedArray.getFloat(R.styleable.ArcProgress_rotateAngle, 0);
 
-
-        contentSize = UnitConvert.sp2px(res, 24);
-        suffixSize = UnitConvert.sp2px(res, 10);
         strokeWidth = UnitConvert.dp2px(res, 3f);
-        accContentSize = UnitConvert.sp2px(res, 16);
-
-
     }
 
     @Override
@@ -129,23 +111,12 @@ public class ArcProgress extends View {
 
     }
 
-    private void drawCenterTemprature() {
-
-    }
-
-    private void drawAccTemprature() {
-
-    }
-
-    private void drawBottomLabel() {
-
-    }
-
-    private void drawCircle(Canvas canvas) {
-        // 绘制外圈渐变
+    private void drawCircle(final Canvas canvas) {
+        canvas.rotate(mRotateAngle, width / 2, height / 2);
         SweepGradient sweepGradient = new SweepGradient(width / 2, height / 2, new int[]{Color.parseColor("#635b42"), Color.parseColor("#c3b9b4")}, null);
         arcPaint.setShader(sweepGradient);
         canvas.drawArc(new RectF(0, 0, width, height), 0, 360, false, arcPaint);
+        canvas.rotate(-mRotateAngle, width / 2, height / 2);
 
         // 取消shader
         arcPaint.setShader(null);
@@ -155,21 +126,7 @@ public class ArcProgress extends View {
         // 绘制最内圈
         arcPaint.setColor(Color.WHITE);
         canvas.drawOval(new RectF(mFisrtArcRadius + mSecondArcRadius, mFisrtArcRadius + mSecondArcRadius, width - mFisrtArcRadius - mSecondArcRadius, height - mFisrtArcRadius - mSecondArcRadius), arcPaint);
-
-
-    }
-
-    /**
-     * 设置当前数值，计算后重绘
-     *
-     * @param progress
-     * @param acceleration
-     */
-    public void setProgress(float progress, float acceleration) {
-        this.accContent = (acceleration > 0 ? "↑" : "↓") + String.format("%.2f", acceleration) + suffix + "/s";
-        this.content = "" + progress;
         invalidate();
     }
-
 
 }
