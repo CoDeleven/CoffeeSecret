@@ -6,6 +6,7 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:screenOrientation="portrait"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
@@ -19,9 +20,11 @@
         </activity>
         <activity android:name=".ui.device.DeviceChildActivity" />
         <activity android:name=".ui.container.BeanInfoActivity" />
-        <activity android:name=".ui.container.fragments.LinesSelectedActivity" />
+        <activity android:name=".ui.container.EditBeanActivity" />
+        <activity android:name=".ui.container.LinesSelectedActivity" />
         <activity android:name=".ui.device.fragments.ReportActivity" />
-        <activity android:name=".ui.cup.NewCuppingActivity"></activity>
+        <activity android:name=".ui.cup.NewCuppingActivity" />
+        <activity android:name=".ui.container.SelectInfoActivity"></activity>
     </application>
 
 </manifest>

@@ -13,10 +13,11 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:background="@color/colorPrimary"
-        app:pstsDividerColor="@color/white"
+        app:pstsDividerColor="@color/colorPrimary"
+        app:pstsTabPaddingLeftRight="24dp"
         app:pstsIndicatorColor="@color/white"
         app:pstsUnderlineColor="@color/colorPrimary"
-        app:pstsUnderlineHeight="6dp" />
+        app:pstsUnderlineHeight="5dp" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/container_pager"

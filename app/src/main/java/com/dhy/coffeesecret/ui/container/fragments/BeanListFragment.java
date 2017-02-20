@@ -102,9 +102,9 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
             @Override
             public void onItemClicked(int position) {
                 Intent intent = new Intent(context, BeanInfoActivity.class);
-                intent.putExtra("beanInfo", "beanInfo");
-                Log.i(TAG, "onItemClicked: position = " + position);
+                intent.putExtra("beanInfo", coffeeBeanInfos.get(position));
                 startActivity(intent);
+                getActivity().overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
             }
         });
 
@@ -312,7 +312,7 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
 
         private final WeakReference<BeanListFragment> mActivity;
 
-        public BeanListHandler(BeanListFragment activity) {
+        BeanListHandler(BeanListFragment activity) {
             mActivity = new WeakReference<>(activity);
         }
 

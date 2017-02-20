@@ -10,9 +10,10 @@
             style="@style/ItemTextView"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:text="产地" />
+            android:text="@string/produce_area" />
 
         <TextView
+            android:id="@+id/info_area"
             style="@style/ItemTextView"
             android:layout_width="0dp"
             android:layout_weight="1"
@@ -25,9 +26,11 @@
             style="@style/ItemTextView"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:text="庄园" />
+            android:text="@string/manor"
+            android:id="@+id/textView2" />
 
         <TextView
+            android:id="@+id/info_manor"
             style="@style/ItemTextView"
             android:layout_width="0dp"
             android:layout_weight="1"
@@ -41,9 +44,10 @@
             style="@style/ItemTextView"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:text="海拔" />
+            android:text="@string/altitude" />
 
         <TextView
+            android:id="@+id/info_altitude"
             style="@style/ItemTextView"
             android:layout_width="0dp"
             android:layout_weight="1"
@@ -56,9 +60,10 @@
             style="@style/ItemTextView"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:text="豆种" />
+            android:text="@string/bean_species" />
 
         <TextView
+            android:id="@+id/info_species"
             style="@style/ItemTextView"
             android:layout_width="0dp"
             android:layout_weight="1"
@@ -71,9 +76,10 @@
             style="@style/ItemTextView"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:text="等级" />
+            android:text="@string/level" />
 
         <TextView
+            android:id="@+id/info_level"
             style="@style/ItemTextView"
             android:layout_width="0dp"
             android:layout_weight="1"
@@ -86,9 +92,10 @@
             style="@style/ItemTextView"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:text="含水量" />
+            android:text="@string/water_content" />
 
         <TextView
+            android:id="@+id/info_water_content"
             style="@style/ItemTextView"
             android:layout_width="0dp"
             android:layout_weight="1"
@@ -102,9 +109,10 @@
             style="@style/ItemTextView"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:text="处理方式" />
+            android:text="@string/handler" />
 
         <TextView
+            android:id="@+id/info_handler"
             style="@style/ItemTextView"
             android:layout_width="0dp"
             android:layout_weight="1"
@@ -117,9 +125,10 @@
             style="@style/ItemTextView"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:text="厂家" />
+            android:text="@string/supplier" />
 
         <TextView
+            android:id="@+id/info_supplier"
             style="@style/ItemTextView"
             android:layout_width="0dp"
             android:layout_weight="1"
@@ -132,9 +141,10 @@
             style="@style/ItemTextView"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:text="价格" />
+            android:text="@string/price" />
 
         <TextView
+            android:id="@+id/info_price"
             style="@style/ItemTextView"
             android:layout_width="0dp"
             android:layout_weight="1"
@@ -147,9 +157,10 @@
             style="@style/ItemTextView"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:text="库存量" />
+            android:text="@string/weight" />
 
         <TextView
+            android:id="@+id/info_weight"
             style="@style/ItemTextView"
             android:layout_width="0dp"
             android:layout_weight="1"
@@ -162,9 +173,10 @@
             style="@style/ItemTextView"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:text="购买日期" />
+            android:text="@string/buy_date" />
 
         <TextView
+            android:id="@+id/info_buy_date"
             style="@style/ItemTextView"
             android:layout_width="0dp"
             android:layout_weight="1"

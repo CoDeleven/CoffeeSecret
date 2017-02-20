@@ -20,21 +20,20 @@ public class BeanInfo implements Serializable{
     private String species;
     //咖啡等级
     private String level;
-    //处理方式
-    private String process;
-    //库存重量
-    private double stockWeight;
-    //每次使用量
-    private float eachUseAmount;
     //含水量
     private float waterContent;
+    //处理方式
+    private String handler;
+    //库存重量
+    private double weight;
+    //每次使用量
+    private float eachUseAmount;
     //供应商
     private String supplier;
     //价格
     private double price;
     //购买日期
     private Date date;
-
 
     public int getId() {
         return id;
@@ -100,20 +99,28 @@ public class BeanInfo implements Serializable{
         this.level = level;
     }
 
-    public String getProcess() {
-        return process;
+    public float getWaterContent() {
+        return waterContent;
     }
 
-    public void setProcess(String process) {
-        this.process = process;
+    public void setWaterContent(float waterContent) {
+        this.waterContent = waterContent;
     }
 
-    public double getStockWeight() {
-        return stockWeight;
+    public String getHandler() {
+        return handler;
     }
 
-    public void setStockWeight(double stockWeight) {
-        this.stockWeight = stockWeight;
+    public void setHandler(String handler) {
+        this.handler = handler;
+    }
+
+    public double getWeight() {
+        return weight;
+    }
+
+    public void setWeight(double weight) {
+        this.weight = weight;
     }
 
     public float getEachUseAmount() {
@@ -122,14 +129,6 @@ public class BeanInfo implements Serializable{
 
     public void setEachUseAmount(float eachUseAmount) {
         this.eachUseAmount = eachUseAmount;
-    }
-
-    public float getWaterContent() {
-        return waterContent;
-    }
-
-    public void setWaterContent(float waterContent) {
-        this.waterContent = waterContent;
     }
 
     public String getSupplier() {
@@ -167,10 +166,10 @@ public class BeanInfo implements Serializable{
                 ", altitude='" + altitude + '\'' +
                 ", species='" + species + '\'' +
                 ", level='" + level + '\'' +
-                ", process='" + process + '\'' +
-                ", stockWeight=" + stockWeight +
-                ", eachUseAmount=" + eachUseAmount +
                 ", waterContent=" + waterContent +
+                ", handler='" + handler + '\'' +
+                ", weight=" + weight +
+                ", eachUseAmount=" + eachUseAmount +
                 ", supplier='" + supplier + '\'' +
                 ", price=" + price +
                 ", date=" + date +

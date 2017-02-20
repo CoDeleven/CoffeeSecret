@@ -1,4 +1,4 @@
-package com.dhy.coffeesecret.ui.container.fragments;
+package com.dhy.coffeesecret.ui.container;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,9 +15,11 @@ import android.widget.ListView;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.ui.container.adapters.LinesAdapter;
+import com.dhy.coffeesecret.ui.container.fragments.SearchFragment;
 import com.dhy.coffeesecret.ui.device.fragments.ReportActivity;
 import com.dhy.coffeesecret.views.SearchEditText;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -94,7 +96,12 @@ public class LinesSelectedActivity extends AppCompatActivity implements View.OnC
     @Override
     public void starSearchPage() {
         FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
+        tx.setCustomAnimations(R.anim.in_from_right, R.anim.out_to_left);
+
         if (!isAddSearchFragment) {
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("reportList", (Serializable) getDatas());
+            searchFragment.setArguments(bundle);
             tx.add(R.id.id_lines_container, searchFragment, "search_line");
             isAddSearchFragment = true;
         } else {
