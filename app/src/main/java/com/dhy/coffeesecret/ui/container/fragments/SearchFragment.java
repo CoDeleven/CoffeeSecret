@@ -1,12 +1,18 @@
 package com.dhy.coffeesecret.ui.container.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,35 +20,79 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.RelativeLayout;
+import android.widget.ListView;
 
 import com.dhy.coffeesecret.R;
+import com.dhy.coffeesecret.pojo.BeanInfo;
+import com.dhy.coffeesecret.ui.container.BeanInfoActivity;
+import com.dhy.coffeesecret.ui.container.adapters.BeanListAdapter;
+
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 
 
 public class SearchFragment extends Fragment {
+
+    private View searchView;
+
     private EditText editText;
-    private Toolbar toolbar;
     private Button cancel;
     private ImageButton clear;
+    private RecyclerView searchList;
     private InputMethodManager imm;
+
+    private Context mContext;
+    private BeanListAdapter beanListAdapter;
+    private ArrayList<BeanInfo> beanInfos;
+    private ArrayList<BeanInfo> beanInfoTemp;
+
+    private static final String TAG = "SearchFragment";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_search, container, false);
-        this.cancel = (Button) view.findViewById(R.id.id_btn_cancel);
+        searchView = inflater.inflate(R.layout.fragment_search, container, false);
+        beanInfos = new ArrayList<>();
+        beanInfoTemp = (ArrayList<BeanInfo>) getArguments().getSerializable("beanList");
+        mContext = getContext();
 
-        this.clear = (ImageButton) view.findViewById(R.id.id_search_clear);
-        RelativeLayout rl = (RelativeLayout) view.findViewById(R.id.rl_2);
-        editText = (EditText) rl.getChildAt(0);
+        return searchView;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        editText = (EditText) searchView.findViewById(R.id.id_search_edit);
+        cancel = (Button) searchView.findViewById(R.id.id_btn_cancel);
+        clear = (ImageButton) searchView.findViewById(R.id.id_search_clear);
+        searchList = (RecyclerView) searchView.findViewById(R.id.search_list);
 
 
         initCancel();
         initClear();
         initEditText();
+        initSearchList();
+    }
 
-        return view;
+    private void initSearchList() {
+
+        LinearLayoutManager manager = new LinearLayoutManager(mContext);
+        manager.setOrientation(LinearLayoutManager.VERTICAL);
+
+        beanListAdapter = new BeanListAdapter(mContext, beanInfos, new BeanListAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClicked(int position) {
+                Intent intent = new Intent(mContext, BeanInfoActivity.class);
+                intent.putExtra("beanInfo", "beanInfo");
+                Log.i(TAG, "onItemClicked: position = " + position);
+                startActivity(intent);
+            }
+        });
+
+        searchList.setLayoutManager(manager);
+        searchList.setAdapter(beanListAdapter);
     }
 
     private void initCancel() {
@@ -76,7 +126,15 @@ public class SearchFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable editable) {
+                Log.i(TAG, "afterTextChanged: " + System.currentTimeMillis());
+                String searchText = editable.toString();
 
+                Message msg = new Message();
+                msg.what = GET_LIKE_BEAN_LIST;
+                msg.obj = searchText;
+                mHandler.sendMessage(msg);
+                
+                Log.i(TAG, "afterTextChanged: " + System.currentTimeMillis());
             }
         });
     }
@@ -111,4 +169,40 @@ public class SearchFragment extends Fragment {
             imm.showSoftInput(editText, InputMethodManager.SHOW_FORCED);
         }
     }
+
+    private static final int GET_LIKE_BEAN_LIST = 111;
+    private SearchHandler mHandler = new SearchHandler(this);
+
+    private class SearchHandler extends Handler {
+
+            private final WeakReference<SearchFragment> mActivity;
+
+            public SearchHandler(SearchFragment activity) {
+                mActivity = new WeakReference<>(activity);
+            }
+
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                final SearchFragment activity = mActivity.get();
+                switch (msg.what) {
+                    case GET_LIKE_BEAN_LIST:
+                        if (activity.beanInfoTemp != null) {
+                            beanInfos.clear();
+
+                            for (BeanInfo beanInfo : activity.beanInfoTemp) {
+                                if (beanInfo.getName().contains((String) msg.obj)) {
+                                    activity.beanInfos.add(beanInfo);
+                                }
+                            }
+
+                            activity.beanListAdapter.notifyDataSetChanged();
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+    }
+
 }

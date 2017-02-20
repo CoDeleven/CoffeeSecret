@@ -181,9 +181,11 @@ public class BakeDialog extends DialogFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        BeanInfo beanInfo = (BeanInfo) data.getSerializableExtra("beanInfo");
-        dialogBeanInfos.get(curItem).setBeanInfo(beanInfo);
-        ((BaseAdapter) mListView.getAdapter()).notifyDataSetChanged();
+        if(data != null){
+            BeanInfo beanInfo = (BeanInfo) data.getSerializableExtra("beanInfo");
+            dialogBeanInfos.get(curItem).setBeanInfo(beanInfo);
+            ((BaseAdapter) mListView.getAdapter()).notifyDataSetChanged();
+        }
     }
 
     public interface OnBeaninfosConfirmListener {

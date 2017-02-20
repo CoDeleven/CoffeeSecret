@@ -43,14 +43,6 @@ public class Utils {
         return (byte) "0123456789ABCDEF".indexOf(c);
     }
 
-    public static Temprature getTempratures(String data) {
-        String[] subStr = data.split(",");
-        Temprature temp = new Temprature();
-        temp.setBeanTemp(Float.parseFloat(subStr[0]));
-        temp.setInwindTemp(Float.parseFloat(subStr[1]));
-        temp.setOutwindTemp(Float.parseFloat(subStr[2]));
 
-        return temp;
-    }
 
 }

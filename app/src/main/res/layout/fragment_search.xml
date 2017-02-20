@@ -1,9 +1,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#F3F3F3"
-                tools:context="com.dhy.coffeesecret.ui.container.fragments.SearchFragment">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F3F3F3"
+    tools:context="com.dhy.coffeesecret.ui.container.fragments.SearchFragment">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -22,7 +22,7 @@
             android:layout_weight="5">
 
             <EditText
-                android:id="@+id/id_search_fragment"
+                android:id="@+id/id_search_edit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
@@ -34,7 +34,7 @@
                 android:hint="搜索"
                 android:padding="5dp"
                 android:singleLine="true"
-                android:textSize="16sp"/>
+                android:textSize="16sp" />
 
             <ImageButton
                 android:id="@+id/id_search_clear"
@@ -45,7 +45,7 @@
                 android:background="@android:color/transparent"
                 android:paddingRight="3dp"
                 android:src="@drawable/ic_container_del"
-                android:visibility="gone"/>
+                android:visibility="gone" />
         </RelativeLayout>
 
         <Button
@@ -55,12 +55,12 @@
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:background="@android:color/transparent"
-            android:text="取消"/>
+            android:text="取消" />
     </LinearLayout>
 
-    <ListView
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/search_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/ll_1"></ListView>
+        android:layout_below="@id/ll_1" />
 </RelativeLayout>

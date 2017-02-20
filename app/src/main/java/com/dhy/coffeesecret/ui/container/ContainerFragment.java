@@ -1,10 +1,12 @@
 package com.dhy.coffeesecret.ui.container;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,12 +16,15 @@ import com.astuetz.PagerSlidingTabStrip;
 import com.dhy.coffeesecret.MainActivity;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.ui.container.fragments.BeanListFragment;
+import com.dhy.coffeesecret.ui.container.fragments.SearchFragment;
+import com.dhy.coffeesecret.ui.cup.CupFragment;
 import com.dhy.coffeesecret.views.SearchEditText;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ContainerFragment extends Fragment {
+public class ContainerFragment extends Fragment implements ViewPager.OnPageChangeListener{
 
     private static final String TAG = "ContainerFragment";
     private final String[] TITLES = {"全部", "中美", "南美", "大洋", "亚洲", "非洲", "其它"};
@@ -28,7 +33,7 @@ public class ContainerFragment extends Fragment {
     private SearchEditText searchBeanET = null;
     private ViewPager containerPager = null;
     private PagerSlidingTabStrip containerTabs = null;
-    private List<Fragment> fragments = null;
+    private List<BeanListFragment> fragments = null;
     private Context context;
 
     public ContainerFragment() {
@@ -56,11 +61,26 @@ public class ContainerFragment extends Fragment {
         return containerView;
     }
 
+    private boolean isAddSearchFragment = false;
+    private SearchFragment searchFragment = new SearchFragment();
+
     public void initView() {
         searchBeanET.setSearchBarListener(new SearchEditText.SearchBarListener() {
             @Override
             public void starSearchPage() {
+                FragmentTransaction tx = ((MainActivity)context).getSupportFragmentManager().beginTransaction();
+                tx.setCustomAnimations(R.anim.in_from_right, R.anim.out_to_left);
 
+                if (!isAddSearchFragment) {
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("beanList", (Serializable) fragments.get(0).getBeaninfoList());
+                    searchFragment.setArguments(bundle);
+                    tx.add(R.id.activity_main, searchFragment, "search_bean");
+                    isAddSearchFragment = true;
+                } else {
+                    tx.show(searchFragment);
+                }
+                tx.commit();
             }
         });
 
@@ -81,6 +101,25 @@ public class ContainerFragment extends Fragment {
             fragment.setTitle(TITLES[i]);
             fragments.add(fragment);
         }
+        containerPager.addOnPageChangeListener(this);
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    //当前page的位置
+    private int position;
+
+    @Override
+    public void onPageSelected(int position) {
+        this.position = position;
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
     }
 
     public class MyPagerAdapter extends FragmentPagerAdapter {
@@ -105,5 +144,14 @@ public class ContainerFragment extends Fragment {
             return fragments.get(position);
         }
 
+    }
+
+    public void onBackPressed() {
+        if (searchFragment != null && !searchFragment.isHidden()) {
+            FragmentTransaction tx = ((MainActivity)context).getSupportFragmentManager().beginTransaction();
+            tx.remove(searchFragment);
+            tx.commit();
+            isAddSearchFragment = false;
+        }
     }
 }

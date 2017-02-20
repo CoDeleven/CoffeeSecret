@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.dhy.coffeesecret.ui.cup.NewCuppingActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:fitsSystemWindows="true"
+        app:navigationIcon="@drawable/ic_back">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="0dp"
+            android:padding="0dp">
+
+            <Button
+                android:id="@+id/btn_save"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:background="@android:color/transparent"
+                android:minHeight="0dp"
+                android:minWidth="0dp"
+                android:paddingLeft="17dp"
+                android:paddingRight="17dp"
+                android:text="@string/save"
+                android:textColor="@android:color/white" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@id/btn_save"
+                android:gravity="center"
+                android:text="@string/new_cupping_title"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/actionbar_title_font_size" />
+        </RelativeLayout>
+    </android.support.v7.widget.Toolbar>
+
+    <RadioGroup
+        android:id="@+id/tabs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolBar"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginTop="7dp"
+        android:background="@drawable/tab_round_border"
+        android:checkedButton="2"
+        android:orientation="horizontal"
+        android:padding="2dp">
+
+        <RadioButton
+            android:id="@+id/rd_cup"
+            style="@style/TabRadioButton"
+            android:background="@drawable/bg_tab_left_selector"
+            android:text="杯测信息" />
+
+        <RadioButton
+            android:id="@+id/rd_bake"
+            style="@style/TabRadioButton"
+            android:background="@drawable/bg_tab_right_selector"
+            android:text="烘焙详情" />
+    </RadioGroup>
+
+    <View
+        android:id="@+id/space"
+        android:layout_width="match_parent"
+        android:layout_height="7dp"
+        android:layout_below="@id/tabs"
+        android:background="#EDEEE9" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/space">
+    </android.support.v4.view.ViewPager>
+</RelativeLayout>

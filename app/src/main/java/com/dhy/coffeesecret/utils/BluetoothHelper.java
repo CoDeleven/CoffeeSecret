@@ -60,7 +60,7 @@ public class BluetoothHelper {
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
-                mDataListener.notifyDataChanged(Utils.getTempratures(hexData));
+                mDataListener.notifyDataChanged(Temprature.parseHex2Temprature(hexData));
             }
             return;
         }

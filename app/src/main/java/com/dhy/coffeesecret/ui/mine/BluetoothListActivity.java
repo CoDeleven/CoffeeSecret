@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BluetoothListActivity extends AppCompatActivity implements BluetoothHelper.DeviceChangeListener, BluetoothHelper.DataChangeListener, BluetoothHelper.ViewHandlerListener {
+public class BluetoothListActivity extends AppCompatActivity implements BluetoothHelper.DeviceChangeListener, BluetoothHelper.ViewHandlerListener {
 
     private BluetoothHelper mHelper;
     private ListView listView;
@@ -65,11 +65,10 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
     protected void onStart() {
         super.onStart();
         if (mHelper == null) {
-            mHelper = BluetoothHelper.getNewInstance(getApplicationContext());
-            mHelper.setDeviceListener(this);
-            mHelper.setDataListener(this);
-            mHelper.setViewHandlerListener(this);
+            mHelper = BluetoothHelper.getNewInstance();
         }
+        mHelper.setDeviceListener(this);
+        mHelper.setViewHandlerListener(this);
         mHelper.scanBluetoothDevice();
     }
 
@@ -78,7 +77,6 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bluetooth_list);
         listView = (ListView) findViewById(R.id.id_bluetooth_list);
-
 
         listView.setAdapter(mAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -99,11 +97,6 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
 
 
     @Override
-    public void notifyDataChanged(Temprature temprature) {
-        Log.e("codelevex", "temprature:" + temprature.getBeanTemp() + ", inwindtemp:" + temprature.getInwindTemp());
-    }
-
-    @Override
     public void notifyNewDevice(BluetoothDevice device) {
         if (!deviceMap.containsKey(device.getAddress())) {
             Log.e("codelevex", "我activity的实现:Device" + device.getName());
@@ -115,6 +108,7 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
     @Override
     public void handleViewBeforeStartRead() {
         progressCircle.setVisibility(View.GONE);
+        finish();
     }
 
     public void refreshListView() {

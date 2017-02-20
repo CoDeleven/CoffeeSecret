@@ -23,6 +23,11 @@ public class DialogBeanSelectedActivity extends AppCompatActivity {
     private List<BeanInfo> mBeanInfos;
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dialog_bean_selected);
