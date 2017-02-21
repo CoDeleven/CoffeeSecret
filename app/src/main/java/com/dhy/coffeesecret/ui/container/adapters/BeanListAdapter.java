@@ -38,23 +38,6 @@ public class BeanListAdapter extends RecyclerView.Adapter<BeanListAdapter.BeanLi
     }
 
     @Override
-    public BeanListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new BeanListViewHolder(inflater.inflate(R.layout.item_bean_list, null));
-    }
-
-    @Override
-    public void onBindViewHolder(BeanListViewHolder holder, final int position) {
-        holder.beanName.setText(coffeeBeanInfoList.get(position).getName());
-        holder.itemBeanLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onItemClickListener.onItemClicked(position);
-            }
-        });
-    }
-
-
-    @Override
     public long getHeaderId(int position) {
         return coffeeBeanInfoList.get(position).getName().charAt(0);
     }
@@ -71,6 +54,23 @@ public class BeanListAdapter extends RecyclerView.Adapter<BeanListAdapter.BeanLi
     }
 
     @Override
+    public BeanListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        return new BeanListViewHolder(inflater.inflate(R.layout.item_bean_list, null));
+    }
+
+
+    @Override
+    public void onBindViewHolder(BeanListViewHolder holder, final int position) {
+        holder.beanName.setText(coffeeBeanInfoList.get(position).getName());
+        holder.itemBeanLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onItemClickListener.onItemClicked(position);
+            }
+        });
+    }
+
+    @Override
     public int getItemCount() {
         return coffeeBeanInfoList.size();
     }
@@ -84,7 +84,7 @@ public class BeanListAdapter extends RecyclerView.Adapter<BeanListAdapter.BeanLi
         private TextView beanName = null;
         private LinearLayout itemBeanLayout = null;
 
-        public BeanListViewHolder(View itemView) {
+        BeanListViewHolder(View itemView) {
             super(itemView);
             beanName = (TextView) itemView.findViewById(R.id.list_bean_produceArea);
             itemBeanLayout = (LinearLayout) itemView.findViewById(R.id.item_bean_layout);

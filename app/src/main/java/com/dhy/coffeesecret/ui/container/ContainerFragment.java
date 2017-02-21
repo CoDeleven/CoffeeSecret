@@ -171,4 +171,8 @@ public class ContainerFragment extends Fragment implements ViewPager.OnPageChang
             isAddSearchFragment = false;
         }
     }
+
+    public boolean isAddSearch() {
+        return isAddSearchFragment;
+    }
 }

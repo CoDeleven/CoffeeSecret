@@ -26,6 +26,8 @@ import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.pojo.BeanInfo;
 import com.dhy.coffeesecret.ui.container.BeanInfoActivity;
 import com.dhy.coffeesecret.ui.container.adapters.BeanListAdapter;
+import com.dhy.coffeesecret.ui.container.adapters.CountryListAdapter;
+import com.dhy.coffeesecret.ui.container.adapters.InfoListAdapter;
 import com.dhy.coffeesecret.ui.container.adapters.LineListAdapter;
 import com.dhy.coffeesecret.ui.device.fragments.ReportActivity;
 
@@ -46,10 +48,13 @@ public class SearchFragment extends Fragment {
     private Context mContext;
     private BeanListAdapter beanListAdapter;
     private LineListAdapter lineListAdapter;
+    private InfoListAdapter infoListAdapter;
     private ArrayList<BeanInfo> beanInfos;
     private ArrayList<BeanInfo> beanInfoTemp;
     private ArrayList<BakeReport> bakeReports;
     private ArrayList<BakeReport> bakeReportTemp;
+    private ArrayList<String> infos;
+    private ArrayList<String> infoTemp;
     private String entrance;
 
     private static final String TAG = "SearchFragment";
@@ -97,6 +102,20 @@ public class SearchFragment extends Fragment {
                     startActivity(intent);
                 }
             });
+        } else if (entrance.equals("search_info")) {
+            infos = new ArrayList<>();
+            infoTemp = bundle.getStringArrayList("infoList");
+
+            for (String info : infoTemp) {
+                Log.i(TAG, "initData: " + info);
+            }
+
+            infoListAdapter = new InfoListAdapter(mContext, infos, new InfoListAdapter.OnInfoListClickListener() {
+                @Override
+                public void onInfoClicked(int position) {
+                    onSearchCallBack.onSearchCallBack(infos.get(position));
+                }
+            });
         }
 
     }
@@ -118,6 +137,8 @@ public class SearchFragment extends Fragment {
             initSearchList(beanListAdapter);
         } else if (entrance.equals("search_line")) {
             initSearchList(lineListAdapter);
+        } else if (entrance.equals("search_info")) {
+            initSearchList(infoListAdapter);
         }
     }
 
@@ -163,7 +184,17 @@ public class SearchFragment extends Fragment {
                 String searchText = editable.toString();
 
                 Message msg = new Message();
-                msg.what = entrance.equals("search_bean")?GET_LIKE_BEAN_LIST: GET_LIKE_LINE_LIST;
+                switch (entrance) {
+                    case "search_bean":
+                        msg.what = GET_LIKE_BEAN_LIST;
+                        break;
+                    case "search_line":
+                        msg.what = GET_LIKE_LINE_LIST;
+                        break;
+                    case "search_info":
+                        msg.what = GET_LIKE_INFO_LIST;
+                        break;
+                }
                 msg.obj = searchText;
                 mHandler.sendMessage(msg);
 
@@ -183,6 +214,7 @@ public class SearchFragment extends Fragment {
 
     public void remove() {
         FragmentTransaction tx = getFragmentManager().beginTransaction();
+        tx.setCustomAnimations(R.anim.in_from_left, R.anim.out_to_right);
         tx.remove(SearchFragment.this);
         tx.commit();
     }
@@ -210,6 +242,7 @@ public class SearchFragment extends Fragment {
 
     private static final int GET_LIKE_BEAN_LIST = 111;
     private static final int GET_LIKE_LINE_LIST = 222;
+    private static final int GET_LIKE_INFO_LIST = 333;
     private SearchHandler mHandler = new SearchHandler(this);
 
     private class SearchHandler extends Handler {
@@ -224,13 +257,15 @@ public class SearchFragment extends Fragment {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             final SearchFragment activity = mActivity.get();
+
+            String msgObj = ((String) msg.obj).toLowerCase();
             switch (msg.what) {
                 case GET_LIKE_BEAN_LIST:
                     if (activity.beanInfoTemp != null) {
                         beanInfos.clear();
 
                         for (BeanInfo beanInfo : activity.beanInfoTemp) {
-                            if (beanInfo.getName().contains((String) msg.obj)) {
+                            if (beanInfo.getName().toLowerCase().contains(msgObj)) {
                                 activity.beanInfos.add(beanInfo);
                             }
                         }
@@ -245,7 +280,7 @@ public class SearchFragment extends Fragment {
                         String bakeDate = null;
                         for (BakeReport bakeReport : activity.bakeReportTemp) {
                             bakeDate = String.format("%1$tY-%1$tm-%1$te", bakeReport.getBakeDate());
-                            if (bakeDate.contains((String) msg.obj)) {
+                            if (bakeDate.toLowerCase().contains(msgObj)) {
                                 activity.bakeReports.add(bakeReport);
                             }
                         }
@@ -253,10 +288,32 @@ public class SearchFragment extends Fragment {
                         activity.lineListAdapter.notifyDataSetChanged();
                     }
                     break;
+                case GET_LIKE_INFO_LIST:
+                    if (activity.infoTemp != null) {
+                        infos.clear();
+
+                        for (String string : activity.infoTemp) {
+                            if (string.toLowerCase().contains(msgObj)) {
+                                activity.infos.add(string);
+                            }
+                        }
+
+                        activity.infoListAdapter.notifyDataSetChanged();
+                    }
+                    break;
                 default:
                     break;
             }
         }
+    }
+
+    public interface OnSearchCallBack {
+        void onSearchCallBack(String info);
+    }
+
+    private OnSearchCallBack onSearchCallBack;
+    public void addOnSearchCallBack(OnSearchCallBack onSearchCallBack) {
+        this.onSearchCallBack = onSearchCallBack;
     }
 
     @Override

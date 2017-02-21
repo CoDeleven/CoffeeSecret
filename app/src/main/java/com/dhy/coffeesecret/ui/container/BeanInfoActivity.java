@@ -140,7 +140,17 @@ public class BeanInfoActivity extends AppCompatActivity {
         switch (resultCode) {
             case RESULT_OK:
                 BeanInfo beanInfo = (BeanInfo) data.getSerializableExtra("new_bean_info");
-                Log.i(TAG, "onActivityResult: " + beanInfo);
+                infoArea.setText(beanInfo.getArea());
+                infoManor.setText(beanInfo.getManor());
+                infoAltitude.setText(beanInfo.getAltitude());
+                infoSpecies.setText(beanInfo.getSpecies());
+                infoLevel.setText(beanInfo.getLevel());
+                infoWaterContent.setText(beanInfo.getWaterContent() * 100 + "%");
+                infoHandler.setText(beanInfo.getHandler());
+                infoSupplier.setText(beanInfo.getSupplier());
+                infoPrice.setText("" + beanInfo.getPrice());
+                infoWeight.setText(beanInfo.getWeight() + "g");
+                infoBuyDate.setText(String.format("%1$tY-%1$tm-%1$te", beanInfo.getDate()));
                 break;
         }
     }

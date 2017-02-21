@@ -2,6 +2,8 @@ package com.dhy.coffeesecret.ui.container;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -17,6 +19,7 @@ import com.bigkoo.pickerview.TimePickerView;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BeanInfo;
 
+import java.lang.ref.WeakReference;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -134,7 +137,6 @@ public class EditBeanActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 currentLevel = levelArray[position];
-                Log.e(TAG, "onItemClick: currentLevel = " + currentLevel);
             }
 
             @Override
@@ -147,7 +149,6 @@ public class EditBeanActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 currentHandler = handlerArray[position];
-                Log.e(TAG, "onItemClick: currentHandler = " + currentHandler);
             }
 
             @Override
@@ -174,6 +175,7 @@ public class EditBeanActivity extends AppCompatActivity {
     }
 
     private int getHandlerSelection(String handler) {
+
         if (handler != null) {
             for (int i = 0; i < handlerArray.length; i++) {
                 if (handler.equals(handlerArray[i])) {
@@ -210,19 +212,19 @@ public class EditBeanActivity extends AppCompatActivity {
             case R.id.edit_layout_area:
                 intent = new Intent(EditBeanActivity.this, SelectInfoActivity.class);
                 intent.putExtra("info_type", "area");
-                startActivity(intent);
+                startActivityForResult(intent, AREA);
                 exitToLeft();
                 break;
             case R.id.edit_layout_manor:
                 intent = new Intent(EditBeanActivity.this, SelectInfoActivity.class);
                 intent.putExtra("info_type", "manor");
-                startActivity(intent);
+                startActivityForResult(intent, MANOR);
                 exitToLeft();
                 break;
             case R.id.edit_layout_species:
                 intent = new Intent(EditBeanActivity.this, SelectInfoActivity.class);
                 intent.putExtra("info_type", "species");
-                startActivity(intent);
+                startActivityForResult(intent, SPECIES);
                 exitToLeft();
                 break;
             case R.id.edit_buy_date:
@@ -251,6 +253,60 @@ public class EditBeanActivity extends AppCompatActivity {
 
         Log.i(TAG, "saveBeanInfo: " + beanInfo.toString());
         exitToRight(beanInfo);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            Message msg = new Message();
+            String info = data.getStringExtra("info");
+            switch (requestCode) {
+                case AREA:
+                    msg.what = AREA;
+                    break;
+                case MANOR:
+                    msg.what = MANOR;
+                    break;
+                case SPECIES:
+                    msg.what = SPECIES;
+                    break;
+            }
+            if (info != null) {
+                msg.obj = info;
+                mHandler.sendMessage(msg);
+            }
+        }
+    }
+    private static final int AREA = 1234;
+    private static final int MANOR = 2345;
+    private static final int SPECIES = 3456;
+    private EditBeanHandler mHandler = new EditBeanHandler(EditBeanActivity.this);
+
+    class EditBeanHandler extends Handler {
+        private final WeakReference<EditBeanActivity> mActivity;
+
+        public EditBeanHandler(EditBeanActivity activity) {
+            mActivity = new WeakReference<>(activity);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            final EditBeanActivity activity = mActivity.get();
+            switch (msg.what) {
+                case AREA:
+                    activity.editArea.setText((String)msg.obj);
+                    break;
+                case MANOR:
+                    activity.editManor.setText((String)msg.obj);
+                    break;
+                case SPECIES:
+                    activity.editSpecies.setText((String)msg.obj);
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 
     private void exitToRight(BeanInfo beanInfo) {

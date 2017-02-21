@@ -8,7 +8,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -67,7 +66,7 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
     private PopupWindow mSortPopupWindow;
     private PopupWindow mScreenPopupWindow;
     private Context context;
-    private String title;
+    private String title = "";
     private boolean isPopupWindowShowing = false;
     private boolean isRefresh = false;
 
@@ -88,7 +87,7 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
         btnScreen = (LinearLayout) beanListView.findViewById(R.id.btn_screen);
         countryName = (TextView) beanListView.findViewById(R.id.country_name);
         beanListRecycler = (RecyclerView) beanListView.findViewById(R.id.bean_list);
-        refreshBeanList = (SwipeRefreshLayout) beanListView.findViewById(R.id.refresh_bean_list);
+        refreshBeanList = (SwipeRefreshLayout) beanListView.findViewById(R.id.refresh_info_list);
         quickSideBarView = (QuickSideBarView) beanListView.findViewById(R.id.quickSideBarView);
         quickSideBarTipsView = (QuickSideBarTipsView) beanListView.findViewById(R.id.quickSideBarTipsView);
 
