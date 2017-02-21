@@ -4,7 +4,7 @@ package com.dhy.coffeesecret.pojo;
 import java.io.Serializable;
 import java.util.Date;
 
-public class BeanInfo implements Serializable{
+public class BeanInfo implements Serializable {
     private int id;
     //咖啡名称
     private String name;
@@ -18,6 +18,8 @@ public class BeanInfo implements Serializable{
     private String altitude;
     //咖啡种属
     private String species;
+    //咖啡大类
+    private String oneSpecies;
     //咖啡等级
     private String level;
     //含水量
@@ -155,6 +157,12 @@ public class BeanInfo implements Serializable{
         this.date = date;
     }
 
+    public String getOneSpecies() {
+        return oneSpecies;
+    }
+
+    public void setOneSpecies(String oneSpecies) {
+        this.oneSpecies = oneSpecies;
     @Override
     public String toString() {
         return "BeanInfo{" +

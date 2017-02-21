@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingLeft="17.4375dp"
+        android:paddingRight="17.4375dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_bake_dialog_singlebean"/>
+
+        <Button
+            android:id="@+id/id_bake_dialog_beanName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="6dp"
+            android:background="@android:color/transparent"
+            android:minHeight="25dp"
+            android:text="样品豆1"
+            android:textSize="13.5sp"/>
+
+        <EditText
+            android:id="@+id/id_bake_dialog_beanWeight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:hint="投入重量"
+            android:inputType="numberDecimal"
+            android:maxWidth="60dp"
+            android:singleLine="true"
+            android:textSize="13.5dp"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="kg"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="20dp"
+            android:padding="10dp"
+            android:src="@drawable/ic_bake_dialog_delete"/>
+    </LinearLayout>
+</LinearLayout>

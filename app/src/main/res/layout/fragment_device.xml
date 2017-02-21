@@ -22,6 +22,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:paddingLeft="48dp"
+            android:paddingTop="70dp"
             android:src="@drawable/ic_bake_conect"/>
 
         <RelativeLayout
@@ -35,6 +37,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 arc:firstCircleRadius="5dp"
+                arc:rotateAngle="-90"
                 arc:secondCircleRadius="4dp"
                 arc:suffix="@string/suffix_arcProgress"
                 arc:titleValue="豆温"/>
@@ -78,9 +81,10 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/id_bake_beanTemp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="371℃"
+                        android:text="-1℃"
                         android:textColor="#000000"
                         android:textSize="24sp"/>
 
@@ -91,19 +95,30 @@
                         android:orientation="horizontal">
 
                         <ImageView
+                            android:id="@+id/id_bake_accBeanView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:drawablePadding="10dp"
-                            android:src="@drawable/ic_bake_up"/>
+                            android:src="@drawable/ic_bake_acc_invariant_big"/>
+
+                        <TextView
+                            android:id="@+id/id_bake_accBeanTemp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:paddingLeft="10.125dp"
+                            android:text="0"
+                            android:textColor="#936743"
+                            android:textSize="19sp"/>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:text="0.1℃/min"
-                            android:textSize="19sp"/>
-
+                            android:layout_gravity="bottom"
+                            android:paddingLeft="3dp"
+                            android:text="℃/s"
+                            android:textColor="#936743"
+                            android:textSize="21.375sp"/>
                     </LinearLayout>
 
                     <ImageView
@@ -112,30 +127,40 @@
                         android:src="@drawable/ic_bake_seprator"/>
                 </LinearLayout>
 
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="top"
                     android:layout_weight="1"
-                    android:gravity="center_horizontal"
-                    android:orientation="horizontal">
+                    android:paddingBottom="10dp">
 
-                    <TextView
+                    <RelativeLayout
+                        android:id="@+id/id_layout_switch"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="已连接"
-                        android:textColor="#000000"
-                        android:textSize="19sp"/>
+                        android:layout_centerInParent="true">
+
+                        <TextView
+                            android:id="@+id/bluetooth_status"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="已连接"
+                            android:textColor="#000000"
+                            android:textSize="19sp"/>
+                    </RelativeLayout>
 
                     <TextView
+                        android:id="@+id/bluetooth_operator"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
+                        android:layout_centerVertical="true"
+                        android:layout_toRightOf="@id/id_layout_switch"
+                        android:padding="10dp"
                         android:text="切换"
+                        android:textColor="@color/colorPrimary"
                         android:textSize="11sp"/>
+                </RelativeLayout>
 
-                </LinearLayout>
+
             </LinearLayout>
         </RelativeLayout>
 
@@ -154,7 +179,7 @@
             android:layout_centerVertical="true"
             android:background="@android:color/transparent"></View>
 
-
+        <!-- 第二个圈，入风温-->
         <RelativeLayout
             android:id="@+id/device_bake_circle2"
             android:layout_width="114dp"
@@ -168,6 +193,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 arc:firstCircleRadius="3dp"
+                arc:rotateAngle="60"
                 arc:secondCircleRadius="2dp"
                 arc:suffix="@string/suffix_arcProgress"
                 arc:titleValue="入风温"/>
@@ -177,8 +203,8 @@
                 android:layout_height="match_parent"
                 android:layout_centerInParent="true"
                 android:orientation="vertical"
-                android:paddingBottom="10dp"
-                android:paddingTop="10dp">
+                android:paddingBottom="20dp"
+                android:paddingTop="20dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -211,9 +237,10 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/id_bake_inwindTemp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="256℃"
+                        android:text="-1℃"
                         android:textColor="#000000"
                         android:textSize="13sp"/>
 
@@ -224,22 +251,30 @@
                         android:orientation="horizontal">
 
                         <ImageView
+                            android:id="@+id/id_bake_accInwindView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:drawablePadding="10dp"
-                            android:scaleType="fitCenter"
-                            android:scaleX="0.625"
-                            android:scaleY="0.625"
-                            android:src="@drawable/ic_bake_up"/>
+                            android:src="@drawable/ic_bake_acc_invariant_small"/>
+
+                        <TextView
+                            android:id="@+id/id_bake_accInwindTemp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:paddingLeft="11dp"
+                            android:text="0"
+                            android:textColor="#936743"
+                            android:textSize="11.25sp"/>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:text="0.1℃/min"
-                            android:textSize="10sp"/>
-
+                            android:layout_gravity="bottom"
+                            android:paddingLeft="3dp"
+                            android:text="℃/s"
+                            android:textColor="#936743"
+                            android:textSize="7.88sp"/>
                     </LinearLayout>
 
                 </LinearLayout>
@@ -247,21 +282,22 @@
             </LinearLayout>
         </RelativeLayout>
 
-
+        <!-- 第三个圈，出风温-->
         <RelativeLayout
             android:id="@+id/device_bake_circle3"
             android:layout_width="114dp"
             android:layout_height="114dp"
             android:layout_alignRight="@id/bake_vetical_refer"
             android:layout_below="@id/bake_horizontal_refer"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="20dp">
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="70dp">
 
             <com.dhy.coffeesecret.views.ArcProgress
                 android:id="@+id/id_arcprogress_outwind"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 arc:firstCircleRadius="3dp"
+                arc:rotateAngle="120"
                 arc:secondCircleRadius="2dp"
                 arc:suffix="@string/suffix_arcProgress"
                 arc:titleValue="出风温"/>
@@ -271,8 +307,8 @@
                 android:layout_height="match_parent"
                 android:layout_centerInParent="true"
                 android:orientation="vertical"
-                android:paddingBottom="10dp"
-                android:paddingTop="10dp">
+                android:paddingBottom="20dp"
+                android:paddingTop="20dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -305,9 +341,10 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/id_bake_outwindTemp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="256℃"
+                        android:text="-1℃"
                         android:textColor="#000000"
                         android:textSize="13sp"/>
 
@@ -318,21 +355,30 @@
                         android:orientation="horizontal">
 
                         <ImageView
+                            android:id="@+id/id_bake_accOutwindView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:drawablePadding="10dp"
-                            android:scaleType="fitCenter"
-                            android:scaleX="0.625"
-                            android:scaleY="0.625"
-                            android:src="@drawable/ic_bake_up"/>
+                            android:src="@drawable/ic_bake_acc_invariant_small"/>
+
+                        <TextView
+                            android:id="@+id/id_bake_accOutwindTemp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:paddingLeft="11dp"
+                            android:text="0"
+                            android:textColor="#936743"
+                            android:textSize="11.25sp"/>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:text="0.1℃/min"
-                            android:textSize="10sp"/>
+                            android:layout_gravity="bottom"
+                            android:paddingLeft="3dp"
+                            android:text="℃/s"
+                            android:textColor="#936743"
+                            android:textSize="7.88sp"/>
 
                     </LinearLayout>
 
@@ -343,11 +389,14 @@
 
 
         <Button
+            android:id="@+id/id_device_prepare_bake"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="20dp"
-            android:background="@drawable/bg_round_pricolor"/>
+            android:layout_below="@id/device_bake_circle3"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/bg_round_pricolor"
+            android:text="准备烘焙"
+            android:textColor="#FFF"/>
     </RelativeLayout>
 
 
