@@ -40,7 +40,6 @@ public class RadarHighlighter extends PieRadarHighlighter<RadarChart> {
 
         return closest;
     }
-
     /**
      * Returns an array of Highlight objects for the given index. The Highlight
      * objects give information about the value at the selected index and the
@@ -59,7 +58,7 @@ public class RadarHighlighter extends PieRadarHighlighter<RadarChart> {
         float sliceangle = mChart.getSliceAngle();
         float factor = mChart.getFactor();
 
-        MPPointF pOut = MPPointF.getInstance(0, 0);
+        MPPointF pOut = MPPointF.getInstance(0,0);
         for (int i = 0; i < mChart.getData().getDataSetCount(); i++) {
 
             IDataSet<?> dataSet = mChart.getData().getDataSetByIndex(i);

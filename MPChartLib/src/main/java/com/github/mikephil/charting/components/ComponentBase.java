@@ -107,15 +107,6 @@ public abstract class ComponentBase {
     }
 
     /**
-     * returns the text size that is currently set for the labels, in pixels
-     *
-     * @return
-     */
-    public float getTextSize() {
-        return mTextSize;
-    }
-
-    /**
      * sets the size of the label text in density pixels min = 6f, max = 24f, default
      * 10f
      *
@@ -132,13 +123,14 @@ public abstract class ComponentBase {
     }
 
     /**
-     * Returns the text color that is set for the labels.
+     * returns the text size that is currently set for the labels, in pixels
      *
      * @return
      */
-    public int getTextColor() {
-        return mTextColor;
+    public float getTextSize() {
+        return mTextSize;
     }
+
 
     /**
      * Sets the text color to use for the labels. Make sure to use
@@ -151,12 +143,12 @@ public abstract class ComponentBase {
     }
 
     /**
-     * Returns true if this comonent is enabled (should be drawn), false if not.
+     * Returns the text color that is set for the labels.
      *
      * @return
      */
-    public boolean isEnabled() {
-        return mEnabled;
+    public int getTextColor() {
+        return mTextColor;
     }
 
     /**
@@ -168,5 +160,14 @@ public abstract class ComponentBase {
      */
     public void setEnabled(boolean enabled) {
         mEnabled = enabled;
+    }
+
+    /**
+     * Returns true if this comonent is enabled (should be drawn), false if not.
+     *
+     * @return
+     */
+    public boolean isEnabled() {
+        return mEnabled;
     }
 }

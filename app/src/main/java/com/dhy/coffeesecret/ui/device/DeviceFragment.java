@@ -128,6 +128,7 @@ public class DeviceFragment extends Fragment implements BluetoothHelper.DataChan
             mPrepareBake.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                     Log.e("codelevex", "卧槽，开始烘焙");
                 }
             });
@@ -136,8 +137,12 @@ public class DeviceFragment extends Fragment implements BluetoothHelper.DataChan
             mPrepareBake.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.e("codelevex", "卧槽，准备烘焙");
-                    showDialogFragment();
+                    // 方便测试烘焙过程界面, 暂时隐藏
+                    /*Log.e("codelevex", "卧槽，准备烘焙");
+                    showDialogFragment();*/
+                    Intent intent = new Intent(getContext(), BakeActivity.class);
+                    startActivity(intent);
+                    mHelper.setDataListener(null);
                 }
             });
         }

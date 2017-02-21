@@ -2,6 +2,7 @@
 package com.github.mikephil.charting.renderer;
 
 import android.graphics.Canvas;
+import android.graphics.PointF;
 
 import com.github.mikephil.charting.charts.RadarChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -39,7 +40,7 @@ public class XAxisRendererRadarChart extends XAxisRenderer {
         float factor = mChart.getFactor();
 
         MPPointF center = mChart.getCenterOffsets();
-        MPPointF pOut = MPPointF.getInstance(0, 0);
+        MPPointF pOut = MPPointF.getInstance(0,0);
         for (int i = 0; i < mChart.getData().getMaxEntryCountSet().getEntryCount(); i++) {
 
             String label = mXAxis.getValueFormatter().getFormattedValue(i, mXAxis);
@@ -58,13 +59,13 @@ public class XAxisRendererRadarChart extends XAxisRenderer {
         MPPointF.recycleInstance(drawLabelAnchor);
     }
 
-    /**
-     * XAxis LimitLines on RadarChart not yet supported.
-     *
-     * @param c
-     */
-    @Override
-    public void renderLimitLines(Canvas c) {
-        // this space intentionally left blank
-    }
+	/**
+	 * XAxis LimitLines on RadarChart not yet supported.
+	 *
+	 * @param c
+	 */
+	@Override
+	public void renderLimitLines(Canvas c) {
+		// this space intentionally left blank
+	}
 }

@@ -7,9 +7,9 @@ import android.view.View.OnTouchListener;
 
 public class OnDrawLineChartTouchListener extends SimpleOnGestureListener implements OnTouchListener {
 
-    @Override
-    public boolean onTouch(View v, MotionEvent event) {
-        return false;
-    }
+	@Override
+	public boolean onTouch(View v, MotionEvent event) {
+		return false;
+	}
 
 }

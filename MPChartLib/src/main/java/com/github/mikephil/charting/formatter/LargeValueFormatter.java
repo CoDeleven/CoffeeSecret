@@ -17,12 +17,13 @@ import java.text.DecimalFormat;
  * @author Philipp Jahoda
  * @author Oleksandr Tyshkovets <olexandr.tyshkovets@gmail.com>
  */
-public class LargeValueFormatter implements IValueFormatter, IAxisValueFormatter {
+public class LargeValueFormatter implements IValueFormatter, IAxisValueFormatter
+{
 
-    private static final int MAX_LENGTH = 5;
     private static String[] SUFFIX = new String[]{
             "", "k", "m", "b", "t"
     };
+    private static final int MAX_LENGTH = 5;
     private DecimalFormat mFormat;
     private String mText = "";
 

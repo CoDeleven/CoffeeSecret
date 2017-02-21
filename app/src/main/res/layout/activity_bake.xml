@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:arc="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_bake"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#E2D8D3"
+    android:orientation="horizontal"
+    tools:context="com.dhy.coffeesecret.ui.device.BakeActivity">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="5.625dp"
+        android:orientation="vertical"
+        android:paddingRight="5.625dp">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6.75dp">
+
+            <com.dhy.coffeesecret.views.ArcProgress
+                android:layout_width="101.25dp"
+                android:layout_height="101.25dp"
+                arc:firstCircleRadius="2.8125dp"
+                arc:rotateAngle="-135"
+                arc:secondCircleRadius="3.375dp"/>
+
+            <TextView
+                android:id="@+id/id_baking_beanTitle"
+                style="@style/bakingTitle"
+                android:drawableLeft="@drawable/ic_bake_baking_singlebean"
+                android:text="豆温"/>
+
+            <TextView
+                android:id="@+id/id_baking_beanTemp"
+                style="@style/bakingTemp"
+                android:layout_below="@id/id_baking_beanTitle"
+                android:text="371℃"/>
+
+            <TextView
+                android:id="@+id/id_baking_accBeantemp"
+                style="@style/bakingAccTemp"
+                android:layout_below="@id/id_baking_beanTemp"
+                android:drawableLeft="@drawable/ic_bake_baking_up"
+                android:text="0.1℃/s"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6.75dp">
+
+            <com.dhy.coffeesecret.views.ArcProgress
+                android:layout_width="101.25dp"
+                android:layout_height="101.25dp"
+                arc:firstCircleRadius="2.8125dp"
+                arc:rotateAngle="-90"
+                arc:secondCircleRadius="3.375dp"/>
+
+            <TextView
+                android:id="@+id/id_baking_inwindTitle"
+                style="@style/bakingTitle"
+                android:drawableLeft="@drawable/ic_bake_baking_inwind"
+                android:text="入风温"/>
+
+            <TextView
+                android:id="@+id/id_baking_inwindTemp"
+                style="@style/bakingTemp"
+                android:layout_below="@id/id_baking_inwindTitle"
+                android:text="371℃"/>
+
+            <TextView
+                android:id="@+id/id_baking_accInwindTemp"
+                style="@style/bakingAccTemp"
+                android:layout_below="@id/id_baking_inwindTemp"
+                android:drawableLeft="@drawable/ic_bake_baking_up"
+                android:text="0.1℃/s"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6.75dp">
+
+            <com.dhy.coffeesecret.views.ArcProgress
+                android:layout_width="101.25dp"
+                android:layout_height="101.25dp"
+                arc:firstCircleRadius="2.8125dp"
+                arc:rotateAngle="-45"
+                arc:secondCircleRadius="3.375dp"/>
+
+            <TextView
+                android:id="@+id/id_baking_outwindTitle"
+                style="@style/bakingTitle"
+                android:drawableLeft="@drawable/ic_bake_baking_outwind"
+                android:text="出风温"/>
+
+            <TextView
+                android:id="@+id/id_baking_outwindTemp"
+                style="@style/bakingTemp"
+                android:layout_below="@id/id_baking_outwindTitle"
+                android:text="371℃"/>
+
+            <TextView
+                android:id="@+id/id_baking_accOutwindTemp"
+                style="@style/bakingAccTemp"
+                android:layout_below="@id/id_baking_outwindTemp"
+                android:drawableLeft="@drawable/ic_bake_baking_up"
+                android:text="0.1℃/s"/>
+        </RelativeLayout>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="#FFF"
+        android:paddingLeft="33.75dp"
+        android:paddingRight="33.75dp">
+
+        <RelativeLayout
+            android:layout_marginTop="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_centerHorizontal="true"
+                android:id="@+id/id_baking_developInfo"
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/id_baking_untilTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="已烘焙时间: 00:00"/>
+                <TextView
+                    android:id="@+id/id_baking_developRate"
+                    android:layout_marginLeft="42dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="发展率: 20%"/>
+                <TextView
+                    android:id="@+id/id_baking_developTime"
+                    android:layout_marginLeft="42dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="00:00"/>
+            </LinearLayout>
+
+            <com.dhy.coffeesecret.views.DevelopBar
+                android:layout_marginTop="16.875dp"
+                android:id="@+id/id_baking_developbar"
+                android:layout_below="@id/id_baking_developInfo"
+                android:layout_width="314.4375dp"
+                android:layout_height="12.375dp"
+                android:layout_centerHorizontal="true"
+                android:paddingLeft="29.8125dp"/>
+
+            <RelativeLayout
+                android:layout_below="@id/id_baking_developbar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_centerHorizontal="true"
+                    android:id="@+id/id_baking_lineOperator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="温度曲线图"
+                    android:textSize="15sp"
+                    android:layout_marginTop="16.875dp"
+                    android:drawableRight="@drawable/ic_baking_dropdown"/>
+
+                <com.dhy.coffeesecret.views.BaseChart4Coffee
+                    android:layout_below="@id/id_baking_lineOperator"
+                    android:id="@+id/id_baking_chart"
+                    android:layout_width="344.25dp"
+                    android:layout_height="match_parent"></com.dhy.coffeesecret.views.BaseChart4Coffee>
+            </RelativeLayout>
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:layout_marginTop="21.375dp"
+            android:id="@+id/id_baking_dry"
+            style="@style/bakingOperator"
+            android:text="脱水"/>
+
+        <Button
+            android:layout_marginTop="13dp"
+            android:layout_below="@id/id_baking_dry"
+            android:id="@+id/id_baking_firstBurst"
+            style="@style/bakingOperator"
+            android:text="一爆"/>
+
+        <Button
+            android:layout_marginTop="13dp"
+            android:layout_below="@id/id_baking_firstBurst"
+            android:id="@+id/id_baking_secondBurst"
+            style="@style/bakingOperator"
+            android:text="二爆"/>
+
+        <Button
+            android:layout_marginTop="13dp"
+            android:layout_below="@id/id_baking_secondBurst"
+            android:id="@+id/id_baking_end"
+            style="@style/bakingOperator"
+            android:text="出豆"/>
+
+        <Button
+            android:layout_below="@+id/id_baking_end"
+            android:id="@+id/id_baking_wind_fire"
+            android:layout_marginTop="59.625dp"
+            style="@style/bakingOperator"
+            android:text="风/火"/>
+
+        <Button
+            android:layout_marginTop="13dp"
+            android:layout_below="@+id/id_baking_wind_fire"
+            android:id="@+id/id_baking_other"
+            style="@style/bakingOperator"
+            android:text="其他"/>
+    </RelativeLayout>
+</LinearLayout>

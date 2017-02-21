@@ -28,7 +28,7 @@ public class SettingTool {
         mConfig.setTempratureUnit(sharedPreferences.getString("tempratureUnit", "℃"));
         mConfig.setReferDegree(sharedPreferences.getString("tempratureUnit", "℃"));
         mConfig.setQuickStart(sharedPreferences.getBoolean("quickStart", false));
-        mConfig.setDoubleClick(sharedPreferences.getBoolean("doubleClick", false));
+        mConfig.setDoubleClick(sharedPreferences.getBoolean("doubleClick", true));
         mConfig.setMarkByCircle(sharedPreferences.getBoolean("markByCircle", false));
         mConfig.setMaxX(sharedPreferences.getInt("maxX", 20));
         mConfig.setMaxLeftY(sharedPreferences.getInt("maxLeftY", 300));
@@ -39,10 +39,13 @@ public class SettingTool {
         mConfig.setCheckInwindTemp(sharedPreferences.getInt("checkInwindTemp", 0));
         mConfig.setCheckOutwindTemp(sharedPreferences.getInt("checkOutwindTemp", 0));
         mConfig.setCheckEvnTemp(sharedPreferences.getInt("checkEvnTemp", 0));
-        mConfig.setBeanColor(sharedPreferences.getInt("beanColor", Color.BLACK));
-        mConfig.setInwindColor(sharedPreferences.getInt("inwindColor", Color.YELLOW));
-        mConfig.setOutwindColor(sharedPreferences.getInt("outwindColor", Color.GREEN));
+        mConfig.setBeanColor(sharedPreferences.getInt("beanColor", Color.parseColor("#FF0000")));
+        mConfig.setInwindColor(sharedPreferences.getInt("inwindColor", Color.parseColor("#00FF00")));
+        mConfig.setOutwindColor(sharedPreferences.getInt("outwindColor", Color.parseColor("#0000FF")));
         mConfig.setEnvColor(sharedPreferences.getInt("envColor", Color.BLACK));
+        mConfig.setAccBeanColor(sharedPreferences.getInt("accBeanColor", Color.parseColor("#FFFF00")));
+        mConfig.setAccInwindColor(sharedPreferences.getInt("accInwindColor", Color.parseColor("#00FFFF")));
+        mConfig.setAccOutwindColor(sharedPreferences.getInt("accOutwindColor", Color.parseColor("#FF00FF")));
     }
 
     public void saveConfig(UniversalConfiguration config) {
@@ -68,5 +71,8 @@ public class SettingTool {
         editor.putInt("inwindColor", config.getInwindColor());
         editor.putInt("outwindColor", config.getOutwindColor());
         editor.putInt("envColor", config.getEnvColor());
+        editor.putInt("accBeanColor", config.getAccBeanColor());
+        editor.putInt("accInwindColor", config.getAccInwindColor());
+        editor.putInt("accOutwindColor", config.getAccOutwindColor());
     }
 }

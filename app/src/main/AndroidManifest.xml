@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.dhy.coffeesecret">
+          package="com.dhy.coffeesecret">
 
     <uses-permission android:name="android.permission.BLUETOOTH"/>
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -14,19 +15,20 @@
             android:name=".MainActivity"
             android:windowSoftInputMode="adjustPan">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".ui.device.DeviceChildActivity" />
-        <activity android:name=".ui.container.BeanInfoActivity" />
-        <activity android:name=".ui.container.fragments.LinesSelectedActivity" />
-        <activity android:name=".ui.device.fragments.ReportActivity" />
-        <activity android:name=".ui.cup.NewCuppingActivity"></activity>
+        <activity android:name=".ui.device.DeviceChildActivity"/>
+        <activity android:name=".ui.container.BeanInfoActivity"/>
+        <activity android:name=".ui.container.fragments.LinesSelectedActivity"/>
+        <activity android:name=".ui.cup.NewCuppingActivity"/>
         <activity android:name=".ui.device.DialogBeanSelectedActivity">
         </activity>
         <activity android:name=".ui.mine.BluetoothListActivity">
+        </activity>
+        <activity android:name=".ui.device.BakeActivity">
         </activity>
     </application>
 

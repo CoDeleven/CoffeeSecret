@@ -1,6 +1,5 @@
 package com.dhy.coffeesecret.ui.container.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
@@ -15,7 +14,6 @@ import android.widget.ListView;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.ui.container.adapters.LinesAdapter;
-import com.dhy.coffeesecret.ui.device.fragments.ReportActivity;
 import com.dhy.coffeesecret.views.SearchEditText;
 
 import java.util.ArrayList;
@@ -61,10 +59,10 @@ public class LinesSelectedActivity extends AppCompatActivity implements View.OnC
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 BakeReport report = (BakeReport) adapterView.getItemAtPosition(i);
-                Intent intent = new Intent(LinesSelectedActivity.this, ReportActivity.class);
+                // Intent intent = new Intent(LinesSelectedActivity.this, ReportActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("bakeReport", report);
-                startActivity(intent);
+                // startActivity(intent);
             }
         });
 

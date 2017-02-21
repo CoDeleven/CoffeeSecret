@@ -11,9 +11,7 @@ public class BarBuffer extends AbstractBuffer<IBarDataSet> {
     protected boolean mContainsStacks = false;
     protected boolean mInverted = false;
 
-    /**
-     * width of the bar on the x-axis, in values (not pixels)
-     */
+    /** width of the bar on the x-axis, in values (not pixels) */
     protected float mBarWidth = 1f;
 
     public BarBuffer(int size, int dataSetCount, boolean containsStacks) {
@@ -52,7 +50,7 @@ public class BarBuffer extends AbstractBuffer<IBarDataSet> {
 
             BarEntry e = data.getEntryForIndex(i);
 
-            if (e == null)
+            if(e == null)
                 continue;
 
             float x = e.getX();

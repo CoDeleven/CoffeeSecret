@@ -53,16 +53,6 @@ public class LineChartRenderer extends LineRadarRenderer {
 
     protected Path cubicPath = new Path();
     protected Path cubicFillPath = new Path();
-    protected Path mGenerateFilledPathBuffer = new Path();
-    private float[] mLineBuffer = new float[4];
-    /**
-     * cache for the circle bitmaps of all datasets
-     */
-    private HashMap<IDataSet, DataSetImageCache> mImageCaches = new HashMap<>();
-    /**
-     * buffer for drawing the circles
-     */
-    private float[] mCirclesBuffer = new float[2];
 
     public LineChartRenderer(LineDataProvider chart, ChartAnimator animator,
                              ViewPortHandler viewPortHandler) {
@@ -289,6 +279,8 @@ public class LineChartRenderer extends LineRadarRenderer {
         }
     }
 
+    private float[] mLineBuffer = new float[4];
+
     /**
      * Draws a normal line.
      *
@@ -426,6 +418,8 @@ public class LineChartRenderer extends LineRadarRenderer {
 
         mRenderPaint.setPathEffect(null);
     }
+
+    protected Path mGenerateFilledPathBuffer = new Path();
 
     /**
      * Draws a filled linear path on the canvas.
@@ -576,6 +570,16 @@ public class LineChartRenderer extends LineRadarRenderer {
         drawCircles(c);
     }
 
+    /**
+     * cache for the circle bitmaps of all datasets
+     */
+    private HashMap<IDataSet, DataSetImageCache> mImageCaches = new HashMap<>();
+
+    /**
+     * buffer for drawing the circles
+     */
+    private float[] mCirclesBuffer = new float[2];
+
     protected void drawCircles(Canvas c) {
 
         mRenderPaint.setStyle(Paint.Style.FILL);
@@ -682,15 +686,6 @@ public class LineChartRenderer extends LineRadarRenderer {
     }
 
     /**
-     * Returns the Bitmap.Config that is used by this renderer.
-     *
-     * @return
-     */
-    public Bitmap.Config getBitmapConfig() {
-        return mBitmapConfig;
-    }
-
-    /**
      * Sets the Bitmap.Config to be used by this renderer.
      * Default: Bitmap.Config.ARGB_8888
      * Use Bitmap.Config.ARGB_4444 to consume less memory.
@@ -700,6 +695,15 @@ public class LineChartRenderer extends LineRadarRenderer {
     public void setBitmapConfig(Bitmap.Config config) {
         mBitmapConfig = config;
         releaseBitmap();
+    }
+
+    /**
+     * Returns the Bitmap.Config that is used by this renderer.
+     *
+     * @return
+     */
+    public Bitmap.Config getBitmapConfig() {
+        return mBitmapConfig;
     }
 
     /**

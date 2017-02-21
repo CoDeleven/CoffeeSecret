@@ -20,7 +20,7 @@ public class HorizontalBarBuffer extends BarBuffer {
 
             BarEntry e = data.getEntryForIndex(i);
 
-            if (e == null)
+            if(e == null)
                 continue;
 
             float x = e.getX();

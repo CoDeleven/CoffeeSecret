@@ -17,59 +17,86 @@ import com.github.mikephil.charting.utils.Utils;
  * @author Philipp Jahoda
  */
 public class YAxis extends AxisBase {
+    public String unit;
+    /**
+     * indicates if the bottom y-label entry is drawn or not
+     */
+    private boolean mDrawBottomYLabelEntry = true;
+
+    /**
+     * indicates if the top y-label entry is drawn or not
+     */
+    private boolean mDrawTopYLabelEntry = true;
 
     /**
      * flag that indicates if the axis is inverted or not
      */
     protected boolean mInverted = false;
+
     /**
      * flag that indicates if the zero-line should be drawn regardless of other grid lines
      */
     protected boolean mDrawZeroLine = false;
+
     /**
      * Color of the zero line
      */
     protected int mZeroLineColor = Color.GRAY;
+
     /**
      * Width of the zero line in pixels
      */
     protected float mZeroLineWidth = 1f;
+
     /**
      * axis space from the largest value to the top in percent of the total axis range
      */
     protected float mSpacePercentTop = 10f;
+
     /**
      * axis space from the smallest value to the bottom in percent of the total axis range
      */
     protected float mSpacePercentBottom = 10f;
+
+    /**
+     * the position of the y-labels relative to the chart
+     */
+    private YAxisLabelPosition mPosition = YAxisLabelPosition.OUTSIDE_CHART;
+
+    /**
+     * enum for the position of the y-labels relative to the chart
+     */
+    public enum YAxisLabelPosition {
+        OUTSIDE_CHART, INSIDE_CHART
+    }
+
+    /**
+     * the side this axis object represents
+     */
+    private AxisDependency mAxisDependency;
+
     /**
      * the minimum width that the axis should take (in dp).
      * <p/>
      * default: 0.0
      */
     protected float mMinWidth = 0.f;
+
     /**
      * the maximum width that the axis can take (in dp).
      * use Inifinity for disabling the maximum
      * default: Float.POSITIVE_INFINITY (no maximum specified)
      */
     protected float mMaxWidth = Float.POSITIVE_INFINITY;
+
     /**
-     * indicates if the bottom y-label entry is drawn or not
+     * Enum that specifies the axis a DataSet should be plotted against, either LEFT or RIGHT.
+     *
+     * @author Philipp Jahoda
      */
-    private boolean mDrawBottomYLabelEntry = true;
-    /**
-     * indicates if the top y-label entry is drawn or not
-     */
-    private boolean mDrawTopYLabelEntry = true;
-    /**
-     * the position of the y-labels relative to the chart
-     */
-    private YAxisLabelPosition mPosition = YAxisLabelPosition.OUTSIDE_CHART;
-    /**
-     * the side this axis object represents
-     */
-    private AxisDependency mAxisDependency;
+    public enum AxisDependency {
+        LEFT, RIGHT
+    }
 
     public YAxis() {
         super();
@@ -167,15 +194,6 @@ public class YAxis extends AxisBase {
     }
 
     /**
-     * If this returns true, the y-axis is inverted.
-     *
-     * @return
-     */
-    public boolean isInverted() {
-        return mInverted;
-    }
-
-    /**
      * If this is set to true, the y-axis is inverted which means that low values are on top of
      * the chart, high values
      * on bottom.
@@ -184,6 +202,15 @@ public class YAxis extends AxisBase {
      */
     public void setInverted(boolean enabled) {
         mInverted = enabled;
+    }
+
+    /**
+     * If this returns true, the y-axis is inverted.
+     *
+     * @return
+     */
+    public boolean isInverted() {
+        return mInverted;
     }
 
     /**
@@ -201,15 +228,6 @@ public class YAxis extends AxisBase {
     }
 
     /**
-     * Returns the top axis space in percent of the full range. Default 10f
-     *
-     * @return
-     */
-    public float getSpaceTop() {
-        return mSpacePercentTop;
-    }
-
-    /**
      * Sets the top axis space in percent of the full range. Default 10f
      *
      * @param percent
@@ -219,12 +237,12 @@ public class YAxis extends AxisBase {
     }
 
     /**
-     * Returns the bottom axis space in percent of the full range. Default 10f
+     * Returns the top axis space in percent of the full range. Default 10f
      *
      * @return
      */
-    public float getSpaceBottom() {
-        return mSpacePercentBottom;
+    public float getSpaceTop() {
+        return mSpacePercentTop;
     }
 
     /**
@@ -234,6 +252,15 @@ public class YAxis extends AxisBase {
      */
     public void setSpaceBottom(float percent) {
         mSpacePercentBottom = percent;
+    }
+
+    /**
+     * Returns the bottom axis space in percent of the full range. Default 10f
+     *
+     * @return
+     */
+    public float getSpaceBottom() {
+        return mSpacePercentBottom;
     }
 
     public boolean isDrawZeroLineEnabled() {
@@ -362,21 +389,5 @@ public class YAxis extends AxisBase {
 
         // calc actual range
         this.mAxisRange = Math.abs(this.mAxisMaximum - this.mAxisMinimum);
-    }
-
-    /**
-     * enum for the position of the y-labels relative to the chart
-     */
-    public enum YAxisLabelPosition {
-        OUTSIDE_CHART, INSIDE_CHART
-    }
-
-    /**
-     * Enum that specifies the axis a DataSet should be plotted against, either LEFT or RIGHT.
-     *
-     * @author Philipp Jahoda
-     */
-    public enum AxisDependency {
-        LEFT, RIGHT
     }
 }

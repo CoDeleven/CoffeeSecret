@@ -56,7 +56,7 @@ public abstract class AnimatedViewPortJob extends ViewPortJob implements ValueAn
 
     public abstract void recycleSelf();
 
-    protected void resetAnimator() {
+    protected void resetAnimator(){
         animator.removeAllListeners();
         animator.removeAllUpdateListeners();
         animator.reverse();
@@ -71,18 +71,18 @@ public abstract class AnimatedViewPortJob extends ViewPortJob implements ValueAn
 
     @Override
     public void onAnimationEnd(Animator animation) {
-        try {
+        try{
             recycleSelf();
-        } catch (IllegalArgumentException e) {
+        }catch (IllegalArgumentException e){
             // don't worry about it.
         }
     }
 
     @Override
     public void onAnimationCancel(Animator animation) {
-        try {
+        try{
             recycleSelf();
-        } catch (IllegalArgumentException e) {
+        }catch (IllegalArgumentException e){
             // don't worry about it.
         }
     }

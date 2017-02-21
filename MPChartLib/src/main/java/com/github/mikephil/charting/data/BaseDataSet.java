@@ -7,6 +7,7 @@ import android.graphics.Typeface;
 
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.formatter.DefaultValueFormatter;
 import com.github.mikephil.charting.formatter.IValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
@@ -31,42 +32,51 @@ public abstract class BaseDataSet<T extends Entry> implements IDataSet<T> {
      * List representing all colors that are used for drawing the actual values for this DataSet
      */
     protected List<Integer> mValueColors = null;
-    /**
-     * this specifies which axis this DataSet should be plotted against
-     */
-    protected YAxis.AxisDependency mAxisDependency = YAxis.AxisDependency.LEFT;
-    /**
-     * if true, value highlightning is enabled
-     */
-    protected boolean mHighlightEnabled = true;
-    /**
-     * custom formatter that is used instead of the auto-formatter if set
-     */
-    protected transient IValueFormatter mValueFormatter;
-    /**
-     * the typeface used for the value text
-     */
-    protected Typeface mValueTypeface;
-    /**
-     * if true, y-values are drawn on the chart
-     */
-    protected boolean mDrawValues = true;
-    /**
-     * the size of the value-text labels
-     */
-    protected float mValueTextSize = 17f;
-    /**
-     * flag that indicates if the DataSet is visible or not
-     */
-    protected boolean mVisible = true;
+
     /**
      * label that describes the DataSet or the data the DataSet represents
      */
     private String mLabel = "DataSet";
+
+    /**
+     * this specifies which axis this DataSet should be plotted against
+     */
+    protected YAxis.AxisDependency mAxisDependency = YAxis.AxisDependency.LEFT;
+
+    /**
+     * if true, value highlightning is enabled
+     */
+    protected boolean mHighlightEnabled = true;
+
+    /**
+     * custom formatter that is used instead of the auto-formatter if set
+     */
+    protected transient IValueFormatter mValueFormatter;
+
+    /**
+     * the typeface used for the value text
+     */
+    protected Typeface mValueTypeface;
+
     private Legend.LegendForm mForm = Legend.LegendForm.DEFAULT;
     private float mFormSize = Float.NaN;
     private float mFormLineWidth = Float.NaN;
     private DashPathEffect mFormLineDashEffect = null;
+
+    /**
+     * if true, y-values are drawn on the chart
+     */
+    protected boolean mDrawValues = true;
+
+    /**
+     * the size of the value-text labels
+     */
+    protected float mValueTextSize = 17f;
+
+    /**
+     * flag that indicates if the DataSet is visible or not
+     */
+    protected boolean mVisible = true;
 
     /**
      * Default constructor.
@@ -107,6 +117,24 @@ public abstract class BaseDataSet<T extends Entry> implements IDataSet<T> {
         return mColors;
     }
 
+    public List<Integer> getValueColors() {
+        return mValueColors;
+    }
+
+    @Override
+    public int getColor() {
+        return mColors.get(0);
+    }
+
+    @Override
+    public int getColor(int index) {
+        return mColors.get(index % mColors.size());
+    }
+
+    /**
+     * ###### ###### COLOR SETTING RELATED METHODS ##### ######
+     */
+
     /**
      * Sets the colors that should be used fore this DataSet. Colors are reused
      * as soon as the number of Entries the DataSet represents is higher than
@@ -133,35 +161,6 @@ public abstract class BaseDataSet<T extends Entry> implements IDataSet<T> {
         this.mColors = ColorTemplate.createColors(colors);
     }
 
-    public List<Integer> getValueColors() {
-        return mValueColors;
-    }
-
-    /**
-     * ###### ###### COLOR SETTING RELATED METHODS ##### ######
-     */
-
-    @Override
-    public int getColor() {
-        return mColors.get(0);
-    }
-
-    /**
-     * Sets the one and ONLY color that should be used for this DataSet.
-     * Internally, this recreates the colors array and adds the specified color.
-     *
-     * @param color
-     */
-    public void setColor(int color) {
-        resetColors();
-        mColors.add(color);
-    }
-
-    @Override
-    public int getColor(int index) {
-        return mColors.get(index % mColors.size());
-    }
-
     /**
      * Sets the colors that should be used fore this DataSet. Colors are reused
      * as soon as the number of Entries the DataSet represents is higher than
@@ -174,7 +173,7 @@ public abstract class BaseDataSet<T extends Entry> implements IDataSet<T> {
      */
     public void setColors(int[] colors, Context c) {
 
-        if (mColors == null) {
+        if(mColors == null){
             mColors = new ArrayList<>();
         }
 
@@ -193,6 +192,17 @@ public abstract class BaseDataSet<T extends Entry> implements IDataSet<T> {
     public void addColor(int color) {
         if (mColors == null)
             mColors = new ArrayList<Integer>();
+        mColors.add(color);
+    }
+
+    /**
+     * Sets the one and ONLY color that should be used for this DataSet.
+     * Internally, this recreates the colors array and adds the specified color.
+     *
+     * @param color
+     */
+    public void setColor(int color) {
+        resetColors();
         mColors.add(color);
     }
 
@@ -223,15 +233,10 @@ public abstract class BaseDataSet<T extends Entry> implements IDataSet<T> {
      * Resets all colors of this DataSet and recreates the colors array.
      */
     public void resetColors() {
-        if (mColors == null) {
+        if(mColors == null) {
             mColors = new ArrayList<Integer>();
         }
         mColors.clear();
-    }
-
-    @Override
-    public String getLabel() {
-        return mLabel;
     }
 
     /**
@@ -244,8 +249,8 @@ public abstract class BaseDataSet<T extends Entry> implements IDataSet<T> {
     }
 
     @Override
-    public boolean isHighlightEnabled() {
-        return mHighlightEnabled;
+    public String getLabel() {
+        return mLabel;
     }
 
     @Override
@@ -254,10 +259,8 @@ public abstract class BaseDataSet<T extends Entry> implements IDataSet<T> {
     }
 
     @Override
-    public IValueFormatter getValueFormatter() {
-        if (needsFormatter())
-            return Utils.getDefaultValueFormatter();
-        return mValueFormatter;
+    public boolean isHighlightEnabled() {
+        return mHighlightEnabled;
     }
 
     @Override
@@ -270,8 +273,21 @@ public abstract class BaseDataSet<T extends Entry> implements IDataSet<T> {
     }
 
     @Override
+    public IValueFormatter getValueFormatter() {
+        if (needsFormatter())
+            return Utils.getDefaultValueFormatter();
+        return mValueFormatter;
+    }
+
+    @Override
     public boolean needsFormatter() {
         return mValueFormatter == null;
+    }
+
+    @Override
+    public void setValueTextColor(int color) {
+        mValueColors.clear();
+        mValueColors.add(color);
     }
 
     @Override
@@ -280,14 +296,18 @@ public abstract class BaseDataSet<T extends Entry> implements IDataSet<T> {
     }
 
     @Override
-    public int getValueTextColor() {
-        return mValueColors.get(0);
+    public void setValueTypeface(Typeface tf) {
+        mValueTypeface = tf;
     }
 
     @Override
-    public void setValueTextColor(int color) {
-        mValueColors.clear();
-        mValueColors.add(color);
+    public void setValueTextSize(float size) {
+        mValueTextSize = Utils.convertDpToPixel(size);
+    }
+
+    @Override
+    public int getValueTextColor() {
+        return mValueColors.get(0);
     }
 
     @Override
@@ -301,23 +321,8 @@ public abstract class BaseDataSet<T extends Entry> implements IDataSet<T> {
     }
 
     @Override
-    public void setValueTypeface(Typeface tf) {
-        mValueTypeface = tf;
-    }
-
-    @Override
     public float getValueTextSize() {
         return mValueTextSize;
-    }
-
-    @Override
-    public void setValueTextSize(float size) {
-        mValueTextSize = Utils.convertDpToPixel(size);
-    }
-
-    @Override
-    public Legend.LegendForm getForm() {
-        return mForm;
     }
 
     public void setForm(Legend.LegendForm form) {
@@ -325,8 +330,8 @@ public abstract class BaseDataSet<T extends Entry> implements IDataSet<T> {
     }
 
     @Override
-    public float getFormSize() {
-        return mFormSize;
+    public Legend.LegendForm getForm() {
+        return mForm;
     }
 
     public void setFormSize(float formSize) {
@@ -334,8 +339,8 @@ public abstract class BaseDataSet<T extends Entry> implements IDataSet<T> {
     }
 
     @Override
-    public float getFormLineWidth() {
-        return mFormLineWidth;
+    public float getFormSize() {
+        return mFormSize;
     }
 
     public void setFormLineWidth(float formLineWidth) {
@@ -343,12 +348,17 @@ public abstract class BaseDataSet<T extends Entry> implements IDataSet<T> {
     }
 
     @Override
-    public DashPathEffect getFormLineDashEffect() {
-        return mFormLineDashEffect;
+    public float getFormLineWidth() {
+        return mFormLineWidth;
     }
 
     public void setFormLineDashEffect(DashPathEffect dashPathEffect) {
         mFormLineDashEffect = dashPathEffect;
+    }
+
+    @Override
+    public DashPathEffect getFormLineDashEffect() {
+        return mFormLineDashEffect;
     }
 
     @Override
@@ -362,13 +372,13 @@ public abstract class BaseDataSet<T extends Entry> implements IDataSet<T> {
     }
 
     @Override
-    public boolean isVisible() {
-        return mVisible;
+    public void setVisible(boolean visible) {
+        mVisible = visible;
     }
 
     @Override
-    public void setVisible(boolean visible) {
-        mVisible = visible;
+    public boolean isVisible() {
+        return mVisible;
     }
 
     @Override

@@ -2,6 +2,8 @@ package com.dhy.coffeesecret.views;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Handler;
+import android.os.Message;
 import android.util.AttributeSet;
 
 import com.dhy.coffeesecret.pojo.UniversalConfiguration;
@@ -20,6 +22,7 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -31,6 +34,13 @@ public class BaseChart4Coffee extends LineChart {
     private UniversalConfiguration mConfig;
     private Map<Integer, String> labels = new HashMap<>();
     private Map<Integer, ILineDataSet> lines = new HashMap<>();
+    private Handler mHandler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            invalidate();
+            return false;
+        }
+    });
 
     {
         labels.put(BEANLINE, "豆温");
@@ -70,7 +80,9 @@ public class BaseChart4Coffee extends LineChart {
         setHighlightPerDragEnabled(true);
         setBackgroundColor(Color.WHITE);
 
+        setPinchZoom(true);
         Legend l = getLegend();
+
 
 
         // modify the legend ...
@@ -116,19 +128,33 @@ public class BaseChart4Coffee extends LineChart {
         rightAxis.setAxisMinimum(0f);
         rightAxis.setDrawGridLines(false);
         rightAxis.unit = mConfig.getTempratureUnit();
+
         // rightAxis.setDrawZeroLine(false);
         // rightAxis.setGranularityEnabled(false);
     }
 
-    public void addLine(int lineIndex) {
-        LineDataSet set = new LineDataSet(new ArrayList<Entry>(Arrays.asList(new Entry(0, 0))), labels.get(lineIndex));
-        set.setAxisDependency(YAxis.AxisDependency.LEFT);
-        set.setCircleColor(Color.WHITE);
+    public void addTempratureLine(int lineIndex, boolean isAcc) {
+        LineDataSet set = new LineDataSet(new ArrayList<Entry>(Arrays.asList(new Entry(1, 150))), labels.get(lineIndex));
+        if(isAcc){
+            set.setAxisDependency(YAxis.AxisDependency.RIGHT);
+        }else{
+            set.setAxisDependency(YAxis.AxisDependency.LEFT);
+
+        }
+        set.setCircleColor(Color.parseColor("#6774a4"));
+        // set.setCircleColorHole(Color.WHITE);
         set.setLineWidth(2f);
-        set.setCircleRadius(3f);
+        set.setCircleRadius(4f);
+        // set.setCircleHoleRadius(2f);
         set.setFillAlpha(65);
         set.setFillColor(ColorTemplate.colorWithAlpha(Color.YELLOW, 200));
         set.setDrawCircleHole(false);
+        set.setDrawCircles(false);
+        if(lineIndex == BEANLINE){
+            set.setDrawCircleHole(true);
+            set.setDrawCircles(true);
+        }
+
         set.setHighLightColor(Color.rgb(244, 117, 117));
         set.setDrawValues(false);
         set.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
@@ -137,19 +163,19 @@ public class BaseChart4Coffee extends LineChart {
                 set.setColor(mConfig.getBeanColor());
                 break;
             case ACCBEANLINE:
-                set.setColor(mConfig.getBeanColor());
+                set.setColor(mConfig.getAccBeanColor());
                 break;
             case INWINDLINE:
                 set.setColor(mConfig.getInwindColor());
                 break;
             case ACCINWINDLINE:
-                set.setColor(mConfig.getInwindColor());
+                set.setColor(mConfig.getAccInwindColor());
                 break;
             case OUTWINDLINE:
                 set.setColor(mConfig.getOutwindColor());
                 break;
             case ACCOUTWINDLINE:
-                set.setColor(mConfig.getOutwindColor());
+                set.setColor(mConfig.getAccOutwindColor());
                 break;
         }
 
@@ -157,13 +183,32 @@ public class BaseChart4Coffee extends LineChart {
         setData(new LineData(new ArrayList<ILineDataSet>(lines.values())));
     }
 
-    public void removeLine(int lineIndex) throws Exception {
-        if (lines.containsKey(lineIndex)) {
-            lines.remove(lineIndex);
-        } else {
-            throw new Exception("No " + lineIndex + " Line");
-        }
+    public void addTempratureLine(int lineIndex){
+        addTempratureLine(lineIndex, false);
     }
 
+    public boolean showLine(int lineIndex) {
+        lines.get(lineIndex).setVisible(true);
+        return true;
+    }
 
+    public boolean hideLine(int lineIndex) {
+        lines.get(lineIndex).setVisible(false);
+        return true;
+    }
+
+    public void addOneDataToLine(Entry beanData, int lineIndex) {
+        LineDataSet beanLine = (LineDataSet) lines.get(lineIndex);
+        beanLine.addEntry(beanData);
+        mHandler.sendMessage(new Message());
+    }
+
+    public void addNewDatas(List<Entry> beanDatas, int lineIndex) {
+        ILineDataSet beanLine = new LineDataSet(beanDatas, labels.get(lineIndex));
+        lines.put(lineIndex, beanLine);
+        getData().addDataSet(beanLine);
+
+        notifyDataSetChanged();
+        invalidate();
+    }
 }

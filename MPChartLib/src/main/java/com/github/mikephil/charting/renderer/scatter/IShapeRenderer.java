@@ -10,7 +10,8 @@ import com.github.mikephil.charting.utils.ViewPortHandler;
  * Created by wajdic on 15/06/2016.
  * Created at Time 09:07
  */
-public interface IShapeRenderer {
+public interface IShapeRenderer
+{
 
     /**
      * Renders the provided ScatterDataSet with a shape.

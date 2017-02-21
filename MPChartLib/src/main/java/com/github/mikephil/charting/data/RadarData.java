@@ -4,6 +4,7 @@ package com.github.mikephil.charting.data;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.IRadarDataSet;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -37,10 +38,6 @@ public class RadarData extends ChartData<IRadarDataSet> {
         this.mLabels = labels;
     }
 
-    public List<String> getLabels() {
-        return mLabels;
-    }
-
     /**
      * Sets the labels that should be drawn around the RadarChart at the end of each web line.
      *
@@ -48,6 +45,10 @@ public class RadarData extends ChartData<IRadarDataSet> {
      */
     public void setLabels(String... labels) {
         this.mLabels = Arrays.asList(labels);
+    }
+
+    public List<String> getLabels() {
+        return mLabels;
     }
 
     @Override

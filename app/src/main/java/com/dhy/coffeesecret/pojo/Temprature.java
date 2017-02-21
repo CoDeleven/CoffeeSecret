@@ -14,6 +14,14 @@ public class Temprature implements Serializable{
     private float accInwindTemp;
     private float accOutwindTemp;
     private static Temprature lastTemprature;
+    public Temprature(){
+
+    }
+    public Temprature(float beanTemp, float inwindTemp, float outwindTemp){
+        this.beanTemp = beanTemp;
+        this.inwindTemp = inwindTemp;
+        this.outwindTemp = outwindTemp;
+    }
     public float getBeanTemp() {
         return beanTemp;
     }

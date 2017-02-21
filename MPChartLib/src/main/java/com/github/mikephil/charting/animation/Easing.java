@@ -3,10 +3,45 @@ package com.github.mikephil.charting.animation;
 
 /**
  * Easing options.
- *
+ * 
  * @author Daniel Cohen Gindi
  */
 public class Easing {
+
+    /**
+     * Use EasingOption instead of EasingFunction to avoid crashes below Android
+     * 3.0
+     */
+    public enum EasingOption {
+        Linear,
+        EaseInQuad,
+        EaseOutQuad,
+        EaseInOutQuad,
+        EaseInCubic,
+        EaseOutCubic,
+        EaseInOutCubic,
+        EaseInQuart,
+        EaseOutQuart,
+        EaseInOutQuart,
+        EaseInSine,
+        EaseOutSine,
+        EaseInOutSine,
+        EaseInExpo,
+        EaseOutExpo,
+        EaseInOutExpo,
+        EaseInCirc,
+        EaseOutCirc,
+        EaseInOutCirc,
+        EaseInElastic,
+        EaseOutElastic,
+        EaseInOutElastic,
+        EaseInBack,
+        EaseOutBack,
+        EaseInOutBack,
+        EaseInBounce,
+        EaseOutBounce,
+        EaseInOutBounce,
+    }
 
     public static EasingFunction getEasingFunctionFromOption(EasingOption easing) {
         switch (easing) {
@@ -69,44 +104,9 @@ public class Easing {
                 return Easing.EasingFunctions.EaseInOutBounce;
         }
     }
-
-    /**
-     * Use EasingOption instead of EasingFunction to avoid crashes below Android
-     * 3.0
-     */
-    public enum EasingOption {
-        Linear,
-        EaseInQuad,
-        EaseOutQuad,
-        EaseInOutQuad,
-        EaseInCubic,
-        EaseOutCubic,
-        EaseInOutCubic,
-        EaseInQuart,
-        EaseOutQuart,
-        EaseInOutQuart,
-        EaseInSine,
-        EaseOutSine,
-        EaseInOutSine,
-        EaseInExpo,
-        EaseOutExpo,
-        EaseInOutExpo,
-        EaseInCirc,
-        EaseOutCirc,
-        EaseInOutCirc,
-        EaseInElastic,
-        EaseOutElastic,
-        EaseInOutElastic,
-        EaseInBack,
-        EaseOutBack,
-        EaseInOutBack,
-        EaseInBounce,
-        EaseOutBounce,
-        EaseInOutBounce,
-    }
-
+    
     private static class EasingFunctions {
-
+        
         /**
          * ########## ########## ########## ########## ########## ##########
          * PREDEFINED EASING FUNCTIONS BELOW THIS
@@ -343,15 +343,18 @@ public class Easing {
 
                     @Override
                     public float getInterpolation(float input) {
-                        if (input == 0) {
+                        if (input == 0)
+                        {
                             return 0.f;
                         }
-                        if (input == 1f) {
+                        if (input == 1f)
+                        {
                             return 1.f;
                         }
 
                         float position = input / 0.5f;
-                        if (position < 1.f) {
+                        if (position < 1.f)
+                        {
                             return 0.5f * (float) Math.pow(2.f, 10.f * (position - 1.f));
                         }
                         return 0.5f * (-(float) Math.pow(2.f, -10.f * --position) + 2.f);
@@ -403,11 +406,12 @@ public class Easing {
                     @Override
                     public float getInterpolation(float input) {
                         float position = input / 0.5f;
-                        if (position < 1.f) {
+                        if (position < 1.f)
+                        {
                             return -0.5f * ((float) Math.sqrt(1.f - position * position) - 1.f);
                         }
                         return 0.5f * ((float) Math.sqrt(1.f - (position -= 2.f) * position)
-                                + 1.f);
+                        + 1.f);
                     }
                 };
 
@@ -437,20 +441,22 @@ public class Easing {
 
                     @Override
                     public float getInterpolation(float input) {
-                        if (input == 0) {
+                        if (input == 0)
+                        {
                             return 0.f;
                         }
 
                         float position = input;
-                        if (position == 1) {
+                        if (position == 1)
+                        {
                             return 1.f;
                         }
 
                         float p = .3f;
                         float s = p / (2.f * (float) Math.PI) * (float) Math.asin(1.f);
                         return -((float) Math.pow(2.f, 10.f * (position -= 1.f)) * (float)
-                                Math
-                                        .sin((position - s) * (2.f * Math.PI) / p));
+                        Math
+                                .sin((position - s) * (2.f * Math.PI) / p));
                     }
                 };
 
@@ -479,12 +485,14 @@ public class Easing {
 
                     @Override
                     public float getInterpolation(float input) {
-                        if (input == 0) {
+                        if (input == 0)
+                        {
                             return 0.f;
                         }
 
                         float position = input;
-                        if (position == 1) {
+                        if (position == 1)
+                        {
                             return 1.f;
                         }
 
@@ -530,21 +538,24 @@ public class Easing {
 
                     @Override
                     public float getInterpolation(float input) {
-                        if (input == 0) {
+                        if (input == 0)
+                        {
                             return 0.f;
                         }
 
                         float position = input / 0.5f;
-                        if (position == 2) {
+                        if (position == 2)
+                        {
                             return 1.f;
                         }
 
                         float p = (.3f * 1.5f);
                         float s = p / (2.f * (float) Math.PI) * (float) Math.asin(1.f);
-                        if (position < 1.f) {
+                        if (position < 1.f)
+                        {
                             return -.5f
                                     * ((float) Math.pow(2.f, 10.f * (position -= 1.f)) * (float) Math
-                                    .sin((position * 1f - s) * (2.f * Math.PI) / p));
+                                            .sin((position * 1f - s) * (2.f * Math.PI) / p));
                         }
                         return (float) Math.pow(2.f, -10.f * (position -= 1.f))
                                 * (float) Math.sin((position * 1f - s) * (2.f * Math.PI) / p) *
@@ -553,7 +564,8 @@ public class Easing {
                     }
                 };
 
-        public static final EasingFunction EaseInBack = new EasingFunction() {
+        public static final EasingFunction EaseInBack = new EasingFunction()
+        {
             // @Override
             // public float ease(long elapsed, long duration) {
             // final float s = 1.70158f;
@@ -569,7 +581,8 @@ public class Easing {
             }
         };
 
-        public static final EasingFunction EaseOutBack = new EasingFunction() {
+        public static final EasingFunction EaseOutBack = new EasingFunction()
+        {
             // @Override
             // public float ease(long elapsed, long duration) {
             // final float s = 1.70158f;
@@ -607,7 +620,8 @@ public class Easing {
                     public float getInterpolation(float input) {
                         float s = 1.70158f;
                         float position = input / 0.5f;
-                        if (position < 1.f) {
+                        if (position < 1.f)
+                        {
                             return 0.5f * (position * position * (((s *= (1.525f)) + 1.f) *
                                     position - s));
                         }
@@ -615,6 +629,21 @@ public class Easing {
                                 * (((s *= (1.525f)) + 1.f) * position + s) + 2.f);
                     }
                 };
+
+        public static final EasingFunction EaseInBounce = new
+                EasingFunction() {
+                    // @Override
+                    // public float ease(long elapsed, long duration) {
+                    // return 1.f - EaseOutBounce.ease(duration - elapsed,
+                    // duration);
+                    // }
+
+                    @Override
+                    public float getInterpolation(float input) {
+                        return 1.f - EaseOutBounce.getInterpolation(1f - input);
+                    }
+                };
+
         public static final EasingFunction EaseOutBounce = new
                 EasingFunction() {
                     // @Override
@@ -644,31 +673,26 @@ public class Easing {
                     @Override
                     public float getInterpolation(float input) {
                         float position = input;
-                        if (position < (1.f / 2.75f)) {
+                        if (position < (1.f / 2.75f))
+                        {
                             return (7.5625f * position * position);
-                        } else if (position < (2.f / 2.75f)) {
+                        }
+                        else if (position < (2.f / 2.75f))
+                        {
                             return (7.5625f * (position -= (1.5f / 2.75f)) * position + .75f);
-                        } else if (position < (2.5f / 2.75f)) {
+                        }
+                        else if (position < (2.5f / 2.75f))
+                        {
                             return (7.5625f * (position -= (2.25f / 2.75f)) * position + .9375f);
-                        } else {
+                        }
+                        else
+                        {
                             return (7.5625f * (position -= (2.625f / 2.75f)) * position +
-                                    .984375f);
+                            .984375f);
                         }
                     }
                 };
-        public static final EasingFunction EaseInBounce = new
-                EasingFunction() {
-                    // @Override
-                    // public float ease(long elapsed, long duration) {
-                    // return 1.f - EaseOutBounce.ease(duration - elapsed,
-                    // duration);
-                    // }
 
-                    @Override
-                    public float getInterpolation(float input) {
-                        return 1.f - EaseOutBounce.getInterpolation(1f - input);
-                    }
-                };
         public static final EasingFunction EaseInOutBounce = new
                 EasingFunction() {
                     // @Override
@@ -684,11 +708,12 @@ public class Easing {
 
                     @Override
                     public float getInterpolation(float input) {
-                        if (input < 0.5f) {
+                        if (input < 0.5f)
+                        {
                             return EaseInBounce.getInterpolation(input * 2) * .5f;
                         }
                         return EaseOutBounce.getInterpolation(input * 2 - 1f) * .5f +
-                                .5f;
+                        .5f;
                     }
                 };
 

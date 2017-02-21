@@ -2,6 +2,7 @@ package com.github.mikephil.charting.listener;
 
 import android.annotation.SuppressLint;
 import android.graphics.Matrix;
+import android.graphics.PointF;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
@@ -27,6 +28,7 @@ import com.github.mikephil.charting.utils.ViewPortHandler;
  */
 public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBase<? extends BarLineScatterCandleBubbleData<?
         extends IBarLineScatterCandleBubbleDataSet<? extends Entry>>>> {
+
     /**
      * the original touch-matrix from the chart
      */
@@ -40,12 +42,12 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
     /**
      * point where the touch action started
      */
-    private MPPointF mTouchStartPoint = MPPointF.getInstance(0, 0);
+    private MPPointF mTouchStartPoint = MPPointF.getInstance(0,0);
 
     /**
      * center between two pointers (fingers on the display)
      */
-    private MPPointF mTouchPointCenter = MPPointF.getInstance(0, 0);
+    private MPPointF mTouchPointCenter = MPPointF.getInstance(0,0);
 
     private float mSavedXDist = 1f;
     private float mSavedYDist = 1f;
@@ -59,8 +61,8 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
     private VelocityTracker mVelocityTracker;
 
     private long mDecelerationLastTime = 0;
-    private MPPointF mDecelerationCurrentPoint = MPPointF.getInstance(0, 0);
-    private MPPointF mDecelerationVelocity = MPPointF.getInstance(0, 0);
+    private MPPointF mDecelerationCurrentPoint = MPPointF.getInstance(0,0);
+    private MPPointF mDecelerationVelocity = MPPointF.getInstance(0,0);
 
     /**
      * the distance of movement that will be counted as a drag
@@ -88,60 +90,6 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
         this.mDragTriggerDist = Utils.convertDpToPixel(dragTriggerDistance);
 
         this.mMinScalePointerDistance = Utils.convertDpToPixel(3.5f);
-    }
-
-    /**
-     * Determines the center point between two pointer touch points.
-     *
-     * @param point
-     * @param event
-     */
-    private static void midPoint(MPPointF point, MotionEvent event) {
-        float x = event.getX(0) + event.getX(1);
-        float y = event.getY(0) + event.getY(1);
-        point.x = (x / 2f);
-        point.y = (y / 2f);
-    }
-
-    /**
-     * ################ ################ ################ ################
-     */
-    /** BELOW CODE PERFORMS THE ACTUAL TOUCH ACTIONS */
-
-    /**
-     * returns the distance between two pointer touch points
-     *
-     * @param event
-     * @return
-     */
-    private static float spacing(MotionEvent event) {
-        float x = event.getX(0) - event.getX(1);
-        float y = event.getY(0) - event.getY(1);
-        return (float) Math.sqrt(x * x + y * y);
-    }
-
-    /**
-     * calculates the distance on the x-axis between two pointers (fingers on
-     * the display)
-     *
-     * @param e
-     * @return
-     */
-    private static float getXDist(MotionEvent e) {
-        float x = Math.abs(e.getX(0) - e.getX(1));
-        return x;
-    }
-
-    /**
-     * calculates the distance on the y-axis between two pointers (fingers on
-     * the display)
-     *
-     * @param e
-     * @return
-     */
-    private static float getYDist(MotionEvent e) {
-        float y = Math.abs(e.getY(0) - e.getY(1));
-        return y;
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -323,7 +271,7 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
     /**
      * ################ ################ ################ ################
      */
-    /** DOING THE MATH BELOW ;-) */
+    /** BELOW CODE PERFORMS THE ACTUAL TOUCH ACTIONS */
 
     /**
      * Saves the current Matrix state and the touch-start point.
@@ -486,6 +434,61 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
             mLastHighlighted = h;
             mChart.highlightValue(h, true);
         }
+    }
+
+    /**
+     * ################ ################ ################ ################
+     */
+    /** DOING THE MATH BELOW ;-) */
+
+
+    /**
+     * Determines the center point between two pointer touch points.
+     *
+     * @param point
+     * @param event
+     */
+    private static void midPoint(MPPointF point, MotionEvent event) {
+        float x = event.getX(0) + event.getX(1);
+        float y = event.getY(0) + event.getY(1);
+        point.x = (x / 2f);
+        point.y = (y / 2f);
+    }
+
+    /**
+     * returns the distance between two pointer touch points
+     *
+     * @param event
+     * @return
+     */
+    private static float spacing(MotionEvent event) {
+        float x = event.getX(0) - event.getX(1);
+        float y = event.getY(0) - event.getY(1);
+        return (float) Math.sqrt(x * x + y * y);
+    }
+
+    /**
+     * calculates the distance on the x-axis between two pointers (fingers on
+     * the display)
+     *
+     * @param e
+     * @return
+     */
+    private static float getXDist(MotionEvent e) {
+        float x = Math.abs(e.getX(0) - e.getX(1));
+        return x;
+    }
+
+    /**
+     * calculates the distance on the y-axis between two pointers (fingers on
+     * the display)
+     *
+     * @param e
+     * @return
+     */
+    private static float getYDist(MotionEvent e) {
+        float y = Math.abs(e.getY(0) - e.getY(1));
+        return y;
     }
 
     /**

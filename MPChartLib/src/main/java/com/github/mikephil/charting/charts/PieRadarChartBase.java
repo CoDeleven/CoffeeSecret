@@ -30,21 +30,24 @@ public abstract class PieRadarChartBase<T extends ChartData<? extends IDataSet<?
         extends Chart<T> {
 
     /**
-     * flag that indicates if rotation is enabled or not
-     */
-    protected boolean mRotateEnabled = true;
-    /**
-     * Sets the minimum offset (padding) around the chart, defaults to 0.f
-     */
-    protected float mMinOffset = 0.f;
-    /**
      * holds the normalized version of the current rotation angle of the chart
      */
     private float mRotationAngle = 270f;
+
     /**
      * holds the raw version of the current rotation angle of the chart
      */
     private float mRawRotationAngle = 270f;
+
+    /**
+     * flag that indicates if rotation is enabled or not
+     */
+    protected boolean mRotateEnabled = true;
+
+    /**
+     * Sets the minimum offset (padding) around the chart, defaults to 0.f
+     */
+    protected float mMinOffset = 0.f;
 
     public PieRadarChartBase(Context context) {
         super(context);
@@ -348,6 +351,17 @@ public abstract class PieRadarChartBase<T extends ChartData<? extends IDataSet<?
     public abstract int getIndexForAngle(float angle);
 
     /**
+     * Set an offset for the rotation of the RadarChart in degrees. Default 270f
+     * --> top (NORTH)
+     *
+     * @param angle
+     */
+    public void setRotationAngle(float angle) {
+        mRawRotationAngle = angle;
+        mRotationAngle = Utils.getNormalizedAngle(mRawRotationAngle);
+    }
+
+    /**
      * gets the raw version of the current rotation angle of the pie chart the
      * returned value could be any value, negative or positive, outside of the
      * 360 degrees. this is used when working with rotation direction, mainly by
@@ -370,14 +384,13 @@ public abstract class PieRadarChartBase<T extends ChartData<? extends IDataSet<?
     }
 
     /**
-     * Set an offset for the rotation of the RadarChart in degrees. Default 270f
-     * --> top (NORTH)
+     * Set this to true to enable the rotation / spinning of the chart by touch.
+     * Set it to false to disable it. Default: true
      *
-     * @param angle
+     * @param enabled
      */
-    public void setRotationAngle(float angle) {
-        mRawRotationAngle = angle;
-        mRotationAngle = Utils.getNormalizedAngle(mRawRotationAngle);
+    public void setRotationEnabled(boolean enabled) {
+        mRotateEnabled = enabled;
     }
 
     /**
@@ -387,16 +400,6 @@ public abstract class PieRadarChartBase<T extends ChartData<? extends IDataSet<?
      */
     public boolean isRotationEnabled() {
         return mRotateEnabled;
-    }
-
-    /**
-     * Set this to true to enable the rotation / spinning of the chart by touch.
-     * Set it to false to disable it. Default: true
-     *
-     * @param enabled
-     */
-    public void setRotationEnabled(boolean enabled) {
-        mRotateEnabled = enabled;
     }
 
     /**

@@ -41,8 +41,38 @@ public class UniversalConfiguration {
     private int inwindColor;
     // 出风温
     private int outwindColor;
+    // 豆升温率
+    private int accBeanColor;
+    // 进风升温率
+    private int accInwindColor;
+    // 出风升温率
+    private int accOutwindColor;
     // 环境温
     private int envColor;
+
+    public int getAccBeanColor() {
+        return accBeanColor;
+    }
+
+    public void setAccBeanColor(int accBeanColor) {
+        this.accBeanColor = accBeanColor;
+    }
+
+    public int getAccInwindColor() {
+        return accInwindColor;
+    }
+
+    public void setAccInwindColor(int accInwindColor) {
+        this.accInwindColor = accInwindColor;
+    }
+
+    public int getAccOutwindColor() {
+        return accOutwindColor;
+    }
+
+    public void setAccOutwindColor(int accOutwindColor) {
+        this.accOutwindColor = accOutwindColor;
+    }
 
     public int getBeanColor() {
         return beanColor;

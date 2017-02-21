@@ -11,7 +11,8 @@ import com.github.mikephil.charting.utils.ViewPortHandler;
  * Created by wajdic on 15/06/2016.
  * Created at Time 09:08
  */
-public class ChevronUpShapeRenderer implements IShapeRenderer {
+public class ChevronUpShapeRenderer implements IShapeRenderer
+{
 
 
     @Override

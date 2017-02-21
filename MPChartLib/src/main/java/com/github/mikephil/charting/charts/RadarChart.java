@@ -24,40 +24,48 @@ import com.github.mikephil.charting.utils.Utils;
  */
 public class RadarChart extends PieRadarChartBase<RadarData> {
 
-    protected YAxisRendererRadarChart mYAxisRenderer;
-    protected XAxisRendererRadarChart mXAxisRenderer;
     /**
      * width of the main web lines
      */
     private float mWebLineWidth = 2.5f;
+
     /**
      * width of the inner web lines
      */
     private float mInnerWebLineWidth = 1.5f;
+
     /**
      * color for the main web lines
      */
     private int mWebColor = Color.rgb(122, 122, 122);
+
     /**
      * color for the inner web
      */
     private int mWebColorInner = Color.rgb(122, 122, 122);
+
     /**
      * transparency the grid is drawn with (0-255)
      */
     private int mWebAlpha = 150;
+
     /**
      * flag indicating if the web lines should be drawn or not
      */
     private boolean mDrawWeb = true;
+
     /**
      * modulus that determines how many labels and web-lines are skipped before the next is drawn
      */
     private int mSkipWebLineCount = 0;
+
     /**
      * the object reprsenting the y-axis labels
      */
     private YAxis mYAxis;
+
+    protected YAxisRendererRadarChart mYAxisRenderer;
+    protected XAxisRendererRadarChart mXAxisRenderer;
 
     public RadarChart(Context context) {
         super(context);
@@ -200,10 +208,6 @@ public class RadarChart extends PieRadarChartBase<RadarData> {
         return mYAxis;
     }
 
-    public float getWebLineWidth() {
-        return mWebLineWidth;
-    }
-
     /**
      * Sets the width of the web lines that come from the center.
      *
@@ -213,8 +217,8 @@ public class RadarChart extends PieRadarChartBase<RadarData> {
         mWebLineWidth = Utils.convertDpToPixel(width);
     }
 
-    public float getWebLineWidthInner() {
-        return mInnerWebLineWidth;
+    public float getWebLineWidth() {
+        return mWebLineWidth;
     }
 
     /**
@@ -227,13 +231,8 @@ public class RadarChart extends PieRadarChartBase<RadarData> {
         mInnerWebLineWidth = Utils.convertDpToPixel(width);
     }
 
-    /**
-     * Returns the alpha value for all web lines.
-     *
-     * @return
-     */
-    public int getWebAlpha() {
-        return mWebAlpha;
+    public float getWebLineWidthInner() {
+        return mInnerWebLineWidth;
     }
 
     /**
@@ -246,8 +245,13 @@ public class RadarChart extends PieRadarChartBase<RadarData> {
         mWebAlpha = alpha;
     }
 
-    public int getWebColor() {
-        return mWebColor;
+    /**
+     * Returns the alpha value for all web lines.
+     *
+     * @return
+     */
+    public int getWebAlpha() {
+        return mWebAlpha;
     }
 
     /**
@@ -261,8 +265,8 @@ public class RadarChart extends PieRadarChartBase<RadarData> {
         mWebColor = color;
     }
 
-    public int getWebColorInner() {
-        return mWebColorInner;
+    public int getWebColor() {
+        return mWebColor;
     }
 
     /**
@@ -276,6 +280,10 @@ public class RadarChart extends PieRadarChartBase<RadarData> {
         mWebColorInner = color;
     }
 
+    public int getWebColorInner() {
+        return mWebColorInner;
+    }
+
     /**
      * If set to true, drawing the web is enabled, if set to false, drawing the
      * whole web is disabled. Default: true
@@ -287,15 +295,6 @@ public class RadarChart extends PieRadarChartBase<RadarData> {
     }
 
     /**
-     * Returns the modulus that is used for skipping web-lines.
-     *
-     * @return
-     */
-    public int getSkipWebLineCount() {
-        return mSkipWebLineCount;
-    }
-
-    /**
      * Sets the number of web-lines that should be skipped on chart web before the
      * next one is drawn. This targets the lines that come from the center of the RadarChart.
      *
@@ -304,6 +303,15 @@ public class RadarChart extends PieRadarChartBase<RadarData> {
     public void setSkipWebLineCount(int count) {
 
         mSkipWebLineCount = Math.max(0, count);
+    }
+
+    /**
+     * Returns the modulus that is used for skipping web-lines.
+     *
+     * @return
+     */
+    public int getSkipWebLineCount() {
+        return mSkipWebLineCount;
     }
 
     @Override

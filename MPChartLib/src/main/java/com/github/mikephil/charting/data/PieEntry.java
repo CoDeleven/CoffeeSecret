@@ -48,16 +48,16 @@ public class PieEntry extends Entry {
 
     @Deprecated
     @Override
-    public float getX() {
+    public void setX(float x) {
+        super.setX(x);
         Log.i("DEPRECATED", "Pie entries do not have x values");
-        return super.getX();
     }
 
     @Deprecated
     @Override
-    public void setX(float x) {
-        super.setX(x);
+    public float getX() {
         Log.i("DEPRECATED", "Pie entries do not have x values");
+        return super.getX();
     }
 
     public PieEntry copy() {

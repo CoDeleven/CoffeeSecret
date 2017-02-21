@@ -13,7 +13,8 @@ import java.text.DecimalFormat;
  *
  * @author Philipp Jahoda
  */
-public class PercentFormatter implements IValueFormatter, IAxisValueFormatter {
+public class PercentFormatter implements IValueFormatter, IAxisValueFormatter
+{
 
     protected DecimalFormat mFormat;
 

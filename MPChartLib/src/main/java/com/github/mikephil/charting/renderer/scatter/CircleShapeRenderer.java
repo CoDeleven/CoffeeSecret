@@ -12,7 +12,8 @@ import com.github.mikephil.charting.utils.ViewPortHandler;
  * Created by wajdic on 15/06/2016.
  * Created at Time 09:08
  */
-public class CircleShapeRenderer implements IShapeRenderer {
+public class CircleShapeRenderer implements IShapeRenderer
+{
 
     @Override
     public void renderShape(Canvas c, IScatterDataSet dataSet, ViewPortHandler viewPortHandler,

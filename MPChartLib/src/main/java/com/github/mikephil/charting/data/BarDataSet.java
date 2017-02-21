@@ -151,11 +151,6 @@ public class BarDataSet extends BarLineScatterCandleBubbleDataSet<BarEntry> impl
         return mEntryCountStacks;
     }
 
-    @Override
-    public int getBarShadowColor() {
-        return mBarShadowColor;
-    }
-
     /**
      * Sets the color used for drawing the bar-shadows. The bar shadows is a
      * surface behind the bar that indicates the maximum value. Don't for get to
@@ -165,6 +160,21 @@ public class BarDataSet extends BarLineScatterCandleBubbleDataSet<BarEntry> impl
      */
     public void setBarShadowColor(int color) {
         mBarShadowColor = color;
+    }
+
+    @Override
+    public int getBarShadowColor() {
+        return mBarShadowColor;
+    }
+
+    /**
+     * Sets the width used for drawing borders around the bars.
+     * If borderWidth == 0, no border will be drawn.
+     *
+     * @return
+     */
+    public void setBarBorderWidth(float width) {
+        mBarBorderWidth = width;
     }
 
     /**
@@ -179,13 +189,12 @@ public class BarDataSet extends BarLineScatterCandleBubbleDataSet<BarEntry> impl
     }
 
     /**
-     * Sets the width used for drawing borders around the bars.
-     * If borderWidth == 0, no border will be drawn.
+     * Sets the color drawing borders around the bars.
      *
      * @return
      */
-    public void setBarBorderWidth(float width) {
-        mBarBorderWidth = width;
+    public void setBarBorderColor(int color) {
+        mBarBorderColor = color;
     }
 
     /**
@@ -199,20 +208,6 @@ public class BarDataSet extends BarLineScatterCandleBubbleDataSet<BarEntry> impl
     }
 
     /**
-     * Sets the color drawing borders around the bars.
-     *
-     * @return
-     */
-    public void setBarBorderColor(int color) {
-        mBarBorderColor = color;
-    }
-
-    @Override
-    public int getHighLightAlpha() {
-        return mHighLightAlpha;
-    }
-
-    /**
      * Set the alpha value (transparency) that is used for drawing the highlight
      * indicator bar. min = 0 (fully transparent), max = 255 (fully opaque)
      *
@@ -223,8 +218,8 @@ public class BarDataSet extends BarLineScatterCandleBubbleDataSet<BarEntry> impl
     }
 
     @Override
-    public String[] getStackLabels() {
-        return mStackLabels;
+    public int getHighLightAlpha() {
+        return mHighLightAlpha;
     }
 
     /**
@@ -234,5 +229,10 @@ public class BarDataSet extends BarLineScatterCandleBubbleDataSet<BarEntry> impl
      */
     public void setStackLabels(String[] labels) {
         mStackLabels = labels;
+    }
+
+    @Override
+    public String[] getStackLabels() {
+        return mStackLabels;
     }
 }

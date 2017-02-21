@@ -14,7 +14,8 @@ import java.util.List;
 /**
  * Created by Philipp Jahoda on 21/07/15.
  */
-public class ChartHighlighter<T extends BarLineScatterCandleBubbleDataProvider> implements IHighlighter {
+public class ChartHighlighter<T extends BarLineScatterCandleBubbleDataProvider> implements IHighlighter
+{
 
     /**
      * instance of the data-provider
@@ -68,7 +69,7 @@ public class ChartHighlighter<T extends BarLineScatterCandleBubbleDataProvider> 
 
         List<Highlight> closestValues = getHighlightsAtXValue(xVal, x, y);
 
-        if (closestValues.isEmpty()) {
+        if(closestValues.isEmpty()) {
             return null;
         }
 
@@ -165,7 +166,8 @@ public class ChartHighlighter<T extends BarLineScatterCandleBubbleDataProvider> 
         if (entries.size() == 0) {
             // Try to find closest x-value and take all entries for that x-value
             final Entry closest = set.getEntryForXValue(xVal, Float.NaN, rounding);
-            if (closest != null) {
+            if (closest != null)
+            {
                 //noinspection unchecked
                 entries = set.getEntriesForXValue(closest.getX());
             }

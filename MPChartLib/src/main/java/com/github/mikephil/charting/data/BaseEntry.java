@@ -5,14 +5,10 @@ package com.github.mikephil.charting.data;
  */
 public abstract class BaseEntry {
 
-    /**
-     * the y value
-     */
+    /** the y value */
     private float y = 0f;
 
-    /**
-     * optional spot for additional data this Entry represents
-     */
+    /** optional spot for additional data this Entry represents */
     private Object mData = null;
 
     public BaseEntry() {

@@ -76,11 +76,13 @@ public interface IDataSet<T extends Entry> {
      * INFORMATION: This method does calculations at runtime. Do
      * not over-use in performance critical situations.
      *
-     * @param xValue     the x-value
+     * @param xValue the x-value
      * @param closestToY If there are multiple y-values for the specified x-value,
-     * @param rounding   determine whether to round up/down/closest
-     *                   if there is no Entry matching the provided x-value
+     * @param rounding determine whether to round up/down/closest
+     *                 if there is no Entry matching the provided x-value
      * @return
+     *
+     *
      */
     T getEntryForXValue(float xValue, float closestToY, DataSet.Rounding rounding);
 
@@ -92,7 +94,8 @@ public interface IDataSet<T extends Entry> {
      * INFORMATION: This method does calculations at runtime. Do
      * not over-use in performance critical situations.
      *
-     * @param xValue     the x-value
+     *
+     * @param xValue the x-value
      * @param closestToY If there are multiple y-values for the specified x-value,
      * @return
      */
@@ -125,10 +128,10 @@ public interface IDataSet<T extends Entry> {
      * INFORMATION: This method does calculations at runtime. Do
      * not over-use in performance critical situations.
      *
-     * @param xValue     the x-value
+     * @param xValue the x-value
      * @param closestToY If there are multiple y-values for the specified x-value,
-     * @param rounding   determine whether to round up/down/closest
-     *                   if there is no Entry matching the provided x-value
+     * @param rounding determine whether to round up/down/closest
+     *                 if there is no Entry matching the provided x-value
      * @return
      */
     int getEntryIndex(float xValue, float closestToY, DataSet.Rounding rounding);
@@ -305,13 +308,6 @@ public interface IDataSet<T extends Entry> {
     void setHighlightEnabled(boolean enabled);
 
     /**
-     * Returns the formatter used for drawing the values inside the chart.
-     *
-     * @return
-     */
-    IValueFormatter getValueFormatter();
-
-    /**
      * Sets the formatter to be used for drawing the values inside the chart. If
      * no formatter is set, the chart will automatically determine a reasonable
      * formatting (concerning decimals) for all the values that are drawn inside
@@ -323,11 +319,25 @@ public interface IDataSet<T extends Entry> {
     void setValueFormatter(IValueFormatter f);
 
     /**
+     * Returns the formatter used for drawing the values inside the chart.
+     *
+     * @return
+     */
+    IValueFormatter getValueFormatter();
+
+    /**
      * Returns true if the valueFormatter object of this DataSet is null.
      *
      * @return
      */
     boolean needsFormatter();
+
+    /**
+     * Sets the color the value-labels of this DataSet should have.
+     *
+     * @param color
+     */
+    void setValueTextColor(int color);
 
     /**
      * Sets a list of colors to be used as the colors for the drawn values.
@@ -337,18 +347,25 @@ public interface IDataSet<T extends Entry> {
     void setValueTextColors(List<Integer> colors);
 
     /**
+     * Sets a Typeface for the value-labels of this DataSet.
+     *
+     * @param tf
+     */
+    void setValueTypeface(Typeface tf);
+
+    /**
+     * Sets the text-size of the value-labels of this DataSet in dp.
+     *
+     * @param size
+     */
+    void setValueTextSize(float size);
+
+    /**
      * Returns only the first color of all colors that are set to be used for the values.
      *
      * @return
      */
     int getValueTextColor();
-
-    /**
-     * Sets the color the value-labels of this DataSet should have.
-     *
-     * @param color
-     */
-    void setValueTextColor(int color);
 
     /**
      * Returns the color at the specified index that is used for drawing the values inside the chart.
@@ -367,25 +384,11 @@ public interface IDataSet<T extends Entry> {
     Typeface getValueTypeface();
 
     /**
-     * Sets a Typeface for the value-labels of this DataSet.
-     *
-     * @param tf
-     */
-    void setValueTypeface(Typeface tf);
-
-    /**
      * Returns the text size that is used for drawing the values inside the chart
      *
      * @return
      */
     float getValueTextSize();
-
-    /**
-     * Sets the text-size of the value-labels of this DataSet in dp.
-     *
-     * @param size
-     */
-    void setValueTextSize(float size);
 
     /**
      * The form to draw for this dataset in the legend.
@@ -432,18 +435,18 @@ public interface IDataSet<T extends Entry> {
     boolean isDrawValuesEnabled();
 
     /**
-     * Returns true if this DataSet is visible inside the chart, or false if it
-     * is currently hidden.
-     *
-     * @return
-     */
-    boolean isVisible();
-
-    /**
      * Set the visibility of this DataSet. If not visible, the DataSet will not
      * be drawn to the chart upon refreshing it.
      *
      * @param visible
      */
     void setVisible(boolean visible);
+
+    /**
+     * Returns true if this DataSet is visible inside the chart, or false if it
+     * is currently hidden.
+     *
+     * @return
+     */
+    boolean isVisible();
 }

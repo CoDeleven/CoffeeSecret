@@ -19,13 +19,15 @@ import java.util.List;
 public class ScatterDataSet extends LineScatterCandleRadarDataSet<Entry> implements IScatterDataSet {
 
     /**
-     * Renderer responsible for rendering this DataSet, default: square
-     */
-    protected IShapeRenderer mShapeRenderer = new SquareShapeRenderer();
-    /**
      * the size the scattershape will have, in density pixels
      */
     private float mShapeSize = 15f;
+
+    /**
+     * Renderer responsible for rendering this DataSet, default: square
+     */
+    protected IShapeRenderer mShapeRenderer = new SquareShapeRenderer();
+
     /**
      * The radius of the hole in the shape (applies to Square, Circle and Triangle)
      * - default: 0.0
@@ -41,28 +43,6 @@ public class ScatterDataSet extends LineScatterCandleRadarDataSet<Entry> impleme
 
     public ScatterDataSet(List<Entry> yVals, String label) {
         super(yVals, label);
-    }
-
-    public static IShapeRenderer getRendererForShape(ScatterChart.ScatterShape shape) {
-
-        switch (shape) {
-            case SQUARE:
-                return new SquareShapeRenderer();
-            case CIRCLE:
-                return new CircleShapeRenderer();
-            case TRIANGLE:
-                return new TriangleShapeRenderer();
-            case CROSS:
-                return new CrossShapeRenderer();
-            case X:
-                return new XShapeRenderer();
-            case CHEVRON_UP:
-                return new ChevronUpShapeRenderer();
-            case CHEVRON_DOWN:
-                return new ChevronDownShapeRenderer();
-        }
-
-        return null;
     }
 
     @Override
@@ -89,11 +69,6 @@ public class ScatterDataSet extends LineScatterCandleRadarDataSet<Entry> impleme
         return copied;
     }
 
-    @Override
-    public float getScatterShapeSize() {
-        return mShapeSize;
-    }
-
     /**
      * Sets the size in density pixels the drawn scattershape will have. This
      * only applies for non custom shapes.
@@ -104,6 +79,11 @@ public class ScatterDataSet extends LineScatterCandleRadarDataSet<Entry> impleme
         mShapeSize = size;
     }
 
+    @Override
+    public float getScatterShapeSize() {
+        return mShapeSize;
+    }
+
     /**
      * Sets the ScatterShape this DataSet should be drawn with. This will search for an available IShapeRenderer and set this
      * renderer for the DataSet.
@@ -112,11 +92,6 @@ public class ScatterDataSet extends LineScatterCandleRadarDataSet<Entry> impleme
      */
     public void setScatterShape(ScatterChart.ScatterShape shape) {
         mShapeRenderer = getRendererForShape(shape);
-    }
-
-    @Override
-    public IShapeRenderer getShapeRenderer() {
-        return mShapeRenderer;
     }
 
     /**
@@ -130,8 +105,8 @@ public class ScatterDataSet extends LineScatterCandleRadarDataSet<Entry> impleme
     }
 
     @Override
-    public float getScatterShapeHoleRadius() {
-        return mScatterShapeHoleRadius;
+    public IShapeRenderer getShapeRenderer() {
+        return mShapeRenderer;
     }
 
     /**
@@ -145,8 +120,8 @@ public class ScatterDataSet extends LineScatterCandleRadarDataSet<Entry> impleme
     }
 
     @Override
-    public int getScatterShapeHoleColor() {
-        return mScatterShapeHoleColor;
+    public float getScatterShapeHoleRadius() {
+        return mScatterShapeHoleRadius;
     }
 
     /**
@@ -156,5 +131,25 @@ public class ScatterDataSet extends LineScatterCandleRadarDataSet<Entry> impleme
      */
     public void setScatterShapeHoleColor(int holeColor) {
         mScatterShapeHoleColor = holeColor;
+    }
+
+    @Override
+    public int getScatterShapeHoleColor() {
+        return mScatterShapeHoleColor;
+    }
+
+    public static IShapeRenderer getRendererForShape(ScatterChart.ScatterShape shape) {
+
+        switch (shape) {
+            case SQUARE: return new SquareShapeRenderer();
+            case CIRCLE: return new CircleShapeRenderer();
+            case TRIANGLE: return new TriangleShapeRenderer();
+            case CROSS: return new CrossShapeRenderer();
+            case X: return new XShapeRenderer();
+            case CHEVRON_UP: return new ChevronUpShapeRenderer();
+            case CHEVRON_DOWN: return new ChevronDownShapeRenderer();
+        }
+
+        return null;
     }
 }

@@ -20,10 +20,6 @@ import java.util.List;
 
 public class YAxisRendererHorizontalBarChart extends YAxisRenderer {
 
-    protected Path mDrawZeroLinePathBuffer = new Path();
-    protected Path mRenderLimitLinesPathBuffer = new Path();
-    protected float[] mRenderLimitLinesBuffer = new float[4];
-
     public YAxisRendererHorizontalBarChart(ViewPortHandler viewPortHandler, YAxis yAxis,
                                            Transformer trans) {
         super(viewPortHandler, yAxis, trans);
@@ -157,7 +153,7 @@ public class YAxisRendererHorizontalBarChart extends YAxisRenderer {
     @Override
     protected float[] getTransformedPositions() {
 
-        if (mGetTransformedPositionsBuffer.length != mYAxis.mEntryCount * 2) {
+        if(mGetTransformedPositionsBuffer.length != mYAxis.mEntryCount * 2) {
             mGetTransformedPositionsBuffer = new float[mYAxis.mEntryCount * 2];
         }
         float[] positions = mGetTransformedPositionsBuffer;
@@ -187,6 +183,8 @@ public class YAxisRendererHorizontalBarChart extends YAxisRenderer {
         return p;
     }
 
+    protected Path mDrawZeroLinePathBuffer = new Path();
+
     @Override
     protected void drawZeroLine(Canvas c) {
 
@@ -213,6 +211,8 @@ public class YAxisRendererHorizontalBarChart extends YAxisRenderer {
         c.restoreToCount(clipRestoreCount);
     }
 
+    protected Path mRenderLimitLinesPathBuffer = new Path();
+    protected float[] mRenderLimitLinesBuffer = new float[4];
     /**
      * Draws the LimitLines associated with this axis to the screen.
      * This is the standard XAxis renderer using the YAxis limit lines.

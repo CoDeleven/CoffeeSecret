@@ -5,7 +5,7 @@ import com.github.mikephil.charting.utils.ViewPortHandler;
 
 /**
  * Abstract baseclass of all Renderers.
- *
+ * 
  * @author Philipp Jahoda
  */
 public abstract class Renderer {

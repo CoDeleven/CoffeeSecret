@@ -7,17 +7,6 @@ import com.github.mikephil.charting.data.BubbleEntry;
  */
 public interface IBubbleDataSet extends IBarLineScatterCandleBubbleDataSet<BubbleEntry> {
 
-    float getMaxSize();
-
-    boolean isNormalizeSizeEnabled();
-
-    /**
-     * Returns the width of the highlight-circle that surrounds the bubble
-     *
-     * @return
-     */
-    float getHighlightCircleWidth();
-
     /**
      * Sets the width of the circle that surrounds the bubble when highlighted,
      * in dp.
@@ -25,4 +14,14 @@ public interface IBubbleDataSet extends IBarLineScatterCandleBubbleDataSet<Bubbl
      * @param width
      */
     void setHighlightCircleWidth(float width);
+
+    float getMaxSize();
+
+    boolean isNormalizeSizeEnabled();
+
+    /**
+     * Returns the width of the highlight-circle that surrounds the bubble
+      * @return
+     */
+    float getHighlightCircleWidth();
 }

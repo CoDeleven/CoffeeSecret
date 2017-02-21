@@ -32,13 +32,13 @@ public class RadarEntry extends Entry {
 
     @Deprecated
     @Override
-    public float getX() {
-        return super.getX();
+    public void setX(float x) {
+        super.setX(x);
     }
 
     @Deprecated
     @Override
-    public void setX(float x) {
-        super.setX(x);
+    public float getX() {
+        return super.getX();
     }
 }

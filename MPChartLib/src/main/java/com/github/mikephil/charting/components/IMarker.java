@@ -10,18 +10,19 @@ public interface IMarker {
 
     /**
      * @return The desired (general) offset you wish the IMarker to have on the x- and y-axis.
-     * By returning x: -(width / 2) you will center the IMarker horizontally.
-     * By returning y: -(height / 2) you will center the IMarker vertically.
+     *         By returning x: -(width / 2) you will center the IMarker horizontally.
+     *         By returning y: -(height / 2) you will center the IMarker vertically.
      */
     MPPointF getOffset();
 
     /**
+     * @return The offset for drawing at the specific `point`. This allows conditional adjusting of the Marker position.
+     *         If you have no adjustments to make, return getOffset().
+     *
      * @param posX This is the X position at which the marker wants to be drawn.
      *             You can adjust the offset conditionally based on this argument.
      * @param posY This is the X position at which the marker wants to be drawn.
      *             You can adjust the offset conditionally based on this argument.
-     * @return The offset for drawing at the specific `point`. This allows conditional adjusting of the Marker position.
-     * If you have no adjustments to make, return getOffset().
      */
     MPPointF getOffsetForDrawingAtPoint(float posX, float posY);
 

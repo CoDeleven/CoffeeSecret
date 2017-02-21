@@ -9,12 +9,18 @@ import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
+import android.content.res.Resources;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
+import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.Temprature;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.UUID;
 
@@ -56,11 +62,12 @@ public class BluetoothHelper {
                 String hexData = null;
                 try {
                     hexData = new String(characteristic.getValue(), "UTF-8");
-                    Log.e("codelevex", "数据更新:" + hexData);
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
-                mDataListener.notifyDataChanged(Temprature.parseHex2Temprature(hexData));
+                if(mDataListener != null){
+                    mDataListener.notifyDataChanged(Temprature.parseHex2Temprature(hexData));
+                }
             }
             return;
         }
@@ -175,7 +182,7 @@ public class BluetoothHelper {
     /**
      * 开启新线程进行读取
      */
-    protected void read() {
+    public void read() {
         mThread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -187,22 +194,55 @@ public class BluetoothHelper {
                     boolean isSuccessful = false;
                     do {
                         isSuccessful = mGatt.writeCharacteristic(mWriter);
-                        Log.e("codelevex", "写入命令：" + isSuccessful);
                     } while (!isSuccessful);
 
                     try {
-                        Thread.currentThread().sleep(5000);
+                        Thread.currentThread().sleep(1000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 }
             }
         });
+
         mThread.start();
     }
 
     public void stopRead() {
         readable = false;
+    }
+
+    /**
+     * 仅用于模拟烘焙过程的数据
+     */
+    public void test(final InputStream is){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                InputStreamReader ireader = new InputStreamReader(is);
+                BufferedReader br = new BufferedReader(ireader);
+                String str = null;
+                StringBuilder builder = new StringBuilder("");
+                try {
+                    while ((str = br.readLine()) != null) {
+                        for (String temp : str.trim().split(",")) {
+                            final Temprature temprature = new Temprature(Float.parseFloat(temp), 0, 0);
+                            mDataListener.notifyDataChanged(temprature);
+                            try {
+                                Thread.currentThread().sleep(1000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+        }).start();
     }
 
     public void setDeviceListener(DeviceChangeListener mDeviceListener) {
@@ -217,16 +257,26 @@ public class BluetoothHelper {
         this.mViewListener = mViewListener;
     }
 
-
     public interface DeviceChangeListener {
+        /**
+         * 发现新设备时回调
+         * @param device 新设备
+         */
         void notifyNewDevice(BluetoothDevice device);
     }
 
     public interface DataChangeListener {
+        /**
+         * 获取到新数据时回调该方法
+         * @param temprature 获得的温度
+         */
         void notifyDataChanged(Temprature temprature);
     }
 
     public interface ViewHandlerListener {
+        /**
+         * 在处理UI前进行的操作
+         */
         void handleViewBeforeStartRead();
     }
 }

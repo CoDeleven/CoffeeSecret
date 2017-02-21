@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:paddingLeft="5dp"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <CheckBox
+        style="@style/bakingLinesCheckbox"
+        android:id="@+id/id_baking_line_bean"
+        android:text="豆温　　　"/>
+    <CheckBox
+        style="@style/bakingLinesCheckbox"
+        android:id="@+id/id_baking_line_inwind"
+        android:text="进风温　　"/>
+    <CheckBox
+        style="@style/bakingLinesCheckbox"
+        android:id="@+id/id_baking_line_outwind"
+        android:text="出风温　　"/>
+    <CheckBox
+        style="@style/bakingLinesCheckbox"
+        android:id="@+id/id_baking_line_accBean"
+        android:text="豆升温率　"/>
+    <CheckBox
+        android:id="@+id/id_baking_line_accInwind"
+        style="@style/bakingLinesCheckbox"
+        android:text="进风升温率"/>
+    <CheckBox
+        style="@style/bakingLinesCheckbox"
+        android:id="@+id/id_baking_line_accOutwind"
+        android:text="出风升温率"/>
+
+</LinearLayout>

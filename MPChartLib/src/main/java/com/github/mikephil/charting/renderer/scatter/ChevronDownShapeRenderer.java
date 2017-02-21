@@ -11,12 +11,13 @@ import com.github.mikephil.charting.utils.ViewPortHandler;
  * Created by wajdic on 15/06/2016.
  * Created at Time 09:08
  */
-public class ChevronDownShapeRenderer implements IShapeRenderer {
+public class ChevronDownShapeRenderer implements IShapeRenderer
+{
 
 
     @Override
     public void renderShape(Canvas c, IScatterDataSet dataSet, ViewPortHandler viewPortHandler,
-                            float posX, float posY, Paint renderPaint) {
+                     float posX, float posY, Paint renderPaint) {
 
         final float shapeHalf = dataSet.getScatterShapeSize() / 2f;
 

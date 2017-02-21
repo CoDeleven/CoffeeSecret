@@ -2,6 +2,7 @@
 package com.github.mikephil.charting.data;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -68,10 +69,13 @@ public abstract class DataSet<T extends Entry> extends BaseDataSet<T> {
         mYMin = Float.MAX_VALUE;
         mXMax = -Float.MAX_VALUE;
         mXMin = Float.MAX_VALUE;
-
-        for (T e : mValues) {
-            calcMinMax(e);
+        Iterator<T> iterator = mValues.iterator();
+        while(iterator.hasNext()){
+            calcMinMax(iterator.next());
         }
+/*        for (T e : mValues) {
+            calcMinMax(e);
+        }*/
     }
 
     @Override

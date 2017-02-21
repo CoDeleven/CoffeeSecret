@@ -45,101 +45,95 @@ import com.github.mikephil.charting.utils.Utils;
 public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<? extends
         IBarLineScatterCandleBubbleDataSet<? extends Entry>>>
         extends Chart<T> implements BarLineScatterCandleBubbleDataProvider {
+
     /**
      * the maximum number of entries to which values will be drawn
      * (entry numbers greater than this value will cause value-labels to disappear)
      */
     protected int mMaxVisibleCount = 100;
+
     /**
      * flag that indicates if auto scaling on the y axis is enabled
      */
     protected boolean mAutoScaleMinMaxEnabled = false;
+
     /**
      * flag that indicates if pinch-zoom is enabled. if true, both x and y axis
      * can be scaled with 2 fingers, if false, x and y axis can be scaled
      * separately
      */
     protected boolean mPinchZoomEnabled = false;
+
     /**
      * flag that indicates if double tap zoom is enabled or not
      */
     protected boolean mDoubleTapToZoomEnabled = true;
+
     /**
      * flag that indicates if highlighting per dragging over a fully zoomed out
      * chart is enabled
      */
     protected boolean mHighlightPerDragEnabled = true;
-    /**
-     * paint object for the (by default) lightgrey background of the grid
-     */
-    protected Paint mGridBackgroundPaint;
-    protected Paint mBorderPaint;
-    /**
-     * flag indicating if the grid background should be drawn or not
-     */
-    protected boolean mDrawGridBackground = false;
-    protected boolean mDrawBorders = false;
-    protected boolean mClipValuesToContent = false;
-    /**
-     * Sets the minimum offset (padding) around the chart, defaults to 15
-     */
-    protected float mMinOffset = 15.f;
-    /**
-     * flag indicating if the chart should stay at the same position after a rotation. Default is false.
-     */
-    protected boolean mKeepPositionOnRotation = false;
-    /**
-     * the listener for user drawing on the chart
-     */
-    protected OnDrawListener mDrawListener;
-    /**
-     * the object representing the labels on the left y-axis
-     */
-    protected YAxis mAxisLeft;
-    /**
-     * the object representing the labels on the right y-axis
-     */
-    protected YAxis mAxisRight;
-    protected YAxisRenderer mAxisRendererLeft;
-    protected YAxisRenderer mAxisRendererRight;
-    protected Transformer mLeftAxisTransformer;
-    protected Transformer mRightAxisTransformer;
-    protected XAxisRenderer mXAxisRenderer;
-    /**
-     * CODE BELOW THIS RELATED TO SCALING AND GESTURES AND MODIFICATION OF THE
-     * VIEWPORT
-     */
 
-    protected Matrix mZoomMatrixBuffer = new Matrix();
-    protected Matrix mFitScreenMatrixBuffer = new Matrix();
-    protected float[] mGetPositionBuffer = new float[2];
-    /**
-     * buffer for storing lowest visible x point
-     */
-    protected MPPointD posForGetLowestVisibleX = MPPointD.getInstance(0, 0);
-    /**
-     * buffer for storing highest visible x point
-     */
-    protected MPPointD posForGetHighestVisibleX = MPPointD.getInstance(0, 0);
-    protected float[] mOnSizeChangedBuffer = new float[2];
-
-    // /** the approximator object used for data filtering */
-    // private Approximator mApproximator;
-    private InterceptorView interceptorView;
     /**
      * if true, dragging is enabled for the chart
      */
     private boolean mDragEnabled = true;
+
     private boolean mScaleXEnabled = true;
     private boolean mScaleYEnabled = true;
-    // for performance tracking
-    private long totalTime = 0;
-    private long drawCycles = 0;
-    private RectF mOffsetsBuffer = new RectF();
+
     /**
-     * flag that indicates if a custom viewport offset has been set
+     * paint object for the (by default) lightgrey background of the grid
      */
-    private boolean mCustomViewPortEnabled = false;
+    protected Paint mGridBackgroundPaint;
+
+    protected Paint mBorderPaint;
+
+    /**
+     * flag indicating if the grid background should be drawn or not
+     */
+    protected boolean mDrawGridBackground = false;
+
+    protected boolean mDrawBorders = false;
+
+    protected boolean mClipValuesToContent = false;
+
+    /**
+     * Sets the minimum offset (padding) around the chart, defaults to 15
+     */
+    protected float mMinOffset = 15.f;
+
+    /**
+     * flag indicating if the chart should stay at the same position after a rotation. Default is false.
+     */
+    protected boolean mKeepPositionOnRotation = false;
+
+    /**
+     * the listener for user drawing on the chart
+     */
+    protected OnDrawListener mDrawListener;
+
+    /**
+     * the object representing the labels on the left y-axis
+     */
+    protected YAxis mAxisLeft;
+
+    /**
+     * the object representing the labels on the right y-axis
+     */
+    protected YAxis mAxisRight;
+
+    protected YAxisRenderer mAxisRendererLeft;
+    protected YAxisRenderer mAxisRendererRight;
+
+    protected Transformer mLeftAxisTransformer;
+    protected Transformer mRightAxisTransformer;
+
+    protected XAxisRenderer mXAxisRenderer;
+
+    // /** the approximator object used for data filtering */
+    // private Approximator mApproximator;
 
     public BarLineChartBase(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
@@ -151,10 +145,6 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
 
     public BarLineChartBase(Context context) {
         super(context);
-    }
-
-    public void setInterceptorView(InterceptorView interceptorView) {
-        this.interceptorView = interceptorView;
     }
 
     @Override
@@ -187,6 +177,10 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
         mBorderPaint.setColor(Color.BLACK);
         mBorderPaint.setStrokeWidth(Utils.convertDpToPixel(1f));
     }
+
+    // for performance tracking
+    private long totalTime = 0;
+    private long drawCycles = 0;
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -371,10 +365,6 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
                 .RIGHT));
     }
 
-    /**
-     * ################ ################ ################ ################
-     */
-
     protected void calculateLegendOffsets(RectF offsets) {
 
         offsets.left = 0.f;
@@ -450,6 +440,8 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
             }
         }
     }
+
+    private RectF mOffsetsBuffer = new RectF();
 
     @Override
     public void calculateOffsets() {
@@ -553,9 +545,7 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         super.onTouchEvent(event);
-        if (interceptorView != null) {
-            interceptorView.intercept(event);
-        }
+
         if (mChartTouchListener == null || mData == null)
             return false;
 
@@ -572,6 +562,16 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
         if (mChartTouchListener instanceof BarLineChartTouchListener)
             ((BarLineChartTouchListener) mChartTouchListener).computeScroll();
     }
+
+    /**
+     * ################ ################ ################ ################
+     */
+    /**
+     * CODE BELOW THIS RELATED TO SCALING AND GESTURES AND MODIFICATION OF THE
+     * VIEWPORT
+     */
+
+    protected Matrix mZoomMatrixBuffer = new Matrix();
 
     /**
      * Zooms in by 1.4f, into the charts center.
@@ -708,6 +708,8 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
         }
     }
 
+    protected Matrix mFitScreenMatrixBuffer = new Matrix();
+
     /**
      * Resets all zooming and dragging and makes the chart fit exactly it's
      * bounds.
@@ -808,6 +810,7 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
         float maxScale = getAxisRange(axis) / maxYRange;
         mViewPortHandler.setMinMaxScaleY(minScale, maxScale);
     }
+
 
     /**
      * Moves the left side of the current viewport to the specified x-position.
@@ -911,11 +914,6 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
     }
 
     /**
-     * ################ ################ ################ ################
-     */
-    /** CODE BELOW IS GETTERS AND SETTERS */
-
-    /**
      * This will move the center of the current viewport to the specified
      * x and y value animated.
      *
@@ -945,6 +943,11 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
             Log.e(LOG_TAG, "Unable to execute centerViewToAnimated(...) on API level < 11");
         }
     }
+
+    /**
+     * flag that indicates if a custom viewport offset has been set
+     */
+    private boolean mCustomViewPortEnabled = false;
 
     /**
      * Sets custom offsets for the current ViewPort (the offsets on the sides of
@@ -984,6 +987,11 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
     }
 
     /**
+     * ################ ################ ################ ################
+     */
+    /** CODE BELOW IS GETTERS AND SETTERS */
+
+    /**
      * Returns the range of the specified axis.
      *
      * @param axis
@@ -1013,6 +1021,8 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
     public OnDrawListener getDrawListener() {
         return mDrawListener;
     }
+
+    protected float[] mGetPositionBuffer = new float[2];
 
     /**
      * Returns a recyclable MPPointF instance.
@@ -1049,10 +1059,6 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
         return mMaxVisibleCount;
     }
 
-    public boolean isHighlightPerDragEnabled() {
-        return mHighlightPerDragEnabled;
-    }
-
     /**
      * Set this to true to allow highlighting per dragging over the chart
      * surface when it is fully zoomed out. Default: true
@@ -1061,6 +1067,10 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
      */
     public void setHighlightPerDragEnabled(boolean enabled) {
         mHighlightPerDragEnabled = enabled;
+    }
+
+    public boolean isHighlightPerDragEnabled() {
+        return mHighlightPerDragEnabled;
     }
 
     /**
@@ -1074,15 +1084,6 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
     }
 
     /**
-     * Returns true if dragging is enabled for the chart, false if not.
-     *
-     * @return
-     */
-    public boolean isDragEnabled() {
-        return mDragEnabled;
-    }
-
-    /**
      * Set this to true to enable dragging (moving the chart with the finger)
      * for the chart (this does not effect scaling).
      *
@@ -1090,6 +1091,15 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
      */
     public void setDragEnabled(boolean enabled) {
         this.mDragEnabled = enabled;
+    }
+
+    /**
+     * Returns true if dragging is enabled for the chart, false if not.
+     *
+     * @return
+     */
+    public boolean isDragEnabled() {
+        return mDragEnabled;
     }
 
     /**
@@ -1103,29 +1113,20 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
         this.mScaleYEnabled = enabled;
     }
 
-    public boolean isScaleXEnabled() {
-        return mScaleXEnabled;
-    }
-
     public void setScaleXEnabled(boolean enabled) {
         mScaleXEnabled = enabled;
-    }
-
-    public boolean isScaleYEnabled() {
-        return mScaleYEnabled;
     }
 
     public void setScaleYEnabled(boolean enabled) {
         mScaleYEnabled = enabled;
     }
 
-    /**
-     * Returns true if zooming via double-tap is enabled false if not.
-     *
-     * @return
-     */
-    public boolean isDoubleTapToZoomEnabled() {
-        return mDoubleTapToZoomEnabled;
+    public boolean isScaleXEnabled() {
+        return mScaleXEnabled;
+    }
+
+    public boolean isScaleYEnabled() {
+        return mScaleYEnabled;
     }
 
     /**
@@ -1136,6 +1137,15 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
      */
     public void setDoubleTapToZoomEnabled(boolean enabled) {
         mDoubleTapToZoomEnabled = enabled;
+    }
+
+    /**
+     * Returns true if zooming via double-tap is enabled false if not.
+     *
+     * @return
+     */
+    public boolean isDoubleTapToZoomEnabled() {
+        return mDoubleTapToZoomEnabled;
     }
 
     /**
@@ -1169,7 +1179,7 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
 
     /**
      * When enabled, the values will be clipped to contentRect,
-     * otherwise they can bleed outside the content rect.
+     *   otherwise they can bleed outside the content rect.
      *
      * @param enabled
      */
@@ -1179,7 +1189,7 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
 
     /**
      * When enabled, the values will be clipped to contentRect,
-     * otherwise they can bleed outside the content rect.
+     *   otherwise they can bleed outside the content rect.
      *
      * @return
      */
@@ -1298,6 +1308,11 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
     }
 
     /**
+     * buffer for storing lowest visible x point
+     */
+    protected MPPointD posForGetLowestVisibleX = MPPointD.getInstance(0, 0);
+
+    /**
      * Returns the lowest x-index (value on the x-axis) that is still visible on
      * the chart.
      *
@@ -1310,6 +1325,11 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
         float result = (float) Math.max(mXAxis.mAxisMinimum, posForGetLowestVisibleX.x);
         return result;
     }
+
+    /**
+     * buffer for storing highest visible x point
+     */
+    protected MPPointD posForGetHighestVisibleX = MPPointD.getInstance(0, 0);
 
     /**
      * Returns the highest x-index (value on the x-axis) that is still visible
@@ -1513,14 +1533,6 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
     }
 
     /**
-     * @return true if auto scaling on the y axis is enabled.
-     * @default false
-     */
-    public boolean isAutoScaleMinMaxEnabled() {
-        return mAutoScaleMinMaxEnabled;
-    }
-
-    /**
      * Flag that indicates if auto scaling on the y axis is enabled. This is
      * especially interesting for charts displaying financial data.
      *
@@ -1530,6 +1542,14 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
      */
     public void setAutoScaleMinMaxEnabled(boolean enabled) {
         mAutoScaleMinMaxEnabled = enabled;
+    }
+
+    /**
+     * @return true if auto scaling on the y axis is enabled.
+     * @default false
+     */
+    public boolean isAutoScaleMinMaxEnabled() {
+        return mAutoScaleMinMaxEnabled;
     }
 
     @Override
@@ -1557,6 +1577,8 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
         return null;
     }
 
+    protected float[] mOnSizeChangedBuffer = new float[2];
+
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
 
@@ -1580,12 +1602,5 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
         } else {
             mViewPortHandler.refresh(mViewPortHandler.getMatrixTouch(), this, true);
         }
-    }
-
-    /**
-     * 因为图标的特殊性，需要设置它父类的事件传播
-     */
-    public interface InterceptorView {
-        public void intercept(MotionEvent event);
     }
 }

@@ -83,25 +83,6 @@ public class BarEntry extends Entry {
     }
 
     /**
-     * Calculates the sum across all values of the given stack.
-     *
-     * @param vals
-     * @return
-     */
-    private static float calcSum(float[] vals) {
-
-        if (vals == null)
-            return 0f;
-
-        float sum = 0f;
-
-        for (float f : vals)
-            sum += f;
-
-        return sum;
-    }
-
-    /**
      * Returns an exact copy of the BarEntry.
      */
     public BarEntry copy() {
@@ -223,6 +204,25 @@ public class BarEntry extends Entry {
 
         mNegativeSum = sumNeg;
         mPositiveSum = sumPos;
+    }
+
+    /**
+     * Calculates the sum across all values of the given stack.
+     *
+     * @param vals
+     * @return
+     */
+    private static float calcSum(float[] vals) {
+
+        if (vals == null)
+            return 0f;
+
+        float sum = 0f;
+
+        for (float f : vals)
+            sum += f;
+
+        return sum;
     }
 
     protected void calcRanges() {

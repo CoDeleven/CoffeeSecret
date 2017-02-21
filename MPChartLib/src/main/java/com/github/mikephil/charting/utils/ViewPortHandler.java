@@ -17,54 +17,60 @@ public class ViewPortHandler {
      * matrix used for touch events
      */
     protected final Matrix mMatrixTouch = new Matrix();
-    /**
-     * buffer for storing the 9 matrix values of a 3x3 matrix
-     */
-    protected final float[] matrixBuffer = new float[9];
+
     /**
      * this rectangle defines the area in which graph values can be drawn
      */
     protected RectF mContentRect = new RectF();
+
     protected float mChartWidth = 0f;
     protected float mChartHeight = 0f;
-    protected float[] valsBufferForFitScreen = new float[9];
-    protected Matrix mCenterViewPortMatrixBuffer = new Matrix();
+
     /**
      * minimum scale value on the y-axis
      */
     private float mMinScaleY = 1f;
+
     /**
      * maximum scale value on the y-axis
      */
     private float mMaxScaleY = Float.MAX_VALUE;
+
     /**
      * minimum scale value on the x-axis
      */
     private float mMinScaleX = 1f;
+
     /**
      * maximum scale value on the x-axis
      */
     private float mMaxScaleX = Float.MAX_VALUE;
+
     /**
      * contains the current scale factor of the x-axis
      */
     private float mScaleX = 1f;
+
     /**
      * contains the current scale factor of the y-axis
      */
     private float mScaleY = 1f;
+
     /**
      * current translation (drag distance) on the x-axis
      */
     private float mTransX = 0f;
+
     /**
      * current translation (drag distance) on the y-axis
      */
     private float mTransY = 0f;
+
     /**
      * offset that allows the chart to be dragged over its bounds on the x-axis
      */
     private float mTransOffsetX = 0f;
+
     /**
      * offset that allows the chart to be dragged over its bounds on the x-axis
      */
@@ -158,13 +164,6 @@ public class ViewPortHandler {
         return MPPointF.getInstance(mContentRect.centerX(), mContentRect.centerY());
     }
 
-    /**
-     * ################ ################ ################ ################
-     */
-    /**
-     * CODE BELOW THIS RELATED TO SCALING AND GESTURES
-     */
-
     public float getChartHeight() {
         return mChartHeight;
     }
@@ -181,6 +180,11 @@ public class ViewPortHandler {
     public float getSmallestContentExtension() {
         return Math.min(mContentRect.width(), mContentRect.height());
     }
+
+    /**
+     * ################ ################ ################ ################
+     */
+    /** CODE BELOW THIS RELATED TO SCALING AND GESTURES */
 
     /**
      * Zooms in by 1.4f, x and y are the coordinates (in pixels) of the zoom
@@ -221,7 +225,6 @@ public class ViewPortHandler {
 
     /**
      * Zooms out to original size.
-     *
      * @param outputMatrix
      */
     public void resetZoom(Matrix outputMatrix) {
@@ -311,6 +314,8 @@ public class ViewPortHandler {
         return save;
     }
 
+    protected float[] valsBufferForFitScreen = new float[9];
+
     /**
      * Resets all zooming and dragging and makes the chart fit exactly it's
      * bounds.
@@ -375,6 +380,8 @@ public class ViewPortHandler {
         outputMatrix.postTranslate(-x, -y);
     }
 
+    protected Matrix mCenterViewPortMatrixBuffer = new Matrix();
+
     /**
      * Centers the viewport around the specified position (x-index and y-value)
      * in the chart. Centering the viewport outside the bounds of the chart is
@@ -398,6 +405,11 @@ public class ViewPortHandler {
 
         refresh(save, view, true);
     }
+
+    /**
+     * buffer for storing the 9 matrix values of a 3x3 matrix
+     */
+    protected final float[] matrixBuffer = new float[9];
 
     /**
      * call this method to refresh the graph with a given matrix

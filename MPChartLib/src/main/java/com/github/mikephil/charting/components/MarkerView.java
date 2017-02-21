@@ -9,6 +9,7 @@ import android.widget.RelativeLayout;
 import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.utils.FSize;
 import com.github.mikephil.charting.utils.MPPointF;
 
 import java.lang.ref.WeakReference;
@@ -52,6 +53,14 @@ public class MarkerView extends RelativeLayout implements IMarker {
         inflated.layout(0, 0, inflated.getMeasuredWidth(), inflated.getMeasuredHeight());
     }
 
+    public void setOffset(MPPointF offset) {
+        mOffset = offset;
+
+        if (mOffset == null) {
+            mOffset = new MPPointF();
+        }
+    }
+
     public void setOffset(float offsetX, float offsetY) {
         mOffset.x = offsetX;
         mOffset.y = offsetY;
@@ -62,20 +71,12 @@ public class MarkerView extends RelativeLayout implements IMarker {
         return mOffset;
     }
 
-    public void setOffset(MPPointF offset) {
-        mOffset = offset;
-
-        if (mOffset == null) {
-            mOffset = new MPPointF();
-        }
+    public void setChartView(Chart chart) {
+        mWeakChart = new WeakReference<>(chart);
     }
 
     public Chart getChartView() {
         return mWeakChart == null ? null : mWeakChart.get();
-    }
-
-    public void setChartView(Chart chart) {
-        mWeakChart = new WeakReference<>(chart);
     }
 
     @Override
@@ -91,13 +92,13 @@ public class MarkerView extends RelativeLayout implements IMarker {
         float height = getHeight();
 
         if (posX + mOffset2.x < 0) {
-            mOffset2.x = -posX;
+            mOffset2.x = - posX;
         } else if (chart != null && posX + width + mOffset2.x > chart.getWidth()) {
             mOffset2.x = chart.getWidth() - posX - width;
         }
 
         if (posY + mOffset2.y < 0) {
-            mOffset2.y = -posY;
+            mOffset2.y = - posY;
         } else if (chart != null && posY + height + mOffset2.y > chart.getHeight()) {
             mOffset2.y = chart.getHeight() - posY - height;
         }
