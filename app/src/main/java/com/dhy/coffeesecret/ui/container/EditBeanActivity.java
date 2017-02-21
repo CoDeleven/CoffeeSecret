@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -71,6 +72,10 @@ public class EditBeanActivity extends AppCompatActivity {
     RelativeLayout editLayoutManor;
     @Bind(R.id.edit_layout_species)
     RelativeLayout editLayoutSpecies;
+    @Bind(R.id.edit_country)
+    TextView editCountry;
+    @Bind(R.id.edit_layout_country)
+    RelativeLayout editLayoutCountry;
 
     private TimePickerView pvTime;
     private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
@@ -121,6 +126,7 @@ public class EditBeanActivity extends AppCompatActivity {
 
         editIcon.setImageResource(R.drawable.ic_container_add_bean);
         editName.setText(beanInfo.getName());
+        editCountry.setText(beanInfo.getCountry());
         editArea.setText(beanInfo.getArea());
         editManor.setText(beanInfo.getManor());
         editAltitude.setText(beanInfo.getAltitude());
@@ -199,7 +205,8 @@ public class EditBeanActivity extends AppCompatActivity {
         return 0;
     }
 
-    @OnClick({R.id.btn_cancel, R.id.btn_save, R.id.edit_layout_area, R.id.edit_layout_manor, R.id.edit_layout_species, R.id.edit_buy_date})
+    @OnClick({R.id.btn_cancel, R.id.btn_save, R.id.edit_layout_country, R.id.edit_layout_area,
+            R.id.edit_layout_manor, R.id.edit_layout_species, R.id.edit_buy_date})
     public void onClick(View view) {
         Intent intent;
         switch (view.getId()) {
@@ -208,6 +215,12 @@ public class EditBeanActivity extends AppCompatActivity {
                 break;
             case R.id.btn_save:
                 saveBeanInfo();
+                break;
+            case R.id.edit_layout_country:
+                intent = new Intent(EditBeanActivity.this, SelectInfoActivity.class);
+                intent.putExtra("info_type", "country");
+                startActivityForResult(intent, COUNTRY);
+                exitToLeft();
                 break;
             case R.id.edit_layout_area:
                 intent = new Intent(EditBeanActivity.this, SelectInfoActivity.class);
@@ -239,6 +252,7 @@ public class EditBeanActivity extends AppCompatActivity {
         BeanInfo beanInfo = new BeanInfo();
 
         beanInfo.setName(editName.getText().toString());
+        beanInfo.setCountry(editCountry.getText().toString());
         beanInfo.setArea(editArea.getText().toString());
         beanInfo.setManor(editManor.getText().toString());
         beanInfo.setAltitude(editAltitude.getText().toString());
@@ -261,6 +275,9 @@ public class EditBeanActivity extends AppCompatActivity {
             Message msg = new Message();
             String info = data.getStringExtra("info");
             switch (requestCode) {
+                case COUNTRY:
+                    msg.what = COUNTRY;
+                    break;
                 case AREA:
                     msg.what = AREA;
                     break;
@@ -277,12 +294,20 @@ public class EditBeanActivity extends AppCompatActivity {
             }
         }
     }
-    private static final int AREA = 1234;
-    private static final int MANOR = 2345;
-    private static final int SPECIES = 3456;
+
+    private static final int COUNTRY = 1234;
+    private static final int AREA = 2345;
+    private static final int MANOR = 3456;
+    private static final int SPECIES = 4567;
+    private static final int BEAN_NAME = 5678;
+    private static final int BEAN_ICON = 6789;
     private EditBeanHandler mHandler = new EditBeanHandler(EditBeanActivity.this);
 
     class EditBeanHandler extends Handler {
+
+        String country = "";
+        String species = "";
+
         private final WeakReference<EditBeanActivity> mActivity;
 
         public EditBeanHandler(EditBeanActivity activity) {
@@ -294,14 +319,39 @@ public class EditBeanActivity extends AppCompatActivity {
             super.handleMessage(msg);
             final EditBeanActivity activity = mActivity.get();
             switch (msg.what) {
+                case COUNTRY:
+                    activity.editCountry.setText((String) msg.obj);
+                    mHandler.sendEmptyMessage(BEAN_NAME);
+                    break;
                 case AREA:
-                    activity.editArea.setText((String)msg.obj);
+                    activity.editArea.setText((String) msg.obj);
                     break;
                 case MANOR:
-                    activity.editManor.setText((String)msg.obj);
+                    activity.editManor.setText((String) msg.obj);
                     break;
                 case SPECIES:
-                    activity.editSpecies.setText((String)msg.obj);
+                    activity.editSpecies.setText((String) msg.obj);
+                    mHandler.sendEmptyMessage(BEAN_NAME);
+                    mHandler.sendEmptyMessage(BEAN_ICON);
+                    break;
+                case BEAN_NAME:
+                    country = activity.editCountry.getText().toString();
+                    species = activity.editSpecies.getText().toString();
+                    if (!TextUtils.isEmpty(country.trim()) &&
+                            !TextUtils.isEmpty(species.trim())) {
+                        activity.editName.setText(country + species);
+                    }
+                    break;
+                case BEAN_ICON:
+                    if (species.toLowerCase().contains("a")) {
+                        activity.editIcon.setImageResource(R.drawable.ic_container_aa);
+                    } else if (species.toLowerCase().contains("c")) {
+                        activity.editIcon.setImageResource(R.drawable.ic_container_ac);
+                    } else if (species.toLowerCase().contains("e")) {
+                        activity.editIcon.setImageResource(R.drawable.ic_container_ae);
+                    } else {
+                        activity.editIcon.setImageResource(R.drawable.ic_container_al);
+                    }
                     break;
                 default:
                     break;

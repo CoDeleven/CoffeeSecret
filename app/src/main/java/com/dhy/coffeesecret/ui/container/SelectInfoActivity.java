@@ -80,6 +80,10 @@ public class SelectInfoActivity extends AppCompatActivity implements OnQuickSide
         infoType = getIntent().getStringExtra("info_type");
 
         switch (infoType) {
+            case "country":
+                titleText.setText("国家");
+                mHandler.sendEmptyMessage(GET_COUNTRY_LIST);
+                break;
             case "area":
                 titleText.setText("产地");
                 mHandler.sendEmptyMessage(GET_AREA_LIST);
@@ -140,6 +144,9 @@ public class SelectInfoActivity extends AppCompatActivity implements OnQuickSide
 
     private void getDataList(int listType) {
         switch (listType) {
+            case GET_COUNTRY_LIST:
+                Collections.addAll(dataList, TestData.beanList7);
+                break;
             case GET_AREA_LIST:
                 Collections.addAll(dataList, TestData.beanList1);
                 break;
@@ -190,10 +197,11 @@ public class SelectInfoActivity extends AppCompatActivity implements OnQuickSide
         exitToRight();
     }
 
-    private static final int GET_AREA_LIST = 111;
-    private static final int GET_MANOR_LIST = 222;
-    private static final int GET_SPECIES_LIST = 333;
-    private static final int SHOW_WRONG_TOAST = 444;
+    private static final int GET_COUNTRY_LIST = 111;
+    private static final int GET_AREA_LIST = 222;
+    private static final int GET_MANOR_LIST = 333;
+    private static final int GET_SPECIES_LIST = 444;
+    private static final int SHOW_WRONG_TOAST = 555;
     private SelectHandler mHandler = new SelectHandler(SelectInfoActivity.this);
 
     private class SelectHandler extends Handler {
@@ -208,6 +216,9 @@ public class SelectInfoActivity extends AppCompatActivity implements OnQuickSide
             super.handleMessage(msg);
             final SelectInfoActivity activity = mActivity.get();
             switch (msg.what) {
+                case GET_COUNTRY_LIST:
+                    activity.getDataList(GET_COUNTRY_LIST);
+                    break;
                 case GET_AREA_LIST:
                     activity.getDataList(GET_AREA_LIST);
                     break;

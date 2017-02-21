@@ -70,11 +70,57 @@
                 </RelativeLayout>
 
             </LinearLayout>
-
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="46dp"
                 android:layout_marginTop="6.5dp"
+                android:background="@color/white"
+                android:paddingLeft="30dp"
+                android:paddingRight="30dp">
+
+                <RelativeLayout
+                    android:id="@+id/edit_layout_country"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="14dp"
+                        android:text="@string/country"
+                        android:textColor="@color/color_gray_c9"
+                        android:textSize="14.5sp" />
+
+                    <TextView
+                        android:id="@+id/edit_country"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="86dp"
+                        android:text="巴西"
+                        android:textColor="@color/black"
+                        android:textSize="14.5sp" />
+
+                    <ImageView
+                        android:layout_width="13.75dp"
+                        android:layout_height="13.75dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="14.8dp"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_next" />
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/color_gray_c9" />
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
                 android:background="@color/white"
                 android:paddingLeft="30dp"
                 android:paddingRight="30dp">
@@ -99,8 +145,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="86dp"
-                        android:background="@null"
-                        android:text="巴西"
+                        android:text="米纳斯"
                         android:textColor="@color/black"
                         android:textSize="14.5sp" />
 
@@ -148,8 +193,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="86dp"
-                        android:background="@null"
-                        android:text="米纳斯"
+                        android:text="Chacal"
                         android:textColor="@color/black"
                         android:textSize="14.5sp" />
 
@@ -198,7 +242,7 @@
                         android:layout_marginRight="108.5dp"
                         android:inputType="text"
                         android:background="@null"
-                        android:text="1000~1300"
+                        android:text="1000~1300m"
                         android:textColor="@color/black"
                         android:textSize="14.5sp" />
 
@@ -573,11 +617,6 @@
                         android:src="@drawable/ic_next" />
                 </RelativeLayout>
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_alignParentBottom="true"
-                    android:background="@color/color_gray_c9" />
             </RelativeLayout>
 
         </LinearLayout>

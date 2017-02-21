@@ -163,6 +163,8 @@ public class BeanInfo implements Serializable {
 
     public void setOneSpecies(String oneSpecies) {
         this.oneSpecies = oneSpecies;
+    }
+
     @Override
     public String toString() {
         return "BeanInfo{" +
@@ -173,6 +175,7 @@ public class BeanInfo implements Serializable {
                 ", manor='" + manor + '\'' +
                 ", altitude='" + altitude + '\'' +
                 ", species='" + species + '\'' +
+                ", oneSpecies='" + oneSpecies + '\'' +
                 ", level='" + level + '\'' +
                 ", waterContent=" + waterContent +
                 ", handler='" + handler + '\'' +

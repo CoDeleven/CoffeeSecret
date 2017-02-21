@@ -7,6 +7,7 @@
 
     <!-- ReportInfoPagePart-->
     <string name="bean_name">豆名</string>
+    <string name="country">国家</string>
     <string name="produce_area">产地</string>
     <string name="manor">庄园</string>
     <string name="altitude">海拔</string>
