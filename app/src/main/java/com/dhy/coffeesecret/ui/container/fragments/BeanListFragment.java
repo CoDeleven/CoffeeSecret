@@ -71,6 +71,7 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
     private boolean isPopupWindowShowing = false;
     private boolean isRefresh = false;
     private Handler mHandler = new BeanListHandler(this);
+    private StickyRecyclerHeadersDecoration headersDecoration;
 
     public BeanListFragment() {
         super();
@@ -111,7 +112,7 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
 
         beanListRecycler.setAdapter(adapter);
 
-        StickyRecyclerHeadersDecoration headersDecoration = new StickyRecyclerHeadersDecoration(adapter);
+        StickyRecyclerHeadersDecoration headersDecoration =  new StickyRecyclerHeadersDecoration(adapter);
         beanListRecycler.addItemDecoration(headersDecoration);
         beanListRecycler.addItemDecoration(new DividerDecoration(context));
 

@@ -1,0 +1,94 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="10dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_cup_dialog_evaluate"
+        android:gravity="center_vertical"
+        android:paddingLeft="16dp"
+        android:paddingTop="9dp"
+        android:text="评分"
+        android:textSize="@dimen/font_size_primary" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="7dp"
+        android:background="#f5f5f5" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:paddingLeft="16dp"
+        android:text="请选择你给此数据的评分（6分-10分）"
+        android:textColor="#B8BBBA"
+        android:textSize="6sp" />
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="3dp"
+        android:layout_marginTop="3dp"
+        android:background="@android:color/darker_gray" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageButton
+            android:id="@+id/ib_left"
+            android:layout_width="52dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_weight="2"
+            android:background="@android:color/transparent"
+            android:minWidth="0dp"
+            android:src="@drawable/ib_cup_dialog_left_selector" />
+
+        <ImageButton
+            android:id="@+id/ib_right"
+            android:layout_width="52dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@android:color/transparent"
+            android:minWidth="0dp"
+            android:src="@drawable/ib_cup_dialog_right_selector" />
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/vp"
+            android:layout_width="157dp"
+            android:layout_height="115dp"
+            android:layout_toLeftOf="@id/ib_right"
+            android:layout_toRightOf="@id/ib_left"
+            android:background="@android:color/transparent"></android.support.v4.view.ViewPager>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/btn_confim"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginBottom="6dp"
+            android:layout_marginTop="12dp"
+            android:textSize="14sp"
+            android:minHeight="20dp"
+            android:minWidth="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:background="@drawable/bg_round_pricolor_selector"
+            android:textColor="@android:color/white"
+            android:text="确定"/>
+    </RelativeLayout>
+
+</LinearLayout>

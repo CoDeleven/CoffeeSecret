@@ -40,18 +40,14 @@ public class NewCuppingActivity extends AppCompatActivity
         mRadioGroup.check(R.id.rd_cup);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-        System.out.println(px2dp(1080));
-    }
-
-    private float px2dp(int px){
-        final float scale = getResources().getDisplayMetrics().density;
-        return px/scale+0.5f;
     }
 
     private void initParam() {
 
         mToolbar = (Toolbar) findViewById(R.id.toolBar);
         setSupportActionBar(mToolbar);
+        mToolbar.setNavigationOnClickListener(new FinishListener(this));
+
         fragments = new Fragment[]{new CuppingInfoFragment(),new BakeInfoFragment()};
         mRadioGroup = (RadioGroup) findViewById(R.id.tabs);
         mViewPager = (ViewPager) findViewById(R.id.viewPager);

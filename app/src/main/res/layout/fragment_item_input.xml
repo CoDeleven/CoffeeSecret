@@ -1,0 +1,75 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.dhy.coffeesecret.ui.cup.fragment.ItemInputFragment">
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:gravity="center" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#BDA28C"
+        android:orientation="horizontal">
+
+        <biz.kasual.materialnumberpicker.MaterialNumberPicker
+            android:id="@+id/np_fir"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:npBackgroundColor="@android:color/transparent"
+            app:npMaxValue="1"
+            app:npMinValue="0"
+            app:npTextColor="@android:color/white"
+            app:npTextSize="33sp" />
+
+        <biz.kasual.materialnumberpicker.MaterialNumberPicker
+            android:id="@+id/np_sec"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:npBackgroundColor="@android:color/transparent"
+            app:npMaxValue="9"
+            app:npMinValue="0"
+            app:npTextColor="@android:color/white"
+            app:npTextSize="33sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="."
+            android:textColor="@android:color/white"
+            android:textSize="33sp" />
+
+        <biz.kasual.materialnumberpicker.MaterialNumberPicker
+            android:id="@+id/np_thr"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:npBackgroundColor="@android:color/transparent"
+            app:npMaxValue="9"
+            app:npMinValue="0"
+            app:npTextColor="@android:color/white"
+            app:npTextSize="33sp" />
+
+        <biz.kasual.materialnumberpicker.MaterialNumberPicker
+            android:id="@+id/np_fou"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:npBackgroundColor="@android:color/transparent"
+            app:npMaxValue="9"
+            app:npMinValue="0"
+            app:npTextColor="@android:color/white"
+            app:npTextSize="33sp" />
+    </LinearLayout>
+
+</LinearLayout>

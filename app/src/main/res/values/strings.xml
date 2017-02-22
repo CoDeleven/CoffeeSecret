@@ -55,4 +55,6 @@
     <string name="reportUpTemp">豆子升温</string>
     <string name="curve">烘焙曲线</string>
     <string name="save">保存</string>
+
+    <string name="progress_text_format_pattern">%d</string>
 </resources>

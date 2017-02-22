@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.view.View;
 
 /**
+ * 点击finish 当前的activity
  * Created by mxf on 2017/2/17.
  */
 public class FinishListener implements View.OnClickListener {
