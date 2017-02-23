@@ -24,7 +24,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="28dp"
-            android:src="@mipmap/add" />
+            android:src="@drawable/ic_container_add_plus" />
 
     </RelativeLayout>
 </LinearLayout>
