@@ -317,9 +317,8 @@ public class LegendRenderer extends Renderer {
 
                 switch (verticalAlignment) {
                     case TOP:
-                        posY = yoffset;
+                        posY = yoffset - 10;
                         break;
-
                     case BOTTOM:
                         posY = mViewPortHandler.getChartHeight() - yoffset - mLegend.mNeededHeight;
                         break;

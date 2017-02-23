@@ -22,13 +22,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
+        android:id="@+id/btn_add_bean"
         android:gravity="center">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@null"
-            android:src="@mipmap/add" />
+            android:src="@drawable/ic_container_add_plus" />
     </LinearLayout>
 
 </LinearLayout>

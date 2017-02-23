@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 
 import com.dhy.coffeesecret.pojo.UniversalConfiguration;
 import com.dhy.coffeesecret.ui.device.formatter.XAxisFormatter4Time;
@@ -67,6 +68,7 @@ public class BaseChart4Coffee extends LineChart {
     }
 
     private void initConfig() {
+
         // 启用触屏手势
         setTouchEnabled(true);
         // 设置没有描述
@@ -83,17 +85,14 @@ public class BaseChart4Coffee extends LineChart {
         setPinchZoom(true);
         Legend l = getLegend();
 
-
-
         // modify the legend ...
         l.setForm(Legend.LegendForm.LINE);
         l.setTextSize(11f);
         l.setTextColor(Color.BLACK);
-        l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
-        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
+        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
         l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
         l.setDrawInside(false);
-
+        l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
         // x轴部分
         XAxis xAxis = getXAxis();
 
@@ -102,7 +101,7 @@ public class BaseChart4Coffee extends LineChart {
         xAxis.setDrawGridLines(true);
         xAxis.setGridColor(Color.rgb(232, 238, 249));
         xAxis.setGridLineWidth(2f);
-        xAxis.setDrawAxisLine(false);
+        xAxis.setDrawAxisLine(true);
         xAxis.setAxisMinimum(0);
         xAxis.setAxisMaximum(mConfig.getMaxX() * 60);
         // 设置x轴的位置在下
@@ -131,6 +130,7 @@ public class BaseChart4Coffee extends LineChart {
 
         // rightAxis.setDrawZeroLine(false);
         // rightAxis.setGranularityEnabled(false);
+        initLine();
     }
 
     public void addTempratureLine(int lineIndex, boolean isAcc) {
@@ -158,6 +158,7 @@ public class BaseChart4Coffee extends LineChart {
         set.setHighLightColor(Color.rgb(244, 117, 117));
         set.setDrawValues(false);
         set.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
+
         switch (lineIndex) {
             case BEANLINE:
                 set.setColor(mConfig.getBeanColor());
@@ -178,7 +179,6 @@ public class BaseChart4Coffee extends LineChart {
                 set.setColor(mConfig.getAccOutwindColor());
                 break;
         }
-
         lines.put(lineIndex, set);
         setData(new LineData(new ArrayList<ILineDataSet>(lines.values())));
     }
@@ -210,5 +210,18 @@ public class BaseChart4Coffee extends LineChart {
 
         notifyDataSetChanged();
         invalidate();
+    }
+
+    private void initLine(){
+        addTempratureLine(BaseChart4Coffee.BEANLINE);
+        addTempratureLine(BaseChart4Coffee.INWINDLINE);
+        addTempratureLine(BaseChart4Coffee.OUTWINDLINE);
+        addTempratureLine(BaseChart4Coffee.ACCBEANLINE, true);
+        addTempratureLine(BaseChart4Coffee.ACCINWINDLINE, true);
+        addTempratureLine(BaseChart4Coffee.ACCOUTWINDLINE, true);
+    }
+
+    interface InterceptorView{
+
     }
 }

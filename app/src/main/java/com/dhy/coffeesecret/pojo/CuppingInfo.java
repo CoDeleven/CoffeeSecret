@@ -1,6 +1,9 @@
 package com.dhy.coffeesecret.pojo;
 
-public class CuppingInfo {
+import java.io.Serializable;
+import java.util.Date;
+
+public class CuppingInfo implements Serializable{
     // id
     private int id;
     // 咖啡得分
@@ -50,6 +53,10 @@ public class CuppingInfo {
     // 豆表烫伤
     private int faced;
 
+    // TODO: 2017/2/22  
+    private Date date;
+
+    private String title;
 
     public int getId() {
         return id;
@@ -243,4 +250,19 @@ public class CuppingInfo {
         this.faced = faced;
     }
 
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
 }

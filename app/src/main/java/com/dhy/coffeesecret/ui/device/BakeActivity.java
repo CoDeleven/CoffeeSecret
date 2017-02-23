@@ -1,5 +1,6 @@
 package com.dhy.coffeesecret.ui.device;
 
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
@@ -197,8 +198,8 @@ public class BakeActivity extends AppCompatActivity implements BluetoothHelper.D
         super.onCreate(savedInstanceState);
         // 横屏
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_bake);
+
 
         chart = (BaseChart4Coffee) findViewById(R.id.id_baking_chart);
         lineOperator = (TextView) findViewById(R.id.id_baking_lineOperator);
@@ -259,12 +260,7 @@ public class BakeActivity extends AppCompatActivity implements BluetoothHelper.D
         outwindTemps[0] = (TextView) findViewById(R.id.id_baking_outwindTemp);
         outwindTemps[1] = (TextView) findViewById(R.id.id_baking_accOutwindTemp);
 
-        chart.addTempratureLine(BaseChart4Coffee.BEANLINE);
-        chart.addTempratureLine(BaseChart4Coffee.INWINDLINE);
-        chart.addTempratureLine(BaseChart4Coffee.OUTWINDLINE);
-        chart.addTempratureLine(BaseChart4Coffee.ACCBEANLINE, true);
-        chart.addTempratureLine(BaseChart4Coffee.ACCINWINDLINE, true);
-        chart.addTempratureLine(BaseChart4Coffee.ACCOUTWINDLINE, true);
+
 
         mDry = (Button) findViewById(R.id.id_baking_dry);
         mDry.setOnClickListener(this);
@@ -320,6 +316,7 @@ public class BakeActivity extends AppCompatActivity implements BluetoothHelper.D
         return popupWindow;
 
     }
+
 
     @Override
     public void onClick(View v) {
@@ -385,6 +382,10 @@ public class BakeActivity extends AppCompatActivity implements BluetoothHelper.D
                 break;
             case R.id.id_baking_end:
                 curEvent = new Event(Event.END);
+                Intent intent = new Intent(BakeActivity.this, ReportActivity.class);
+                startActivity(intent);
+                finish();
+                break;
             case R.id.id_baking_wind_fire:
                 curEvent = new Event(Event.FIRE_WIND);
                 break;
@@ -404,6 +405,12 @@ public class BakeActivity extends AppCompatActivity implements BluetoothHelper.D
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putLong("startTime", startTime);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 
     @Override

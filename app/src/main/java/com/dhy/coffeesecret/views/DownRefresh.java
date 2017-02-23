@@ -8,6 +8,8 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.dhy.coffeesecret.utils.UnitConvert;
+
 /**
  * Created by CoDeleven on 17-2-4.
  */
@@ -16,7 +18,6 @@ public class DownRefresh extends View {
     private float height;
     private float width;
     private String content = "上拉查看详情";
-    private float marginLeft;
 
     public DownRefresh(Context context) {
         this(context, null);
@@ -36,13 +37,15 @@ public class DownRefresh extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         Paint paint = new Paint();
-        paint.setTextSize(24);
-        paint.setStrokeWidth(1);
-        paint.setColor(Color.parseColor("#6D7C83"));
-        canvas.drawLine(0, height / 2, (width / 2) - (paint.measureText(content) / 2) - 16, height / 2, paint);
-        paint.setColor(Color.BLACK);
-        canvas.drawText(content, (width / 2) - (paint.measureText(content) / 2), height / 2 + paint.getFontMetrics().descent, paint);
-        canvas.drawLine((width / 2) + (paint.measureText(content) / 2) + 16, height / 2, width, height / 2, paint);
+        paint.setTextSize(UnitConvert.sp2px(getResources(), 10.125f));
+        paint.setColor(Color.parseColor("#7f7f7f"));
+        float xBase = width / 2 - paint.measureText(content) / 2;
+        canvas.drawText(content,  xBase, (int)(height / 10 * 4.5), paint);
+        float singleFontWidth = paint.measureText("哈");
+        paint.setStrokeWidth(UnitConvert.dp2px(getResources(), 1.125f));
+        canvas.drawLine(xBase + singleFontWidth, height / 10 * 6, xBase + paint.measureText(content) - singleFontWidth, height / 10 * 6, paint);
+        canvas.drawLine(xBase + singleFontWidth * 2, height / 10 * 7, xBase + paint.measureText(content) - singleFontWidth * 2, height / 10 * 7, paint);
+        canvas.drawLine(xBase + singleFontWidth * 2 + singleFontWidth / 2, height / 10 * 8, xBase + singleFontWidth * 2 + singleFontWidth / 2 + singleFontWidth, height / 10 * 8, paint);
     }
 
     @Override

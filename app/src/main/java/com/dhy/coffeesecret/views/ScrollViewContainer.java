@@ -2,9 +2,11 @@ package com.dhy.coffeesecret.views;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.graphics.Rect;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
@@ -52,7 +54,7 @@ public class ScrollViewContainer extends RelativeLayout {
     private boolean canPullDown;
     private boolean canPullUp;
     private int state = DONE;
-
+    private int statusHeight = 0;
     /**
      * 记录当前展示的是哪个view，0是topView，1是bottomView
      */
@@ -106,8 +108,6 @@ public class ScrollViewContainer extends RelativeLayout {
                 canPullUp = true;
             else {
                 canPullUp = false;
-                if (isScreenOriatationPortrait(getContext()))
-                    canPullUp = true;
             }
 
             return false;
@@ -141,12 +141,28 @@ public class ScrollViewContainer extends RelativeLayout {
         init();
     }
 
-    public static boolean isScreenOriatationPortrait(Context context) {
-        return context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
+    public void setCanPullup(boolean can){
+        canPullUp = can;
     }
 
     private void init() {
         mTimer = new MyTimer(handler);
+        statusHeight = getStatusHeight(getContext());
+    }
+
+    public static int getStatusHeight(Context context) {
+
+        int statusHeight = -1;
+        try {
+            Class<?> clazz = Class.forName("com.android.internal.R$dimen");
+            Object object = clazz.newInstance();
+            int height = Integer.parseInt(clazz.getField("status_bar_height")
+                    .get(object).toString());
+            statusHeight = context.getResources().getDimensionPixelSize(height);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return statusHeight;
     }
 
     @Override
@@ -263,9 +279,6 @@ public class ScrollViewContainer extends RelativeLayout {
         }
     }
 
-    public void setCanPullUp(boolean canPullUp) {
-        this.canPullUp = canPullUp;
-    }
 
     class MyTimer {
         private Handler handler;

@@ -5,14 +5,10 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.dhy.coffeesecret.ui.community.CommunityFragment;
@@ -122,8 +118,10 @@ public class MainActivity extends AppCompatActivity implements CupFragment.OnCup
 
     @Override
     public void onBackPressed() {
-        if (containerFragment != null) {
+        if (containerFragment != null && containerFragment.isAddSearch()) {
             containerFragment.onBackPressed();
+        } else {
+            super.onBackPressed();
         }
     }
 }

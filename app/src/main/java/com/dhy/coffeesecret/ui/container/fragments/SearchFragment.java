@@ -20,12 +20,16 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ListView;
 
 import com.dhy.coffeesecret.R;
+import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.pojo.BeanInfo;
 import com.dhy.coffeesecret.ui.container.BeanInfoActivity;
 import com.dhy.coffeesecret.ui.container.adapters.BeanListAdapter;
+import com.dhy.coffeesecret.ui.container.adapters.CountryListAdapter;
+import com.dhy.coffeesecret.ui.container.adapters.InfoListAdapter;
+import com.dhy.coffeesecret.ui.container.adapters.LineListAdapter;
+import com.dhy.coffeesecret.ui.device.ReportActivity;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -43,8 +47,15 @@ public class SearchFragment extends Fragment {
 
     private Context mContext;
     private BeanListAdapter beanListAdapter;
+    private LineListAdapter lineListAdapter;
+    private InfoListAdapter infoListAdapter;
     private ArrayList<BeanInfo> beanInfos;
     private ArrayList<BeanInfo> beanInfoTemp;
+    private ArrayList<BakeReport> bakeReports;
+    private ArrayList<BakeReport> bakeReportTemp;
+    private ArrayList<String> infos;
+    private ArrayList<String> infoTemp;
+    private String entrance;
 
     private static final String TAG = "SearchFragment";
 
@@ -53,11 +64,60 @@ public class SearchFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         searchView = inflater.inflate(R.layout.fragment_search, container, false);
-        beanInfos = new ArrayList<>();
-        beanInfoTemp = (ArrayList<BeanInfo>) getArguments().getSerializable("beanList");
+
         mContext = getContext();
+        entrance = getTag();
+        Bundle bundle = getArguments();
+
+        initData(bundle);
 
         return searchView;
+    }
+
+    private void initData(Bundle bundle) {
+        if (entrance.equals("search_bean")) {
+            beanInfos = new ArrayList<>();
+            beanInfoTemp = (ArrayList<BeanInfo>) bundle.getSerializable("beanList");
+
+            beanListAdapter = new BeanListAdapter(mContext, beanInfos, new BeanListAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClicked(int position) {
+                    Intent intent = new Intent(mContext, BeanInfoActivity.class);
+                    intent.putExtra("beanInfo", "beanInfo");
+                    remove();
+                    startActivity(intent);
+                }
+            });
+
+        } else if (entrance.equals("search_line")) {
+            bakeReports = new ArrayList<>();
+            bakeReportTemp = (ArrayList<BakeReport>) bundle.getSerializable("reportList");
+
+            lineListAdapter = new LineListAdapter(mContext, bakeReports, new LineListAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClicked(int position, BakeReport report) {
+                    Intent intent = new Intent(mContext, ReportActivity.class);
+                    intent.putExtra("bakeReport", bakeReports);
+                    remove();
+                    startActivity(intent);
+                }
+            });
+        } else if (entrance.equals("search_info")) {
+            infos = new ArrayList<>();
+            infoTemp = bundle.getStringArrayList("infoList");
+
+            for (String info : infoTemp) {
+                Log.i(TAG, "initData: " + info);
+            }
+
+            infoListAdapter = new InfoListAdapter(mContext, infos, new InfoListAdapter.OnInfoListClickListener() {
+                @Override
+                public void onInfoClicked(int position) {
+                    onSearchCallBack.onSearchCallBack(infos.get(position));
+                }
+            });
+        }
+
     }
 
     @Override
@@ -69,30 +129,26 @@ public class SearchFragment extends Fragment {
         clear = (ImageButton) searchView.findViewById(R.id.id_search_clear);
         searchList = (RecyclerView) searchView.findViewById(R.id.search_list);
 
-
         initCancel();
         initClear();
         initEditText();
-        initSearchList();
+
+        if (entrance.equals("search_bean")) {
+            initSearchList(beanListAdapter);
+        } else if (entrance.equals("search_line")) {
+            initSearchList(lineListAdapter);
+        } else if (entrance.equals("search_info")) {
+            initSearchList(infoListAdapter);
+        }
     }
 
-    private void initSearchList() {
+    private void initSearchList(RecyclerView.Adapter adapter) {
 
         LinearLayoutManager manager = new LinearLayoutManager(mContext);
         manager.setOrientation(LinearLayoutManager.VERTICAL);
 
-        beanListAdapter = new BeanListAdapter(mContext, beanInfos, new BeanListAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClicked(int position) {
-                Intent intent = new Intent(mContext, BeanInfoActivity.class);
-                intent.putExtra("beanInfo", "beanInfo");
-                Log.i(TAG, "onItemClicked: position = " + position);
-                startActivity(intent);
-            }
-        });
-
         searchList.setLayoutManager(manager);
-        searchList.setAdapter(beanListAdapter);
+        searchList.setAdapter(adapter);
     }
 
     private void initCancel() {
@@ -100,9 +156,7 @@ public class SearchFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 editText.setText("");
-                FragmentTransaction tx = getFragmentManager().beginTransaction();
-                tx.hide(SearchFragment.this);
-                tx.commit();
+                remove();
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             }
         });
@@ -130,10 +184,20 @@ public class SearchFragment extends Fragment {
                 String searchText = editable.toString();
 
                 Message msg = new Message();
-                msg.what = GET_LIKE_BEAN_LIST;
+                switch (entrance) {
+                    case "search_bean":
+                        msg.what = GET_LIKE_BEAN_LIST;
+                        break;
+                    case "search_line":
+                        msg.what = GET_LIKE_LINE_LIST;
+                        break;
+                    case "search_info":
+                        msg.what = GET_LIKE_INFO_LIST;
+                        break;
+                }
                 msg.obj = searchText;
                 mHandler.sendMessage(msg);
-                
+
                 Log.i(TAG, "afterTextChanged: " + System.currentTimeMillis());
             }
         });
@@ -148,6 +212,12 @@ public class SearchFragment extends Fragment {
         });
     }
 
+    public void remove() {
+        FragmentTransaction tx = getFragmentManager().beginTransaction();
+        tx.setCustomAnimations(R.anim.in_from_left, R.anim.out_to_right);
+        tx.remove(SearchFragment.this);
+        tx.commit();
+    }
 
     @Override
     public void onStart() {
@@ -171,38 +241,84 @@ public class SearchFragment extends Fragment {
     }
 
     private static final int GET_LIKE_BEAN_LIST = 111;
+    private static final int GET_LIKE_LINE_LIST = 222;
+    private static final int GET_LIKE_INFO_LIST = 333;
     private SearchHandler mHandler = new SearchHandler(this);
 
     private class SearchHandler extends Handler {
 
-            private final WeakReference<SearchFragment> mActivity;
+        private final WeakReference<SearchFragment> mActivity;
 
-            public SearchHandler(SearchFragment activity) {
-                mActivity = new WeakReference<>(activity);
-            }
+        public SearchHandler(SearchFragment activity) {
+            mActivity = new WeakReference<>(activity);
+        }
 
-            @Override
-            public void handleMessage(Message msg) {
-                super.handleMessage(msg);
-                final SearchFragment activity = mActivity.get();
-                switch (msg.what) {
-                    case GET_LIKE_BEAN_LIST:
-                        if (activity.beanInfoTemp != null) {
-                            beanInfos.clear();
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            final SearchFragment activity = mActivity.get();
 
-                            for (BeanInfo beanInfo : activity.beanInfoTemp) {
-                                if (beanInfo.getName().contains((String) msg.obj)) {
-                                    activity.beanInfos.add(beanInfo);
-                                }
+            String msgObj = ((String) msg.obj).toLowerCase();
+            switch (msg.what) {
+                case GET_LIKE_BEAN_LIST:
+                    if (activity.beanInfoTemp != null) {
+                        beanInfos.clear();
+
+                        for (BeanInfo beanInfo : activity.beanInfoTemp) {
+                            if (beanInfo.getName().toLowerCase().contains(msgObj)) {
+                                activity.beanInfos.add(beanInfo);
                             }
-
-                            activity.beanListAdapter.notifyDataSetChanged();
                         }
-                        break;
-                    default:
-                        break;
-                }
+
+                        activity.beanListAdapter.notifyDataSetChanged();
+                    }
+                    break;
+                case GET_LIKE_LINE_LIST:
+                    if (activity.bakeReportTemp != null) {
+                        bakeReports.clear();
+
+                        String bakeDate = null;
+                        for (BakeReport bakeReport : activity.bakeReportTemp) {
+                            bakeDate = String.format("%1$tY-%1$tm-%1$te", bakeReport.getBakeDate());
+                            if (bakeDate.toLowerCase().contains(msgObj)) {
+                                activity.bakeReports.add(bakeReport);
+                            }
+                        }
+
+                        activity.lineListAdapter.notifyDataSetChanged();
+                    }
+                    break;
+                case GET_LIKE_INFO_LIST:
+                    if (activity.infoTemp != null) {
+                        infos.clear();
+
+                        for (String string : activity.infoTemp) {
+                            if (string.toLowerCase().contains(msgObj)) {
+                                activity.infos.add(string);
+                            }
+                        }
+
+                        activity.infoListAdapter.notifyDataSetChanged();
+                    }
+                    break;
+                default:
+                    break;
             }
+        }
     }
 
+    public interface OnSearchCallBack {
+        void onSearchCallBack(String info);
+    }
+
+    private OnSearchCallBack onSearchCallBack;
+    public void addOnSearchCallBack(OnSearchCallBack onSearchCallBack) {
+        this.onSearchCallBack = onSearchCallBack;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.e(TAG, "onDestroy: ");
+    }
 }
