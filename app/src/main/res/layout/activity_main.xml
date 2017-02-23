@@ -6,9 +6,27 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:clipChildren="false"
+    android:clipToPadding="true"
     android:fitsSystemWindows="true"
     tools:context="com.dhy.coffeesecret.MainActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        app:contentInsetStartWithNavigation="0dp"
+        app:navigationIcon="@drawable/ic_conta_home"
+        >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/conta_title"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/actionbar_title_font_size"/>
+    </android.support.v7.widget.Toolbar>
 
     <android.support.design.widget.TabLayout
         android:id="@+id/id_fragment_tabLayout"

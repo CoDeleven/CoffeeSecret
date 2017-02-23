@@ -1,9 +1,10 @@
 package com.dhy.coffeesecret.pojo;
 
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class BeanInfo {
+public class BeanInfo implements Serializable {
     private int id;
     //咖啡名称
     private String name;
@@ -17,23 +18,24 @@ public class BeanInfo {
     private String altitude;
     //咖啡种属
     private String species;
+    //咖啡大类
+    private String oneSpecies;
     //咖啡等级
     private String level;
-    //处理方式
-    private String process;
-    //库存重量
-    private double stockWeight;
-    //每次使用量
-    private float eachUseAmount;
     //含水量
     private float waterContent;
+    //处理方式
+    private String handler;
+    //库存重量
+    private double weight;
+    //每次使用量
+    private float eachUseAmount;
     //供应商
     private String supplier;
     //价格
     private double price;
     //购买日期
     private Date date;
-
 
     public int getId() {
         return id;
@@ -99,20 +101,28 @@ public class BeanInfo {
         this.level = level;
     }
 
-    public String getProcess() {
-        return process;
+    public float getWaterContent() {
+        return waterContent;
     }
 
-    public void setProcess(String process) {
-        this.process = process;
+    public void setWaterContent(float waterContent) {
+        this.waterContent = waterContent;
     }
 
-    public double getStockWeight() {
-        return stockWeight;
+    public String getHandler() {
+        return handler;
     }
 
-    public void setStockWeight(double stockWeight) {
-        this.stockWeight = stockWeight;
+    public void setHandler(String handler) {
+        this.handler = handler;
+    }
+
+    public double getWeight() {
+        return weight;
+    }
+
+    public void setWeight(double weight) {
+        this.weight = weight;
     }
 
     public float getEachUseAmount() {
@@ -121,14 +131,6 @@ public class BeanInfo {
 
     public void setEachUseAmount(float eachUseAmount) {
         this.eachUseAmount = eachUseAmount;
-    }
-
-    public float getWaterContent() {
-        return waterContent;
-    }
-
-    public void setWaterContent(float waterContent) {
-        this.waterContent = waterContent;
     }
 
     public String getSupplier() {
@@ -155,4 +157,33 @@ public class BeanInfo {
         this.date = date;
     }
 
+    public String getOneSpecies() {
+        return oneSpecies;
+    }
+
+    public void setOneSpecies(String oneSpecies) {
+        this.oneSpecies = oneSpecies;
+    }
+
+    @Override
+    public String toString() {
+        return "BeanInfo{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", country='" + country + '\'' +
+                ", area='" + area + '\'' +
+                ", manor='" + manor + '\'' +
+                ", altitude='" + altitude + '\'' +
+                ", species='" + species + '\'' +
+                ", oneSpecies='" + oneSpecies + '\'' +
+                ", level='" + level + '\'' +
+                ", waterContent=" + waterContent +
+                ", handler='" + handler + '\'' +
+                ", weight=" + weight +
+                ", eachUseAmount=" + eachUseAmount +
+                ", supplier='" + supplier + '\'' +
+                ", price=" + price +
+                ", date=" + date +
+                '}';
+    }
 }

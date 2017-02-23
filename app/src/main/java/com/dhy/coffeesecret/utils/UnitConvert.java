@@ -15,6 +15,5 @@ public class UnitConvert {
     public static int sp2px(Resources res, float sp) {
         float density = res.getDisplayMetrics().scaledDensity;
         return (int) (sp * density + 0.5f);
-
     }
 }

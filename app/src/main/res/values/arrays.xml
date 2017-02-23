@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="level" >
+        <item>Activity</item>
+        <item>Border</item>
+        <item>Create</item>
+        <item>Death</item>
+        <item>Earth</item>
+        <item>Fate</item>
+        <item>Grand</item>
+        <item>Hibernate</item>
+        <item>Joker</item>
+    </string-array>
+
+    <string-array name="handler" >
+        <item>日晒</item>
+        <item>风干</item>
+        <item>抽湿</item>
+    </string-array>
+</resources>

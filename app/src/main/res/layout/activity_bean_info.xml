@@ -65,12 +65,14 @@
                 android:text="@string/curve"/>
         </LinearLayout>
     </ScrollView>
+
     <ImageView
-        android:id="@+id/edit"
+        android:id="@+id/btn_edit"
         android:src="@drawable/ic_pen"
-        android:layout_above="@id/sv"
-        android:layout_alignParentRight="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:translationY="25dp"/>
+        android:translationY="25dp"
+        android:layout_above="@+id/sv"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 </RelativeLayout>

@@ -8,7 +8,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -40,6 +39,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
@@ -52,10 +52,9 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 public class BeanListFragment extends Fragment implements OnQuickSideBarTouchListener {
 
     private static final String TAG = "BeanListFragment";
-    private static final int GET_BEAN_INFOS = 111;
-    private static final int LOADING = 222;
-    private static final int NO_LOADING = 333;
+
     private HashMap<String, Integer> letters = new HashMap<>();
+    private ArrayList<BeanInfo> coffeeBeanInfos;
     private View beanListView;
     private LinearLayout btnCountryChoose = null;
     private LinearLayout btnScreen = null;
@@ -67,11 +66,9 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
     private PopupWindow mSortPopupWindow;
     private PopupWindow mScreenPopupWindow;
     private Context context;
-    private String title;
+    private String title = "";
     private boolean isPopupWindowShowing = false;
     private boolean isRefresh = false;
-    private Handler mHandler = new BeanListHandler(this);
-    private StickyRecyclerHeadersDecoration headersDecoration;
 
     public BeanListFragment() {
         super();
@@ -81,8 +78,7 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         init();
-        initCountryPopupWindow();
-        initScreenPopupWindow();
+        mHandler.sendEmptyMessageDelayed(INIT_POPUP_WINDOW, 1000);
     }
 
     private void init() {
@@ -91,47 +87,48 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
         btnScreen = (LinearLayout) beanListView.findViewById(R.id.btn_screen);
         countryName = (TextView) beanListView.findViewById(R.id.country_name);
         beanListRecycler = (RecyclerView) beanListView.findViewById(R.id.bean_list);
-        refreshBeanList = (SwipeRefreshLayout) beanListView.findViewById(R.id.refresh_bean_list);
+        refreshBeanList = (SwipeRefreshLayout) beanListView.findViewById(R.id.refresh_info_list);
         quickSideBarView = (QuickSideBarView) beanListView.findViewById(R.id.quickSideBarView);
         quickSideBarTipsView = (QuickSideBarTipsView) beanListView.findViewById(R.id.quickSideBarTipsView);
+
+        coffeeBeanInfos = new ArrayList<>();
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(context);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         beanListRecycler.setLayoutManager(layoutManager);
 
-        ArrayList<BeanInfo> coffeeBeanInfos = getBeanInfos();
         BeanListAdapter adapter = new BeanListAdapter(context, coffeeBeanInfos, new BeanListAdapter.OnItemClickListener() {
             @Override
             public void onItemClicked(int position) {
                 Intent intent = new Intent(context, BeanInfoActivity.class);
-                intent.putExtra("beanInfo", "beanInfo");
-                Log.i(TAG, "onItemClicked: position = " + position);
+                intent.putExtra("beanInfo", coffeeBeanInfos.get(position));
                 startActivity(intent);
+                getActivity().overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
             }
         });
 
         beanListRecycler.setAdapter(adapter);
 
-        StickyRecyclerHeadersDecoration headersDecoration =  new StickyRecyclerHeadersDecoration(adapter);
+        StickyRecyclerHeadersDecoration headersDecoration = new StickyRecyclerHeadersDecoration(adapter);
         beanListRecycler.addItemDecoration(headersDecoration);
         beanListRecycler.addItemDecoration(new DividerDecoration(context));
 
         quickSideBarView.setOnQuickSideBarTouchListener(this);
-
+        mHandler.sendEmptyMessage(GET_BEAN_INFOS);
 
         refreshBeanList.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mHandler.sendEmptyMessage(LOADING);
-                mHandler.sendEmptyMessageDelayed(GET_BEAN_INFOS, 3000);
-                mHandler.sendEmptyMessageDelayed(NO_LOADING, 6000);
+                mHandler.sendEmptyMessage(GET_BEAN_INFOS);
             }
         });
     }
 
-    @NonNull
-    private ArrayList<BeanInfo> getBeanInfos() {
-        ArrayList<BeanInfo> coffeeBeanInfos = new ArrayList<>();
+    private void getBeanInfos() {
+
+        Log.i(TAG, "------------------开始加载豆种信息------------------");
+
+        ArrayList<BeanInfo> coffeeBeanInfoList = new ArrayList<>();
         String[] beanLists = null;
         switch (title) {
             case "全部":
@@ -161,13 +158,16 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
             BeanInfo beanInfo = new BeanInfo();
             beanInfo.setName(beanLists[i]);
 
-            coffeeBeanInfos.add(beanInfo);
+            coffeeBeanInfoList.add(beanInfo);
 
             if (!letters.containsKey(beanLists[i].substring(0, 1))) {
                 letters.put(beanLists[i].substring(0, 1), i);
             }
         }
-        return coffeeBeanInfos;
+        coffeeBeanInfos.clear();
+        coffeeBeanInfos.addAll(coffeeBeanInfoList);
+
+        Log.i(TAG, "------------------豆种信息加载结束------------------");
     }
 
     @TargetApi(Build.VERSION_CODES.CUPCAKE)
@@ -300,12 +300,18 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
         //可以自己加入动画效果渐显渐隐
         quickSideBarTipsView.setVisibility(touching ? View.VISIBLE : View.INVISIBLE);
     }
+    private static final int GET_BEAN_INFOS = 111;
+    private static final int LOADING = 222;
+    private static final int NO_LOADING = 333;
+    private static final int INIT_POPUP_WINDOW = 444;
+
+    private Handler mHandler = new BeanListHandler(this);
 
     private class BeanListHandler extends Handler {
 
         private final WeakReference<BeanListFragment> mActivity;
 
-        public BeanListHandler(BeanListFragment activity) {
+        BeanListHandler(BeanListFragment activity) {
             mActivity = new WeakReference<>(activity);
         }
 
@@ -315,14 +321,39 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
             final BeanListFragment activity = mActivity.get();
             switch (msg.what) {
                 case GET_BEAN_INFOS:
-                    T.showShort(context, "start to get bean info");
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mHandler.sendEmptyMessage(LOADING);
+
+                            try {
+                                Thread.sleep(2000);
+                                T.showShort(context, "BeanInfo start load");
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            getBeanInfos();
+                        }
+                    }).start();
+
+                    mHandler.sendEmptyMessageDelayed(NO_LOADING, 4000);
+
                     break;
                 case LOADING:
+                    if (!refreshBeanList.isRefreshing()) {
+                        activity.refreshBeanList.setRefreshing(true);
+                    }
                     T.showShort(context, "refresh start");
                     break;
                 case NO_LOADING:
-                    refreshBeanList.setRefreshing(false);
-                    T.showShort(context, "refresh over");
+                    if (refreshBeanList.isRefreshing()) {
+                        refreshBeanList.setRefreshing(false);
+                    }
+                    T.showShort(context, "refresh finish");
+                    break;
+                case INIT_POPUP_WINDOW:
+                    initCountryPopupWindow();
+                    initScreenPopupWindow();
                     break;
                 default:
                     T.showShort(context, "you send a wrong message");
@@ -331,4 +362,8 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
         }
     }
 
+
+    public List<BeanInfo> getBeaninfoList() {
+        return this.coffeeBeanInfos;
+    }
 }

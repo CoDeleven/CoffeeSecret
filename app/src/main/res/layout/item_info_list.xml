@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.android.percent.support.PercentLinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/info_layout"
+    android:layout_width="match_parent"
+    android:layout_height="40dp"
+    android:background="@drawable/option_selector"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/info_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:layout_marginLeft="15dp"
+        android:text="@string/produce_area"
+        android:textColor="@color/list_text_color"
+        android:textSize="11.5sp"
+        app:layout_widthPercent="100%" />
+
+</com.zhy.android.percent.support.PercentLinearLayout>

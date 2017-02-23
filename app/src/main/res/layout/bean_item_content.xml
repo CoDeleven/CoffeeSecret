@@ -19,7 +19,7 @@
             style="@style/TextViewCenter.Left"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:text="@string/area"
+            android:text="@string/produce_area"
             android:textColor="@android:color/darker_gray"/>
 
         <TextView
@@ -44,7 +44,7 @@
             style="@style/TextViewCenter.Left"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:text="@string/type"
+            android:text="@string/bean_species"
             android:textColor="@android:color/darker_gray"/>
 
 

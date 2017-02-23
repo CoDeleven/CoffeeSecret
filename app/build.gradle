@@ -5,7 +5,7 @@ android {
     buildToolsVersion "24.0.1"
     defaultConfig {
         applicationId "com.dhy.coffeesecret"
-        minSdkVersion 15
+        minSdkVersion 18
         targetSdkVersion 24
         versionCode 1
         versionName "0.0.1"
@@ -37,6 +37,8 @@ dependencies {
     compile 'com.bigkoo:quicksidebar:1.0.3'
     compile 'com.timehop.stickyheadersrecyclerview:library:0.4.3@aar'
     compile 'com.zhy:percent-support-extends:1.1.1'
+    compile 'com.jakewharton:butterknife:7.0.1'
+    compile 'com.bigkoo:pickerview:2.1.1'
     compile 'com.dinuscxj:circleprogressbar:1.1.1'
     compile 'biz.kasual:materialnumberpicker:1.2.1'
     compile 'com.hedgehog.ratingbar:app:1.1.2'
