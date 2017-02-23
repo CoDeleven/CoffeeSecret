@@ -9,19 +9,16 @@ import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
-import android.content.res.Resources;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
-import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.Temprature;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.util.UUID;
 
 /**
@@ -33,6 +30,8 @@ public class BluetoothHelper {
     private static final UUID TAG_WRITE = UUID.fromString("00002af1-0000-1000-8000-00805f9b34fb");
     private static final UUID TAG_READ = UUID.fromString("00002af0-0000-1000-8000-00805f9b34fb");
     private static final UUID WRITE_DESCRIPTOR = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
+    public static String firstChannel = "4348414e3b323130300a";
+    public static String secondChannel = "4348414e3b333230300a";
     private static BluetoothHelper mHelper;
     private static BluetoothAdapter mAdapter;
     private BluetoothDevice mCurDevice;
@@ -46,6 +45,13 @@ public class BluetoothHelper {
     // 读取特性里面的数据
     private BluetoothGattCharacteristic mReader = null;
     private Thread mThread = null;
+    private String result = "";
+    private int count = 0;
+    private boolean changeChannel = false;
+    private boolean readingData = false;
+    private boolean readNewData = false;
+    private boolean isActivityDestroy = false;
+    private Thread testThread = null;
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -56,27 +62,54 @@ public class BluetoothHelper {
     private BluetoothGattCallback mGattCallback = new BluetoothGattCallback() {
         @Override
         public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
-            // 空数据直接跳过
-            if (characteristic.getValue().length > 5) {
-                // 将bytes数组转换成16进制存储起来
-                String hexData = null;
-                try {
-                    hexData = new String(characteristic.getValue(), "UTF-8");
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
+            // 将bytes数组转换成16进制存储起来
+            String hexData = null;
+            hexData = Utils.bytesToHexString(characteristic.getValue());
+
+            // 第一次设置channel成功后进入后续读取
+            if (changeChannel) {
+                if (hexData.endsWith("0a")) {
+                    // 通道设置结束
+                    changeChannel = false;
+                    // 可以读取需要的数据
+                    readData();
                 }
-                if(mDataListener != null){
-                    mDataListener.notifyDataChanged(Temprature.parseHex2Temprature(hexData));
+                // 只要是设置通道的调用均结束
+                return;
+            }
+            // 获取转换后的数据
+            result += hexData;
+            ++count;
+            // 当读取数据到末尾而且计数为2
+            if (readingData && hexData.endsWith("0a")) {
+                result += "2c";
+                if (count == 2) {
+                    // 设置下一个通道
+                    readNextChannel();
                 }
             }
-            return;
+            // 当计数为4，一次温度读取结束
+            if (count == 4) {
+                result = Utils.hexString2String(result);
+                // 通知数据改变
+                if (mDataListener != null) {
+                    mDataListener.notifyDataChanged(Temprature.parseHex2Temprature(result));
+                }
+                // 初始化数据
+                result = "";
+                count = 0;
+                readNewData = true;
+            }
+
+
         }
 
         @Override
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
             Log.e("codelevex", "获取单片机服务");
-            // 获取读写的服务
+
             BluetoothGattService service = gatt.getService(PRIMARY_SERVICE);
+
             // 获取写特性
             mWriter = service.getCharacteristic(TAG_WRITE);
             // 获取读特性
@@ -89,7 +122,9 @@ public class BluetoothHelper {
             // 设置通知
             mGatt.setCharacteristicNotification(mReader, true);
             BluetoothGattDescriptor descriptor = mReader.getDescriptor(WRITE_DESCRIPTOR);
+
             descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+
             mGatt.writeDescriptor(descriptor);
         }
 
@@ -187,16 +222,11 @@ public class BluetoothHelper {
             @Override
             public void run() {
                 while (readable) {
-                    // 设置descriptor
-                    mWriter.setValue(Utils.hexStringToBytes("524541440a"));
-
-                    // 直达发送成功才退出循环
-                    boolean isSuccessful = false;
-                    do {
-                        isSuccessful = mGatt.writeCharacteristic(mWriter);
-                    } while (!isSuccessful);
-
+                    setFirstChannel();
+                    while (!readNewData){
+                    }
                     try {
+                        readNewData = false;
                         Thread.currentThread().sleep(1000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
@@ -208,6 +238,50 @@ public class BluetoothHelper {
         mThread.start();
     }
 
+    /**
+     * 发送读取数据命令
+     */
+    private void readData() {
+        mThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                readingData = true;
+                mWriter.setValue(Utils.hexStringToBytes("524541440a"));
+                mGatt.writeCharacteristic(mWriter);
+            }
+        });
+
+        mThread.start();
+    }
+
+    /**
+     * 设置通道 进风+出风
+     */
+    private void setFirstChannel() {
+        changeChannel = true;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                mWriter.setValue(Utils.hexStringToBytes(firstChannel));
+                mGatt.writeCharacteristic(mWriter);
+            }
+        }).start();
+    }
+
+    /**
+     * 设置通道 进风+豆表
+     */
+    private void readNextChannel() {
+        changeChannel = true;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                mWriter.setValue(Utils.hexStringToBytes(secondChannel));
+                mGatt.writeCharacteristic(mWriter);
+            }
+        }).start();
+    }
+
     public void stopRead() {
         readable = false;
     }
@@ -215,21 +289,24 @@ public class BluetoothHelper {
     /**
      * 仅用于模拟烘焙过程的数据
      */
-    public void test(final InputStream is){
-        new Thread(new Runnable() {
+    public void test(final InputStream is) {
+        testThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 InputStreamReader ireader = new InputStreamReader(is);
                 BufferedReader br = new BufferedReader(ireader);
                 String str = null;
-                StringBuilder builder = new StringBuilder("");
                 try {
                     while ((str = br.readLine()) != null) {
                         for (String temp : str.trim().split(",")) {
                             final Temprature temprature = new Temprature(Float.parseFloat(temp), 0, 0);
                             mDataListener.notifyDataChanged(temprature);
+                            if(isActivityDestroy){
+                                return;
+                            }
                             try {
-                                Thread.currentThread().sleep(1000);
+                                // Thread.currentThread().sleep(1000);
+                                Thread.currentThread().sleep(5000);
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
@@ -242,7 +319,8 @@ public class BluetoothHelper {
 
 
             }
-        }).start();
+        });
+        testThread.start();
     }
 
     public void setDeviceListener(DeviceChangeListener mDeviceListener) {
@@ -260,6 +338,7 @@ public class BluetoothHelper {
     public interface DeviceChangeListener {
         /**
          * 发现新设备时回调
+         *
          * @param device 新设备
          */
         void notifyNewDevice(BluetoothDevice device);
@@ -268,6 +347,7 @@ public class BluetoothHelper {
     public interface DataChangeListener {
         /**
          * 获取到新数据时回调该方法
+         *
          * @param temprature 获得的温度
          */
         void notifyDataChanged(Temprature temprature);
@@ -278,5 +358,13 @@ public class BluetoothHelper {
          * 在处理UI前进行的操作
          */
         void handleViewBeforeStartRead();
+    }
+
+    public void setActivityDestroy(boolean activityDestroy) {
+        isActivityDestroy = activityDestroy;
+    }
+
+    public boolean isTestThreadAlive(){
+        return testThread != null && testThread.isAlive();
     }
 }

@@ -2,10 +2,13 @@ package com.dhy.coffeesecret.utils;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+
+import com.dhy.coffeesecret.ui.device.fragments.BakeDialog;
 
 import java.util.HashMap;
 import java.util.List;
@@ -30,58 +33,14 @@ public class FragmentTool {
         return managerMap.get(context);
     }
 
-    public static Fragment getCurFragment() {
-        return curFragment;
-    }
-
-    public static void setCurFragment(Fragment fragment) {
-        curFragment = fragment;
-    }
-
-    public void add(int containerId, Fragment fragment, boolean toStack, @Nullable String tag) {
-        FragmentTransaction tx = fragmentManager.beginTransaction();
-        List<Fragment> list = fragmentManager.getFragments();
-        if (list != null && list.contains(fragment)) {
-            tx.show(fragment);
-        } else {
-            tx.add(containerId, fragment, tag);
-            if (toStack) {
-                tx.addToBackStack(tag);
-            }
+    public void showDialogFragmen(String tag, DialogFragment dialogFragment){
+        FragmentTransaction mFragTransaction = fragmentManager.beginTransaction();
+        Fragment fragment = fragmentManager.findFragmentByTag(tag);
+        if (fragment != null) {
+            //为了不重复显示dialog，在显示对话框之前移除正在显示的对话框
+            mFragTransaction.remove(fragment);
         }
-        curFragment = fragment;
-        tx.commit();
-    }
-
-    public void replace(int containerId, Fragment fragment, boolean toStack) {
-        FragmentTransaction tx = fragmentManager.beginTransaction();
-
-        tx.replace(containerId, fragment);
-        if (toStack) {
-            tx.addToBackStack(null);
-        }
-        curFragment = fragment;
-        tx.commit();
-    }
-
-    public FragmentTool hideCur() {
-        FragmentTransaction tx = fragmentManager.beginTransaction();
-        tx.hide(curFragment);
-        // curFragment = nextFragment;
-        tx.commit();
-        return this;
-    }
-
-
-    public void removeKey(Object key) {
-        managerMap.remove(key);
-    }
-
-    public Fragment getFragment(String tag) {
-        Fragment fragment = null;
-        if ((fragment = fragmentManager.findFragmentByTag(tag)) != null) {
-            return fragment;
-        }
-        return fragment;
+        //显示一个Fragment并且给该Fragment添加一个Tag，可通过findFragmentByTag找到该Fragment
+        dialogFragment.show(mFragTransaction, tag);
     }
 }

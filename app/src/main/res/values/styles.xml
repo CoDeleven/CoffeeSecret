@@ -244,4 +244,12 @@
         <item name="android:textSize">10.125sp</item>
         <item name="android:includeFontPadding">false</item>
     </style>
+    <style name="bakingOtherSelect">
+        <item name="android:textColor">#9ea3a8</item>
+        <item name="android:paddingLeft">20.1285dp</item>
+        <item name="android:paddingTop">6.75dp</item>
+        <item name="android:paddingBottom">6.75dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
 </resources>

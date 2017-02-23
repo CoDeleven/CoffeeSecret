@@ -142,7 +142,7 @@
                     android:layout_marginLeft="42dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="发展率: 20%"/>
+                    android:text="发展率: 0%"/>
                 <TextView
                     android:id="@+id/id_baking_developTime"
                     android:layout_marginLeft="42dp"

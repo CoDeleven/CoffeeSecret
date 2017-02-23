@@ -1,8 +1,6 @@
 package com.dhy.coffeesecret.utils;
 
 
-import com.dhy.coffeesecret.pojo.Temprature;
-
 /**
  * Created by CoDeleven on 17-2-9.
  */
@@ -43,6 +41,14 @@ public class Utils {
         return (byte) "0123456789ABCDEF".indexOf(c);
     }
 
-
+    public static String hexString2String(String src) {
+        String temp = "";
+        for (int i = 0; i < src.length() / 2; i++) {
+            temp = temp
+                    + (char) Integer.valueOf(src.substring(i * 2, i * 2 + 2),
+                    16).byteValue();
+        }
+        return temp;
+    }
 
 }

@@ -14,9 +14,11 @@ public class Temprature implements Serializable{
     private float accInwindTemp;
     private float accOutwindTemp;
     private static Temprature lastTemprature;
+
     public Temprature(){
 
     }
+
     public Temprature(float beanTemp, float inwindTemp, float outwindTemp){
         this.beanTemp = beanTemp;
         this.inwindTemp = inwindTemp;
@@ -73,7 +75,7 @@ public class Temprature implements Serializable{
     public static Temprature parseHex2Temprature(String data) {
         String[] subStr = data.split(",");
         Temprature temp = new Temprature();
-        float beanTemp = Float.parseFloat(subStr[0]);
+        float beanTemp = Float.parseFloat(subStr[4]);
         float inwindTemp = Float.parseFloat(subStr[1]);
         float outwindTemp = Float.parseFloat(subStr[2]);
         temp.setBeanTemp(beanTemp);

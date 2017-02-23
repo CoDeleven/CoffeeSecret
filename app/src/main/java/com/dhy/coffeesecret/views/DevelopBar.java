@@ -91,7 +91,7 @@ public class DevelopBar extends View {
         canvas.drawRect(rectF2, paint);
 
         RectF rectF3 = new RectF();
-        rectF3.set(greenLength + yellowLength, 0, orangeLength + yellowLength + greenLength, height);
+        rectF3.set(greenLength + yellowLength, 0, greenLength + yellowLength + orangeLength, height);
         paint.setColor(Color.rgb(250, 128, 10));
         canvas.drawRect(rectF3, paint);
 
@@ -120,12 +120,19 @@ public class DevelopBar extends View {
         // 橙条
         orangeLength = (firstBurstTime / totalTime) * width;
 
-        Log.e("codelevex", "greenLength:" + greenLength + ", " + yellowLength);
     }
 
     public void setCurStatus(int curStatus) {
         this.curStatus = curStatus;
-        calculate();
         this.invalidate();
+    }
+
+    public String getDevelopRate(){
+        return "发展率: " + String.format("%1$.2f", (firstBurstTime * 100) / totalTime) + "%";
+    }
+    public String getDevelopTime(){
+        int minutes = (int)(firstBurstTime / 60);
+        int seconds = (int)(firstBurstTime % 60);
+        return String.format("%1$02d", minutes) + ":" + String.format("%1$02d", seconds);
     }
 }

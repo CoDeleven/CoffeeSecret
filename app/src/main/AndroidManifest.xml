@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.BLUETOOTH"/>
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
     <application
         android:allowBackup="true"
@@ -20,7 +21,6 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".ui.device.DeviceChildActivity"/>
         <activity android:name=".ui.container.BeanInfoActivity"/>
         <activity android:name=".ui.container.fragments.LinesSelectedActivity"/>
         <activity android:name=".ui.cup.NewCuppingActivity"/>
@@ -29,6 +29,8 @@
         <activity android:name=".ui.mine.BluetoothListActivity">
         </activity>
         <activity android:name=".ui.device.BakeActivity">
+        </activity>
+        <activity android:name=".ui.device.TestActivity">
         </activity>
     </application>
 

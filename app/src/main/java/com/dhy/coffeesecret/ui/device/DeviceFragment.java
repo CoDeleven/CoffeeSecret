@@ -21,6 +21,7 @@ import com.dhy.coffeesecret.pojo.Temprature;
 import com.dhy.coffeesecret.ui.device.fragments.BakeDialog;
 import com.dhy.coffeesecret.ui.mine.BluetoothListActivity;
 import com.dhy.coffeesecret.utils.BluetoothHelper;
+import com.dhy.coffeesecret.utils.FragmentTool;
 
 import java.util.List;
 
@@ -40,6 +41,7 @@ public class DeviceFragment extends Fragment implements BluetoothHelper.DataChan
     private ImageView accBeanView;
     private ImageView accInwindView;
     private ImageView accOutwindView;
+    private int count = 0;
     private Handler mHandler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
@@ -78,24 +80,17 @@ public class DeviceFragment extends Fragment implements BluetoothHelper.DataChan
     }
 
     private void showDialogFragment() {
-        FragmentTransaction mFragTransaction = getFragmentManager().beginTransaction();
-        Fragment fragment = getFragmentManager().findFragmentByTag("dialogFragment");
-        if (fragment != null) {
-            //为了不重复显示dialog，在显示对话框之前移除正在显示的对话框
-            mFragTransaction.remove(fragment);
-            mPrepareBake.setText("开始烘焙");
-        }
         final BakeDialog dialogFragment = new BakeDialog();
         dialogFragment.setBeanInfosListener(new BakeDialog.OnBeaninfosConfirmListener() {
             @Override
             public void setBeanInfos(List<DialogBeanInfo> beanInfos) {
                 dialogBeanInfos = beanInfos;
                 hasPrepared = true;
+                mPrepareBake.setText("开始烘焙");
                 switchStatus();
             }
         });
-        //显示一个Fragment并且给该Fragment添加一个Tag，可通过findFragmentByTag找到该Fragment
-        dialogFragment.show(mFragTransaction, "dialogFragment");
+        FragmentTool.getFragmentToolInstance(getContext()).showDialogFragmen("dialogFragment", dialogFragment);
     }
 
     private void init(View view) {
@@ -128,7 +123,9 @@ public class DeviceFragment extends Fragment implements BluetoothHelper.DataChan
             mPrepareBake.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    Intent intent = new Intent(getContext(), BakeActivity.class);
+                    startActivity(intent);
+                    mHelper.setDataListener(null);
                     Log.e("codelevex", "卧槽，开始烘焙");
                 }
             });
@@ -138,11 +135,8 @@ public class DeviceFragment extends Fragment implements BluetoothHelper.DataChan
                 @Override
                 public void onClick(View v) {
                     // 方便测试烘焙过程界面, 暂时隐藏
-                    /*Log.e("codelevex", "卧槽，准备烘焙");
-                    showDialogFragment();*/
-                    Intent intent = new Intent(getContext(), BakeActivity.class);
-                    startActivity(intent);
-                    mHelper.setDataListener(null);
+                    Log.e("codelevex", "卧槽，准备烘焙");
+                    showDialogFragment();
                 }
             });
         }
@@ -150,7 +144,6 @@ public class DeviceFragment extends Fragment implements BluetoothHelper.DataChan
 
     @Override
     public void notifyDataChanged(Temprature temprature) {
-        Log.e("codelevex", "temprature:" + temprature.getBeanTemp() + ", inwindtemp:" + temprature.getInwindTemp() + ", outwindtemp:" + temprature.getOutwindTemp());
         Message message = new Message();
         Bundle bundle = new Bundle();
         bundle.putSerializable("temprature", temprature);
