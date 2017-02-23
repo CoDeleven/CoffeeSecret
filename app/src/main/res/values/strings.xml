@@ -57,4 +57,6 @@
     <string name="save">保存</string>
 
     <string name="progress_text_format_pattern">%d</string>
+    <string name="edit">编辑</string>
+    <string name="edit_cupping">编辑杯测信息</string>
 </resources>

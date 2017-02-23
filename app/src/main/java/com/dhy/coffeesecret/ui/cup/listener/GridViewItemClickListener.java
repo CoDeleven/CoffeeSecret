@@ -11,15 +11,18 @@ import com.dhy.coffeesecret.ui.cup.fragment.InputDialogFragment;
  */
 public class GridViewItemClickListener implements AdapterView.OnItemClickListener {
 
-    private String mGridView;
-    private InputDialogFragment mFragment;
-    private FragmentManager mManager;
 
     public static final String FEEL_GRID = "FEEL_GRID";
     public static final String FLAW_GRID = "FLAW_GRID";
 
+    private String mGridView;
+    private InputDialogFragment mFragment;
+    private FragmentManager mManager;
 
-    public GridViewItemClickListener(FragmentManager manager, InputDialogFragment fragment, String gridView ) {
+    private boolean isEditable;
+
+    public GridViewItemClickListener(FragmentManager manager,
+                                     InputDialogFragment fragment, String gridView ) {
         this.mManager = manager;
         this.mFragment = fragment;
         this.mGridView = gridView;
@@ -27,14 +30,24 @@ public class GridViewItemClickListener implements AdapterView.OnItemClickListene
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        int currentItem = 0;
-        if (mGridView == FEEL_GRID) {
-            currentItem = i;
-        }else {
-            currentItem = i + 8;
+        if(isEditable){
+            int currentItem;
+            if (mGridView == FEEL_GRID) {
+                currentItem = i;
+            }else {
+                currentItem = i + 8;
+            }
+            if (mFragment.getDialog() == null) {
+                mFragment.show(currentItem,mManager,"");
+            }
         }
-        if (mFragment.getDialog() == null) {
-            mFragment.show(currentItem,mManager,"");
-        }
+    }
+
+    public boolean isEditable() {
+        return isEditable;
+    }
+
+    public void setEditable(boolean editable) {
+        isEditable = editable;
     }
 }

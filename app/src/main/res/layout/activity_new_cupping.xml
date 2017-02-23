@@ -1,56 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.dhy.coffeesecret.ui.cup.NewCuppingActivity">
-
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolBar"
+    <LinearLayout
+        android:id="@+id/line"
+        android:fitsSystemWindows="true"
+        android:background="@color/colorPrimary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        android:fitsSystemWindows="true"
-        app:navigationIcon="@drawable/ic_back">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="0dp"
-            android:padding="0dp">
-
-            <Button
-                android:id="@+id/btn_save"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:background="@android:color/transparent"
-                android:minHeight="0dp"
-                android:minWidth="0dp"
-                android:paddingLeft="17dp"
-                android:paddingRight="17dp"
-                android:text="@string/save"
-                android:textColor="@android:color/white" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_toLeftOf="@id/btn_save"
-                android:gravity="center"
-                android:text="@string/new_cupping_title"
-                android:textColor="@android:color/white"
-                android:textSize="@dimen/actionbar_title_font_size" />
-        </RelativeLayout>
-    </android.support.v7.widget.Toolbar>
-
+        android:orientation="horizontal"></LinearLayout>
     <RadioGroup
         android:id="@+id/tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/toolBar"
+        android:layout_below="@id/line"
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="25dp"
         android:layout_marginRight="25dp"

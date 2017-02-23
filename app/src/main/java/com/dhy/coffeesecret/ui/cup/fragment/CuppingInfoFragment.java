@@ -14,10 +14,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.dhy.coffeesecret.R;
+import com.dhy.coffeesecret.ui.cup.NewCuppingActivity;
 import com.dhy.coffeesecret.ui.cup.listener.GridViewItemClickListener;
 import com.dhy.coffeesecret.utils.ArrayUtil;
 import com.dinuscxj.progressbar.CircleProgressBar;
 
+import static com.dhy.coffeesecret.ui.cup.NewCuppingActivity.NEW_CUPPING;
+import static com.dhy.coffeesecret.ui.cup.NewCuppingActivity.VIEW_TYPE;
 import static com.dhy.coffeesecret.ui.cup.listener.GridViewItemClickListener.FEEL_GRID;
 import static com.dhy.coffeesecret.ui.cup.listener.GridViewItemClickListener.FLAW_GRID;
 
@@ -47,19 +50,21 @@ public class CuppingInfoFragment extends Fragment implements InputDialogFragment
 
     private float[] flawScores;
     private float[] feelScores;
+    private boolean isNewCupping = false;
 
-    private boolean iseEditab;
     private InfoGridViewAdapter mFeelAdapter;
     private InfoGridViewAdapter mFlawAdapter;
+    private GridViewItemClickListener mFeelGridListener;
+    private GridViewItemClickListener mFlawGridListener;
+    private boolean mEditable;
 
     public CuppingInfoFragment() {
     }
 
     public static CuppingInfoFragment newInstance(float[] flawScores, float[] feelScores) {
-
         Bundle args = new Bundle();
+        args.putFloatArray(FEEL_SCORES_ARRAY, feelScores);
         args.putFloatArray(FLAW_SCORES_ARRAY, flawScores);
-        args.putFloatArray(FLAW_SCORES_ARRAY, feelScores);
         CuppingInfoFragment fragment = new CuppingInfoFragment();
         fragment.setArguments(args);
         return fragment;
@@ -84,19 +89,34 @@ public class CuppingInfoFragment extends Fragment implements InputDialogFragment
 
         mGridViewFeel.setAdapter(mFeelAdapter);
         mGridViewFlaw.setAdapter(mFlawAdapter);
-
         feelProgressBar.setMax(FEEL_SCORE_MAX);
         flawProgressBar.setMax(FLAW_SCORE_MAX);
         finalProgressBar.setMax(FEEL_SCORE_MAX);
 
-        InputDialogFragment fragment = InputDialogFragment.newInstance(ArrayUtil.merge(feelScores, flawScores));
+        InputDialogFragment fragment = InputDialogFragment.newInstance(isNewCupping, ArrayUtil.merge(feelScores, flawScores));
 
-        mGridViewFeel.setOnItemClickListener(
-                new GridViewItemClickListener(getChildFragmentManager(), fragment, FEEL_GRID));
-        mGridViewFlaw.setOnItemClickListener(
-                new GridViewItemClickListener(getChildFragmentManager(), fragment, FLAW_GRID));
+        mFeelGridListener = new GridViewItemClickListener(getChildFragmentManager(), fragment, FEEL_GRID);
+        mFlawGridListener = new GridViewItemClickListener(getChildFragmentManager(), fragment, FLAW_GRID);
 
+        mGridViewFeel.setOnItemClickListener(mFeelGridListener);
+        mGridViewFlaw.setOnItemClickListener(mFlawGridListener);
+
+        setEditable(mEditable);
         super.onActivityCreated(savedInstanceState);
+    }
+
+    /**
+     * 设置GridView 是否可以更改数值
+     *
+     * @param editable true则可以更改
+     */
+    public void setEditable(boolean editable) {
+        mFeelGridListener.setEditable(editable);
+        mFlawGridListener.setEditable(editable);
+    }
+
+    public void initEditable(boolean editable) {
+        this.mEditable = editable;
     }
 
     /**
@@ -106,6 +126,7 @@ public class CuppingInfoFragment extends Fragment implements InputDialogFragment
      * @param flawScore 瑕疵分
      */
     public void updateProgressBar(final int feelScore, final int flawScore) {
+
         feelProgressBar.setProgress(feelScore);
         flawProgressBar.setProgress(flawScore);
         finalProgressBar.setProgress(feelScore - flawScore);
@@ -113,17 +134,18 @@ public class CuppingInfoFragment extends Fragment implements InputDialogFragment
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             feelScores = getArguments().getFloatArray(FEEL_SCORES_ARRAY);
             flawScores = getArguments().getFloatArray(FLAW_SCORES_ARRAY);
+            System.out.println(getArguments());
         }
-
 
         if (feelScores == null) {
             feelScores = new float[]{3.01f, 0, 0, 0, 0, 0, 0, 0};
             flawScores = new float[]{0, 0, 0, 0, 0, 0};
+            isNewCupping = true;
         }
-        super.onCreate(savedInstanceState);
     }
 
     @Override
