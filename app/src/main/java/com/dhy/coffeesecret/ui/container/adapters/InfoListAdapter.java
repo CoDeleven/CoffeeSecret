@@ -22,6 +22,7 @@ public class InfoListAdapter extends RecyclerView.Adapter<InfoListAdapter.InfoLi
         implements StickyRecyclerHeadersAdapter<InfoListAdapter.InfoListViewHolder> {
 
     private Context context;
+    private ArrayList<String> species;
     private ArrayList<String> infoList;
     private LayoutInflater mLayoutInflater;
     private OnInfoListClickListener onInfoListClickListener;
@@ -36,9 +37,15 @@ public class InfoListAdapter extends RecyclerView.Adapter<InfoListAdapter.InfoLi
 
     }
 
+    public InfoListAdapter(Context context, ArrayList<String> species, ArrayList<String> infoList, OnInfoListClickListener onInfoListClickListener) {
+
+        this(context, infoList, onInfoListClickListener);
+        this.species = species;
+    }
+
     @Override
     public long getHeaderId(int position) {
-        return infoList.get(position).charAt(0);
+        return species == null ? infoList.get(position).charAt(0) : species.get(position).charAt(0);
     }
 
     @Override
@@ -47,9 +54,19 @@ public class InfoListAdapter extends RecyclerView.Adapter<InfoListAdapter.InfoLi
     }
 
     @Override
-    public void onBindHeaderViewHolder(InfoListViewHolder holder, int position) {
+    public void onBindHeaderViewHolder(final InfoListViewHolder holder, int position) {
         TextView letter = (TextView) holder.itemView;
-        letter.setText(String.valueOf(infoList.get(position).charAt(0)));
+        if (species == null) {
+            letter.setText(String.valueOf(infoList.get(position).charAt(0)));
+        } else {
+            letter.setText(species.get(position));
+            letter.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onInfoListClickListener.onInfoClicked(holder.getAdapterPosition());
+                }
+            });
+        }
     }
 
     @Override

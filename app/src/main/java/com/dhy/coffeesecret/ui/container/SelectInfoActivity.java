@@ -59,6 +59,7 @@ public class SelectInfoActivity extends AppCompatActivity implements OnQuickSide
     private boolean isAddSearchFragment = false;
     private SearchFragment searchFragment;
     private ArrayList<String> dataList = null;
+    private ArrayList<String> species = null;
     private InfoListAdapter infoAdapter = null;
     private HashMap<String, Integer> letters = new HashMap<>();
 
@@ -70,6 +71,8 @@ public class SelectInfoActivity extends AppCompatActivity implements OnQuickSide
 
         context = SelectInfoActivity.this;
         dataList = new ArrayList<>();
+        species = new ArrayList<>();
+
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         initInfoList();
@@ -154,6 +157,7 @@ public class SelectInfoActivity extends AppCompatActivity implements OnQuickSide
                 Collections.addAll(dataList, TestData.beanList2);
                 break;
             case GET_SPECIES_LIST:
+                Collections.addAll(species, TestData.countryList7);
                 Collections.addAll(dataList, TestData.beanList4);
                 break;
             default:
