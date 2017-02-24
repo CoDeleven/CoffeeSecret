@@ -26,9 +26,9 @@
         android:gravity="right"
         app:halfstart="true"
         app:starCount="5"
-        app:starEmpty="@drawable/ic_navbar_mine"
-        app:starFill="@drawable/ic_navbar_mine_selected"
-        app:starHalf="@drawable/ic_seleted_tick"
+        app:starEmpty="@drawable/ic_star_empty"
+        app:starFill="@drawable/ic_star_fill"
+        app:starHalf="@drawable/ic_star_half"
         app:starImageHeight="19dp" />
 </LinearLayout>
 

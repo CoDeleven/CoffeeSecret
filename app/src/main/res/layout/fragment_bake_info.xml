@@ -1,13 +1,115 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.dhy.coffeesecret.ui.cup.fragment.BakeInfoFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="141dp"
+        android:orientation="vertical"
+        android:paddingLeft="20dp"
+        android:paddingTop="10dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="豆种信息"
+            android:textSize="@dimen/font_size_primary" />
+
+        <com.andexert.expandablelayout.library.ExpandableLayoutListView
+            android:id="@+id/beanInfo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/space"
+        android:layout_width="match_parent"
+        android:layout_height="7dp"
+        android:background="#EDEEE9" />
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="1" />
+        android:orientation="vertical"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="20dp">
 
-</FrameLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="曲线情况"
+                android:textSize="@dimen/font_size_primary" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:background="@drawable/bg_round_pricolor_selector"
+                android:minHeight="0dp"
+                android:minWidth="0dp"
+                android:paddingBottom="2dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingTop="2dp"
+                android:text="烘焙报告"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/font_size_primary" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:padding="10dp"
+            android:text="温度曲线图"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="@dimen/font_size_primary" />
+
+        <com.dhy.coffeesecret.views.BaseChart4Coffee
+            android:id="@+id/chart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="160dp" />
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TableRow android:paddingTop="10dp">
+
+                <TextView
+                    android:text="@string/devTime"
+                    android:textSize="@dimen/font_size_primary" />
+
+                <TextView
+                    android:text="@string/endTemp"
+                    android:textSize="@dimen/font_size_primary" />
+
+                <TextView
+                    android:text="@string/startTemp"
+                    android:textSize="@dimen/font_size_primary" />
+            </TableRow>
+
+            <TableRow android:paddingTop="7dp">
+
+                <TextView
+                    android:text="@string/devRate"
+                    android:textSize="@dimen/font_size_primary" />
+
+                <TextView
+                    android:text="@string/reportEnvTime"
+                    android:textSize="@dimen/font_size_primary" />
+            </TableRow>
+        </TableLayout>
+    </LinearLayout>
+</LinearLayout>

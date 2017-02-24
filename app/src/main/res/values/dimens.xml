@@ -13,6 +13,7 @@
     <dimen name="lv_item_padding">8dp</dimen>
     <dimen name="view_horizontal_padding">12dp</dimen>
     <dimen name="font_size_primary">12sp</dimen>
+    <dimen name="font_size_smaller">10sp</dimen>
     <dimen name="actionbar_title_font_size">18sp</dimen>
     <dimen name="bean_info_title_font_size">24sp</dimen>
 

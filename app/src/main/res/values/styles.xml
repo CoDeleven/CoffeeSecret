@@ -35,6 +35,16 @@
         <item name="android:textColor">@android:color/black</item>
     </style>
 
+    <style name="BeanInfoTextView">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">left</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:paddingLeft">@dimen/tv_vertical_padding</item>
+        <item name="android:textColor">@android:color/darker_gray</item>
+        <item name="android:textSize">@dimen/font_size_smaller</item>
+    </style>
+
     <style name="TextViewCenter.Left">
         <item name="android:gravity">center_vertical|left</item>
         <item name="android:paddingLeft">@dimen/tv_horizontal_padding</item>

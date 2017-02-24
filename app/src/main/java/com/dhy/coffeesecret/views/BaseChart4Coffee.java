@@ -31,6 +31,7 @@ import java.util.Map;
  */
 
 public class BaseChart4Coffee extends LineChart {
+
     public final static int BEANLINE = 1, ACCBEANLINE = -1, INWINDLINE = 2, ACCINWINDLINE = -2, OUTWINDLINE = 3, ACCOUTWINDLINE = -3;
     private UniversalConfiguration mConfig;
     private Map<Integer, String> labels = new HashMap<>();
