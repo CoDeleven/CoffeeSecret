@@ -34,6 +34,7 @@ import com.github.mikephil.charting.data.Event;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static android.view.WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
 import static com.dhy.coffeesecret.views.DevelopBar.AFTER160;
 import static com.dhy.coffeesecret.views.DevelopBar.FIRST_BURST;
 import static com.dhy.coffeesecret.views.DevelopBar.RAWBEAN;
@@ -196,10 +197,11 @@ public class BakeActivity extends AppCompatActivity implements BluetoothHelper.D
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // 横屏
+
+        // 设置横屏和隐藏状态栏
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         setContentView(R.layout.activity_bake);
-
 
         chart = (BaseChart4Coffee) findViewById(R.id.id_baking_chart);
         lineOperator = (TextView) findViewById(R.id.id_baking_lineOperator);
@@ -383,6 +385,7 @@ public class BakeActivity extends AppCompatActivity implements BluetoothHelper.D
             case R.id.id_baking_end:
                 curEvent = new Event(Event.END);
                 Intent intent = new Intent(BakeActivity.this, ReportActivity.class);
+                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
                 startActivity(intent);
                 finish();
                 break;
