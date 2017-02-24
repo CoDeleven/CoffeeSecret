@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="50dp"
-    android:background="@color/colorPrimary"
-    android:orientation="vertical">
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/colorPrimary"
+                android:orientation="vertical">
 
     <TextView
         android:id="@+id/btn_cancel"
@@ -13,7 +13,7 @@
         android:layout_marginLeft="20dp"
         android:text="@string/cancel"
         android:textColor="@color/white"
-        android:textSize="14.5sp" />
+        android:textSize="14.5sp"/>
 
     <TextView
         android:id="@+id/title_text"
@@ -22,7 +22,7 @@
         android:layout_centerInParent="true"
         android:text="@string/add_bean"
         android:textColor="@color/white"
-        android:textSize="18.5sp" />
+        android:textSize="18.5sp"/>
 
     <TextView
         android:id="@+id/btn_save"
@@ -33,5 +33,5 @@
         android:layout_marginRight="20dp"
         android:text="@string/save"
         android:textColor="@color/white"
-        android:textSize="14.5sp" />
+        android:textSize="14.5sp"/>
 </RelativeLayout>

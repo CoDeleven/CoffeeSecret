@@ -19,11 +19,13 @@ import com.dhy.coffeesecret.ui.cup.adapter.CuppingListAdapter;
 import com.dhy.coffeesecret.views.DividerDecoration;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
-import java.util.Date;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-import static com.dhy.coffeesecret.ui.cup.NewCuppingActivity.*;
+import static com.dhy.coffeesecret.ui.cup.NewCuppingActivity.NEW_CUPPING;
+import static com.dhy.coffeesecret.ui.cup.NewCuppingActivity.SHOW_INFO;
+import static com.dhy.coffeesecret.ui.cup.NewCuppingActivity.TARGET;
 import static com.dhy.coffeesecret.ui.cup.NewCuppingActivity.VIEW_TYPE;
 
 public class CupFragment extends Fragment {
@@ -42,8 +44,8 @@ public class CupFragment extends Fragment {
         cuppingInfos = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
             CuppingInfo cuppingInfo = new CuppingInfo();
-            cuppingInfo.setTitle("mxf---"+i);
-            cuppingInfo.setScore((60+5*i)%100);
+            cuppingInfo.setTitle("mxf---" + i);
+            cuppingInfo.setScore((60 + 5 * i) % 100);
             cuppingInfo.setDate(new Date());
             cuppingInfos.add(cuppingInfo);
         }
@@ -66,8 +68,8 @@ public class CupFragment extends Fragment {
         mAdapter.setOnItemClickListener(new CuppingListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                Intent intent = new Intent(mContext,NewCuppingActivity.class);
-                intent.putExtra(TARGET,cuppingInfos.get(position));
+                Intent intent = new Intent(mContext, NewCuppingActivity.class);
+                intent.putExtra(TARGET, cuppingInfos.get(position));
                 intent.putExtra(VIEW_TYPE, SHOW_INFO);
                 startActivity(intent);
             }
@@ -82,7 +84,7 @@ public class CupFragment extends Fragment {
         mAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(),NewCuppingActivity.class);
+                Intent intent = new Intent(getActivity(), NewCuppingActivity.class);
                 intent.putExtra(VIEW_TYPE, NEW_CUPPING);
                 startActivity(intent);
             }

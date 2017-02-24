@@ -40,7 +40,7 @@ public class DownRefresh extends View {
         paint.setTextSize(UnitConvert.sp2px(getResources(), 10.125f));
         paint.setColor(Color.parseColor("#7f7f7f"));
         float xBase = width / 2 - paint.measureText(content) / 2;
-        canvas.drawText(content,  xBase, (int)(height / 10 * 4.5), paint);
+        canvas.drawText(content, xBase, (int) (height / 10 * 4.5), paint);
         float singleFontWidth = paint.measureText("哈");
         paint.setStrokeWidth(UnitConvert.dp2px(getResources(), 1.125f));
         canvas.drawLine(xBase + singleFontWidth, height / 10 * 6, xBase + paint.measureText(content) - singleFontWidth, height / 10 * 6, paint);

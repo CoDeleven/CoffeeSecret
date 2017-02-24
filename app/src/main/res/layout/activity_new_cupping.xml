@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.dhy.coffeesecret.ui.cup.NewCuppingActivity">
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context="com.dhy.coffeesecret.ui.cup.NewCuppingActivity">
+
     <LinearLayout
         android:id="@+id/line"
-        android:fitsSystemWindows="true"
-        android:background="@color/colorPrimary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:fitsSystemWindows="true"
         android:orientation="horizontal"></LinearLayout>
+
     <RadioGroup
         android:id="@+id/tabs"
         android:layout_width="match_parent"
@@ -29,13 +31,13 @@
             android:id="@+id/rd_cup"
             style="@style/TabRadioButton"
             android:background="@drawable/bg_tab_left_selector"
-            android:text="杯测信息" />
+            android:text="杯测信息"/>
 
         <RadioButton
             android:id="@+id/rd_bake"
             style="@style/TabRadioButton"
             android:background="@drawable/bg_tab_right_selector"
-            android:text="烘焙详情" />
+            android:text="烘焙详情"/>
     </RadioGroup>
 
     <View
@@ -43,7 +45,7 @@
         android:layout_width="match_parent"
         android:layout_height="7dp"
         android:layout_below="@id/tabs"
-        android:background="#EDEEE9" />
+        android:background="#EDEEE9"/>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/viewPager"

@@ -20,11 +20,11 @@
             android:id="@+id/iv_add"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="@null"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="28dp"
-            android:src="@drawable/ic_container_add_plus" />
+            android:contentDescription="@null"
+            android:src="@drawable/ic_container_add_plus"/>
 
     </RelativeLayout>
 </LinearLayout>

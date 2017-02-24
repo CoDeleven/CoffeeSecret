@@ -9,29 +9,80 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.Button;
+import android.widget.TextView;
 
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.utils.UnitConvert;
+import com.github.mikephil.charting.data.Event;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by CoDeleven on 17-2-23.
  */
 
 public class Other extends DialogFragment {
-
+    private OnOtherAddListener onOtherAddListener;
+    @Bind(R.id.id_baking_quick1)
+    TextView quick1;
+    @Bind(R.id.id_baking_quick2)
+    TextView quick2;
+    @Bind(R.id.id_baking_quick3)
+    TextView quick3;
+    @Bind(R.id.id_baking_quick4)
+    TextView quick4;
+    @Bind(R.id.id_baking_quick5)
+    TextView quick5;
+    @Bind(R.id.id_baking_cancel)
+    Button mCancel;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
         getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         View view = inflater.inflate(R.layout.bake_other_dialog, container, false);
+        ButterKnife.bind(this, view);
 
+        mCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
         return view;
+    }
+
+    public void setOnOtherAddListener(OnOtherAddListener onOtherAddListener){
+        this.onOtherAddListener = onOtherAddListener;
     }
 
     @Override
     public void onResume() {
         super.onResume();
         getDialog().getWindow().setLayout(UnitConvert.dp2px(getResources(), 200), UnitConvert.dp2px(getResources(), 195));
+    }
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
+    }
+    public interface OnOtherAddListener {
+        void onDataChanged(Event event);
+    }
+
+    @OnClick({R.id.id_baking_quick1, R.id.id_baking_quick2, R.id.id_baking_quick3, R.id.id_baking_quick4, R.id.id_baking_quick5})
+    void quickSelected(View view){
+        String info = ((TextView)view).getText().toString();
+        Event event = new Event(Event.OTHER);
+        event.setDescription(info);
+        onOtherAddListener.onDataChanged(event);
+        dismiss();
+    }
+    @OnClick(R.id.id_baking_cancel)
+    void exitOtherDialog(){
+        dismiss();
     }
 }

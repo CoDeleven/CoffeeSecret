@@ -17,9 +17,6 @@ import android.view.Window;
 import android.widget.ImageButton;
 
 import com.dhy.coffeesecret.R;
-import com.dhy.coffeesecret.utils.ArrayUtil;
-
-import java.util.Arrays;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -64,7 +61,7 @@ public class InputDialogFragment extends DialogFragment
      * @param defaultValue Parameter 2.
      * @return A new instance of fragment InputDialogFragment.
      */
-    public static InputDialogFragment newInstance(boolean isSlidable,float[] defaultValue) {
+    public static InputDialogFragment newInstance(boolean isSlidable, float[] defaultValue) {
         InputDialogFragment fragment = new InputDialogFragment();
         Bundle args = new Bundle();
         String[] values = null;

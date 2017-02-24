@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/item_bean_layout"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@drawable/option_selector"
-    android:gravity="center_vertical"
-    android:orientation="horizontal">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:id="@+id/item_bean_layout"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@drawable/option_selector"
+              android:gravity="center_vertical"
+              android:orientation="horizontal">
 
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_marginLeft="25dp"
-        android:src="@mipmap/ic_launcher" />
+        android:src="@mipmap/ic_launcher"/>
 
     <com.zhy.android.percent.support.PercentLinearLayout
         android:layout_width="match_parent"
@@ -35,7 +35,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/produce_area"
                 android:textColor="@color/list_text_color"
-                android:textSize="11.5sp" />
+                android:textSize="11.5sp"/>
 
             <TextView
                 android:id="@+id/list_bean_manor"
@@ -44,7 +44,7 @@
                 android:layout_marginTop="3dp"
                 android:text="@string/manor"
                 android:textColor="@color/list_text_color_2"
-                android:textSize="10.5sp" />
+                android:textSize="10.5sp"/>
         </LinearLayout>
 
         <TextView
@@ -56,6 +56,6 @@
             android:textColor="@color/colorPrimary"
             android:textSize="10sp"
             android:textStyle="bold"
-            app:layout_widthPercent="30%" />
+            app:layout_widthPercent="30%"/>
     </com.zhy.android.percent.support.PercentLinearLayout>
 </LinearLayout>

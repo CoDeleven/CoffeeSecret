@@ -6,24 +6,43 @@ import java.io.Serializable;
  * Created by CoDeleven on 17-2-12.
  */
 
-public class Temprature implements Serializable{
+public class Temprature implements Serializable {
+    private static Temprature lastTemprature;
     private float beanTemp;
     private float inwindTemp;
     private float outwindTemp;
     private float accBeanTemp;
     private float accInwindTemp;
     private float accOutwindTemp;
-    private static Temprature lastTemprature;
 
-    public Temprature(){
+    public Temprature() {
 
     }
 
-    public Temprature(float beanTemp, float inwindTemp, float outwindTemp){
+    public Temprature(float beanTemp, float inwindTemp, float outwindTemp) {
         this.beanTemp = beanTemp;
         this.inwindTemp = inwindTemp;
         this.outwindTemp = outwindTemp;
     }
+
+    public static Temprature parseHex2Temprature(String data) {
+        String[] subStr = data.split(",");
+        Temprature temp = new Temprature();
+        float beanTemp = Float.parseFloat(subStr[4]);
+        float inwindTemp = Float.parseFloat(subStr[1]);
+        float outwindTemp = Float.parseFloat(subStr[2]);
+        temp.setBeanTemp(beanTemp);
+        temp.setInwindTemp(inwindTemp);
+        temp.setOutwindTemp(outwindTemp);
+        if (lastTemprature != null) {
+            temp.setAccBeanTemp(beanTemp - lastTemprature.getBeanTemp());
+            temp.setAccInwindTemp(inwindTemp - lastTemprature.getInwindTemp());
+            temp.setAccOutwindTemp(outwindTemp - lastTemprature.getOutwindTemp());
+        }
+        lastTemprature = temp;
+        return temp;
+    }
+
     public float getBeanTemp() {
         return beanTemp;
     }
@@ -70,23 +89,5 @@ public class Temprature implements Serializable{
 
     public void setAccOutwindTemp(float accOutwindTemp) {
         this.accOutwindTemp = accOutwindTemp;
-    }
-
-    public static Temprature parseHex2Temprature(String data) {
-        String[] subStr = data.split(",");
-        Temprature temp = new Temprature();
-        float beanTemp = Float.parseFloat(subStr[4]);
-        float inwindTemp = Float.parseFloat(subStr[1]);
-        float outwindTemp = Float.parseFloat(subStr[2]);
-        temp.setBeanTemp(beanTemp);
-        temp.setInwindTemp(inwindTemp);
-        temp.setOutwindTemp(outwindTemp);
-        if(lastTemprature != null){
-            temp.setAccBeanTemp(beanTemp - lastTemprature.getBeanTemp());
-            temp.setAccInwindTemp(inwindTemp - lastTemprature.getInwindTemp());
-            temp.setAccOutwindTemp(outwindTemp - lastTemprature.getOutwindTemp());
-        }
-        lastTemprature = temp;
-        return temp;
     }
 }

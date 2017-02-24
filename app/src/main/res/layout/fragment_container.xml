@@ -6,7 +6,7 @@
               android:orientation="vertical"
               tools:context=".ui.container.ContainerFragment">
 
-    <include layout="@layout/title_container" />
+    <include layout="@layout/title_container"/>
 
     <com.astuetz.PagerSlidingTabStrip
         android:id="@+id/container_tabs"
@@ -14,10 +14,10 @@
         android:layout_height="48dp"
         android:background="@color/colorPrimary"
         app:pstsDividerColor="@color/colorPrimary"
-        app:pstsTabPaddingLeftRight="24dp"
         app:pstsIndicatorColor="@color/white"
+        app:pstsTabPaddingLeftRight="24dp"
         app:pstsUnderlineColor="@color/colorPrimary"
-        app:pstsUnderlineHeight="5dp" />
+        app:pstsUnderlineHeight="5dp"/>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/container_pager"

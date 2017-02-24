@@ -4,7 +4,6 @@ import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -23,6 +22,7 @@ import butterknife.ButterKnife;
 
 public class BeanInfoActivity extends AppCompatActivity {
 
+    private static final String TAG = "BeanInfoActivity";
     @Bind(R.id.image)
     ImageView image;
     @Bind(R.id.btn_back)
@@ -62,10 +62,7 @@ public class BeanInfoActivity extends AppCompatActivity {
     @Bind(R.id.btn_edit)
     ImageView btnEdit;
     private float editButtonTrans;
-
     private BeanInfo beanInfo;
-
-    private static final String TAG = "BeanInfoActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

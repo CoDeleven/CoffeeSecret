@@ -1,12 +1,10 @@
 package com.dhy.coffeesecret.ui.device;
 
 import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,7 +23,7 @@ import com.dhy.coffeesecret.utils.FragmentTool;
 
 import java.util.List;
 
-public class DeviceFragment extends Fragment implements BluetoothHelper.DataChangeListener{
+public class DeviceFragment extends Fragment implements BluetoothHelper.DataChangeListener {
     private Button mPrepareBake;
     private boolean hasPrepared = false;
     private List<DialogBeanInfo> dialogBeanInfos;
@@ -46,7 +44,7 @@ public class DeviceFragment extends Fragment implements BluetoothHelper.DataChan
         @Override
         public boolean handleMessage(Message msg) {
             Bundle bundle = msg.getData();
-            Temprature temprature = (Temprature)bundle.getSerializable("temprature");
+            Temprature temprature = (Temprature) bundle.getSerializable("temprature");
             beanTemp.setText(String.format("%1$.2f", temprature.getBeanTemp()));
             inwindTemp.setText(String.format("%1$.2f", temprature.getInwindTemp()));
             outwindTemp.setText(String.format("%1$.2f", temprature.getOutwindTemp()));
@@ -59,6 +57,7 @@ public class DeviceFragment extends Fragment implements BluetoothHelper.DataChan
             return false;
         }
     });
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -73,7 +72,7 @@ public class DeviceFragment extends Fragment implements BluetoothHelper.DataChan
     @Override
     public void onStart() {
         super.onStart();
-        if(mHelper == null){
+        if (mHelper == null) {
             mHelper = BluetoothHelper.getNewInstance(getActivity().getApplicationContext());
             mHelper.setDataListener(this);
         }
@@ -100,12 +99,12 @@ public class DeviceFragment extends Fragment implements BluetoothHelper.DataChan
         beanTemp = (TextView) view.findViewById(R.id.id_bake_beanTemp);
         inwindTemp = (TextView) view.findViewById(R.id.id_bake_inwindTemp);
         outwindTemp = (TextView) view.findViewById(R.id.id_bake_outwindTemp);
-        accBeanTemp = (TextView)view.findViewById(R.id.id_bake_accBeanTemp);
-        accInwindTemp = (TextView)view.findViewById(R.id.id_bake_accInwindTemp);
-        accOutwindTemp = (TextView)view.findViewById(R.id.id_bake_accOutwindTemp);
-        accBeanView = (ImageView)view.findViewById(R.id.id_bake_accBeanView);
-        accInwindView = (ImageView)view.findViewById(R.id.id_bake_accInwindView);
-        accOutwindView = (ImageView)view.findViewById(R.id.id_bake_accOutwindView);
+        accBeanTemp = (TextView) view.findViewById(R.id.id_bake_accBeanTemp);
+        accInwindTemp = (TextView) view.findViewById(R.id.id_bake_accInwindTemp);
+        accOutwindTemp = (TextView) view.findViewById(R.id.id_bake_accOutwindTemp);
+        accBeanView = (ImageView) view.findViewById(R.id.id_bake_accBeanView);
+        accInwindView = (ImageView) view.findViewById(R.id.id_bake_accInwindView);
+        accOutwindView = (ImageView) view.findViewById(R.id.id_bake_accOutwindView);
 
         operator.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -152,29 +151,29 @@ public class DeviceFragment extends Fragment implements BluetoothHelper.DataChan
         mHandler.sendMessage(message);
     }
 
-    private void switchImage(Temprature temprature){
+    private void switchImage(Temprature temprature) {
         float t1 = temprature.getAccBeanTemp();
         float t2 = temprature.getAccInwindTemp();
         float t3 = temprature.getAccOutwindTemp();
-        if(t1 > 0){
+        if (t1 > 0) {
             accBeanView.setImageResource(R.drawable.ic_bake_acc_up_big);
-        }else if(t1 < 0){
+        } else if (t1 < 0) {
             accBeanView.setImageResource(R.drawable.ic_bake_acc_down_big);
-        }else{
+        } else {
             accBeanView.setImageResource(R.drawable.ic_bake_acc_invariant_big);
         }
-        if(t2 > 0){
+        if (t2 > 0) {
             accInwindView.setImageResource(R.drawable.ic_bake_acc_up_small);
-        }else if(t2 < 0){
+        } else if (t2 < 0) {
             accInwindView.setImageResource(R.drawable.ic_bake_acc_down_small);
-        }else{
+        } else {
             accInwindView.setImageResource(R.drawable.ic_bake_acc_invariant_small);
         }
-        if(t3 > 0){
+        if (t3 > 0) {
             accOutwindView.setImageResource(R.drawable.ic_bake_acc_up_small);
-        }else if(t3 < 0){
+        } else if (t3 < 0) {
             accOutwindView.setImageResource(R.drawable.ic_bake_acc_down_small);
-        }else{
+        } else {
             accOutwindView.setImageResource(R.drawable.ic_bake_acc_invariant_small);
         }
     }

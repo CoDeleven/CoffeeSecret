@@ -1,25 +1,132 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
+
     <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <TextView
+        <LinearLayout
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <com.dhy.coffeesecret.views.CircleSeekBar
+                    android:id="@+id/id_baking_circle1"
+                    android:layout_width="150dp"
+                    android:padding="20dp"
+                    app:wheel_can_touch="true"
+                    app:wheel_cur_process="0"
+                    app:wheel_max_process="10"
+                    app:wheel_reached_color="#936743"
+                    app:wheel_unreached_color="#DBDDDC"
+                    app:wheel_pointer_radius="7dp"
+                    app:wheel_unreached_width="15dp"
+                    app:wheel_reached_width="10dp"
+                    app:wheel_unactivity_pointer_color="#DBDDDC"
+                    android:layout_height="150dp"/>
+                <TextView
+                    android:id="@+id/id_baking_circle1_text"
+                    android:layout_centerInParent="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"/>
+            </RelativeLayout>
+
+            <TextView
+                android:layout_gravity="center_horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="风门"/>
+        </LinearLayout>
+        <CheckBox
+            android:background="@android:color/transparent"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:id="@+id/id_baking_group"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="风门"/>
+            android:paddingLeft="5dp"
+            android:text="组合"/>
+        <LinearLayout
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <RelativeLayout
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <com.dhy.coffeesecret.views.CircleSeekBar
+                    android:id="@+id/id_baking_circle2"
+                    android:layout_width="150dp"
+                    android:padding="20dp"
+                    app:wheel_can_touch="true"
+                    app:wheel_cur_process="0"
+                    app:wheel_max_process="10"
+                    app:wheel_reached_color="#936743"
+                    app:wheel_unreached_color="#DBDDDC"
+                    app:wheel_pointer_radius="7dp"
+                    app:wheel_unreached_width="15dp"
+                    app:wheel_reached_width="10dp"
+                    app:wheel_unactivity_pointer_color="#DBDDDC"
+                    android:layout_height="150dp"/>
+                <TextView
+                    android:id="@+id/id_baking_circle2_text"
+                    android:layout_centerInParent="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"/>
+            </RelativeLayout>
 
+            <TextView
+                android:layout_gravity="center_horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="火力 "/>
+        </LinearLayout>
     </LinearLayout>
-
+    <View
+        android:layout_marginTop="5dp"
+        android:background="#CCC"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"></View>
     <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <TextView
+        <Button
+            android:background="@android:color/transparent"
+            android:layout_weight="1"
+            android:textSize="15sp"
+            android:textColor="@color/colorPrimary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="火力 "/>
+            android:text="取消"
+            android:id="@+id/id_baking_cancel"/>
+        <View
+            android:background="#CCC"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"></View>
+        <Button
+            android:text="确认"
+            android:background="@android:color/transparent"
+            android:layout_weight="1"
+            android:textSize="15sp"
+            android:textColor="@color/colorPrimary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/id_baking_confirm"/>
     </LinearLayout>
+
 </LinearLayout>

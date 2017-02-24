@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
 
     <LinearLayout style="@style/ItemLayout">
 
@@ -10,48 +10,49 @@
             style="@style/ItemTextView"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:text="@string/produce_area" />
+            android:text="@string/produce_area"/>
 
         <TextView
             android:id="@+id/info_area"
             style="@style/ItemTextView"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:text="%1$#12s" />
+            android:text="%1$#12s"/>
     </LinearLayout>
 
     <LinearLayout style="@style/ItemLayout">
 
         <TextView
+            android:id="@+id/textView2"
             style="@style/ItemTextView"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:text="@string/manor"
-            android:id="@+id/textView2" />
+            android:text="@string/manor"/>
 
         <TextView
             android:id="@+id/info_manor"
             style="@style/ItemTextView"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:text="%1$#12s" />
+            android:text="%1$#12s"/>
     </LinearLayout>
 
-    <LinearLayout style="@style/ItemLayout"
+    <LinearLayout
+        style="@style/ItemLayout"
         android:layout_marginBottom="13dp">
 
         <TextView
             style="@style/ItemTextView"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:text="@string/altitude" />
+            android:text="@string/altitude"/>
 
         <TextView
             android:id="@+id/info_altitude"
             style="@style/ItemTextView"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:text="%1$#12s" />
+            android:text="%1$#12s"/>
     </LinearLayout>
 
     <LinearLayout style="@style/ItemLayout">
@@ -60,14 +61,14 @@
             style="@style/ItemTextView"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:text="@string/bean_species" />
+            android:text="@string/bean_species"/>
 
         <TextView
             android:id="@+id/info_species"
             style="@style/ItemTextView"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:text="%1$#12s" />
+            android:text="%1$#12s"/>
     </LinearLayout>
 
     <LinearLayout style="@style/ItemLayout">
@@ -76,14 +77,14 @@
             style="@style/ItemTextView"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:text="@string/level" />
+            android:text="@string/level"/>
 
         <TextView
             android:id="@+id/info_level"
             style="@style/ItemTextView"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:text="%1$#12s" />
+            android:text="%1$#12s"/>
     </LinearLayout>
 
     <LinearLayout style="@style/ItemLayout">
@@ -92,31 +93,32 @@
             style="@style/ItemTextView"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:text="@string/water_content" />
+            android:text="@string/water_content"/>
 
         <TextView
             android:id="@+id/info_water_content"
             style="@style/ItemTextView"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:text="%1$#12s" />
+            android:text="%1$#12s"/>
     </LinearLayout>
 
-    <LinearLayout style="@style/ItemLayout"
+    <LinearLayout
+        style="@style/ItemLayout"
         android:layout_marginBottom="13dp">
 
         <TextView
             style="@style/ItemTextView"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:text="@string/handler" />
+            android:text="@string/handler"/>
 
         <TextView
             android:id="@+id/info_handler"
             style="@style/ItemTextView"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:text="%1$#12s" />
+            android:text="%1$#12s"/>
     </LinearLayout>
 
     <LinearLayout style="@style/ItemLayout">
@@ -125,14 +127,14 @@
             style="@style/ItemTextView"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:text="@string/supplier" />
+            android:text="@string/supplier"/>
 
         <TextView
             android:id="@+id/info_supplier"
             style="@style/ItemTextView"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:text="%1$#12s" />
+            android:text="%1$#12s"/>
     </LinearLayout>
 
     <LinearLayout style="@style/ItemLayout">
@@ -141,14 +143,14 @@
             style="@style/ItemTextView"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:text="@string/price" />
+            android:text="@string/price"/>
 
         <TextView
             android:id="@+id/info_price"
             style="@style/ItemTextView"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:text="%1$#12s" />
+            android:text="%1$#12s"/>
     </LinearLayout>
 
     <LinearLayout style="@style/ItemLayout">
@@ -157,14 +159,14 @@
             style="@style/ItemTextView"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:text="@string/weight" />
+            android:text="@string/weight"/>
 
         <TextView
             android:id="@+id/info_weight"
             style="@style/ItemTextView"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:text="%1$#12s" />
+            android:text="%1$#12s"/>
     </LinearLayout>
 
     <LinearLayout style="@style/ItemLayout">
@@ -173,14 +175,14 @@
             style="@style/ItemTextView"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:text="@string/buy_date" />
+            android:text="@string/buy_date"/>
 
         <TextView
             android:id="@+id/info_buy_date"
             style="@style/ItemTextView"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:text="%1$#12s" />
+            android:text="%1$#12s"/>
     </LinearLayout>
 
 </LinearLayout>

@@ -1,9 +1,9 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.dhy.coffeesecret.ui.cup.fragment.NormalToolBar">
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             tools:context="com.dhy.coffeesecret.ui.cup.fragment.NormalToolBar">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolBar"
@@ -31,7 +31,7 @@
                 android:paddingLeft="17dp"
                 android:paddingRight="17dp"
                 android:text="@string/edit"
-                android:textColor="@android:color/white" />
+                android:textColor="@android:color/white"/>
 
             <TextView
                 android:layout_width="match_parent"
@@ -40,7 +40,7 @@
                 android:gravity="center"
                 android:text="杯测名xxx"
                 android:textColor="@android:color/white"
-                android:textSize="@dimen/actionbar_title_font_size" />
+                android:textSize="@dimen/actionbar_title_font_size"/>
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
 </FrameLayout>

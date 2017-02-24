@@ -26,7 +26,6 @@ import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.pojo.BeanInfo;
 import com.dhy.coffeesecret.ui.container.BeanInfoActivity;
 import com.dhy.coffeesecret.ui.container.adapters.BeanListAdapter;
-import com.dhy.coffeesecret.ui.container.adapters.CountryListAdapter;
 import com.dhy.coffeesecret.ui.container.adapters.InfoListAdapter;
 import com.dhy.coffeesecret.ui.container.adapters.LineListAdapter;
 import com.dhy.coffeesecret.ui.device.ReportActivity;
@@ -37,14 +36,16 @@ import java.util.ArrayList;
 
 public class SearchFragment extends Fragment {
 
+    private static final String TAG = "SearchFragment";
+    private static final int GET_LIKE_BEAN_LIST = 111;
+    private static final int GET_LIKE_LINE_LIST = 222;
+    private static final int GET_LIKE_INFO_LIST = 333;
     private View searchView;
-
     private EditText editText;
     private Button cancel;
     private ImageButton clear;
     private RecyclerView searchList;
     private InputMethodManager imm;
-
     private Context mContext;
     private BeanListAdapter beanListAdapter;
     private LineListAdapter lineListAdapter;
@@ -56,8 +57,8 @@ public class SearchFragment extends Fragment {
     private ArrayList<String> infos;
     private ArrayList<String> infoTemp;
     private String entrance;
-
-    private static final String TAG = "SearchFragment";
+    private SearchHandler mHandler = new SearchHandler(this);
+    private OnSearchCallBack onSearchCallBack;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -240,10 +241,19 @@ public class SearchFragment extends Fragment {
         }
     }
 
-    private static final int GET_LIKE_BEAN_LIST = 111;
-    private static final int GET_LIKE_LINE_LIST = 222;
-    private static final int GET_LIKE_INFO_LIST = 333;
-    private SearchHandler mHandler = new SearchHandler(this);
+    public void addOnSearchCallBack(OnSearchCallBack onSearchCallBack) {
+        this.onSearchCallBack = onSearchCallBack;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.e(TAG, "onDestroy: ");
+    }
+
+    public interface OnSearchCallBack {
+        void onSearchCallBack(String info);
+    }
 
     private class SearchHandler extends Handler {
 
@@ -305,20 +315,5 @@ public class SearchFragment extends Fragment {
                     break;
             }
         }
-    }
-
-    public interface OnSearchCallBack {
-        void onSearchCallBack(String info);
-    }
-
-    private OnSearchCallBack onSearchCallBack;
-    public void addOnSearchCallBack(OnSearchCallBack onSearchCallBack) {
-        this.onSearchCallBack = onSearchCallBack;
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Log.e(TAG, "onDestroy: ");
     }
 }

@@ -122,64 +122,67 @@
         android:paddingRight="33.75dp">
 
         <RelativeLayout
-            android:layout_marginTop="16dp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp">
 
             <LinearLayout
-                android:layout_centerHorizontal="true"
                 android:id="@+id/id_baking_developInfo"
-                android:orientation="horizontal"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:orientation="horizontal">
+
                 <TextView
                     android:id="@+id/id_baking_untilTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="已烘焙时间: 00:00"/>
+
                 <TextView
                     android:id="@+id/id_baking_developRate"
-                    android:layout_marginLeft="42dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="42dp"
                     android:text="发展率: 0%"/>
+
                 <TextView
                     android:id="@+id/id_baking_developTime"
-                    android:layout_marginLeft="42dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="42dp"
                     android:text="00:00"/>
             </LinearLayout>
 
             <com.dhy.coffeesecret.views.DevelopBar
-                android:layout_marginTop="16.875dp"
                 android:id="@+id/id_baking_developbar"
-                android:layout_below="@id/id_baking_developInfo"
                 android:layout_width="314.4375dp"
                 android:layout_height="12.375dp"
+                android:layout_below="@id/id_baking_developInfo"
                 android:layout_centerHorizontal="true"
+                android:layout_marginTop="16.875dp"
                 android:paddingLeft="29.8125dp"/>
 
             <RelativeLayout
-                android:layout_below="@id/id_baking_developbar"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_below="@id/id_baking_developbar">
 
                 <TextView
-                    android:layout_centerHorizontal="true"
                     android:id="@+id/id_baking_lineOperator"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="温度曲线图"
-                    android:textSize="15sp"
+                    android:layout_centerHorizontal="true"
                     android:layout_marginTop="16.875dp"
-                    android:drawableRight="@drawable/ic_baking_dropdown"/>
+                    android:drawableRight="@drawable/ic_baking_dropdown"
+                    android:text="温度曲线图"
+                    android:textSize="15sp"/>
 
                 <com.dhy.coffeesecret.views.BaseChart4Coffee
-                    android:layout_below="@id/id_baking_lineOperator"
                     android:id="@+id/id_baking_chart"
                     android:layout_width="344.25dp"
-                    android:layout_height="match_parent"></com.dhy.coffeesecret.views.BaseChart4Coffee>
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/id_baking_lineOperator"></com.dhy.coffeesecret.views.BaseChart4Coffee>
             </RelativeLayout>
         </RelativeLayout>
     </RelativeLayout>
@@ -189,44 +192,44 @@
         android:layout_height="match_parent">
 
         <Button
-            android:layout_marginTop="21.375dp"
             android:id="@+id/id_baking_dry"
             style="@style/bakingOperator"
+            android:layout_marginTop="21.375dp"
             android:text="脱水"/>
 
         <Button
-            android:layout_marginTop="13dp"
-            android:layout_below="@id/id_baking_dry"
             android:id="@+id/id_baking_firstBurst"
             style="@style/bakingOperator"
+            android:layout_below="@id/id_baking_dry"
+            android:layout_marginTop="13dp"
             android:text="一爆"/>
 
         <Button
-            android:layout_marginTop="13dp"
-            android:layout_below="@id/id_baking_firstBurst"
             android:id="@+id/id_baking_secondBurst"
             style="@style/bakingOperator"
+            android:layout_below="@id/id_baking_firstBurst"
+            android:layout_marginTop="13dp"
             android:text="二爆"/>
 
         <Button
-            android:layout_marginTop="13dp"
-            android:layout_below="@id/id_baking_secondBurst"
             android:id="@+id/id_baking_end"
             style="@style/bakingOperator"
+            android:layout_below="@id/id_baking_secondBurst"
+            android:layout_marginTop="13dp"
             android:text="出豆"/>
 
         <Button
-            android:layout_below="@+id/id_baking_end"
             android:id="@+id/id_baking_wind_fire"
-            android:layout_marginTop="59.625dp"
             style="@style/bakingOperator"
+            android:layout_below="@+id/id_baking_end"
+            android:layout_marginTop="59.625dp"
             android:text="风/火"/>
 
         <Button
-            android:layout_marginTop="13dp"
-            android:layout_below="@+id/id_baking_wind_fire"
             android:id="@+id/id_baking_other"
             style="@style/bakingOperator"
+            android:layout_below="@+id/id_baking_wind_fire"
+            android:layout_marginTop="13dp"
             android:text="其他"/>
     </RelativeLayout>
 </LinearLayout>

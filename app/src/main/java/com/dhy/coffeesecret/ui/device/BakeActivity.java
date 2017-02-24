@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.Temprature;
 import com.dhy.coffeesecret.pojo.UniversalConfiguration;
+import com.dhy.coffeesecret.ui.device.fragments.FireWindDialog;
 import com.dhy.coffeesecret.ui.device.fragments.Other;
 import com.dhy.coffeesecret.utils.BluetoothHelper;
 import com.dhy.coffeesecret.utils.FragmentTool;
@@ -34,12 +35,11 @@ import com.github.mikephil.charting.data.Event;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static android.view.WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
 import static com.dhy.coffeesecret.views.DevelopBar.AFTER160;
 import static com.dhy.coffeesecret.views.DevelopBar.FIRST_BURST;
 import static com.dhy.coffeesecret.views.DevelopBar.RAWBEAN;
 
-public class BakeActivity extends AppCompatActivity implements BluetoothHelper.DataChangeListener, View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+public class BakeActivity extends AppCompatActivity implements BluetoothHelper.DataChangeListener, View.OnClickListener, CompoundButton.OnCheckedChangeListener, Other.OnOtherAddListener, FireWindDialog.OnFireWindAddListener{
     private BaseChart4Coffee chart;
     private TextView lineOperator;
     private PopupWindow popupWindow;
@@ -87,7 +87,7 @@ public class BakeActivity extends AppCompatActivity implements BluetoothHelper.D
             outwindTemps[0].setText(String.format("%1$.2f", bundle.getFloat("outwind")) + "℃");
             outwindTemps[1].setText(String.format("%1$.2f", bundle.getFloat("accOutwind")) + "℃/s");
 
-            if(curStatus == FIRST_BURST){
+            if (curStatus == FIRST_BURST) {
                 developTime.setText(developBar.getDevelopTime());
                 developRate.setText(developBar.getDevelopRate());
             }
@@ -166,6 +166,7 @@ public class BakeActivity extends AppCompatActivity implements BluetoothHelper.D
         }
 
         if (curEvent != null) {
+            Log.e("codelevex", "啊，我有事件啊:" + curEvent.getDescription());
             beanEntry.setEvent(curEvent);
             curEvent = null;
         }
@@ -214,12 +215,14 @@ public class BakeActivity extends AppCompatActivity implements BluetoothHelper.D
     @Override
     protected void onStart() {
         super.onStart();
+
+
         if (mHelper == null) {
             mHelper = BluetoothHelper.getNewInstance();
         }
         mHelper.setDataListener(this);
         Log.e("codelevex", "我特么又被重启了？？");
-        if(!mHelper.isTestThreadAlive()){
+        if (!mHelper.isTestThreadAlive()) {
             mHelper.test(getResources().openRawResource(R.raw.test));
         }
         startTime = System.currentTimeMillis();
@@ -241,6 +244,7 @@ public class BakeActivity extends AppCompatActivity implements BluetoothHelper.D
         timer.start();
 
     }
+
     /**
      * 初始化属性
      */
@@ -263,7 +267,6 @@ public class BakeActivity extends AppCompatActivity implements BluetoothHelper.D
         outwindTemps[1] = (TextView) findViewById(R.id.id_baking_accOutwindTemp);
 
 
-
         mDry = (Button) findViewById(R.id.id_baking_dry);
         mDry.setOnClickListener(this);
         mFirstBurst = (Button) findViewById(R.id.id_baking_firstBurst);
@@ -283,8 +286,10 @@ public class BakeActivity extends AppCompatActivity implements BluetoothHelper.D
         developTime = (TextView) findViewById(R.id.id_baking_developTime);
         developBar = (DevelopBar) findViewById(R.id.id_baking_developbar);
 
+
         fragmentTool = FragmentTool.getFragmentToolInstance(this);
     }
+
 
     /**
      * 获取popupwindow
@@ -390,18 +395,29 @@ public class BakeActivity extends AppCompatActivity implements BluetoothHelper.D
                 finish();
                 break;
             case R.id.id_baking_wind_fire:
-                curEvent = new Event(Event.FIRE_WIND);
+                FireWindDialog fireWind = new FireWindDialog();
+                fireWind.setOnFireWindAddListener(this);
+                fragmentTool.showDialogFragmen("fireWindFragment", fireWind);
                 break;
             case R.id.id_baking_other:
-                curEvent = new Event(Event.OTHER);
-                DialogFragment other = new Other();
-                Log.e("codelevex", "启用otherfragment");
+                Other other = new Other();
+                other.setOnOtherAddListener(this);
                 fragmentTool.showDialogFragmen("otherFragment", other);
                 break;
         }
         if (id != R.id.id_baking_wind_fire && id != R.id.id_baking_other) {
             v.setEnabled(false);
         }
+    }
+
+    @Override
+    public void onFireWindChanged(Event event) {
+        curEvent = event;
+    }
+
+    @Override
+    public void onDataChanged(Event event) {
+        curEvent = event;
     }
 
     @Override
@@ -422,4 +438,5 @@ public class BakeActivity extends AppCompatActivity implements BluetoothHelper.D
         Log.e("codelevex", "尼玛的什么情况个");
         isReading = false;
     }
+
 }

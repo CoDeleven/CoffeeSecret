@@ -6,63 +6,68 @@
               android:orientation="vertical">
 
     <TextView
-        android:layout_marginTop="2.25dp"
+        android:id="@+id/id_baking_quick1"
         style="@style/bakingOtherSelect"
+        android:layout_marginTop="2.25dp"
         android:text="快速选择1"/>
 
     <View
-        android:layout_marginLeft="5.625dp"
-        android:layout_marginRight="5.625dp"
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:layout_marginLeft="5.625dp"
+        android:layout_marginRight="5.625dp"
         android:background="#F1F2F0"></View>
 
     <TextView
+        android:id="@+id/id_baking_quick2"
         style="@style/bakingOtherSelect"
         android:text="快速选择2"/>
 
     <View
-        android:layout_marginLeft="5.625dp"
-        android:layout_marginRight="5.625dp"
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:layout_marginLeft="5.625dp"
+        android:layout_marginRight="5.625dp"
         android:background="#F1F2F0"></View>
 
     <TextView
+        android:id="@+id/id_baking_quick3"
         style="@style/bakingOtherSelect"
         android:text="快速选择3"/>
 
     <View
-        android:layout_marginLeft="5.625dp"
-        android:layout_marginRight="5.625dp"
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:layout_marginLeft="5.625dp"
+        android:layout_marginRight="5.625dp"
         android:background="#F1F2F0"></View>
 
     <TextView
+        android:id="@+id/id_baking_quick4"
         style="@style/bakingOtherSelect"
 
         android:text="快速选择4"/>
 
     <View
-        android:layout_marginLeft="5.625dp"
-        android:layout_marginRight="5.625dp"
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:layout_marginLeft="5.625dp"
+        android:layout_marginRight="5.625dp"
         android:background="#F1F2F0"></View>
 
     <TextView
         style="@style/bakingOtherSelect"
-
+        android:id="@+id/id_baking_quick5"
         android:text="快速选择5"/>
 
     <Button
-        android:layout_marginTop="3dp"
-        android:minHeight="15dp"
-        android:background="@android:color/transparent"
-        android:layout_gravity="center_horizontal"
-        android:text="取消"
-        android:textColor="#936743"
+        android:id="@+id/id_baking_cancel"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="3dp"
+        android:background="@android:color/transparent"
+        android:minHeight="15dp"
+        android:text="取消"
+        android:textColor="#936743"/>
 </LinearLayout>

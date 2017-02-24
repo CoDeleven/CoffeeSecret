@@ -11,7 +11,7 @@
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
     <color name="btn_border_gray">#CCCCCC</color>
-    <color name="trans_dark" >#cc000000</color>
+    <color name="trans_dark">#cc000000</color>
     <color name="bg_reportinfo">#F3F3F3</color>
     <color name="bg_activity">#F3F3F3</color>
     <color name="bg_progress_norml">#DBDDDC</color>
@@ -25,5 +25,7 @@
     <color name="press_gray">#B8B8B8</color>
 
     <color name="color_gray_c9">#C9C9C9</color>
-
+    <color name="def_wheel_color">#4E4988</color>
+    <color name="def_reached_color">#FFD844</color>
+    <color name="def_pointer_color">#FFFFFF</color>
 </resources>

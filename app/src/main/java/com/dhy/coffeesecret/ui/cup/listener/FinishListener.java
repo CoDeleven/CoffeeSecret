@@ -10,7 +10,7 @@ import android.view.View;
 public class FinishListener implements View.OnClickListener {
     private Activity activity;
 
-    public FinishListener(Activity activity){
+    public FinishListener(Activity activity) {
         this.activity = activity;
     }
 

@@ -1,8 +1,7 @@
 package com.dhy.coffeesecret.ui.device;
 
-import android.os.PersistableBundle;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,8 +20,8 @@ public class TestActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
-        text1 = (EditText)findViewById(R.id.id_test_1);
-        text2 = (EditText)findViewById(R.id.id_test_2);
+        text1 = (EditText) findViewById(R.id.id_test_1);
+        text2 = (EditText) findViewById(R.id.id_test_2);
         send = (Button) findViewById(R.id.id_test_send);
         send.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -31,7 +30,7 @@ public class TestActivity extends AppCompatActivity {
                 mHelper.read();
             }
         });
-        if(mHelper == null){
+        if (mHelper == null) {
             mHelper = BluetoothHelper.getNewInstance(this);
         }
 

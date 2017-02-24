@@ -13,11 +13,11 @@
         android:id="@+id/info_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="10dp"
         android:layout_marginLeft="15dp"
+        android:padding="10dp"
         android:text="@string/produce_area"
         android:textColor="@color/list_text_color"
         android:textSize="11.5sp"
-        app:layout_widthPercent="100%" />
+        app:layout_widthPercent="100%"/>
 
 </com.zhy.android.percent.support.PercentLinearLayout>

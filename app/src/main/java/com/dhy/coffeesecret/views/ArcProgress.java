@@ -29,6 +29,7 @@ public class ArcProgress extends View {
     private float mSecondArcRadius;
     private Resources res;
     private float mRotateAngle;
+
     public ArcProgress(Context context) {
         this(context, null);
     }

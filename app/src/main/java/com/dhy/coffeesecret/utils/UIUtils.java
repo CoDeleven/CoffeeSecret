@@ -7,7 +7,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 
-
 import com.dhy.coffeesecret.R;
 
 import java.lang.reflect.Field;

@@ -1,12 +1,9 @@
 package com.dhy.coffeesecret.views;
 
 import android.content.Context;
-import android.content.res.Configuration;
-import android.graphics.Rect;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
@@ -141,15 +138,6 @@ public class ScrollViewContainer extends RelativeLayout {
         init();
     }
 
-    public void setCanPullup(boolean can){
-        canPullUp = can;
-    }
-
-    private void init() {
-        mTimer = new MyTimer(handler);
-        statusHeight = getStatusHeight(getContext());
-    }
-
     public static int getStatusHeight(Context context) {
 
         int statusHeight = -1;
@@ -163,6 +151,15 @@ public class ScrollViewContainer extends RelativeLayout {
             e.printStackTrace();
         }
         return statusHeight;
+    }
+
+    public void setCanPullup(boolean can) {
+        canPullUp = can;
+    }
+
+    private void init() {
+        mTimer = new MyTimer(handler);
+        statusHeight = getStatusHeight(getContext());
     }
 
     @Override

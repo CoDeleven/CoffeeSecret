@@ -79,7 +79,7 @@ public class BeanListAdapter extends RecyclerView.Adapter<BeanListAdapter.BeanLi
         void onItemClicked(int position);
     }
 
-    class BeanListViewHolder extends RecyclerView.ViewHolder{
+    class BeanListViewHolder extends RecyclerView.ViewHolder {
 
         private TextView beanName = null;
         private LinearLayout itemBeanLayout = null;

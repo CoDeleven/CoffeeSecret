@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:soya="http://schemas.android.com/apk/res-auto">
+      xmlns:soya="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/msg"
-        android:title="always"
         android:icon="@drawable/ic_conta_share"
+        android:title="always"
         soya:showAsAction="always"/>
 </menu>

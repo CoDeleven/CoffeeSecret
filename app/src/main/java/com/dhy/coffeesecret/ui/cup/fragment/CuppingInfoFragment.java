@@ -14,13 +14,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.dhy.coffeesecret.R;
-import com.dhy.coffeesecret.ui.cup.NewCuppingActivity;
 import com.dhy.coffeesecret.ui.cup.listener.GridViewItemClickListener;
 import com.dhy.coffeesecret.utils.ArrayUtil;
 import com.dinuscxj.progressbar.CircleProgressBar;
 
-import static com.dhy.coffeesecret.ui.cup.NewCuppingActivity.NEW_CUPPING;
-import static com.dhy.coffeesecret.ui.cup.NewCuppingActivity.VIEW_TYPE;
 import static com.dhy.coffeesecret.ui.cup.listener.GridViewItemClickListener.FEEL_GRID;
 import static com.dhy.coffeesecret.ui.cup.listener.GridViewItemClickListener.FLAW_GRID;
 

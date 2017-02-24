@@ -2,17 +2,19 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="#EDEEE9"
     android:id="@+id/activity_report"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#EDEEE9"
     tools:context="com.dhy.coffeesecret.ui.device.ReportActivity">
+
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar_device_activtiy"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize">
+
         <TextView
             android:id="@+id/id_toolbar_title"
             android:layout_width="wrap_content"
@@ -22,208 +24,237 @@
             android:textColor="#FFF"
             android:textSize="20sp"/>
     </android.support.v7.widget.Toolbar>
+
     <com.dhy.coffeesecret.views.ScrollViewContainer
-        android:padding="0dp"
-        android:layout_below="@id/toolbar_device_activtiy"
         android:id="@+id/id_report_scrollContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar_device_activtiy"
+        android:padding="0dp">
+
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
             <LinearLayout
-                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
                 <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:background="#FFF"
                     android:elevation="2dp"
-                    android:paddingLeft="@dimen/activity_horizontal_margin"
-                    android:paddingRight="@dimen/activity_horizontal_margin"
                     android:orientation="vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:paddingRight="@dimen/activity_horizontal_margin">
+
                     <LinearLayout
-                        android:orientation="vertical"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
                         <LinearLayout
-                            android:orientation="horizontal"
-                            android:gravity="center"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="horizontal">
+
                             <TextView
-                                android:textSize="13.5sp"
-                                android:textColor="#000"
-                                android:layout_gravity="center"
                                 android:id="@+id/id_baking_bakeDate"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="烘焙日期：2017-01-01 12:06"/>
-                            <TextView
-                                android:textSize="13.5sp"
-                                android:textColor="#000"
-                                android:layout_marginLeft="15dp"
                                 android:layout_gravity="center"
+                                android:text="烘焙日期：2017-01-01 12:06"
+                                android:textColor="#000"
+                                android:textSize="13.5sp"/>
+
+                            <TextView
                                 android:id="@+id/id_baking_deviceName"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="设备：HBCoffee"/>
+                                android:layout_gravity="center"
+                                android:layout_marginLeft="15dp"
+                                android:text="设备：HBCoffee"
+                                android:textColor="#000"
+                                android:textSize="13.5sp"/>
                         </LinearLayout>
+
                         <ImageView
-                            android:layout_gravity="center"
-                            android:layout_marginTop="32dp"
-                            android:layout_marginBottom="21.375dp"
-                            android:src="@drawable/ic_report_test"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginBottom="21.375dp"
+                            android:layout_marginTop="32dp"
+                            android:src="@drawable/ic_report_test"/>
                     </LinearLayout>
 
                     <View
-                        android:background="#C7C7C7"
                         android:layout_width="match_parent"
-                        android:layout_height="1px"></View>
+                        android:layout_height="1px"
+                        android:background="#C7C7C7"></View>
+
                     <LinearLayout
-                        android:orientation="vertical"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
                         <TextView
-                            android:layout_marginTop="17dp"
-                            android:layout_marginBottom="16dp"
-                            android:layout_gravity="left"
-                            android:textSize="13.5sp"
-                            android:textColor="#000"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="品种"/>
+                            android:layout_gravity="left"
+                            android:layout_marginBottom="16dp"
+                            android:layout_marginTop="17dp"
+                            android:text="品种"
+                            android:textColor="#000"
+                            android:textSize="13.5sp"/>
+
                         <LinearLayout
-                            android:paddingLeft="7.874dp"
-                            android:paddingRight="7.874dp"
                             android:id="@+id/id_bean_container"
-                            android:orientation="vertical"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:paddingLeft="7.874dp"
+                            android:paddingRight="7.874dp">
 
                         </LinearLayout>
                     </LinearLayout>
 
                 </LinearLayout>
+
                 <LinearLayout
-                    android:elevation="2dp"
-                    android:paddingLeft="@dimen/activity_horizontal_margin"
-                    android:paddingRight="@dimen/activity_horizontal_margin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="9.5625dp"
                     android:background="#FFF"
+                    android:elevation="2dp"
                     android:orientation="vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:paddingRight="@dimen/activity_horizontal_margin">
+
                     <TextView
-                        android:layout_marginTop="20.25dp"
-                        android:layout_gravity="left"
-                        android:textSize="13.5sp"
-                        android:textColor="#000"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="曲线详情"/>
+                        android:layout_gravity="left"
+                        android:layout_marginTop="20.25dp"
+                        android:text="曲线详情"
+                        android:textColor="#000"
+                        android:textSize="13.5sp"/>
+
                     <RelativeLayout
-                        android:layout_below="@id/id_baking_developbar"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/id_baking_developbar">
 
                         <TextView
-                            android:layout_centerHorizontal="true"
                             android:id="@+id/id_baking_lineOperator"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginBottom="5dp"
+                            android:drawableRight="@drawable/ic_baking_dropdown"
                             android:text="温度曲线图"
-                            android:textSize="15sp"
-                            android:drawableRight="@drawable/ic_baking_dropdown"/>
+                            android:textSize="15sp"/>
 
                         <com.dhy.coffeesecret.views.BaseChart4Coffee
-                            android:layout_centerHorizontal="true"
-                            android:layout_below="@id/id_baking_lineOperator"
                             android:id="@+id/id_baking_chart"
                             android:layout_width="344.25dp"
-                            android:layout_height="200dp"></com.dhy.coffeesecret.views.BaseChart4Coffee>
+                            android:layout_height="200dp"
+                            android:layout_below="@id/id_baking_lineOperator"
+                            android:layout_centerHorizontal="true"></com.dhy.coffeesecret.views.BaseChart4Coffee>
+
                         <LinearLayout
-                            android:layout_marginTop="23dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
                             android:layout_below="@id/id_baking_chart"
                             android:layout_marginBottom="10dp"
-                            android:orientation="vertical"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
+                            android:layout_marginTop="23dp"
+                            android:orientation="vertical">
+
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content">
+
                                 <TextView
-                                    android:layout_weight="1"
                                     android:id="@+id/id_envTemp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
                                     android:layout_gravity="left"
-                                    android:textSize="12sp"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="环境温度：35.7xx"/>
-                                <TextView
                                     android:layout_weight="1"
+                                    android:text="环境温度：35.7xx"
+                                    android:textSize="12sp"/>
+
+                                <TextView
                                     android:id="@+id/id_inputBeanTemp"
-                                    android:textSize="12sp"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="入豆温度：35.7xx"/>
-                                <TextView
                                     android:layout_weight="1"
+                                    android:text="入豆温度：35.7xx"
+                                    android:textSize="12sp"/>
+
+                                <TextView
                                     android:id="@+id/id_endTemp"
-                                    android:textSize="12sp"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="结束温度：35.7xx"/>
+                                    android:layout_weight="1"
+                                    android:text="结束温度：35.7xx"
+                                    android:textSize="12sp"/>
                             </LinearLayout>
+
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content">
+
                                 <TextView
                                     android:id="@+id/id_developTime"
-                                    android:layout_weight="1"
-                                    android:textSize="12sp"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="发展时间：00:00"/>
-                                <TextView
                                     android:layout_weight="1"
+                                    android:text="发展时间：00:00"
+                                    android:textSize="12sp"/>
+
+                                <TextView
                                     android:id="@+id/id_developRate"
-                                    android:textSize="12sp"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="发展率：20%"/>
-                                <TextView
                                     android:layout_weight="1"
-                                    android:textSize="12sp"
+                                    android:text="发展率：20%"
+                                    android:textSize="12sp"/>
+
+                                <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="　　　　　　"/>
+                                    android:layout_weight="1"
+                                    android:text="　　　　　　"
+                                    android:textSize="12sp"/>
                             </LinearLayout>
                         </LinearLayout>
 
                     </RelativeLayout>
 
                 </LinearLayout>
+
                 <com.dhy.coffeesecret.views.DownRefresh
                     android:layout_width="match_parent"
                     android:layout_height="40dp"/>
             </LinearLayout>
         </ScrollView>
+
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <TableLayout
                 android:id="@+id/id_report_table"
-                android:padding="0dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:padding="0dp">
+
                 <TableRow
-                    android:layout_marginTop="?attr/actionBarSize"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="?attr/actionBarSize"
                     android:background="#936743"
                     android:gravity="center"
                     android:paddingBottom="10dp"

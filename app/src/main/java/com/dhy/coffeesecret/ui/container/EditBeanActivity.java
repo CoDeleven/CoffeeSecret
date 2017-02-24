@@ -33,7 +33,12 @@ import butterknife.OnClick;
 public class EditBeanActivity extends AppCompatActivity {
 
     private static final String TAG = "EditBeanActivity";
-
+    private static final int COUNTRY = 1234;
+    private static final int AREA = 2345;
+    private static final int MANOR = 3456;
+    private static final int SPECIES = 4567;
+    private static final int BEAN_NAME = 5678;
+    private static final int BEAN_ICON = 6789;
     @Bind(R.id.title_text)
     TextView titleText;
     @Bind(R.id.btn_cancel)
@@ -76,13 +81,13 @@ public class EditBeanActivity extends AppCompatActivity {
     TextView editCountry;
     @Bind(R.id.edit_layout_country)
     RelativeLayout editLayoutCountry;
-
     private TimePickerView pvTime;
     private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
     private String[] levelArray;
     private String[] handlerArray;
     private String currentLevel;
     private String currentHandler;
+    private EditBeanHandler mHandler = new EditBeanHandler(EditBeanActivity.this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -295,20 +300,33 @@ public class EditBeanActivity extends AppCompatActivity {
         }
     }
 
-    private static final int COUNTRY = 1234;
-    private static final int AREA = 2345;
-    private static final int MANOR = 3456;
-    private static final int SPECIES = 4567;
-    private static final int BEAN_NAME = 5678;
-    private static final int BEAN_ICON = 6789;
-    private EditBeanHandler mHandler = new EditBeanHandler(EditBeanActivity.this);
+    private void exitToRight(BeanInfo beanInfo) {
+        Intent intent = new Intent();
+        intent.putExtra("new_bean_info", beanInfo);
+        setResult(RESULT_OK, intent);
+        exitToRight();
+    }
+
+    private void exitToRight() {
+        this.finish();
+        overridePendingTransition(R.anim.in_from_left, R.anim.out_to_right);
+    }
+
+    private void exitToLeft() {
+        overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        exitToRight();
+    }
 
     class EditBeanHandler extends Handler {
 
+        private final WeakReference<EditBeanActivity> mActivity;
         String country = "";
         String species = "";
-
-        private final WeakReference<EditBeanActivity> mActivity;
 
         public EditBeanHandler(EditBeanActivity activity) {
             mActivity = new WeakReference<>(activity);
@@ -357,27 +375,5 @@ public class EditBeanActivity extends AppCompatActivity {
                     break;
             }
         }
-    }
-
-    private void exitToRight(BeanInfo beanInfo) {
-        Intent intent = new Intent();
-        intent.putExtra("new_bean_info", beanInfo);
-        setResult(RESULT_OK, intent);
-        exitToRight();
-    }
-
-    private void exitToRight() {
-        this.finish();
-        overridePendingTransition(R.anim.in_from_left, R.anim.out_to_right);
-    }
-
-    private void exitToLeft() {
-        overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        exitToRight();
     }
 }

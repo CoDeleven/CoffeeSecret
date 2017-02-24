@@ -5,8 +5,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -54,6 +52,10 @@ public class LineListAdapter extends RecyclerView.Adapter<LineListAdapter.LineVi
         return reports.size();
     }
 
+    public interface OnItemClickListener {
+        void onItemClicked(int position, BakeReport report);
+    }
+
     class LineViewHolder extends RecyclerView.ViewHolder {
         private TextView lineName;
         private TextView dateName;
@@ -66,10 +68,6 @@ public class LineListAdapter extends RecyclerView.Adapter<LineListAdapter.LineVi
             dateName = (TextView) itemView.findViewById(R.id.id_lines_item_date);
             lineLayout = (RelativeLayout) itemView.findViewById(R.id.item_line_layout);
         }
-    }
-
-    public interface OnItemClickListener {
-        void onItemClicked(int position, BakeReport report);
     }
 
 }

@@ -24,7 +24,7 @@ import com.dhy.coffeesecret.ui.cup.fragment.NormalToolBar;
 
 public class NewCuppingActivity extends AppCompatActivity
         implements RadioGroup.OnCheckedChangeListener, CuppingInfoFragment.OnFragmentInteractionListener,
-                        EditToolBar.OnSaveListener {
+        EditToolBar.OnSaveListener {
 
     public static final String NEW_CUPPING = "newCupping";
     public static final String EDIT_INFO = "editInfo";
@@ -124,12 +124,12 @@ public class NewCuppingActivity extends AppCompatActivity
 
     private void initParam() {
         if (NEW_CUPPING.equals(viewType)) {
-            cuppingInfoFragment = CuppingInfoFragment.newInstance(null,null);
+            cuppingInfoFragment = CuppingInfoFragment.newInstance(null, null);
             cuppingInfoFragment.initEditable(true);
-        }else {
+        } else {
             float[] feelScores = new float[]{3.01f, 0, 0, 0, 0, 0, 0, 0};
             float[] flawScores = new float[]{0, 0, 0, 0, 0, 0};
-            cuppingInfoFragment = CuppingInfoFragment.newInstance(flawScores,feelScores);
+            cuppingInfoFragment = CuppingInfoFragment.newInstance(flawScores, feelScores);
         }
 
         bakeInfoFragment = new BakeInfoFragment();

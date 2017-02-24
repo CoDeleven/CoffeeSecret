@@ -9,7 +9,6 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 /**
@@ -127,12 +126,13 @@ public class DevelopBar extends View {
         this.invalidate();
     }
 
-    public String getDevelopRate(){
+    public String getDevelopRate() {
         return "发展率: " + String.format("%1$.2f", (firstBurstTime * 100) / totalTime) + "%";
     }
-    public String getDevelopTime(){
-        int minutes = (int)(firstBurstTime / 60);
-        int seconds = (int)(firstBurstTime % 60);
+
+    public String getDevelopTime() {
+        int minutes = (int) (firstBurstTime / 60);
+        int seconds = (int) (firstBurstTime % 60);
         return String.format("%1$02d", minutes) + ":" + String.format("%1$02d", seconds);
     }
 }

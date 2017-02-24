@@ -13,7 +13,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.dhy.coffeesecret.R;
-import com.dhy.coffeesecret.pojo.Temprature;
 import com.dhy.coffeesecret.utils.BluetoothHelper;
 
 import java.util.ArrayList;

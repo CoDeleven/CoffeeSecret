@@ -22,7 +22,7 @@ public class GridViewItemClickListener implements AdapterView.OnItemClickListene
     private boolean isEditable;
 
     public GridViewItemClickListener(FragmentManager manager,
-                                     InputDialogFragment fragment, String gridView ) {
+                                     InputDialogFragment fragment, String gridView) {
         this.mManager = manager;
         this.mFragment = fragment;
         this.mGridView = gridView;
@@ -30,15 +30,15 @@ public class GridViewItemClickListener implements AdapterView.OnItemClickListene
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        if(isEditable){
+        if (isEditable) {
             int currentItem;
             if (mGridView == FEEL_GRID) {
                 currentItem = i;
-            }else {
+            } else {
                 currentItem = i + 8;
             }
             if (mFragment.getDialog() == null) {
-                mFragment.show(currentItem,mManager,"");
+                mFragment.show(currentItem, mManager, "");
             }
         }
     }

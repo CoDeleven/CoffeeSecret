@@ -1,81 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_marginBottom="16.3125dp"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:layout_height="match_parent"
+              android:layout_marginBottom="16.3125dp"
+              android:orientation="vertical">
+
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
         <TextView
-            android:textSize="13.5sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="名称：巴西黄波旁"/>
+            android:text="名称：巴西黄波旁"
+            android:textSize="13.5sp"/>
+
         <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
-            android:textSize="13.5sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="海拔：1.2-1.5km"/>
+            android:text="海拔：1.2-1.5km"
+            android:textSize="13.5sp"/>
     </LinearLayout>
+
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
         <TextView
-            android:textSize="13.5sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="豆种：Bourbon"/>
+            android:text="豆种：Bourbon"
+            android:textSize="13.5sp"/>
+
         <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
-            android:textSize="13.5sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="处理方式：日晒"/>
+            android:text="处理方式：日晒"
+            android:textSize="13.5sp"/>
     </LinearLayout>
+
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
         <TextView
-            android:textSize="13.5sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="国家：英国"/>
+            android:text="国家：英国"
+            android:textSize="13.5sp"/>
+
         <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
-            android:textSize="13.5sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="含水量：100%"/>
+            android:text="含水量：100%"
+            android:textSize="13.5sp"/>
     </LinearLayout>
+
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
         <TextView
-            android:textSize="13.5sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="等级:G99"/>
+            android:text="等级:G99"
+            android:textSize="13.5sp"/>
+
         <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
-            android:textSize="13.5sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="庄园：Chacal"/>
+            android:text="庄园：Chacal"
+            android:textSize="13.5sp"/>
     </LinearLayout>
+
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
         <TextView
-            android:textSize="13.5sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="产区：米纳斯"/>
+            android:text="产区：米纳斯"
+            android:textSize="13.5sp"/>
     </LinearLayout>
 </LinearLayout>

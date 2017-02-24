@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
 
 import com.dhy.coffeesecret.pojo.UniversalConfiguration;
 import com.dhy.coffeesecret.ui.device.formatter.XAxisFormatter4Time;
@@ -135,9 +134,9 @@ public class BaseChart4Coffee extends LineChart {
 
     public void addTempratureLine(int lineIndex, boolean isAcc) {
         LineDataSet set = new LineDataSet(new ArrayList<Entry>(Arrays.asList(new Entry(1, 150))), labels.get(lineIndex));
-        if(isAcc){
+        if (isAcc) {
             set.setAxisDependency(YAxis.AxisDependency.RIGHT);
-        }else{
+        } else {
             set.setAxisDependency(YAxis.AxisDependency.LEFT);
 
         }
@@ -150,7 +149,7 @@ public class BaseChart4Coffee extends LineChart {
         set.setFillColor(ColorTemplate.colorWithAlpha(Color.YELLOW, 200));
         set.setDrawCircleHole(false);
         set.setDrawCircles(false);
-        if(lineIndex == BEANLINE){
+        if (lineIndex == BEANLINE) {
             set.setDrawCircleHole(true);
             set.setDrawCircles(true);
         }
@@ -183,7 +182,7 @@ public class BaseChart4Coffee extends LineChart {
         setData(new LineData(new ArrayList<ILineDataSet>(lines.values())));
     }
 
-    public void addTempratureLine(int lineIndex){
+    public void addTempratureLine(int lineIndex) {
         addTempratureLine(lineIndex, false);
     }
 
@@ -212,7 +211,7 @@ public class BaseChart4Coffee extends LineChart {
         invalidate();
     }
 
-    private void initLine(){
+    private void initLine() {
         addTempratureLine(BaseChart4Coffee.BEANLINE);
         addTempratureLine(BaseChart4Coffee.INWINDLINE);
         addTempratureLine(BaseChart4Coffee.OUTWINDLINE);
@@ -221,7 +220,7 @@ public class BaseChart4Coffee extends LineChart {
         addTempratureLine(BaseChart4Coffee.ACCOUTWINDLINE, true);
     }
 
-    interface InterceptorView{
+    interface InterceptorView {
 
     }
 }

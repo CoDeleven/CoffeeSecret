@@ -39,7 +39,7 @@ public class NormalToolBar extends Fragment {
         return view;
     }
 
-    public void setEditBtnClickListener(View.OnClickListener listener){
+    public void setEditBtnClickListener(View.OnClickListener listener) {
         mListener = listener;
     }
 

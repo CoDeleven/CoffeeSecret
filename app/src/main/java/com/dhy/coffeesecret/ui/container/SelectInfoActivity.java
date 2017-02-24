@@ -37,6 +37,11 @@ import butterknife.OnClick;
 
 public class SelectInfoActivity extends AppCompatActivity implements OnQuickSideBarTouchListener, SearchEditText.SearchBarListener {
 
+    private static final int GET_COUNTRY_LIST = 111;
+    private static final int GET_AREA_LIST = 222;
+    private static final int GET_MANOR_LIST = 333;
+    private static final int GET_SPECIES_LIST = 444;
+    private static final int SHOW_WRONG_TOAST = 555;
     @Bind(R.id.btn_cancel)
     TextView btnCancel;
     @Bind(R.id.title_text)
@@ -53,7 +58,6 @@ public class SelectInfoActivity extends AppCompatActivity implements OnQuickSide
     QuickSideBarView quickSideBarView;
     @Bind(R.id.activity_select_info)
     RelativeLayout activitySelectInfo;
-
     private Context context;
     private String infoType;
     private boolean isAddSearchFragment = false;
@@ -62,6 +66,7 @@ public class SelectInfoActivity extends AppCompatActivity implements OnQuickSide
     private ArrayList<String> species = null;
     private InfoListAdapter infoAdapter = null;
     private HashMap<String, Integer> letters = new HashMap<>();
+    private SelectHandler mHandler = new SelectHandler(SelectInfoActivity.this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -201,12 +206,27 @@ public class SelectInfoActivity extends AppCompatActivity implements OnQuickSide
         exitToRight();
     }
 
-    private static final int GET_COUNTRY_LIST = 111;
-    private static final int GET_AREA_LIST = 222;
-    private static final int GET_MANOR_LIST = 333;
-    private static final int GET_SPECIES_LIST = 444;
-    private static final int SHOW_WRONG_TOAST = 555;
-    private SelectHandler mHandler = new SelectHandler(SelectInfoActivity.this);
+    private void exitToRight(String info) {
+        Intent intent = new Intent();
+        intent.putExtra("info", info);
+        setResult(RESULT_OK, intent);
+        exitToRight();
+    }
+
+    private void exitToRight() {
+        this.finish();
+        overridePendingTransition(R.anim.in_from_left, R.anim.out_to_right);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (isAddSearchFragment) {
+            searchFragment.remove();
+            isAddSearchFragment = false;
+        } else {
+            exitToRight();
+        }
+    }
 
     private class SelectHandler extends Handler {
         private final WeakReference<SelectInfoActivity> mActivity;
@@ -237,28 +257,6 @@ public class SelectInfoActivity extends AppCompatActivity implements OnQuickSide
                 default:
                     break;
             }
-        }
-    }
-
-    private void exitToRight(String info) {
-        Intent intent = new Intent();
-        intent.putExtra("info", info);
-        setResult(RESULT_OK, intent);
-        exitToRight();
-    }
-
-    private void exitToRight() {
-        this.finish();
-        overridePendingTransition(R.anim.in_from_left, R.anim.out_to_right);
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (isAddSearchFragment) {
-            searchFragment.remove();
-            isAddSearchFragment = false;
-        } else {
-            exitToRight();
         }
     }
 }

@@ -25,7 +25,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ContainerFragment extends Fragment implements ViewPager.OnPageChangeListener{
+public class ContainerFragment extends Fragment implements ViewPager.OnPageChangeListener {
 
     private static final String TAG = "ContainerFragment";
     private final String[] TITLES = {"全部", "中美", "南美", "大洋", "亚洲", "非洲", "其它"};
@@ -38,6 +38,10 @@ public class ContainerFragment extends Fragment implements ViewPager.OnPageChang
 
     private List<BeanListFragment> fragments = null;
     private Context context;
+    private boolean isAddSearchFragment = false;
+    private SearchFragment searchFragment;
+    //当前page的位置
+    private int position;
 
     public ContainerFragment() {
     }
@@ -71,14 +75,11 @@ public class ContainerFragment extends Fragment implements ViewPager.OnPageChang
         initView();
     }
 
-    private boolean isAddSearchFragment = false;
-    private SearchFragment searchFragment;
-
     public void initView() {
         searchBeanET.setSearchBarListener(new SearchEditText.SearchBarListener() {
             @Override
             public void starSearchPage() {
-                FragmentTransaction tx = ((MainActivity)context).getSupportFragmentManager().beginTransaction();
+                FragmentTransaction tx = ((MainActivity) context).getSupportFragmentManager().beginTransaction();
                 tx.setCustomAnimations(R.anim.in_from_right, R.anim.out_to_left);
 
                 if (!isAddSearchFragment) {
@@ -128,9 +129,6 @@ public class ContainerFragment extends Fragment implements ViewPager.OnPageChang
 
     }
 
-    //当前page的位置
-    private int position;
-
     @Override
     public void onPageSelected(int position) {
         this.position = position;
@@ -139,6 +137,17 @@ public class ContainerFragment extends Fragment implements ViewPager.OnPageChang
     @Override
     public void onPageScrollStateChanged(int state) {
 
+    }
+
+    public void onBackPressed() {
+        if (searchFragment != null && !searchFragment.isHidden()) {
+            searchFragment.remove();
+            isAddSearchFragment = false;
+        }
+    }
+
+    public boolean isAddSearch() {
+        return isAddSearchFragment;
     }
 
     public class MyPagerAdapter extends FragmentPagerAdapter {
@@ -163,16 +172,5 @@ public class ContainerFragment extends Fragment implements ViewPager.OnPageChang
             return fragments.get(position);
         }
 
-    }
-
-    public void onBackPressed() {
-        if (searchFragment != null && !searchFragment.isHidden()) {
-            searchFragment.remove();
-            isAddSearchFragment = false;
-        }
-    }
-
-    public boolean isAddSearch() {
-        return isAddSearchFragment;
     }
 }

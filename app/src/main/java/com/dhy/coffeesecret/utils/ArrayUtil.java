@@ -13,7 +13,7 @@ public class ArrayUtil {
             }
 
             for (int i = 0; i < t2.length; i++) {
-                f[i+t1.length] = t2[i];
+                f[i + t1.length] = t2[i];
             }
 
         } else if (t1 != null) {

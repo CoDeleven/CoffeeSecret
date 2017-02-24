@@ -1,8 +1,8 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:scrollbars="none">
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,9 +19,9 @@
             android:layout_marginBottom="10dp"
             android:layout_marginLeft="6dp"
             android:text="口感"
-            android:textSize="@dimen/font_size_primary" />
+            android:textSize="@dimen/font_size_primary"/>
 
-        <View style="@style/HorizontalLine" />
+        <View style="@style/HorizontalLine"/>
 
         <GridView
             android:id="@+id/gv_feel"
@@ -42,9 +42,9 @@
             android:layout_marginBottom="10dp"
             android:layout_marginLeft="6dp"
             android:text="瑕疵"
-            android:textSize="@dimen/font_size_primary" />
+            android:textSize="@dimen/font_size_primary"/>
 
-        <View style="@style/HorizontalLine" />
+        <View style="@style/HorizontalLine"/>
 
         <GridView
             android:id="@+id/gv_flaw"
@@ -65,9 +65,9 @@
             android:layout_marginBottom="10dp"
             android:layout_marginLeft="6dp"
             android:text="结果"
-            android:textSize="@dimen/font_size_primary" />
+            android:textSize="@dimen/font_size_primary"/>
 
-        <View style="@style/HorizontalLine" />
+        <View style="@style/HorizontalLine"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -88,7 +88,7 @@
                 app:progress_text_color="@android:color/black"
                 app:progress_text_format_pattern="@string/progress_text_format_pattern"
                 app:progress_text_size="@dimen/font_size_primary"
-                app:style="solid_line" />
+                app:style="solid_line"/>
 
             <View
                 android:layout_width="34dp"
@@ -96,7 +96,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
-                android:background="@drawable/bg_round_pricolor" />
+                android:background="@drawable/bg_round_pricolor"/>
 
             <com.dinuscxj.progressbar.CircleProgressBar
                 android:id="@+id/cpb_flaw"
@@ -109,7 +109,7 @@
                 app:progress_text_color="@android:color/black"
                 app:progress_text_format_pattern="@string/progress_text_format_pattern"
                 app:progress_text_size="@dimen/font_size_primary"
-                app:style="solid_line" />
+                app:style="solid_line"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -123,7 +123,7 @@
                     android:layout_marginBottom="2dp"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
-                    android:background="@drawable/bg_round_pricolor" />
+                    android:background="@drawable/bg_round_pricolor"/>
 
                 <View
                     android:layout_width="34dp"
@@ -132,7 +132,7 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_marginTop="2dp"
-                    android:background="@drawable/bg_round_pricolor" />
+                    android:background="@drawable/bg_round_pricolor"/>
             </LinearLayout>
 
 
@@ -147,7 +147,7 @@
                 app:progress_text_color="@android:color/black"
                 app:progress_text_format_pattern="@string/progress_text_format_pattern"
                 app:progress_text_size="@dimen/font_size_primary"
-                app:style="solid_line" />
+                app:style="solid_line"/>
 
         </LinearLayout>
 
@@ -165,7 +165,7 @@
                 android:gravity="left"
                 android:paddingLeft="10dp"
                 android:text="口感评分"
-                android:textSize="@dimen/font_size_primary" />
+                android:textSize="@dimen/font_size_primary"/>
 
             <TextView
                 android:layout_width="0dp"
@@ -173,7 +173,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="瑕疵"
-                android:textSize="@dimen/font_size_primary" />
+                android:textSize="@dimen/font_size_primary"/>
 
             <TextView
                 android:layout_width="0dp"
@@ -182,7 +182,7 @@
                 android:gravity="right"
                 android:paddingRight="10dp"
                 android:text="最终结果"
-                android:textSize="@dimen/font_size_primary" />
+                android:textSize="@dimen/font_size_primary"/>
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

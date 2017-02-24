@@ -32,7 +32,7 @@ import static android.widget.LinearLayout.LayoutParams.MATCH_PARENT;
 import static android.widget.LinearLayout.LayoutParams.WRAP_CONTENT;
 
 
-public class ReportActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener{
+public class ReportActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener {
     private TableLayout tableLayout;
     private BaseChart4Coffee mChart;
     private TextView mOperator;
@@ -42,6 +42,7 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
     private TextView mLineOperator;
     private PopupWindow popupWindow;
     private ScrollViewContainer scrollViewContainer;
+
     {
         BeanInfo beanInfo = new BeanInfo();
         beanInfo.setName("巴西黄波旁");
@@ -62,8 +63,6 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_report);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_device_activtiy);
         toolbar.setTitle("");
@@ -74,15 +73,16 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
         beanContainer.addView(beanContent.get(0));
         beanContainer.addView(beanContent.get(1));
     }
+
     private void initParam() {
         mChart = (BaseChart4Coffee) findViewById(R.id.id_baking_chart);
         mChart.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if(event.getAction() == MotionEvent.ACTION_UP){
+                if (event.getAction() == MotionEvent.ACTION_UP) {
                     scrollViewContainer.requestDisallowInterceptTouchEvent(false);
                     scrollViewContainer.setCanPullup(true);
-                }else{
+                } else {
                     scrollViewContainer.requestDisallowInterceptTouchEvent(true);
                     scrollViewContainer.setCanPullup(false);
                 }
@@ -93,8 +93,8 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
         tableLayout = (TableLayout) findViewById(R.id.id_report_table);
         beanContainer = (LinearLayout) findViewById(R.id.id_bean_container);
         beanContent = getNewInstance();
-        mLineOperator = (TextView)findViewById(R.id.id_baking_lineOperator);
-        scrollViewContainer = (ScrollViewContainer)findViewById(R.id.id_report_scrollContainer);
+        mLineOperator = (TextView) findViewById(R.id.id_baking_lineOperator);
+        scrollViewContainer = (ScrollViewContainer) findViewById(R.id.id_report_scrollContainer);
 
         mLineOperator.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -138,6 +138,7 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
         return popupWindow;
 
     }
+
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         int id = buttonView.getId();
@@ -168,6 +169,7 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
             mChart.hideLine(curIndex);
         }
     }
+
     private void init() {
         for (int i = 0; i < 40; ++i) {
             TableRow tableRow = new TableRow(this);
@@ -262,7 +264,6 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
             content[1].addView(beanHandler);
             content[1].addView(beanWaterContent);
             content[1].addView(beanManor);
-
 
 
             // 设置外linearlayout

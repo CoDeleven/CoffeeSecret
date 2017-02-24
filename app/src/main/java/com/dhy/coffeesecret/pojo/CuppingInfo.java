@@ -3,7 +3,7 @@ package com.dhy.coffeesecret.pojo;
 import java.io.Serializable;
 import java.util.Date;
 
-public class CuppingInfo implements Serializable{
+public class CuppingInfo implements Serializable {
     // id
     private int id;
     // 咖啡得分

@@ -9,11 +9,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.NumberPicker;
 import android.widget.TextView;
 
 import com.dhy.coffeesecret.R;
-import com.dhy.coffeesecret.ui.cup.listener.GridViewItemClickListener;
 
 import biz.kasual.materialnumberpicker.MaterialNumberPicker;
 
@@ -91,7 +89,7 @@ public class ItemInputFragment extends Fragment {
         mPickerSec.setValue((i / 100) % 10);
         mPickerFir.setValue(i / 1000);
 
-        if(mPosition > 7){
+        if (mPosition > 7) {
             lockPicker();
         }
     }

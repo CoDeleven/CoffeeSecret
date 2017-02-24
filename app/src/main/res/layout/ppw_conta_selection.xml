@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/white"
-    android:orientation="vertical">
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@android:color/white"
+              android:orientation="vertical">
 
     <RadioGroup
         android:layout_width="match_parent"
@@ -14,25 +14,25 @@
 
         <RadioButton
             style="@style/SelectionRadioButton"
-            android:text="场地排序" />
+            android:text="场地排序"/>
 
-        <View style="@style/HorizontalLine" />
-
-        <RadioButton
-            style="@style/SelectionRadioButton"
-            android:text="时间排序" />
-
-        <View style="@style/HorizontalLine" />
+        <View style="@style/HorizontalLine"/>
 
         <RadioButton
             style="@style/SelectionRadioButton"
-            android:text="时间排序" />
+            android:text="时间排序"/>
 
-        <View style="@style/HorizontalLine" />
+        <View style="@style/HorizontalLine"/>
 
         <RadioButton
             style="@style/SelectionRadioButton"
-            android:text="时间排序" />
+            android:text="时间排序"/>
+
+        <View style="@style/HorizontalLine"/>
+
+        <RadioButton
+            style="@style/SelectionRadioButton"
+            android:text="时间排序"/>
 
     </RadioGroup>
 

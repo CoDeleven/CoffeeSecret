@@ -1,9 +1,10 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="com.dhy.coffeesecret.ui.cup.fragment.EditToolBar">
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             tools:context="com.dhy.coffeesecret.ui.cup.fragment.EditToolBar">
+
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolBar"
         android:layout_width="match_parent"
@@ -29,7 +30,7 @@
                 android:paddingLeft="17dp"
                 android:paddingRight="17dp"
                 android:text="@string/save"
-                android:textColor="@android:color/white" />
+                android:textColor="@android:color/white"/>
 
             <TextView
                 android:id="@+id/tv"
@@ -39,7 +40,7 @@
                 android:gravity="center"
                 android:text="@string/edit_cupping"
                 android:textColor="@android:color/white"
-                android:textSize="@dimen/actionbar_title_font_size" />
+                android:textSize="@dimen/actionbar_title_font_size"/>
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
 

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/option_selector"
-    android:id="@+id/item_line_layout"
-    android:paddingLeft="@dimen/pageinfo_text_horizontal_margin"
-    android:paddingRight="@dimen/pageinfo_text_horizontal_margin">
+                android:id="@+id/item_line_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/option_selector"
+                android:paddingLeft="@dimen/pageinfo_text_horizontal_margin"
+                android:paddingRight="@dimen/pageinfo_text_horizontal_margin">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -16,11 +16,11 @@
         <TextView
             android:id="@+id/id_lines_item_name"
             style="@style/LineItemText"
-            android:layout_alignParentLeft="true" />
+            android:layout_alignParentLeft="true"/>
 
         <TextView
             android:id="@+id/id_lines_item_date"
             style="@style/LineItemText"
-            android:layout_alignParentRight="true" />
+            android:layout_alignParentRight="true"/>
     </RelativeLayout>
 </RelativeLayout>

@@ -223,7 +223,7 @@ public class BluetoothHelper {
             public void run() {
                 while (readable) {
                     setFirstChannel();
-                    while (!readNewData){
+                    while (!readNewData) {
                     }
                     try {
                         readNewData = false;
@@ -301,7 +301,7 @@ public class BluetoothHelper {
                         for (String temp : str.trim().split(",")) {
                             final Temprature temprature = new Temprature(Float.parseFloat(temp), 0, 0);
                             mDataListener.notifyDataChanged(temprature);
-                            if(isActivityDestroy){
+                            if (isActivityDestroy) {
                                 return;
                             }
                             try {
@@ -335,6 +335,14 @@ public class BluetoothHelper {
         this.mViewListener = mViewListener;
     }
 
+    public void setActivityDestroy(boolean activityDestroy) {
+        isActivityDestroy = activityDestroy;
+    }
+
+    public boolean isTestThreadAlive() {
+        return testThread != null && testThread.isAlive();
+    }
+
     public interface DeviceChangeListener {
         /**
          * 发现新设备时回调
@@ -358,13 +366,5 @@ public class BluetoothHelper {
          * 在处理UI前进行的操作
          */
         void handleViewBeforeStartRead();
-    }
-
-    public void setActivityDestroy(boolean activityDestroy) {
-        isActivityDestroy = activityDestroy;
-    }
-
-    public boolean isTestThreadAlive(){
-        return testThread != null && testThread.isAlive();
     }
 }
