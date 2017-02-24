@@ -44,14 +44,16 @@
         <item name="android:gravity">center_vertical|right</item>
         <item name="android:paddingRight">@dimen/tv_horizontal_padding</item>
     </style>
+
     <style name="ItemLayout">
-        <item name="android:orientation" >horizontal</item>
-        <item name="android:paddingLeft" >52dp</item>
-        <item name="android:layout_width" >match_parent</item>
-        <item name="android:layout_height" >wrap_content</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:paddingLeft">52dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">1px</item>
         <item name="android:background">@android:color/white</item>
     </style>
+
     <style name="ItemTextView">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
@@ -89,10 +91,10 @@
     </style>
 
     <style name="SelectionRadioButton.DrawableRound">
-        <item name="android:textColor" >@drawable/rb_font_selector</item>
+        <item name="android:textColor">@drawable/rb_font_selector</item>
         <item name="android:drawableRight">@drawable/rb_round_selector</item>
-        <item name="android:layout_marginLeft" >@dimen/view_horizontal_padding</item>
-        <item name="android:layout_marginRight" >@dimen/view_horizontal_padding</item>
+        <item name="android:layout_marginLeft">@dimen/view_horizontal_padding</item>
+        <item name="android:layout_marginRight">@dimen/view_horizontal_padding</item>
         <item name="android:paddingLeft">@dimen/view_horizontal_padding</item>
         <item name="android:paddingRight">@dimen/view_horizontal_padding</item>
         <item name="android:paddingTop">0dp</item>
@@ -104,6 +106,7 @@
         <item name="android:layout_height">1dp</item>
         <item name="android:background">@android:color/darker_gray</item>
     </style>
+
     <style name="PopupWindowAnimation" parent="android:Animation">
         <item name="android:windowEnterAnimation">@anim/popup_enter</item>
         <item name="android:windowExitAnimation">@anim/popup_exit</item>
@@ -119,8 +122,8 @@
         <item name="android:textSize">@dimen/font_size_primary</item>
         <item name="android:paddingLeft">@dimen/btn_horizontal_padding</item>
         <item name="android:paddingRight">@dimen/btn_horizontal_padding</item>
-        <item name="android:paddingTop" >0dp</item>
-        <item name="android:paddingBottom" >0dp</item>
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingBottom">0dp</item>
         <item name="android:layout_margin">2dp</item>
         <item name="android:textColor">@android:color/white</item>
     </style>
@@ -196,6 +199,26 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">13.5sp</item>
+    </style>
+
+    <style name="option_item">
+        <item name="android:clickable">true</item>
+        <item name="android:background">@drawable/option_selector</item>
+    </style>
+
+    <style name="option_item_vertical" parent="option_item">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+    <style name="option_item_horizontal" parent="option_item">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center</item>
+        <item name="android:orientation">vertical</item>
     </style>
     <style name="bakingTitle">
         <item name="android:textColor">#000</item>

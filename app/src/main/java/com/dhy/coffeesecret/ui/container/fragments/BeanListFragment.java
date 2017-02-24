@@ -114,7 +114,6 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
         beanListRecycler.addItemDecoration(new DividerDecoration(context));
 
         quickSideBarView.setOnQuickSideBarTouchListener(this);
-        mHandler.sendEmptyMessage(GET_BEAN_INFOS);
 
         refreshBeanList.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -276,6 +275,7 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
 
     public void setTitle(String title) {
         this.title = title;
+        mHandler.sendEmptyMessage(GET_BEAN_INFOS);
     }
 
     @Nullable
@@ -361,7 +361,6 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
             }
         }
     }
-
 
     public List<BeanInfo> getBeaninfoList() {
         return this.coffeeBeanInfos;

@@ -8,6 +8,8 @@ public class BeanInfo implements Serializable {
     private int id;
     //咖啡名称
     private String name;
+    //咖啡大洲
+    private String continent;
     //咖啡国别
     private String country;
     //咖啡产区
@@ -28,8 +30,6 @@ public class BeanInfo implements Serializable {
     private String handler;
     //库存重量
     private double weight;
-    //每次使用量
-    private float eachUseAmount;
     //供应商
     private String supplier;
     //价格
@@ -51,6 +51,14 @@ public class BeanInfo implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getContinent() {
+        return continent;
+    }
+
+    public void setContinent(String continent) {
+        this.continent = continent;
     }
 
     public String getCountry() {
@@ -93,6 +101,14 @@ public class BeanInfo implements Serializable {
         this.species = species;
     }
 
+    public String getOneSpecies() {
+        return oneSpecies;
+    }
+
+    public void setOneSpecies(String oneSpecies) {
+        this.oneSpecies = oneSpecies;
+    }
+
     public String getLevel() {
         return level;
     }
@@ -125,14 +141,6 @@ public class BeanInfo implements Serializable {
         this.weight = weight;
     }
 
-    public float getEachUseAmount() {
-        return eachUseAmount;
-    }
-
-    public void setEachUseAmount(float eachUseAmount) {
-        this.eachUseAmount = eachUseAmount;
-    }
-
     public String getSupplier() {
         return supplier;
     }
@@ -157,19 +165,12 @@ public class BeanInfo implements Serializable {
         this.date = date;
     }
 
-    public String getOneSpecies() {
-        return oneSpecies;
-    }
-
-    public void setOneSpecies(String oneSpecies) {
-        this.oneSpecies = oneSpecies;
-    }
-
     @Override
     public String toString() {
         return "BeanInfo{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", continent='" + continent + '\'' +
                 ", country='" + country + '\'' +
                 ", area='" + area + '\'' +
                 ", manor='" + manor + '\'' +
@@ -180,7 +181,6 @@ public class BeanInfo implements Serializable {
                 ", waterContent=" + waterContent +
                 ", handler='" + handler + '\'' +
                 ", weight=" + weight +
-                ", eachUseAmount=" + eachUseAmount +
                 ", supplier='" + supplier + '\'' +
                 ", price=" + price +
                 ", date=" + date +

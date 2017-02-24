@@ -211,6 +211,7 @@ public class EditBeanActivity extends AppCompatActivity {
         Intent intent;
         switch (view.getId()) {
             case R.id.btn_cancel:
+                setResult(RESULT_CANCELED);
                 exitToRight();
                 break;
             case R.id.btn_save:

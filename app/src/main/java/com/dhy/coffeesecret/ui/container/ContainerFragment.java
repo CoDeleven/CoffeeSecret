@@ -1,5 +1,6 @@
 package com.dhy.coffeesecret.ui.container;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,17 +19,20 @@ import android.widget.LinearLayout;
 import com.astuetz.PagerSlidingTabStrip;
 import com.dhy.coffeesecret.MainActivity;
 import com.dhy.coffeesecret.R;
+import com.dhy.coffeesecret.pojo.BeanInfo;
 import com.dhy.coffeesecret.ui.container.fragments.BeanListFragment;
 import com.dhy.coffeesecret.ui.container.fragments.SearchFragment;
+import com.dhy.coffeesecret.utils.UIUtils;
 import com.dhy.coffeesecret.views.SearchEditText;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ContainerFragment extends Fragment implements ViewPager.OnPageChangeListener{
+public class ContainerFragment extends Fragment {
 
     private static final String TAG = "ContainerFragment";
+    private static final int ADD_BEAN = 111;
     private final String[] TITLES = {"全部", "中美", "南美", "大洋", "亚洲", "非洲", "其它"};
 
     private View containerView;
@@ -40,11 +45,6 @@ public class ContainerFragment extends Fragment implements ViewPager.OnPageChang
     private Context context;
 
     public ContainerFragment() {
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -99,14 +99,13 @@ public class ContainerFragment extends Fragment implements ViewPager.OnPageChang
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, EditBeanActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, ADD_BEAN);
                 getActivity().overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
             }
         });
 
         containerPager.setOffscreenPageLimit(6);
         containerPager.setAdapter(new MyPagerAdapter(((MainActivity) context).getSupportFragmentManager()));
-        containerPager.addOnPageChangeListener(this);
         // Bind the tabs to the ViewPager
         containerTabs.setTextColor(getResources().getColor(R.color.white));
         containerTabs.setViewPager(containerPager);
@@ -120,24 +119,6 @@ public class ContainerFragment extends Fragment implements ViewPager.OnPageChang
             fragment.setTitle(TITLE);
             fragments.add(fragment);
         }
-
-    }
-
-    @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-    }
-
-    //当前page的位置
-    private int position;
-
-    @Override
-    public void onPageSelected(int position) {
-        this.position = position;
-    }
-
-    @Override
-    public void onPageScrollStateChanged(int state) {
 
     }
 
@@ -174,5 +155,25 @@ public class ContainerFragment extends Fragment implements ViewPager.OnPageChang
 
     public boolean isAddSearch() {
         return isAddSearchFragment;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (resultCode) {
+            case Activity.RESULT_OK:
+                BeanInfo beanInfo = (BeanInfo) data.getSerializableExtra("new_bean_info");
+                for (int i = 0; i < TITLES.length; i++) {
+
+                    if (TITLES[i].equals(beanInfo.getContinent())) {
+                        fragments.get(i).setTitle(TITLES[i]);
+                    }
+                }
+                break;
+            case Activity.RESULT_CANCELED:
+                break;
+            default:
+                break;
+        }
     }
 }

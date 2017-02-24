@@ -106,14 +106,16 @@ public class SearchFragment extends Fragment {
             infos = new ArrayList<>();
             infoTemp = bundle.getStringArrayList("infoList");
 
-            for (String info : infoTemp) {
-                Log.i(TAG, "initData: " + info);
+            if (infoTemp != null) {
+                for (String info : infoTemp) {
+                    Log.i(TAG, "initData: " + info);
+                }
             }
 
             infoListAdapter = new InfoListAdapter(mContext, infos, new InfoListAdapter.OnInfoListClickListener() {
                 @Override
-                public void onInfoClicked(int position) {
-                    onSearchCallBack.onSearchCallBack(infos.get(position));
+                public void onInfoClicked(String item) {
+                    onSearchCallBack.onSearchCallBack(item);
                 }
             });
         }

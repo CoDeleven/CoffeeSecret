@@ -29,6 +29,7 @@ public class DeviceFragment extends Fragment implements BluetoothHelper.DataChan
     private Button mPrepareBake;
     private boolean hasPrepared = false;
     private List<DialogBeanInfo> dialogBeanInfos;
+    private TextView titleText;
     private TextView bluetoothStatus;
     private TextView operator;
     private BluetoothHelper mHelper;
@@ -94,6 +95,7 @@ public class DeviceFragment extends Fragment implements BluetoothHelper.DataChan
     }
 
     private void init(View view) {
+        titleText = (TextView) view.findViewById(R.id.title_text);
         mPrepareBake = (Button) view.findViewById(R.id.id_device_prepare_bake);
         bluetoothStatus = (TextView) view.findViewById(R.id.bluetooth_status);
         operator = (TextView) view.findViewById(R.id.bluetooth_operator);
@@ -106,6 +108,8 @@ public class DeviceFragment extends Fragment implements BluetoothHelper.DataChan
         accBeanView = (ImageView)view.findViewById(R.id.id_bake_accBeanView);
         accInwindView = (ImageView)view.findViewById(R.id.id_bake_accInwindView);
         accOutwindView = (ImageView)view.findViewById(R.id.id_bake_accOutwindView);
+
+        titleText.setText("烘焙");
 
         operator.setOnClickListener(new View.OnClickListener() {
             @Override

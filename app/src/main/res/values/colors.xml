@@ -22,8 +22,11 @@
 
     <!--按下时的颜色-->
     <color name="color_pressed">#FFF5F5F5</color>
+    <color name="color_pressed_2">#FF895D39</color>
     <color name="press_gray">#B8B8B8</color>
 
     <color name="color_gray_c9">#C9C9C9</color>
+
+    <color name="text_mine">#110601</color>
 
 </resources>

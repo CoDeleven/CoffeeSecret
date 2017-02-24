@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.dhy.coffeesecret.R;
+import com.dhy.coffeesecret.pojo.Species;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
 
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ public class InfoListAdapter extends RecyclerView.Adapter<InfoListAdapter.InfoLi
         implements StickyRecyclerHeadersAdapter<InfoListAdapter.InfoListViewHolder> {
 
     private Context context;
-    private ArrayList<String> species;
+    private ArrayList<Species> speciesList;
     private ArrayList<String> infoList;
     private LayoutInflater mLayoutInflater;
     private OnInfoListClickListener onInfoListClickListener;
@@ -37,15 +38,15 @@ public class InfoListAdapter extends RecyclerView.Adapter<InfoListAdapter.InfoLi
 
     }
 
-    public InfoListAdapter(Context context, ArrayList<String> species, ArrayList<String> infoList, OnInfoListClickListener onInfoListClickListener) {
+    public InfoListAdapter(Context context, ArrayList<Species> speciesList, ArrayList<String> infoList, OnInfoListClickListener onInfoListClickListener) {
 
         this(context, infoList, onInfoListClickListener);
-        this.species = species;
+        this.speciesList = speciesList;
     }
 
     @Override
     public long getHeaderId(int position) {
-        return species == null ? infoList.get(position).charAt(0) : species.get(position).charAt(0);
+        return speciesList == null || speciesList.size() == 0 ? infoList.get(position).charAt(0) : speciesList.get(position).getOneSpecies().charAt(0);
     }
 
     @Override
@@ -56,14 +57,15 @@ public class InfoListAdapter extends RecyclerView.Adapter<InfoListAdapter.InfoLi
     @Override
     public void onBindHeaderViewHolder(final InfoListViewHolder holder, int position) {
         TextView letter = (TextView) holder.itemView;
-        if (species == null) {
+        if (speciesList == null || speciesList.size() == 0) {
             letter.setText(String.valueOf(infoList.get(position).charAt(0)));
         } else {
-            letter.setText(species.get(position));
+            final String headItem = speciesList.get(position).getOneSpecies();
+            letter.setText(headItem);
             letter.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onInfoListClickListener.onInfoClicked(holder.getAdapterPosition());
+                    onInfoListClickListener.onInfoClicked(headItem);
                 }
             });
         }
@@ -75,23 +77,31 @@ public class InfoListAdapter extends RecyclerView.Adapter<InfoListAdapter.InfoLi
     }
 
     @Override
-    public void onBindViewHolder(final InfoListViewHolder holder, int position) {
-        holder.infoTV.setText(infoList.get(position));
+    public void onBindViewHolder(InfoListViewHolder holder, int position) {
+        String item = "";
+        if (speciesList == null || speciesList.size() == 0) {
+            item = infoList.get(position);
+            holder.infoTV.setText(item);
+        } else {
+            item = speciesList.get(position).getSpecies();
+            holder.infoTV.setText(item);
+        }
+        final String finalItem = item;
         holder.infoLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onInfoListClickListener.onInfoClicked(holder.getAdapterPosition());
+                onInfoListClickListener.onInfoClicked(finalItem);
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        return infoList.size();
+        return speciesList == null || speciesList.size() == 0 ? infoList.size() : speciesList.size();
     }
 
     public interface OnInfoListClickListener {
-        void onInfoClicked(int position);
+        void onInfoClicked(String item);
     }
 
     class InfoListViewHolder extends RecyclerView.ViewHolder {
