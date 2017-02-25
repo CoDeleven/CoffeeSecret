@@ -50,7 +50,7 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
         beanInfo.setAltitude("1.2km-1.4km");
         beanInfo.setCountry("巴西");
         beanInfo.setArea("啦啦啦啊啊啊");
-        beanInfo.setHandler("花式");
+        beanInfo.setProcess("花式");
         beanInfo.setWaterContent(0.6f);
         beanInfo.setLevel("G99");
         beanInfo.setManor("Cancel");
@@ -226,7 +226,7 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
 
             // 设置处理方式
             TextView beanHandler = new TextView(this);
-            beanHandler.setText("处理方式：" + beanInfo.getHandler());
+            beanHandler.setText("处理方式：" + beanInfo.getProcess());
             beanHandler.setLayoutParams(temp);
 
             // 设置国家

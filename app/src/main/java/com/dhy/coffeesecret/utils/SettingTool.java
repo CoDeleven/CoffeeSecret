@@ -75,6 +75,6 @@ public class SettingTool {
         editor.putInt("accInwindColor", config.getAccInwindColor());
         editor.putInt("accOutwindColor", config.getAccOutwindColor());
 
-        editor.commit();
+        editor.apply();
     }
 }

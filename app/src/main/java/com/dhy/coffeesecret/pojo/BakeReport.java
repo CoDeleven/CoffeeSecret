@@ -1,167 +1,179 @@
 package com.dhy.coffeesecret.pojo;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
-public class BakeReport implements Serializable {
-    private int id;
-    // 烘焙报告名称
-    private String name;
-    // 烘焙师
-    private String baker;
-    // 设备
-    private String device;
-    //咖啡豆名称
-    private String beanName;
-    // 烘焙日期
-    private Date bakeDate;
-    // 熟豆重量
-    private String cookedBeanWeight;
-    // 生豆重量
-    private String rawBeanWeight;
-    // 烘焙度
-    private String roastDegree;
-    // 曲线文件路径
-    private String curveFilePath;
-    // 事件文件路径
-    private String eventFilePath;
-    // 发展时间
-    private String developmentTime;
-    // 发展率
-    private String developmentRate;
-    // 环境温度
-    private String ambientTemperature;
-    // 结束温度
-    private String endTemperature;
-    // 入豆温度
-    private String beanTemperature;
+//import com.fasterxml.jackson.annotation.JsonIgnore;
+/**
+ * @author mxf
+ * 
+ */
+public class BakeReport implements Serializable{
 
-    public Date getBakeDate() {
-        return bakeDate;
-    }
+	private int id;
+	// 烘焙报告名称
+	private String name;
+	// 设备
+	private String device;
+	// 熟豆重量
+	private String cookedBeanWeight;
+	// 生豆重量
+	private String rawBeanWeight;
+	// 烘焙度
+	private String roastDegree;
+	// 曲线文件路径
+	private String curveFilePath;
+	// 发展时间
+	private String developmentTime;
+	// 发展率
+	private String developmentRate;
+	// 环境温度
+	private String ambientTemperature;
+	// 结束温度
+	private String endTemperature;
+	// 入豆温度
+	private String beanTemperature;
+	//烘焙日期
+	private Date date;
+	//豆子缩略信息
+	private List<BeanInfoSimple> beanInfoSimples = new ArrayList<>();
 
-    public void setBakeDate(Date bakeDate) {
-        this.bakeDate = bakeDate;
-    }
+	// 用于测试单个豆种
+	{
+		beanInfoSimples.add(new BeanInfoSimple());
+	}
 
-    public String getBeanName() {
-        return beanName;
-    }
+	//不需要持久化
+//	@JsonIgnore
+	private CuppingInfo cuppingInfo;
+	
+	public int getId() {
+		return id;
+	}
 
-    public void setBeanName(String beanName) {
-        this.beanName = beanName;
-    }
+	public void setId(int id) {
+		this.id = id;
+	}
 
-    public int getId() {
-        return id;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public void setId(int id) {
-        this.id = id;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getDevice() {
+		return device;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public void setDevice(String device) {
+		this.device = device;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public String getCookedBeanWeight() {
+		return cookedBeanWeight; 
+	}
 
-    public String getBaker() {
-        return baker;
-    }
+	public void setCookedBeanWeight(String cookedBeanWeight) {
+		this.cookedBeanWeight = cookedBeanWeight;
+	}
 
-    public void setBaker(String baker) {
-        this.baker = baker;
-    }
+	public String getRawBeanWeight() {
+		return rawBeanWeight;
+	}
 
-    public String getDevice() {
-        return device;
-    }
+	public void setRawBeanWeight(String rawBeanWeight) {
+		this.rawBeanWeight = rawBeanWeight;
+	}
 
-    public void setDevice(String device) {
-        this.device = device;
-    }
+	public String getRoastDegree() {
+		return roastDegree;
+	}
 
-    public String getCookedBeanWeight() {
-        return cookedBeanWeight;
-    }
+	public void setRoastDegree(String roastDegree) {
+		this.roastDegree = roastDegree;
+	}
 
-    public void setCookedBeanWeight(String cookedBeanWeight) {
-        this.cookedBeanWeight = cookedBeanWeight;
-    }
+	public String getCurveFilePath() {
+		return curveFilePath;
+	}
 
-    public String getRawBeanWeight() {
-        return rawBeanWeight;
-    }
+	public void setCurveFilePath(String curveFilePath) {
+		this.curveFilePath = curveFilePath;
+	}
+	
+	public String getDevelopmentTime() {
+		return developmentTime;
+	}
 
-    public void setRawBeanWeight(String rawBeanWeight) {
-        this.rawBeanWeight = rawBeanWeight;
-    }
+	public void setDevelopmentTime(String developmentTime) {
+		this.developmentTime = developmentTime;
+	}
 
-    public String getRoastDegree() {
-        return roastDegree;
-    }
+	public String getDevelopmentRate() {
+		return developmentRate;
+	}
 
-    public void setRoastDegree(String roastDegree) {
-        this.roastDegree = roastDegree;
-    }
+	public void setDevelopmentRate(String developmentRate) {
+		this.developmentRate = developmentRate;
+	}
 
-    public String getCurveFilePath() {
-        return curveFilePath;
-    }
+	public String getAmbientTemperature() {
+		return ambientTemperature;
+	}
 
-    public void setCurveFilePath(String curveFilePath) {
-        this.curveFilePath = curveFilePath;
-    }
+	public void setAmbientTemperature(String ambientTemperature) {
+		this.ambientTemperature = ambientTemperature;
+	}
 
-    public String getEventFilePath() {
-        return eventFilePath;
-    }
+	public String getEndTemperature() {
+		return endTemperature;
+	}
 
-    public void setEventFilePath(String eventFilePath) {
-        this.eventFilePath = eventFilePath;
-    }
+	public void setEndTemperature(String endTemperature) {
+		this.endTemperature = endTemperature;
+	}
 
-    public String getDevelopmentTime() {
-        return developmentTime;
-    }
+	public String getBeanTemperature() {
+		return beanTemperature;
+	}
 
-    public void setDevelopmentTime(String developmentTime) {
-        this.developmentTime = developmentTime;
-    }
+	public void setBeanTemperature(String beanTemperature) {
+		this.beanTemperature = beanTemperature;
+	}
 
-    public String getDevelopmentRate() {
-        return developmentRate;
-    }
+	public CuppingInfo getCuppingInfo() {
+		return cuppingInfo;
+	}
 
-    public void setDevelopmentRate(String developmentRate) {
-        this.developmentRate = developmentRate;
-    }
+	public void setCuppingInfo(CuppingInfo cuppingInfo) {
+		this.cuppingInfo = cuppingInfo;
+	}
 
-    public String getAmbientTemperature() {
-        return ambientTemperature;
-    }
+	public List<BeanInfoSimple> getBeanInfoSimples() {
+		return beanInfoSimples;
+	}
 
-    public void setAmbientTemperature(String ambientTemperature) {
-        this.ambientTemperature = ambientTemperature;
-    }
+	public void setBeanInfoSimples(List<BeanInfoSimple> beanInfoSimples) {
+		this.beanInfoSimples = beanInfoSimples;
+	}
 
-    public String getEndTemperature() {
-        return endTemperature;
-    }
+	public Date getDate() {
+		return date;
+	}
 
-    public void setEndTemperature(String endTemperature) {
-        this.endTemperature = endTemperature;
-    }
+	public void setDate(Date date) {
+		this.date = date;
+	}
 
-    public String getBeanTemperature() {
-        return beanTemperature;
-    }
-
-    public void setBeanTemperature(String beanTemperature) {
-        this.beanTemperature = beanTemperature;
-    }
-
+	// 用于测试
+	public String getSingleBeanName(){
+		return beanInfoSimples.get(0).getBeanName();
+	}
+	// 用于测试
+	public void setSingleBeanName(String beanName){
+		beanInfoSimples.get(0).setBeanName(beanName);
+	}
 }

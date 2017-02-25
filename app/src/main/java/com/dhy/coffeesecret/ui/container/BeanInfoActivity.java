@@ -125,10 +125,10 @@ public class BeanInfoActivity extends AppCompatActivity {
         infoSpecies.setText(beanInfo.getSpecies());
         infoLevel.setText(beanInfo.getLevel());
         infoWaterContent.setText(beanInfo.getWaterContent() * 100 + "%");
-        infoHandler.setText(beanInfo.getHandler());
+        infoHandler.setText(beanInfo.getProcess());
         infoSupplier.setText(beanInfo.getSupplier());
         infoPrice.setText("" + beanInfo.getPrice());
-        infoWeight.setText(beanInfo.getWeight() + "g");
+        infoWeight.setText(beanInfo.getStockWeight() + "g");
         infoBuyDate.setText(String.format("%1$tY-%1$tm-%1$te", beanInfo.getDate()));
     }
 
@@ -143,10 +143,10 @@ public class BeanInfoActivity extends AppCompatActivity {
                 infoSpecies.setText(beanInfo.getSpecies());
                 infoLevel.setText(beanInfo.getLevel());
                 infoWaterContent.setText(beanInfo.getWaterContent() * 100 + "%");
-                infoHandler.setText(beanInfo.getHandler());
+                infoHandler.setText(beanInfo.getProcess());
                 infoSupplier.setText(beanInfo.getSupplier());
                 infoPrice.setText("" + beanInfo.getPrice());
-                infoWeight.setText(beanInfo.getWeight() + "g");
+                infoWeight.setText(beanInfo.getStockWeight() + "g");
                 infoBuyDate.setText(String.format("%1$tY-%1$tm-%1$te", beanInfo.getDate()));
                 break;
         }

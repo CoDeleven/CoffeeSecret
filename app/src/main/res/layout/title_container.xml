@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="70dp"
-              android:background="@color/colorPrimary"
-              android:gravity="center_vertical"
-              android:orientation="horizontal">
+    android:layout_width="match_parent"
+    android:layout_height="70dp"
+    android:gravity="center_vertical"
+    android:fitsSystemWindows="true"
+    android:background="@color/colorPrimary"
+    android:orientation="horizontal">
 
     <View
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"/>
+        android:layout_weight="1" />
 
     <com.dhy.coffeesecret.views.SearchEditText
         android:id="@+id/search_bean"
@@ -19,17 +20,17 @@
     </com.dhy.coffeesecret.views.SearchEditText>
 
     <LinearLayout
-        android:id="@+id/btn_add_bean"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
+        android:id="@+id/btn_add_bean"
         android:gravity="center">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@null"
-            android:src="@drawable/ic_container_add_plus"/>
+            android:src="@drawable/ic_container_add_plus" />
     </LinearLayout>
 
 </LinearLayout>

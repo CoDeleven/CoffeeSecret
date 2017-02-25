@@ -58,7 +58,7 @@ public class InputDialogFragment extends DialogFragment
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param defaultValue Parameter 2.
+     * @param defaultValue defaultValue
      * @return A new instance of fragment InputDialogFragment.
      */
     public static InputDialogFragment newInstance(boolean isSlidable, float[] defaultValue) {

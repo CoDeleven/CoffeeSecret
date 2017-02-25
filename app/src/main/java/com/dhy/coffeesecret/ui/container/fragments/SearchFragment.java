@@ -107,14 +107,16 @@ public class SearchFragment extends Fragment {
             infos = new ArrayList<>();
             infoTemp = bundle.getStringArrayList("infoList");
 
-            for (String info : infoTemp) {
-                Log.i(TAG, "initData: " + info);
+            if (infoTemp != null) {
+                for (String info : infoTemp) {
+                    Log.i(TAG, "initData: " + info);
+                }
             }
 
             infoListAdapter = new InfoListAdapter(mContext, infos, new InfoListAdapter.OnInfoListClickListener() {
                 @Override
-                public void onInfoClicked(int position) {
-                    onSearchCallBack.onSearchCallBack(infos.get(position));
+                public void onInfoClicked(String item) {
+                    onSearchCallBack.onSearchCallBack(item);
                 }
             });
         }
@@ -289,7 +291,7 @@ public class SearchFragment extends Fragment {
 
                         String bakeDate = null;
                         for (BakeReport bakeReport : activity.bakeReportTemp) {
-                            bakeDate = String.format("%1$tY-%1$tm-%1$te", bakeReport.getBakeDate());
+                            bakeDate = String.format("%1$tY-%1$tm-%1$te", bakeReport.getDate());
                             if (bakeDate.toLowerCase().contains(msgObj)) {
                                 activity.bakeReports.add(bakeReport);
                             }

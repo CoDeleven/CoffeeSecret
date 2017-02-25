@@ -12,6 +12,9 @@ import com.dhy.coffeesecret.pojo.CuppingInfo;
 import com.hedgehog.ratingbar.RatingBar;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -44,7 +47,7 @@ public class CuppingListAdapter extends RecyclerView.Adapter implements StickyRe
         CuppingViewHolder cuppingViewHolder = (CuppingViewHolder) holder;
         CuppingInfo info = cuppingInfos.get(position);
         float score = info.getScore() / 20f;
-        cuppingViewHolder.itemTitle.setText(info.getTitle());
+        cuppingViewHolder.itemTitle.setText(info.getName());
         cuppingViewHolder.ratingBar.setStar(score);
 
         cuppingViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -72,7 +75,10 @@ public class CuppingListAdapter extends RecyclerView.Adapter implements StickyRe
     @Override
     public void onBindHeaderViewHolder(RecyclerView.ViewHolder holder, int position) {
         TextView tv = (TextView) holder.itemView;
-        tv.setText(cuppingInfos.get(position).getDate().toGMTString());
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = cuppingInfos.get(position).getDate();
+        tv.setText(format.format(date));
     }
 
     @Override
@@ -93,6 +99,7 @@ public class CuppingListAdapter extends RecyclerView.Adapter implements StickyRe
             super(itemView);
             itemTitle = (TextView) itemView.findViewById(R.id.tv);
             ratingBar = (RatingBar) itemView.findViewById(R.id.rb);
+            ratingBar.setmClickable(false);
         }
     }
 

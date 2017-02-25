@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:id="@+id/activity_main"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:clipToPadding="true"
-                android:fitsSystemWindows="true"
-                tools:context="com.dhy.coffeesecret.MainActivity">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    tools:context="com.dhy.coffeesecret.MainActivity">
 
     <android.support.design.widget.TabLayout
         android:id="@+id/id_fragment_tabLayout"
@@ -17,13 +18,13 @@
         android:background="@drawable/black_border"
         app:tabIndicatorColor="@color/tab_underline"
         app:tabSelectedTextColor="@color/tab_selected"
-        app:tabTextColor="@color/tab_default"></android.support.design.widget.TabLayout>
+        app:tabTextColor="@color/tab_default" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/id_fragment_viewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/id_fragment_tabLayout"></android.support.v4.view.ViewPager>
+        android:layout_above="@id/id_fragment_tabLayout" />
 
 
 </RelativeLayout>

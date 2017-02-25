@@ -37,8 +37,8 @@ public class LineListAdapter extends RecyclerView.Adapter<LineListAdapter.LineVi
 
     @Override
     public void onBindViewHolder(final LineViewHolder holder, int position) {
-        holder.lineName.setText(reports.get(position).getBeanName());
-        holder.dateName.setText("日期:" + String.format("%1$tY-%1$tm-%1$te", reports.get(position).getBakeDate()));
+        holder.lineName.setText(reports.get(position).getSingleBeanName());
+        holder.dateName.setText("日期:" + String.format("%1$tY-%1$tm-%1$te", reports.get(position).getDate()));
         holder.lineLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

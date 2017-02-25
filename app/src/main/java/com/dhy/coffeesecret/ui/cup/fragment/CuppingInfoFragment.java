@@ -18,17 +18,21 @@ import com.dhy.coffeesecret.ui.cup.listener.GridViewItemClickListener;
 import com.dhy.coffeesecret.utils.ArrayUtil;
 import com.dinuscxj.progressbar.CircleProgressBar;
 
+import static com.dhy.coffeesecret.R.drawable.*;
 import static com.dhy.coffeesecret.ui.cup.listener.GridViewItemClickListener.FEEL_GRID;
 import static com.dhy.coffeesecret.ui.cup.listener.GridViewItemClickListener.FLAW_GRID;
 
 public class CuppingInfoFragment extends Fragment implements InputDialogFragment.OnValueChangeListener {
 
-    private static final String[] FEEL_TITLES = {"干湿度", "风味", "余韵", "酸质", "口感", "甜感", "均衡度", "整体感受"};
-    private static final int[] FEEL_ICONS = {};
+    private static final String[] FEEL_TITLES = {"干湿香", "风味", "余韵", "酸质", "口感", "甜感", "均衡度", "整体感受"};
+    private static final int[] FEEL_ICONS = {
+            ic_dry_fragrant, ic_flavor, ic_after_taste, ic_acidity,
+            ic_feel, ic_sweet, ic_balance, ic_overall
+    };
 
 
     private static final String[] FLAW_TITLES = {"发展不充分", "过度发展", "烤焙味", "自焙烫伤", "胚芽烫伤", "豆表烫伤"};
-    private static final int[] FLAW_ICONS = {};
+    private static final int[] FLAW_ICONS = {ic_underdev, ic_overdev, ic_baked, ic_scorched, ic_tipped, ic_faced};
 
     private static final int FEEL_SCORE_MAX = 100;
     private static final int FLAW_SCORE_MAX = 100;
@@ -135,11 +139,10 @@ public class CuppingInfoFragment extends Fragment implements InputDialogFragment
         if (getArguments() != null) {
             feelScores = getArguments().getFloatArray(FEEL_SCORES_ARRAY);
             flawScores = getArguments().getFloatArray(FLAW_SCORES_ARRAY);
-            System.out.println(getArguments());
         }
 
         if (feelScores == null) {
-            feelScores = new float[]{3.01f, 0, 0, 0, 0, 0, 0, 0};
+            feelScores = new float[]{0, 0, 0, 0, 0, 0, 0, 0};
             flawScores = new float[]{0, 0, 0, 0, 0, 0};
             isNewCupping = true;
         }
@@ -219,7 +222,7 @@ public class CuppingInfoFragment extends Fragment implements InputDialogFragment
             ImageView iv = (ImageView) inflate.findViewById(R.id.iv);
             TextView score = (TextView) inflate.findViewById(R.id.score);
             tv.setText(titles[i]);
-            iv.setImageDrawable(getResources().getDrawable(R.drawable.ic_container_search));
+            iv.setImageDrawable(getResources().getDrawable(icons[i]));
             score.setText(scores[i] + "");
             return inflate;
         }

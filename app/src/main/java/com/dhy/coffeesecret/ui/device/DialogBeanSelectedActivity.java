@@ -88,7 +88,6 @@ public class DialogBeanSelectedActivity extends AppCompatActivity {
         BeanInfo beanInfo = new BeanInfo();
         beanInfo.setName("巴西黄波旁");
         beanInfo.setSpecies("Bourbon");
-        beanInfo.setOneSpecies("Arabica");
         mBeanInfos.add(beanInfo);
     }
 

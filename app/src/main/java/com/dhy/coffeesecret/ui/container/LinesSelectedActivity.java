@@ -81,8 +81,8 @@ public class LinesSelectedActivity extends AppCompatActivity implements View.OnC
         List<BakeReport> reportList = new ArrayList<>();
         for (int i = 0; i < 30; ++i) {
             BakeReport report = new BakeReport();
-            report.setBeanName(i + " -> " + Math.random() * 100);
-            report.setBakeDate(new Date());
+            report.setSingleBeanName(i + " -> " + Math.random() * 100);
+            report.setDate(new Date());
             reportList.add(report);
         }
         return reportList;

@@ -1,14 +1,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical"
-              tools:context=".ui.cup.CupFragment">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.cup.CupFragment">
 
     <include
-        layout="@layout/include_title_cupping"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        layout="@layout/include_title_cupping" />
 
     <LinearLayout
         android:id="@+id/filter_header"
@@ -34,12 +34,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="中国"
-                android:textColor="@android:color/black"/>
+                android:textColor="@android:color/black" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_delta"/>
+                android:src="@drawable/ic_delta" />
         </LinearLayout>
 
 
@@ -52,24 +52,28 @@
             android:clickable="true"
             android:gravity="center_vertical|right"
             android:paddingRight="25dp">
-
             <TextView
                 android:id="@+id/textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="筛选"
-                android:textColor="@android:color/black"/>
+                android:textColor="@android:color/black" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_screen"/>
+                android:src="@drawable/ic_screen" />
         </LinearLayout>
     </LinearLayout>
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_cupping"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    </android.support.v7.widget.RecyclerView>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_cupping"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </android.support.v7.widget.RecyclerView>
+    </android.support.v4.widget.SwipeRefreshLayout>
+
 </LinearLayout>

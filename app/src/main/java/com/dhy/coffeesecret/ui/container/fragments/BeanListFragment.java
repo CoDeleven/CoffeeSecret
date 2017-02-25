@@ -52,10 +52,7 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 public class BeanListFragment extends Fragment implements OnQuickSideBarTouchListener {
 
     private static final String TAG = "BeanListFragment";
-    private static final int GET_BEAN_INFOS = 111;
-    private static final int LOADING = 222;
-    private static final int NO_LOADING = 333;
-    private static final int INIT_POPUP_WINDOW = 444;
+
     private HashMap<String, Integer> letters = new HashMap<>();
     private ArrayList<BeanInfo> coffeeBeanInfos;
     private View beanListView;
@@ -72,7 +69,6 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
     private String title = "";
     private boolean isPopupWindowShowing = false;
     private boolean isRefresh = false;
-    private Handler mHandler = new BeanListHandler(this);
 
     public BeanListFragment() {
         super();
@@ -118,7 +114,6 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
         beanListRecycler.addItemDecoration(new DividerDecoration(context));
 
         quickSideBarView.setOnQuickSideBarTouchListener(this);
-        mHandler.sendEmptyMessage(GET_BEAN_INFOS);
 
         refreshBeanList.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -280,6 +275,7 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
 
     public void setTitle(String title) {
         this.title = title;
+        mHandler.sendEmptyMessage(GET_BEAN_INFOS);
     }
 
     @Nullable
@@ -304,10 +300,12 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
         //可以自己加入动画效果渐显渐隐
         quickSideBarTipsView.setVisibility(touching ? View.VISIBLE : View.INVISIBLE);
     }
+    private static final int GET_BEAN_INFOS = 111;
+    private static final int LOADING = 222;
+    private static final int NO_LOADING = 333;
+    private static final int INIT_POPUP_WINDOW = 444;
 
-    public List<BeanInfo> getBeaninfoList() {
-        return this.coffeeBeanInfos;
-    }
+    private Handler mHandler = new BeanListHandler(this);
 
     private class BeanListHandler extends Handler {
 
@@ -362,5 +360,9 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
                     break;
             }
         }
+    }
+
+    public List<BeanInfo> getBeaninfoList() {
+        return this.coffeeBeanInfos;
     }
 }

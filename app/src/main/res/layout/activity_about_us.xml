@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_about_us"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.dhy.coffeesecret.ui.mine.AboutUsActivity">
+
+    <include layout="@layout/title_bar_back" />
+
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:id="@+id/app_icon"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="25dp"
+        android:scaleType="centerCrop"
+        android:src="@mipmap/this_year_brave"
+        app:riv_corner_radius="30dip"
+        app:riv_oval="true" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name" />
+
+        <TextView
+            android:id="@+id/about_version_code"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="7dp"
+            android:text="@string/version_code" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/about_to_score"
+        android:layout_marginTop="40.5dp"
+        style="@style/option_item_vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:text="去评分"
+            android:textColor="@color/text_mine"
+            android:textSize="14.5sp" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="14.8dp"
+        android:background="@color/color_gray_c9" />
+
+    <LinearLayout
+        android:id="@+id/about_function_introduction"
+        style="@style/option_item_vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:text="功能介绍"
+            android:textColor="@color/text_mine"
+            android:textSize="14.5sp" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="14.8dp"
+        android:background="@color/color_gray_c9" />
+
+    <LinearLayout
+        android:id="@+id/about_help"
+        style="@style/option_item_vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:text="帮助"
+            android:textColor="@color/text_mine"
+            android:textSize="14.5sp" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="14.8dp"
+        android:background="@color/color_gray_c9" />
+
+    <LinearLayout
+        android:id="@+id/about_feed_back"
+        style="@style/option_item_vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:text="意见反馈"
+            android:textColor="@color/text_mine"
+            android:textSize="14.5sp" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="14.8dp"
+        android:background="@color/color_gray_c9" />
+
+    <LinearLayout
+        android:id="@+id/about_check_update"
+        style="@style/option_item_vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:text="检查更新"
+            android:textColor="@color/text_mine"
+            android:textSize="14.5sp" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="14.8dp"
+        android:background="@color/color_gray_c9" />
+</LinearLayout>

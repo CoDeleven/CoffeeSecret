@@ -8,7 +8,7 @@ android {
         minSdkVersion 18
         targetSdkVersion 24
         versionCode 1
-        versionName "0.0.1"
+        versionName "0.8.5"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -39,6 +39,8 @@ dependencies {
     compile 'com.zhy:percent-support-extends:1.1.1'
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.bigkoo:pickerview:2.1.1'
+    compile 'com.makeramen:roundedimageview:2.3.0'
+    compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.dinuscxj:circleprogressbar:1.1.1'
     compile 'biz.kasual:materialnumberpicker:1.2.1'
     compile 'com.hedgehog.ratingbar:app:1.1.2'

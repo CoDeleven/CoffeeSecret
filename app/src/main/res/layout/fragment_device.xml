@@ -1,12 +1,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:arc="http://schemas.android.com/apk/res-auto"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/white"
-                tools:context=".ui.device.DeviceFragment">
+    xmlns:arc="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".ui.device.DeviceFragment">
 
-    <include layout="@layout/normal_title_noback"></include>
+    <include layout="@layout/normal_title_noback" />
 
     <!-- TODO: Update blank fragment layout -->
     <RelativeLayout
@@ -24,7 +24,7 @@
             android:layout_centerInParent="true"
             android:paddingLeft="48dp"
             android:paddingTop="70dp"
-            android:src="@drawable/ic_bake_conect"/>
+            android:src="@drawable/ic_bake_conect" />
 
         <RelativeLayout
             android:id="@+id/device_bake_circle1"
@@ -40,7 +40,7 @@
                 arc:rotateAngle="-90"
                 arc:secondCircleRadius="4dp"
                 arc:suffix="@string/suffix_arcProgress"
-                arc:titleValue="豆温"/>
+                arc:titleValue="豆温" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -61,7 +61,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:src="@drawable/ic_bake_bean"/>
+                        android:src="@drawable/ic_bake_bean" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -70,7 +70,7 @@
                         android:paddingLeft="10dp"
                         android:text="豆温"
                         android:textColor="#000"
-                        android:textSize="20sp"/>
+                        android:textSize="20sp" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -86,7 +86,7 @@
                         android:layout_height="wrap_content"
                         android:text="-1℃"
                         android:textColor="#000000"
-                        android:textSize="24sp"/>
+                        android:textSize="24sp" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -99,7 +99,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:src="@drawable/ic_bake_acc_invariant_big"/>
+                            android:src="@drawable/ic_bake_acc_invariant_big" />
 
                         <TextView
                             android:id="@+id/id_bake_accBeanTemp"
@@ -109,7 +109,7 @@
                             android:paddingLeft="10.125dp"
                             android:text="0"
                             android:textColor="#936743"
-                            android:textSize="19sp"/>
+                            android:textSize="19sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -118,13 +118,13 @@
                             android:paddingLeft="3dp"
                             android:text="℃/s"
                             android:textColor="#936743"
-                            android:textSize="21.375sp"/>
+                            android:textSize="21.375sp" />
                     </LinearLayout>
 
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_bake_seprator"/>
+                        android:src="@drawable/ic_bake_seprator" />
                 </LinearLayout>
 
                 <RelativeLayout
@@ -145,7 +145,7 @@
                             android:layout_height="wrap_content"
                             android:text="已连接"
                             android:textColor="#000000"
-                            android:textSize="19sp"/>
+                            android:textSize="19sp" />
                     </RelativeLayout>
 
                     <TextView
@@ -157,7 +157,7 @@
                         android:padding="10dp"
                         android:text="切换"
                         android:textColor="@color/colorPrimary"
-                        android:textSize="11sp"/>
+                        android:textSize="11sp" />
                 </RelativeLayout>
 
 
@@ -196,7 +196,7 @@
                 arc:rotateAngle="60"
                 arc:secondCircleRadius="2dp"
                 arc:suffix="@string/suffix_arcProgress"
-                arc:titleValue="入风温"/>
+                arc:titleValue="入风温" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -217,7 +217,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:src="@drawable/ic_bake_inwind"/>
+                        android:src="@drawable/ic_bake_inwind" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -226,7 +226,7 @@
                         android:paddingLeft="5dp"
                         android:text="入风温"
                         android:textColor="#000"
-                        android:textSize="11sp"/>
+                        android:textSize="11sp" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -242,7 +242,7 @@
                         android:layout_height="wrap_content"
                         android:text="-1℃"
                         android:textColor="#000000"
-                        android:textSize="13sp"/>
+                        android:textSize="13sp" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -255,7 +255,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:src="@drawable/ic_bake_acc_invariant_small"/>
+                            android:src="@drawable/ic_bake_acc_invariant_small" />
 
                         <TextView
                             android:id="@+id/id_bake_accInwindTemp"
@@ -265,7 +265,7 @@
                             android:paddingLeft="11dp"
                             android:text="0"
                             android:textColor="#936743"
-                            android:textSize="11.25sp"/>
+                            android:textSize="11.25sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -274,7 +274,7 @@
                             android:paddingLeft="3dp"
                             android:text="℃/s"
                             android:textColor="#936743"
-                            android:textSize="7.88sp"/>
+                            android:textSize="7.88sp" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -300,7 +300,7 @@
                 arc:rotateAngle="120"
                 arc:secondCircleRadius="2dp"
                 arc:suffix="@string/suffix_arcProgress"
-                arc:titleValue="出风温"/>
+                arc:titleValue="出风温" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -321,7 +321,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:src="@drawable/ic_bake_outwind"/>
+                        android:src="@drawable/ic_bake_outwind" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -330,7 +330,7 @@
                         android:paddingLeft="5dp"
                         android:text="出风温"
                         android:textColor="#000"
-                        android:textSize="11sp"/>
+                        android:textSize="11sp" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -346,7 +346,7 @@
                         android:layout_height="wrap_content"
                         android:text="-1℃"
                         android:textColor="#000000"
-                        android:textSize="13sp"/>
+                        android:textSize="13sp" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -359,7 +359,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:src="@drawable/ic_bake_acc_invariant_small"/>
+                            android:src="@drawable/ic_bake_acc_invariant_small" />
 
                         <TextView
                             android:id="@+id/id_bake_accOutwindTemp"
@@ -369,7 +369,7 @@
                             android:paddingLeft="11dp"
                             android:text="0"
                             android:textColor="#936743"
-                            android:textSize="11.25sp"/>
+                            android:textSize="11.25sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -378,7 +378,7 @@
                             android:paddingLeft="3dp"
                             android:text="℃/s"
                             android:textColor="#936743"
-                            android:textSize="7.88sp"/>
+                            android:textSize="7.88sp" />
 
                     </LinearLayout>
 
@@ -396,7 +396,7 @@
             android:layout_marginTop="15dp"
             android:background="@drawable/bg_round_pricolor"
             android:text="准备烘焙"
-            android:textColor="#FFF"/>
+            android:textColor="#FFF" />
     </RelativeLayout>
 
 

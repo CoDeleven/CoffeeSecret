@@ -18,6 +18,7 @@ import com.bigkoo.quicksidebar.QuickSideBarTipsView;
 import com.bigkoo.quicksidebar.QuickSideBarView;
 import com.bigkoo.quicksidebar.listener.OnQuickSideBarTouchListener;
 import com.dhy.coffeesecret.R;
+import com.dhy.coffeesecret.pojo.Species;
 import com.dhy.coffeesecret.ui.container.adapters.InfoListAdapter;
 import com.dhy.coffeesecret.ui.container.fragments.SearchFragment;
 import com.dhy.coffeesecret.utils.T;
@@ -63,7 +64,7 @@ public class SelectInfoActivity extends AppCompatActivity implements OnQuickSide
     private boolean isAddSearchFragment = false;
     private SearchFragment searchFragment;
     private ArrayList<String> dataList = null;
-    private ArrayList<String> species = null;
+    private ArrayList<Species> speciesList = null;
     private InfoListAdapter infoAdapter = null;
     private HashMap<String, Integer> letters = new HashMap<>();
     private SelectHandler mHandler = new SelectHandler(SelectInfoActivity.this);
@@ -76,12 +77,12 @@ public class SelectInfoActivity extends AppCompatActivity implements OnQuickSide
 
         context = SelectInfoActivity.this;
         dataList = new ArrayList<>();
-        species = new ArrayList<>();
+        speciesList = new ArrayList<>();
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-        initInfoList();
         initView();
+        initInfoList();
     }
 
     private void initInfoList() {
@@ -118,10 +119,10 @@ public class SelectInfoActivity extends AppCompatActivity implements OnQuickSide
         LinearLayoutManager manager = new LinearLayoutManager(SelectInfoActivity.this);
         manager.setOrientation(LinearLayoutManager.VERTICAL);
 
-        infoAdapter = new InfoListAdapter(context, dataList, new InfoListAdapter.OnInfoListClickListener() {
+        infoAdapter = new InfoListAdapter(context, speciesList, dataList, new InfoListAdapter.OnInfoListClickListener() {
             @Override
-            public void onInfoClicked(int position) {
-                exitToRight(dataList.get(position));
+            public void onInfoClicked(String item) {
+                exitToRight(item);
             }
         });
 
@@ -153,17 +154,30 @@ public class SelectInfoActivity extends AppCompatActivity implements OnQuickSide
     private void getDataList(int listType) {
         switch (listType) {
             case GET_COUNTRY_LIST:
+                dataList.clear();
                 Collections.addAll(dataList, TestData.beanList7);
+                infoAdapter.notifyDataSetChanged();
                 break;
             case GET_AREA_LIST:
+                dataList.clear();
                 Collections.addAll(dataList, TestData.beanList1);
+                infoAdapter.notifyDataSetChanged();
                 break;
             case GET_MANOR_LIST:
+                dataList.clear();
                 Collections.addAll(dataList, TestData.beanList2);
+                infoAdapter.notifyDataSetChanged();
                 break;
             case GET_SPECIES_LIST:
-                Collections.addAll(species, TestData.countryList7);
-                Collections.addAll(dataList, TestData.beanList4);
+                speciesList.clear();
+                for (String country : TestData.countryList1) {
+                    Species species = new Species();
+                    species.setSpecies(country);
+                    species.setOneSpecies(country);
+
+                    speciesList.add(species);
+                }
+                infoAdapter.notifyDataSetChanged();
                 break;
             default:
                 break;

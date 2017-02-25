@@ -138,10 +138,10 @@ public class EditBeanActivity extends AppCompatActivity {
         editSpecies.setText(beanInfo.getSpecies());
         editLevel.setSelection(getLevelSelection(beanInfo.getLevel()), true);
         editWaterContent.setText(beanInfo.getWaterContent() * 100 + "");
-        editHandler.setSelection(getHandlerSelection(beanInfo.getHandler()), true);
+        editHandler.setSelection(getHandlerSelection(beanInfo.getProcess()), true);
         editSupplier.setText(beanInfo.getSupplier());
         editPrice.setText(beanInfo.getPrice() + "");
-        editWeight.setText(beanInfo.getWeight() + "");
+        editWeight.setText(beanInfo.getStockWeight() + "");
         editBuyDate.setText(formatDate(beanInfo.getDate()));
 
         editLevel.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -216,6 +216,7 @@ public class EditBeanActivity extends AppCompatActivity {
         Intent intent;
         switch (view.getId()) {
             case R.id.btn_cancel:
+                setResult(RESULT_CANCELED);
                 exitToRight();
                 break;
             case R.id.btn_save:
@@ -264,10 +265,10 @@ public class EditBeanActivity extends AppCompatActivity {
         beanInfo.setSpecies(editSpecies.getText().toString());
         beanInfo.setLevel(currentLevel);
         beanInfo.setWaterContent(Float.parseFloat(editWaterContent.getText().toString()));
-        beanInfo.setHandler(currentHandler);
+        beanInfo.setProcess(currentHandler);
         beanInfo.setSupplier(editSupplier.getText().toString());
         beanInfo.setPrice(Double.parseDouble(editPrice.getText().toString()));
-        beanInfo.setWeight(Double.parseDouble(editWeight.getText().toString()));
+        beanInfo.setStockWeight(Double.parseDouble(editWeight.getText().toString()));
         beanInfo.setDate(parseDate(editBuyDate.getText().toString()));
 
         Log.i(TAG, "saveBeanInfo: " + beanInfo.toString());
