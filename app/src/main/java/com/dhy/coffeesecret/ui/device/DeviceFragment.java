@@ -1,5 +1,6 @@
 package com.dhy.coffeesecret.ui.device;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.dhy.coffeesecret.R;
@@ -22,6 +24,8 @@ import com.dhy.coffeesecret.utils.BluetoothHelper;
 import com.dhy.coffeesecret.utils.FragmentTool;
 import com.dhy.coffeesecret.utils.ObjectJsonConvert;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class DeviceFragment extends Fragment implements BluetoothHelper.DataChangeListener {
@@ -42,6 +46,16 @@ public class DeviceFragment extends Fragment implements BluetoothHelper.DataChan
     private ImageView accInwindView;
     private ImageView accOutwindView;
     private float beginTemp;
+    private boolean isStart = false;
+    private ProgressDialog dialog;
+    private float envTemp;
+    private Handler mShowHandler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            dialog = ProgressDialog.show(getContext(), "标题", "加载中，请稍后……");
+            return false;
+        }
+    });
     private Handler mHandler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
@@ -50,7 +64,7 @@ public class DeviceFragment extends Fragment implements BluetoothHelper.DataChan
             beanTemp.setText(String.format("%1$.2f", temprature.getBeanTemp()));
             // 随时保存开始烘焙的温度
             beginTemp = temprature.getBeanTemp();
-
+            envTemp = temprature.getEnvTemp();
             inwindTemp.setText(String.format("%1$.2f", temprature.getInwindTemp()));
             outwindTemp.setText(String.format("%1$.2f", temprature.getOutwindTemp()));
             accBeanTemp.setText(String.format("%1$.2f", temprature.getAccBeanTemp()));
@@ -130,13 +144,31 @@ public class DeviceFragment extends Fragment implements BluetoothHelper.DataChan
             mPrepareBake.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(getContext(), BakeActivity.class);
-                    intent.putExtra(BakeActivity.RAW_BEAN_INFO, dialogBeanInfos.toArray());
-                    intent.putExtra(BakeActivity.DEVICE_NAME, mHelper.getCurBluetoothName());
-                    intent.putExtra(BakeActivity.START_TEMP, beginTemp);
-                    startActivity(intent);
-                    mHelper.setDataListener(null);
-                    Log.e("codelevex", "卧槽，开始烘焙");
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mShowHandler.sendMessage(new Message());
+                            while(true){
+                                if(isStart){
+                                    Intent intent = new Intent(getContext(), BakeActivity.class);
+                                    intent.putExtra(BakeActivity.RAW_BEAN_INFO, dialogBeanInfos.toArray());
+                                    intent.putExtra(BakeActivity.DEVICE_NAME, mHelper.getCurBluetoothName());
+                                    intent.putExtra(BakeActivity.START_TEMP, beginTemp);
+                                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+                                    intent.putExtra(BakeActivity.BAKE_DATE, format.format(new Date()));
+                                    intent.putExtra(BakeActivity.ENV_TEMP, envTemp);
+                                    Log.e("codelevex", beginTemp + "");
+                                    if(dialog != null){
+                                        dialog.dismiss();
+                                    }
+                                    startActivity(intent);
+                                    mHelper.setDataListener(null);
+                                    Log.e("codelevex", "卧槽，开始烘焙");
+                                    break;
+                                }
+                            }
+                        }
+                    }).start();
                 }
             });
         } else {
@@ -157,9 +189,14 @@ public class DeviceFragment extends Fragment implements BluetoothHelper.DataChan
         Message message = new Message();
         Bundle bundle = new Bundle();
         bundle.putSerializable("temprature", temprature);
+        if(!isStart){
+            beginTemp = temprature.getBeanTemp();
+            isStart = true;
+        }
         message.setData(bundle);
 
         mHandler.sendMessage(message);
+
     }
 
     private void switchImage(Temprature temprature) {
@@ -187,5 +224,16 @@ public class DeviceFragment extends Fragment implements BluetoothHelper.DataChan
         } else {
             accOutwindView.setImageResource(R.drawable.ic_bake_acc_invariant_small);
         }
+    }
+
+    public void showProgressDialogInstance(){
+        dialog = new ProgressDialog(getContext());
+        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        dialog.setTitle("");
+        dialog.setIcon(null);
+        dialog.setMessage("正在处理...");
+        dialog.setCancelable(false);
+        dialog.setIndeterminate(false);
+        dialog.show();
     }
 }

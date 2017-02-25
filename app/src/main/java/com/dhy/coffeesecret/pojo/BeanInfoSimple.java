@@ -24,6 +24,24 @@ public class BeanInfoSimple implements Serializable {
 	// 使用量
 	private String usage;
 
+	public BeanInfoSimple(){
+
+	}
+
+
+	public BeanInfoSimple(BeanInfo beanInfo, String usage){
+		this.altitude = beanInfo.getAltitude();
+		this.area = beanInfo.getArea();
+		this.beanName = beanInfo.getName();
+		this.country = beanInfo.getCountry();
+		this.level = beanInfo.getLevel();
+		this.manor = beanInfo.getManor();
+		this.process = beanInfo.getProcess();
+		this.species = beanInfo.getSpecies();
+		this.usage = usage;
+		this.waterContent = beanInfo.getWaterContent() + "";
+	}
+
 	public String getBeanName() {
 		return beanName;
 	}

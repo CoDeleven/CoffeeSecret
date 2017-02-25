@@ -31,9 +31,9 @@ import java.util.Map;
 
 public class BaseChart4Coffee extends LineChart {
 
-    public final static int BEANLINE = 1, ACCBEANLINE = -1, INWINDLINE = 2, ACCINWINDLINE = -2, OUTWINDLINE = 3, ACCOUTWINDLINE = -3;
+    public final static int BEANLINE = 0, ACCBEANLINE = 1, INWINDLINE = 2, ACCINWINDLINE = 3, OUTWINDLINE = 4, ACCOUTWINDLINE = 5;
     private UniversalConfiguration mConfig;
-    private Map<Integer, String> labels = new HashMap<>();
+    private static Map<Integer, String> labels = new HashMap<>();
     private Map<Integer, ILineDataSet> lines = new HashMap<>();
     private Handler mHandler = new Handler(new Handler.Callback() {
         @Override
@@ -43,7 +43,7 @@ public class BaseChart4Coffee extends LineChart {
         }
     });
 
-    {
+    static{
         labels.put(BEANLINE, "豆温");
         labels.put(ACCBEANLINE, "豆升温");
         labels.put(INWINDLINE, "进风温");
@@ -51,6 +51,10 @@ public class BaseChart4Coffee extends LineChart {
         labels.put(OUTWINDLINE, "出风温");
         labels.put(ACCOUTWINDLINE, "出风升温");
 
+    }
+
+    public static String Integer2StringLable(int index){
+        return labels.get(index);
     }
 
     public BaseChart4Coffee(Context context) {

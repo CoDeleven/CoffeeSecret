@@ -12,6 +12,9 @@ public class XAxisFormatter4Time implements IAxisValueFormatter {
 
     @Override
     public String getFormattedValue(float value, AxisBase axis) {
+        return formatString2Time(value);
+    }
+    public static String formatString2Time(float value){
         int time = (int) value;
         int minutes = time / 60;
         int seconds = time % 60;
