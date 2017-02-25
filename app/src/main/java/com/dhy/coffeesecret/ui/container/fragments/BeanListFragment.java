@@ -126,6 +126,7 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
     private void getBeanInfos() {
 
         Log.i(TAG, "------------------开始加载豆种信息------------------");
+        T.showShort(context, "BeanInfo start load");
 
         ArrayList<BeanInfo> coffeeBeanInfoList = new ArrayList<>();
         String[] beanLists = null;
@@ -328,7 +329,6 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
 
                             try {
                                 Thread.sleep(2000);
-                                T.showShort(context, "BeanInfo start load");
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }

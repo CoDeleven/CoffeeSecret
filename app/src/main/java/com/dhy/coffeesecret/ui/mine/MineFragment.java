@@ -80,6 +80,7 @@ public class MineFragment extends Fragment {
 
     @OnClick({R.id.attention_layout, R.id.fans_layout, R.id.collection_layout, R.id.mine_my_privacy, R.id.mine_history_line, R.id.mine_settings, R.id.mine_my_device, R.id.mine_about_us})
     public void onClick(View view) {
+        Intent intent;
         switch (view.getId()) {
             case R.id.attention_layout:
                 break;
@@ -91,12 +92,14 @@ public class MineFragment extends Fragment {
                 break;
             case R.id.mine_history_line:
                 break;
-            case R.id.mine_settings:
-                break;
             case R.id.mine_my_device:
                 break;
+            case R.id.mine_settings:
+                intent = new Intent(mContext, SettingsActivity.class);
+                startActivity(intent);
+                break;
             case R.id.mine_about_us:
-                Intent intent = new Intent(mContext, AboutUsActivity.class);
+                intent = new Intent(mContext, AboutUsActivity.class);
                 startActivity(intent);
                 break;
         }

@@ -1,0 +1,88 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="226.5dp"
+    android:layout_height="226.5dp"
+    android:background="@color/white"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    tools:context="com.dhy.coffeesecret.ui.cup.fragment.ItemInputFragment">
+
+    <TextView
+        android:id="@+id/title_text"
+        android:layout_width="226.5dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@android:color/transparent"
+        android:gravity="center"
+        android:text="时间轴"
+        android:textColor="@color/text_mine"
+        android:textSize="25sp" />
+
+    <LinearLayout
+        android:layout_width="150dp"
+        android:layout_height="86dp"
+        android:background="#BDA28C"
+        android:orientation="horizontal">
+
+        <biz.kasual.materialnumberpicker.MaterialNumberPicker
+            android:id="@+id/number_hundred"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:npBackgroundColor="@android:color/transparent"
+            app:npMaxValue="9"
+            app:npMinValue="0"
+            app:npTextColor="@android:color/white"
+            app:npTextSize="33sp" />
+
+        <biz.kasual.materialnumberpicker.MaterialNumberPicker
+            android:id="@+id/number_ten"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:npBackgroundColor="@android:color/transparent"
+            app:npMaxValue="9"
+            app:npMinValue="0"
+            app:npTextColor="@android:color/white"
+            app:npTextSize="33sp" />
+
+        <biz.kasual.materialnumberpicker.MaterialNumberPicker
+            android:id="@+id/number_single"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:npBackgroundColor="@android:color/transparent"
+            app:npMaxValue="9"
+            app:npMinValue="0"
+            app:npTextColor="@android:color/white"
+            app:npTextSize="33sp" />
+
+        <TextView
+            android:id="@+id/item_unit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="5dp"
+            android:text="℃"
+            android:textColor="@android:color/white"
+            android:textSize="30sp" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_confirm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="6dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/bg_round_pricolor_click"
+        android:minHeight="20dp"
+        android:minWidth="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:text="确定"
+        android:textColor="@android:color/white"
+        android:textSize="14sp" />
+
+</LinearLayout>
