@@ -130,9 +130,17 @@ public class DevelopBar extends View {
         return "发展率: " + String.format("%1$.2f", (firstBurstTime * 100) / totalTime) + "%";
     }
 
+    public float getDevelopRateWithoutFormat(){
+        return (firstBurstTime) / totalTime;
+    }
+
     public String getDevelopTime() {
         int minutes = (int) (firstBurstTime / 60);
         int seconds = (int) (firstBurstTime % 60);
         return String.format("%1$02d", minutes) + ":" + String.format("%1$02d", seconds);
+    }
+
+    public Integer getDevelopTimeWithoutFormat(){
+        return (int)totalTime;
     }
 }

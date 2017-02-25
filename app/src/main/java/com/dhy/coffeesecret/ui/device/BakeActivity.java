@@ -5,7 +5,6 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -19,6 +18,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dhy.coffeesecret.R;
+import com.dhy.coffeesecret.pojo.BakeReportImm;
+import com.dhy.coffeesecret.pojo.DialogBeanInfo;
 import com.dhy.coffeesecret.pojo.Temprature;
 import com.dhy.coffeesecret.pojo.UniversalConfiguration;
 import com.dhy.coffeesecret.ui.device.fragments.FireWindDialog;
@@ -32,6 +33,8 @@ import com.dhy.coffeesecret.views.DevelopBar;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.Event;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -39,7 +42,11 @@ import static com.dhy.coffeesecret.views.DevelopBar.AFTER160;
 import static com.dhy.coffeesecret.views.DevelopBar.FIRST_BURST;
 import static com.dhy.coffeesecret.views.DevelopBar.RAWBEAN;
 
-public class BakeActivity extends AppCompatActivity implements BluetoothHelper.DataChangeListener, View.OnClickListener, CompoundButton.OnCheckedChangeListener, Other.OnOtherAddListener, FireWindDialog.OnFireWindAddListener{
+public class BakeActivity extends AppCompatActivity implements BluetoothHelper.DataChangeListener, View.OnClickListener, CompoundButton.OnCheckedChangeListener, Other.OnOtherAddListener, FireWindDialog.OnFireWindAddListener {
+    public static final String RAW_BEAN_INFO = "com.dhy.coffeesercret.ui.device.BakeActivity.RAW_BEAN_INFO";
+    public static final String DEVICE_NAME = "com.dhy.coffeesercret.ui.device.BakeActivity.DEVICE_NAME";
+    public static final String START_TEMP = "com.dhy.coffeesercret.ui.device.BakeActivity.START_TIME";
+    public static final String EVN_TEMP = "com.dhy.coffeesercret.ui.device.BakeActivity.EVN_TEMP";
     private BaseChart4Coffee chart;
     private TextView lineOperator;
     private PopupWindow popupWindow;
@@ -55,7 +62,7 @@ public class BakeActivity extends AppCompatActivity implements BluetoothHelper.D
     private Button mEnd;
     private Button mFireWind;
     private Button mOther;
-
+    private float endTemp;
     private Event curEvent;
     private boolean enableDoubleConfirm;
     private boolean isDoubleClick;
@@ -159,6 +166,7 @@ public class BakeActivity extends AppCompatActivity implements BluetoothHelper.D
         float accBeanTemp = temprature.getAccBeanTemp();
         float accInwindTemp = temprature.getAccInwindTemp();
         float accOutwindTemp = temprature.getAccOutwindTemp();
+        endTemp = beanTemp;
         Entry beanEntry = new Entry(count, beanTemp);
 
         if (beanTemp > 160 && isOverBottom && curStatus != FIRST_BURST) {
@@ -439,4 +447,38 @@ public class BakeActivity extends AppCompatActivity implements BluetoothHelper.D
         isReading = false;
     }
 
+    private BakeReportImm generateReport() {
+        Intent intent = getIntent();
+        String deviceName = intent.getStringExtra(DEVICE_NAME);
+        DialogBeanInfo[] beanInfos = (DialogBeanInfo[]) intent.getSerializableExtra(RAW_BEAN_INFO);
+        float startTemp = intent.getFloatExtra(START_TEMP, -1);
+        float evnTemp = intent.getFloatExtra(EVN_TEMP, -1);
+
+        BakeReportImm bakeReportImm = new BakeReportImm();
+
+        Map<Integer, Float> rawBeanWeight = new HashMap<>();
+        for (DialogBeanInfo dialogBeanInfo : beanInfos) {
+            rawBeanWeight.put(dialogBeanInfo.getBeanInfo().getId(), dialogBeanInfo.getWeight());
+        }
+        bakeReportImm.setDevice(deviceName);
+
+        bakeReportImm.setRawBeanWeight(rawBeanWeight);
+
+        bakeReportImm.setDevelopTime(developBar.getDevelopTimeWithoutFormat());
+
+        bakeReportImm.setTempratures(chart.getLineData());
+
+        bakeReportImm.setDevelopRate(developBar.getDevelopRateWithoutFormat());
+
+        bakeReportImm.setStartTemp(startTemp);
+
+        bakeReportImm.setEndTemp(endTemp);
+
+        bakeReportImm.setEnvTemp(evnTemp);
+
+        // 这里使用默认的
+        bakeReportImm.setBaker("Admin");
+
+        return bakeReportImm;
+    }
 }

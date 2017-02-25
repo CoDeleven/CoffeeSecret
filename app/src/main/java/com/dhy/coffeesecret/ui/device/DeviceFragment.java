@@ -20,6 +20,7 @@ import com.dhy.coffeesecret.ui.device.fragments.BakeDialog;
 import com.dhy.coffeesecret.ui.mine.BluetoothListActivity;
 import com.dhy.coffeesecret.utils.BluetoothHelper;
 import com.dhy.coffeesecret.utils.FragmentTool;
+import com.dhy.coffeesecret.utils.ObjectJsonConvert;
 
 import java.util.List;
 
@@ -39,13 +40,16 @@ public class DeviceFragment extends Fragment implements BluetoothHelper.DataChan
     private ImageView accBeanView;
     private ImageView accInwindView;
     private ImageView accOutwindView;
-    private int count = 0;
+    private float beginTemp;
     private Handler mHandler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
             Bundle bundle = msg.getData();
             Temprature temprature = (Temprature) bundle.getSerializable("temprature");
             beanTemp.setText(String.format("%1$.2f", temprature.getBeanTemp()));
+            // 随时保存开始烘焙的温度
+            beginTemp = temprature.getBeanTemp();
+
             inwindTemp.setText(String.format("%1$.2f", temprature.getInwindTemp()));
             outwindTemp.setText(String.format("%1$.2f", temprature.getOutwindTemp()));
             accBeanTemp.setText(String.format("%1$.2f", temprature.getAccBeanTemp()));
@@ -123,6 +127,9 @@ public class DeviceFragment extends Fragment implements BluetoothHelper.DataChan
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(getContext(), BakeActivity.class);
+                    intent.putExtra(BakeActivity.RAW_BEAN_INFO, dialogBeanInfos.toArray());
+                    intent.putExtra(BakeActivity.DEVICE_NAME, mHelper.getCurBluetoothName());
+                    intent.putExtra(BakeActivity.START_TEMP, beginTemp);
                     startActivity(intent);
                     mHelper.setDataListener(null);
                     Log.e("codelevex", "卧槽，开始烘焙");

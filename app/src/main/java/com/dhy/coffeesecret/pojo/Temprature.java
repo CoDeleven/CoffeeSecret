@@ -14,7 +14,7 @@ public class Temprature implements Serializable {
     private float accBeanTemp;
     private float accInwindTemp;
     private float accOutwindTemp;
-
+    private float envTemp;
     public Temprature() {
 
     }
@@ -31,9 +31,12 @@ public class Temprature implements Serializable {
         float beanTemp = Float.parseFloat(subStr[4]);
         float inwindTemp = Float.parseFloat(subStr[1]);
         float outwindTemp = Float.parseFloat(subStr[2]);
+
         temp.setBeanTemp(beanTemp);
         temp.setInwindTemp(inwindTemp);
         temp.setOutwindTemp(outwindTemp);
+        temp.setEnvTemp(Float.parseFloat(subStr[0]));
+
         if (lastTemprature != null) {
             temp.setAccBeanTemp(beanTemp - lastTemprature.getBeanTemp());
             temp.setAccInwindTemp(inwindTemp - lastTemprature.getInwindTemp());
@@ -89,5 +92,13 @@ public class Temprature implements Serializable {
 
     public void setAccOutwindTemp(float accOutwindTemp) {
         this.accOutwindTemp = accOutwindTemp;
+    }
+
+    public float getEnvTemp() {
+        return envTemp;
+    }
+
+    public void setEnvTemp(float envTemp) {
+        this.envTemp = envTemp;
     }
 }

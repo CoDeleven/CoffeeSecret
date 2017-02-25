@@ -35,6 +35,8 @@
         </activity>
         <activity android:name=".ui.device.ReportActivity">
         </activity>
+        <activity android:name=".ui.device.EditBehindActiviy">
+        </activity>
     </application>
 
 </manifest>

@@ -59,6 +59,9 @@ public class BluetoothHelper {
         }
     };
 
+    public String getCurBluetoothName(){
+        return mCurDevice.getName();
+    }
     private BluetoothGattCallback mGattCallback = new BluetoothGattCallback() {
         @Override
         public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {

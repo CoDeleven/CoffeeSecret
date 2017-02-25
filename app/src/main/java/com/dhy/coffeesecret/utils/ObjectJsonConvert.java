@@ -1,68 +1,35 @@
 package com.dhy.coffeesecret.utils;
 
-import android.util.JsonReader;
-
-import com.dhy.coffeesecret.pojo.BakeReport;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
+import com.dhy.coffeesecret.pojo.BakeReportImm;
+import com.google.gson.Gson;
 
 /**
  * Created by CoDeleven on 17-2-9.
  */
 
 public class ObjectJsonConvert {
-    public static JSONObject bakereport2Json(BakeReport report) {
-        JSONObject jsonObject = new JSONObject();
-        String curveFilePath = report.getCurveFilePath();
-        String eventFilePath = report.getEventFilePath();
-        File file = new File(curveFilePath, report.getName());
-        List<Double> beanTemprature = new ArrayList<>();
-        try {
-            InputStreamReader isr = new InputStreamReader(new FileInputStream(file));
-            JsonReader jsonReader = new JsonReader(isr);
-            jsonReader.beginObject();
-            String name = jsonReader.nextName();
-            if ("beanTemp".equals(name)) {
-                jsonReader.beginArray();
-                while (jsonReader.hasNext()) {
-                    beanTemprature.add(jsonReader.nextDouble());
-                }
-            }
-            jsonReader.endArray();
-            jsonReader.endObject();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+    public static String bakereport2Json(BakeReportImm imm) {
+/*        BakeReportImm imm = new BakeReportImm();
+        imm.setBaker("gg");
+        imm.setCookedBeanWeight(320);
+        imm.setDevelopRate(0.3f);
+        imm.setDevice("lala");
+        imm.setDevelopTime(300);
+        imm.setStartTemp(160);
+        imm.setEndTemp(230);
+        imm.setEnvTemp(26);
+        Map<Integer, Long> maps = new HashMap<Integer, Long>();
+        maps.put(1, 360L);
+        maps.put(2, 720L);
+        imm.setRawBeanWeight(maps);
+        LineData line = new LineData();
+        for (int i = 0; i < 5; ++i) {
+            line.addDataSet(new LineDataSet(Arrays.asList(new Entry(1, 1)), "haha:" + i));
         }
+        imm.setTempratures(line);*/
 
-        try {
-            jsonObject.put("name", report.getName());
-            jsonObject.put("baker", report.getBaker());
-            jsonObject.put("device", report.getDevice());
-            jsonObject.put("beanName", report.getBeanName());
-            jsonObject.put("cookedBeanWeight", report.getCookedBeanWeight());
-            jsonObject.put("rawBeanWeight", report.getRawBeanWeight());
-            jsonObject.put("roastDegree", report.getRoastDegree());
-            jsonObject.put("developmentTime", report.getDevelopmentTime());
-            jsonObject.put("developmentRate", report.getDevelopmentRate());
-            jsonObject.put("ambientTemperature", report.getAmbientTemperature());
-            jsonObject.put("endTemperature", report.getEndTemperature());
-            jsonObject.put("beanTemperature", report.getBeanTemperature());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-
-        return jsonObject;
+        String jsonStr = new Gson().toJson(imm);
+        return jsonStr;
     }
+
 }

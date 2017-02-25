@@ -16,6 +16,10 @@ import com.github.mikephil.charting.utils.Utils;
 public class Entry extends BaseEntry implements Parcelable {
 
     public Event getEvent() {
+        if(event == null){
+            event = new Event(Event.OTHER);
+            event.setDescription("");
+        }
         return event;
     }
 
