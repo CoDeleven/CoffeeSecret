@@ -1,189 +1,213 @@
 package com.dhy.coffeesecret.pojo;
 
-
-import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
-public class BeanInfo implements Serializable {
-    private int id;
-    //咖啡名称
-    private String name;
-    //咖啡大洲
-    private String continent;
-    //咖啡国别
-    private String country;
-    //咖啡产区
-    private String area;
-    //咖啡庄园
-    private String manor;
-    //产地海拔
-    private String altitude;
-    //咖啡种属
-    private String species;
-    //咖啡大类
-    private String oneSpecies;
-    //咖啡等级
-    private String level;
-    //含水量
-    private float waterContent;
-    //处理方式
-    private String handler;
-    //库存重量
-    private double weight;
-    //供应商
-    private String supplier;
-    //价格
-    private double price;
-    //购买日期
-    private Date date;
+public class BeanInfo {
 
-    public int getId() {
-        return id;
-    }
+	private int id;
+	// ��������
+	private String name;
+	// ����ׯ԰
+	private String manor;
+	// ͼƬ·��
+	private String drawablePath;
+	// �������
+	private double stockWeight;
+	// ���ȹ���
+	private String country;
+	// ���Ȳ���
+	private String area;
+	// ���غ���
+	private String altitude;
+	// ��������
+	private String species;
+	// ���ȵȼ�
+	private String level;
+	// ����ʽ
+	private String process;
+	// ��ˮ��
+	private float waterContent;
+	// ��Ӧ��
+	private String supplier;
+	// �۸�
+	private double price;
+	// ��������
+	private Date date;
+	
+	//����
+	private String continent;
+	
+	// ����Ҫ�־û�
+	private List<BakeReport> bakeReports;
+	
+	// �Ƿ��к決����
+	private boolean hasBakeReports;
 
-    public void setId(int id) {
-        this.id = id;
-    }
+	public int getId() {
+		return id;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public void setId(int id) {
+		this.id = id;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public String getContinent() {
-        return continent;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public void setContinent(String continent) {
-        this.continent = continent;
-    }
+	public String getCountry() {
+		return country;
+	}
 
-    public String getCountry() {
-        return country;
-    }
+	public void setCountry(String country) {
+		this.country = country;
+	}
 
-    public void setCountry(String country) {
-        this.country = country;
-    }
+	public String getArea() {
+		return area;
+	}
 
-    public String getArea() {
-        return area;
-    }
+	public void setArea(String area) {
+		this.area = area;
+	}
 
-    public void setArea(String area) {
-        this.area = area;
-    }
+	public String getManor() {
+		return manor;
+	}
 
-    public String getManor() {
-        return manor;
-    }
+	public void setManor(String manor) {
+		this.manor = manor;
+	}
 
-    public void setManor(String manor) {
-        this.manor = manor;
-    }
+	public String getAltitude() {
+		return altitude;
+	}
 
-    public String getAltitude() {
-        return altitude;
-    }
+	public void setAltitude(String altitude) {
+		this.altitude = altitude;
+	}
 
-    public void setAltitude(String altitude) {
-        this.altitude = altitude;
-    }
+	public String getSpecies() {
+		return species;
+	}
 
-    public String getSpecies() {
-        return species;
-    }
+	public void setSpecies(String species) {
+		this.species = species;
+	}
 
-    public void setSpecies(String species) {
-        this.species = species;
-    }
+	public String getLevel() {
+		return level;
+	}
 
-    public String getOneSpecies() {
-        return oneSpecies;
-    }
+	public void setLevel(String level) {
+		this.level = level;
+	}
 
-    public void setOneSpecies(String oneSpecies) {
-        this.oneSpecies = oneSpecies;
-    }
+	public String getProcess() {
+		return process;
+	}
 
-    public String getLevel() {
-        return level;
-    }
+	public void setProcess(String process) {
+		this.process = process;
+	}
 
-    public void setLevel(String level) {
-        this.level = level;
-    }
+	public double getStockWeight() {
+		return stockWeight;
+	}
 
-    public float getWaterContent() {
-        return waterContent;
-    }
+	public void setStockWeight(double stockWeight) {
+		this.stockWeight = stockWeight;
+	}
+	public float getWaterContent() {
+		return waterContent;
+	}
 
-    public void setWaterContent(float waterContent) {
-        this.waterContent = waterContent;
-    }
+	public void setWaterContent(float waterContent) {
+		this.waterContent = waterContent;
+	}
 
-    public String getHandler() {
-        return handler;
-    }
+	public String getSupplier() {
+		return supplier;
+	}
 
-    public void setHandler(String handler) {
-        this.handler = handler;
-    }
+	public void setSupplier(String supplier) {
+		this.supplier = supplier;
+	}
 
-    public double getWeight() {
-        return weight;
-    }
+	public double getPrice() {
+		return price;
+	}
 
-    public void setWeight(double weight) {
-        this.weight = weight;
-    }
+	public void setPrice(double price) {
+		this.price = price;
+	}
 
-    public String getSupplier() {
-        return supplier;
-    }
+	public Date getDate() {
+		return date;
+	}
 
-    public void setSupplier(String supplier) {
-        this.supplier = supplier;
-    }
+	public void setDate(Date date) {
+		this.date = date;
+	}
 
-    public double getPrice() {
-        return price;
-    }
+	public List<BakeReport> getBakeReports() {
+		return bakeReports;
+	}
 
-    public void setPrice(double price) {
-        this.price = price;
-    }
+	@Deprecated
+	public void setBakeReports(List<BakeReport> bakeReports) {
+		this.bakeReports = bakeReports;
+	}
 
-    public Date getDate() {
-        return date;
-    }
+	public void addBakeReport(BakeReport bakeReport) {
+		if (bakeReport != null) {
+			if (bakeReports == null) {
+				bakeReports = new ArrayList<>();
+			}
+			bakeReports.add(bakeReport);
+		}
+	}
 
-    public void setDate(Date date) {
-        this.date = date;
-    }
+	public void removeBakeReport(BakeReport bakeReport) {
+		if (bakeReport != null) {
+			if (bakeReports == null) {
+				bakeReports = new ArrayList<>();
+			}
 
-    @Override
-    public String toString() {
-        return "BeanInfo{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", continent='" + continent + '\'' +
-                ", country='" + country + '\'' +
-                ", area='" + area + '\'' +
-                ", manor='" + manor + '\'' +
-                ", altitude='" + altitude + '\'' +
-                ", species='" + species + '\'' +
-                ", oneSpecies='" + oneSpecies + '\'' +
-                ", level='" + level + '\'' +
-                ", waterContent=" + waterContent +
-                ", handler='" + handler + '\'' +
-                ", weight=" + weight +
-                ", supplier='" + supplier + '\'' +
-                ", price=" + price +
-                ", date=" + date +
-                '}';
-    }
+			if (bakeReports.contains(bakeReport)) {
+				bakeReports.remove(bakeReport);
+			}
+		}
+	}
+
+	public String getDrawablePath() {
+		return drawablePath;
+	}
+
+	public void setDrawablePath(String drawablePath) {
+		this.drawablePath = drawablePath;
+	}
+
+	public String getContinent() {
+		return continent;
+	}
+
+	public void setContinent(String continent) {
+		this.continent = continent;
+	}
+
+	public boolean isHasBakeReports() {
+		return hasBakeReports;
+	}
+
+	public void setHasBakeReports(boolean hasBakeReports) {
+		this.hasBakeReports = hasBakeReports;
+	}
+
 }
