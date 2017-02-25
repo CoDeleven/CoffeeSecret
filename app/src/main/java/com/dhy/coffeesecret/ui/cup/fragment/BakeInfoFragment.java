@@ -17,19 +17,33 @@ import com.andexert.expandablelayout.library.ExpandableLayout;
 import com.andexert.expandablelayout.library.ExpandableLayoutItem;
 import com.andexert.expandablelayout.library.ExpandableLayoutListView;
 import com.dhy.coffeesecret.R;
+import com.dhy.coffeesecret.pojo.BakeReport;
 
 public class BakeInfoFragment extends Fragment {
 
-
+    public final static String TARGET = "target";
     private View mView;
     private ExpandableLayoutListView mListView;
+    private BakeReport mBakeReport;
 
     public BakeInfoFragment() {
+
+    }
+
+    public static BakeInfoFragment newInstance(BakeReport report){
+        BakeInfoFragment fragment = new BakeInfoFragment();
+        Bundle args = new Bundle();
+        args.putSerializable(TARGET,report);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mBakeReport = (BakeReport) getArguments().getSerializable(TARGET);
+        }
     }
 
     @Override
@@ -48,7 +62,7 @@ public class BakeInfoFragment extends Fragment {
         mListView.setAdapter(new BaseAdapter() {
             @Override
             public int getCount() {
-                return 2;
+                return mBakeReport.getBeanInfoSimples().size();
             }
 
             @Override
@@ -64,6 +78,7 @@ public class BakeInfoFragment extends Fragment {
             @Override
             public View getView(int i, View view, ViewGroup viewGroup) {
                 View inflate = LayoutInflater.from(getActivity()).inflate(R.layout.expande_item, viewGroup, false);
+                // TODO: 2017/2/25 烘焙报告里的豆种信息填充到列表中
                 if (i == 0){
                     ExpandableLayoutItem layout =
                             (ExpandableLayoutItem) inflate.findViewById(R.id.eli);

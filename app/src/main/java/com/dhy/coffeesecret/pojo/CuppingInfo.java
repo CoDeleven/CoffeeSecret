@@ -1,42 +1,47 @@
 package com.dhy.coffeesecret.pojo;
 
-public class CuppingInfo {
+import java.io.Serializable;
+import java.util.Date;
+
+public class CuppingInfo implements Serializable {
 	// id
 	private int id;
 
 	private String name;
-	// ���ȵ÷�
+	// 咖啡得分
 	private int score;
-	// �決覴�
+	// 烘焙瑕疵
 	private int flaw;
-	// ��ʪ��
+	// 干湿香
 	private int dryAndFragrant;
-	// ��ζ
+	// 风味
 	private int flavor;
-	// ����
+	// 余韵
 	private int afterTaste;
-	// ����
+	// 酸质
 	private int acidity;
-	// �ڸ�
+	// 口感
 	private int taste;
-	// ���
+	// 甜度
 	private int sweetness;
-	// ����
+	// 均衡
 	private int balance;
-	// �����
+	// 整体感
 	private int overall;
-	// ��չ�����
+	// 发展不充分
 	private int underdevelopment;
-	// ��չ����
+	// 发展过度
 	private int overdevelopment;
-	// �決ζ��
+	// 烘焙味道
 	private int baked;
-	// �Ա�����
+	// 自焙烫伤
 	private int scorched;
-	// ��ѿ����
+	// 胚芽烫伤
 	private int tipped;
-	// ��������
+	// 豆表烫伤
 	private int faced;
+
+	private Date date;
 
 	private BakeReport bakeReport;
 
@@ -191,5 +196,13 @@ public class CuppingInfo {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public Date getDate() {
+		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
 	}
 }

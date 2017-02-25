@@ -1,48 +1,49 @@
 package com.dhy.coffeesecret.pojo;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class BeanInfo {
+public class BeanInfo implements Serializable {
 
 	private int id;
-	// ��������
+	// 咖啡名称
 	private String name;
-	// ����ׯ԰
+	// 咖啡庄园
 	private String manor;
-	// ͼƬ·��
+	// 图片路径
 	private String drawablePath;
-	// �������
+	// 库存重量
 	private double stockWeight;
-	// ���ȹ���
+	// 咖啡国别
 	private String country;
-	// ���Ȳ���
+	// 咖啡产区
 	private String area;
-	// ���غ���
+	// 产地海拔
 	private String altitude;
-	// ��������
+	// 咖啡种属
 	private String species;
-	// ���ȵȼ�
+	// 咖啡等级
 	private String level;
-	// ����ʽ
+	// 处理方式
 	private String process;
-	// ��ˮ��
+	// 含水量
 	private float waterContent;
-	// ��Ӧ��
+	// 供应商
 	private String supplier;
-	// �۸�
+	// 价格
 	private double price;
-	// ��������
+	// 购买日期
 	private Date date;
-	
-	//����
+
+	//大洲
 	private String continent;
-	
-	// ����Ҫ�־û�
+
+	// 不需要持久化
 	private List<BakeReport> bakeReports;
-	
-	// �Ƿ��к決����
+
+	// 是否有烘焙报告
 	private boolean hasBakeReports;
 
 	public int getId() {

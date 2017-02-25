@@ -1,25 +1,27 @@
 package com.dhy.coffeesecret.pojo;
 
-public class BeanInfoSimple {
+import java.io.Serializable;
+
+public class BeanInfoSimple implements Serializable {
 
 	private String beanName;
-	// ����
+	// 豆种
 	private String species;
-	// ���ȹ���
+	// 咖啡国别
 	private String country;
-	// ���ȵȼ�
+	// 咖啡等级
 	private String level;
-	// ���Ȳ���
+	// 咖啡产区
 	private String area;
-	// ���غ���
+	// 产地海拔
 	private String altitude;
-	// ����ׯ԰
+	// 咖啡庄园
 	private String manor;
-	// ����ʽ
+	// 处理方式
 	private String process;
-	// ��ˮ��
+	// 含水量
 	private String waterContent;
-	// ʹ����
+	// 使用量
 	private String usage;
 
 	public String getBeanName() {

@@ -1,5 +1,7 @@
 package com.dhy.coffeesecret.pojo;
 
+import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 //import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -7,36 +9,37 @@ import java.util.List;
  * @author mxf
  * 
  */
-public class BakeReport {
-	
+public class BakeReport implements Serializable{
+
 	private int id;
-	// �決��������
+	// 烘焙报告名称
 	private String name;
-	// �豸
+	// 设备
 	private String device;
-	// �춹����
+	// 熟豆重量
 	private String cookedBeanWeight;
-	// ��������
+	// 生豆重量
 	private String rawBeanWeight;
-	// �決��
+	// 烘焙度
 	private String roastDegree;
-	// �����ļ�·��
+	// 曲线文件路径
 	private String curveFilePath;
-	// ��չʱ��
+	// 发展时间
 	private String developmentTime;
-	// ��չ��
+	// 发展率
 	private String developmentRate;
-	// �����¶�
+	// 环境温度
 	private String ambientTemperature;
-	// �����¶�
+	// 结束温度
 	private String endTemperature;
-	// �붹�¶�
+	// 入豆温度
 	private String beanTemperature;
-	
-	//����������Ϣ
+	//烘焙日期
+	private Date date;
+	//豆子缩略信息
 	private List<BeanInfoSimple> beanInfoSimples;
-	//����Ҫ�־û�
-	//@JsonIgnore
+	//不需要持久化
+//	@JsonIgnore
 	private CuppingInfo cuppingInfo;
 	
 	public int getId() {
@@ -150,4 +153,11 @@ public class BakeReport {
 		this.beanInfoSimples = beanInfoSimples;
 	}
 
+	public Date getDate() {
+		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
+	}
 }

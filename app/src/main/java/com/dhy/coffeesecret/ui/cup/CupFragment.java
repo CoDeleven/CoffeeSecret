@@ -148,7 +148,7 @@ public class CupFragment extends Fragment {
         // TODO: 2017/2/23  加载数据
         for (int i = 0; i < 20; i++) {
             CuppingInfo cuppingInfo = new CuppingInfo();
-            cuppingInfo.setTitle("mxf---"+i);
+            cuppingInfo.setName("mxf---"+i);
             cuppingInfo.setScore((60+5*i)%100);
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
             try {

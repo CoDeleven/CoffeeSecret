@@ -1,10 +1,12 @@
 package com.dhy.coffeesecret.pojo;
 
+import java.io.Serializable;
+
 /**
  * Created by CoDeleven on 17-2-19.
  */
 
-public class DialogBeanInfo {
+public class DialogBeanInfo implements Serializable {
     private BeanInfo beanInfo;
     private float weight;
 
