@@ -3,12 +3,16 @@ package com.dhy.coffeesecret.ui.device;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BakeReportImm;
+import com.dhy.coffeesecret.pojo.BakeReportImmBeanFactory;
 import com.dhy.coffeesecret.utils.ObjectJsonConvert;
 import com.dhy.coffeesecret.views.CircleSeekBar;
 import com.dhy.coffeesecret.views.WheelView;
@@ -44,7 +48,8 @@ public class EditBehindActiviy extends AppCompatActivity {
     EditText cookedWeight;
     private List<String> content = new ArrayList<>();
     private List<Entry> entries = new ArrayList<>();
-
+    private int lastIndex = 1;
+    private String lastIndexString = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,36 +59,49 @@ public class EditBehindActiviy extends AppCompatActivity {
         init();
         editText.setText(entries.get(0).getEvent().getDescription());
         wheelView.setItems(content);
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                int temp = wheelView.getSeletedIndex();
+                entries.get(temp).getEvent().setDescription(s.toString());
+            }
+        });
         wheelView.setOnWheelViewListener(new WheelView.OnWheelViewListener() {
             @Override
-            public void onSelected(int selectedIndex, String item) {
+            public void onSelected(final int selectedIndex, String item) {
                 String eventDescriptor = entries.get(selectedIndex - 1).getEvent().getDescription();
                 editText.setText(eventDescriptor);
             }
         });
+
     }
 
     private void init() {
-        Intent intent = getIntent();
-        Object[] objs = (Object[])intent.getSerializableExtra(BEAN_EVENTS);
-        for(Object obj : objs){
-            Entry entry = (Entry)obj;
+        entries = BakeReportImmBeanFactory.getBakeReportImm().getEntriesWithEvents();
+        for(Entry entry : entries){
             int time = (int) entry.getX();
             int minutes = time / 60;
             int seconds = time % 60;
             content.add(String.format("%1$02d", minutes) + ":" + String.format("%1$02d", seconds));
-            entries.add(entry);
         }
     }
     @OnClick(R.id.id_bake_behind_save)
     protected void onSave(){
-        Intent intent = getIntent();
-        BakeReportImm imm = (BakeReportImm)intent.getSerializableExtra(BAKE_REPORT);
+        BakeReportImm imm = BakeReportImmBeanFactory.getBakeReportImm();
         imm.setCookedBeanWeight(Float.parseFloat(cookedWeight.getText().toString()));
-        sendJsonData(imm);
         imm.setBakeDegree(mSeekBar.getCurProcess());
         Intent other = new Intent(this, ReportActivity.class);
-        other.putExtra(ReportActivity.REPORT_FINAL, imm);
+        sendJsonData(imm);
         startActivity(other);
         finish();
     }

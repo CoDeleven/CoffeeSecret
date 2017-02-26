@@ -14,12 +14,14 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BakeReportImm;
+import com.dhy.coffeesecret.pojo.BakeReportImmBeanFactory;
 import com.dhy.coffeesecret.pojo.BeanInfo;
 import com.dhy.coffeesecret.pojo.BeanInfoSimple;
 import com.dhy.coffeesecret.ui.device.formatter.XAxisFormatter4Time;
@@ -87,15 +89,17 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
                     scrollViewContainer.requestDisallowInterceptTouchEvent(false);
+                    ((ScrollView)scrollViewContainer.getChildAt(0)).requestDisallowInterceptTouchEvent(false);
                     scrollViewContainer.setCanPullup(true);
                 } else {
                     scrollViewContainer.requestDisallowInterceptTouchEvent(true);
+                    ((ScrollView)scrollViewContainer.getChildAt(0)).requestDisallowInterceptTouchEvent(true);
                     scrollViewContainer.setCanPullup(false);
                 }
                 return false;
             }
         });
-        imm = (BakeReportImm)getIntent().getSerializableExtra(REPORT_FINAL);
+        imm = BakeReportImmBeanFactory.getBakeReportImm();
         envTemp.setText("环境温度:" + imm.getEnvTemp());
         startTemp.setText("入豆温度:" + imm.getStartTemp());
         endTemp.setText("结束温度:" + imm.getEndTemp());

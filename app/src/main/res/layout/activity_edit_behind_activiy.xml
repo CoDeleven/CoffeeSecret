@@ -45,7 +45,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.dhy.coffeesecret.views.CircleSeekBar
+        <com.dhy.coffeesecret.views.BakeDegreeCircleSeekBar
             android:id="@+id/id_bake_degree"
             android:layout_centerInParent="true"
             app:wheel_unreached_color="#969695"
@@ -62,7 +62,7 @@
             android:layout_toLeftOf="@id/id_bake_degree"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Mediam"/>
+            android:text="Full City"/>
         <TextView
             android:layout_below="@id/id_bake_degree"
             android:layout_centerHorizontal="true"
@@ -74,7 +74,7 @@
             android:layout_toRightOf="@id/id_bake_degree"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Full City"/>
+            android:text="Mediam"/>
     </RelativeLayout>
     <TextView
         android:paddingLeft="25.3125dp"

@@ -19,8 +19,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dhy.coffeesecret.R;
-import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.pojo.BakeReportImm;
+import com.dhy.coffeesecret.pojo.BakeReportImmBeanFactory;
 import com.dhy.coffeesecret.pojo.BeanInfoSimple;
 import com.dhy.coffeesecret.pojo.DialogBeanInfo;
 import com.dhy.coffeesecret.pojo.Temprature;
@@ -36,7 +36,6 @@ import com.dhy.coffeesecret.views.DevelopBar;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.Event;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -52,7 +51,6 @@ public class BakeActivity extends AppCompatActivity implements BluetoothHelper.D
     public static final String RAW_BEAN_INFO = "com.dhy.coffeesercret.ui.device.BakeActivity.RAW_BEAN_INFO";
     public static final String DEVICE_NAME = "com.dhy.coffeesercret.ui.device.BakeActivity.DEVICE_NAME";
     public static final String START_TEMP = "com.dhy.coffeesercret.ui.device.BakeActivity.START_TIME";
-    public static final String EVN_TEMP = "com.dhy.coffeesercret.ui.device.BakeActivity.EVN_TEMP";
     public static final String BAKE_DATE = "com.dhy.coffeesercret.ui.device.BakeActivity.BAKE_DATE";
     public static final String ENV_TEMP = "com.dhy.coffeesercret.ui.device.BakeActivity.ENV_TEMP";
     private BaseChart4Coffee chart;
@@ -432,9 +430,10 @@ public class BakeActivity extends AppCompatActivity implements BluetoothHelper.D
                         mShowHandler.sendEmptyMessage(0);
                         while (true) {
                             if (isEnd) {
+                                BakeReportImm imm = generateReport();
+                                imm.setEntriesWithEvents(eventRecords);
                                 Intent intent = new Intent(BakeActivity.this, EditBehindActiviy.class);
-                                intent.putExtra(EditBehindActiviy.BEAN_EVENTS, eventRecords.toArray());
-                                intent.putExtra(EditBehindActiviy.BAKE_REPORT, generateReport());
+
                                 if (dialog != null) {
                                     dialog.dismiss();
                                 }
@@ -507,9 +506,8 @@ public class BakeActivity extends AppCompatActivity implements BluetoothHelper.D
             rawBeanWeight.put(beanInfo.getBeanInfo().getId(), beanInfo.getWeight());
         }
         float startTemp = intent.getFloatExtra(START_TEMP, -1);
-        float evnTemp = intent.getFloatExtra(EVN_TEMP, -1);
 
-        BakeReportImm bakeReportImm = new BakeReportImm();
+        BakeReportImm bakeReportImm = BakeReportImmBeanFactory.getBakeReportImm(chart.getLineData());
 
         bakeReportImm.setBakeDate(intent.getStringExtra(BAKE_DATE));
 
@@ -521,8 +519,6 @@ public class BakeActivity extends AppCompatActivity implements BluetoothHelper.D
 
         bakeReportImm.setDevelopTime(developBar.getDevelopTimeWithoutFormat());
 
-        bakeReportImm.lineData2Pojo(chart.getLineData());
-
         bakeReportImm.setDevelopRate(developBar.getDevelopRateWithoutFormat());
 
         bakeReportImm.setStartTemp(startTemp);
@@ -530,6 +526,7 @@ public class BakeActivity extends AppCompatActivity implements BluetoothHelper.D
         bakeReportImm.setEndTemp(endTemp);
 
         bakeReportImm.setEnvTemp(intent.getFloatExtra(ENV_TEMP, -1));
+
 
         return bakeReportImm;
     }

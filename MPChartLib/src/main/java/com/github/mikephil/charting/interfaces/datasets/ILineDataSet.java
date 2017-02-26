@@ -6,6 +6,8 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IFillFormatter;
 
+import java.io.Serializable;
+
 /**
  * Created by Philpp Jahoda on 21/10/15.
  */

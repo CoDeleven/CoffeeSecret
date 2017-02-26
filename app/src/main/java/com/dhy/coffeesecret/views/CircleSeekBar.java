@@ -7,6 +7,8 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,6 +20,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.dhy.coffeesecret.R;
+
 /**
  * Created by gaopengfei on 15/11/15.
  */
@@ -82,7 +85,8 @@ public class CircleSeekBar extends View {
     private float mFirstCurY = 0;
     private boolean isReset = false;
     private int mUnactivityColor;
-
+    private int height;
+    private int width;
     private OnSeekBarChangeListener mChangListener;
 
     public CircleSeekBar(Context context) {
@@ -211,8 +215,8 @@ public class CircleSeekBar extends View {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int height = getDefaultSize(getSuggestedMinimumHeight(), heightMeasureSpec);
-        int width = getDefaultSize(getSuggestedMinimumWidth(), widthMeasureSpec);
+        height = getDefaultSize(getSuggestedMinimumHeight(), heightMeasureSpec);
+        width = getDefaultSize(getSuggestedMinimumWidth(), widthMeasureSpec);
         int min = Math.min(width, height);
         setMeasuredDimension(min, min);
 
@@ -222,15 +226,20 @@ public class CircleSeekBar extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        if(!isFirst){
+
+        RectF bitmapRectF = new RectF(0, 0, width, height);
+        // 预留位置进行图片混拼
+        Bitmap bitmap1 = generateGradientBg(bitmapRectF);
+        Bitmap bitmap2 = null;
+        if (!isFirst) {
             mFirstCurX = mWheelCurX;
             mFirstCurY = mWheelCurY;
             isFirst = true;
         }
-        if(isReset){
+        if (isReset) {
             mPointerPaint.setColor(mUnactivityColor);
             isReset = false;
-        }else{
+        } else {
             mPointerPaint.setColor(mPointerColor);
         }
         float left = getPaddingLeft() + mUnreachedWidth / 2;
@@ -251,11 +260,31 @@ public class CircleSeekBar extends View {
             canvas.drawCircle(centerX, centerY, wheelRadius, mWheelPaint);
         }
 
+        RectF rectF = new RectF(left, top, right, bottom);
         //画选中区域
-        canvas.drawArc(new RectF(left, top, right, bottom), -90, (float) mCurAngle, false, mReachedPaint);
 
+        if (bitmap1 != null) {
+            bitmap2 = drawReached(rectF);
+            int sc = canvas.saveLayer(bitmapRectF, mReachedPaint, Canvas.ALL_SAVE_FLAG);
+            canvas.drawBitmap(bitmap2, null, bitmapRectF, mReachedPaint);
+            mReachedPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+            canvas.drawBitmap(bitmap1, null, bitmapRectF, mReachedPaint);
+            mReachedPaint.setXfermode(null);
+            canvas.restoreToCount(sc);
+        }else{
+            canvas.drawArc(rectF, -90, (float) mCurAngle, false, mReachedPaint);
+        }
         //画锚点
         canvas.drawCircle(mWheelCurX, mWheelCurY, mPointerRadius, mPointerPaint);
+
+
+    }
+
+    private Bitmap drawReached(RectF rectF){
+        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas temp = new Canvas(bitmap);
+        temp.drawArc(rectF, -90, (float) mCurAngle, false, mReachedPaint);
+        return bitmap;
     }
 
     private void buildCache(float centerX, float centerY, float wheelRadius) {
@@ -549,7 +578,7 @@ public class CircleSeekBar extends View {
         invalidate();
     }
 
-    public void resetStatus(){
+    public void resetStatus() {
         Log.e("codelevex", "被重置啦");
         mCurAngle = 0;
         mWheelCurY = mFirstCurY;
@@ -558,11 +587,13 @@ public class CircleSeekBar extends View {
         invalidate();
     }
 
+    protected Bitmap generateGradientBg(RectF rectF) {
+        return null;
+    }
 
     public void setOnSeekBarChangeListener(OnSeekBarChangeListener listener) {
         mChangListener = listener;
     }
-
 
 
     public interface OnSeekBarChangeListener {

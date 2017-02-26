@@ -1,15 +1,12 @@
 package com.dhy.coffeesecret.pojo;
 
-import com.dhy.coffeesecret.views.BaseChart4Coffee;
 import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
-import com.google.gson.annotations.Expose;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -17,7 +14,7 @@ import java.util.Map;
  * Created by CoDeleven on 17-2-25.
  */
 
-public class BakeReportImm implements Serializable{
+public class BakeReportImm implements Serializable {
     private String bakeDate;
     private String device;
     private Map<Integer, Float> rawBeanWeight;
@@ -36,11 +33,27 @@ public class BakeReportImm implements Serializable{
     private float startTemp;
     private float bakeDegree;
     // 以下字段均不持久化
-    private LineData lineData;
     private List<BeanInfoSimple> beanInfos;
+    private LineData lineData;
+    private List<Entry> entriesWithEvents;
+    public BakeReportImm() {
+
+    }
+
+    public List<Entry> getEntriesWithEvents() {
+        return entriesWithEvents;
+    }
+
+    public void setEntriesWithEvents(List<Entry> entriesWithEvents) {
+        this.entriesWithEvents = entriesWithEvents;
+    }
 
     public String getBakeDate() {
         return bakeDate;
+    }
+
+    public void setLineData(LineData lineData) {
+        this.lineData = lineData;
     }
 
     public void setBakeDate(String bakeDate) {
@@ -62,7 +75,6 @@ public class BakeReportImm implements Serializable{
     public void setBakeDegree(float bakeDegree) {
         this.bakeDegree = bakeDegree;
     }
-
 
     public float getCookedBeanWeight() {
         return cookedBeanWeight;
@@ -112,7 +124,6 @@ public class BakeReportImm implements Serializable{
         this.envTemp = envTemp;
     }
 
-
     public Map<Integer, Float> getRawBeanWeight() {
         return rawBeanWeight;
     }
@@ -129,12 +140,8 @@ public class BakeReportImm implements Serializable{
         this.startTemp = startTemp;
     }
 
-    public List<Float> getTimex(){
+    public List<Float> getTimex() {
         return timex;
-    }
-
-    public BakeReportImm(){
-
     }
 
     public void setTimex(List<Float> timex) {
@@ -189,66 +196,36 @@ public class BakeReportImm implements Serializable{
         this.outwindTemps = outwindTemps;
     }
 
-    public void lineData2Pojo(LineData lineData){
-        this.lineData = lineData;
-        for(ILineDataSet dataSet: lineData.getDataSets()){
-            DataSet<Entry> temp = (DataSet<Entry>) dataSet;
-            switch (dataSet.getLabel()){
-                case "豆温":
-                    for(Entry entry: temp.getValues()){
-                        beanTemps.add(new EntryPojo(entry));
-                        timex.add(entry.getX());
-                    }
-                    break;
-                case "豆升温":
-                    for(Entry entry: temp.getValues()){
-                        accBeanTemps.add(entry.getY());
-                    }
-                    break;
-                case "进风温":
-                    for(Entry entry: temp.getValues()){
-                        inwindTemps.add(entry.getY());
-                    }
-                    break;
-                case "进风升温":
-                    for(Entry entry: temp.getValues()){
-                        accInwindTemps.add(entry.getY());
-                    }
-                    break;
-                case "出风温":
-                    for(Entry entry: temp.getValues()){
-                        outwindTemps.add(entry.getY());
-                    }
-                    break;
-                case "出风升温":
-                    for(Entry entry: temp.getValues()){
-                        accOutwindTemps.add(entry.getY());
-                    }
-                    break;
-
-            }
-        }
+    public LineData getLineData() {
+        return lineData;
     }
 
-
-    class EntryPojo implements Serializable{
+    public class EntryPojo implements Serializable {
         public float y;
         public String event;
         public int curStatus;
-        public EntryPojo(Entry entry){
 
-            this.y = entry.getY();
-            this.event = entry.getEvent().getDescription();
-            this.curStatus = entry.getEvent().getCurStatus();
-        }
-        public EntryPojo(){
+        private Entry entry;
+
+        public EntryPojo(Entry entry) {
+            this.entry = entry;
 
         }
-    }
 
+        public String getEvent() {
+            return entry.getEvent().getDescription();
+        }
+        public int getCurStatus() {
+            return entry.getEvent().getCurStatus();
+        }
 
-    public LineData getLineData() {
-        return lineData;
+        public float getY() {
+            return entry.getY();
+        }
+
+        public EntryPojo() {
+
+        }
     }
 
 }
