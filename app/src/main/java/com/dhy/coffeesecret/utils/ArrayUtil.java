@@ -15,13 +15,12 @@ public class ArrayUtil {
             for (int i = 0; i < t2.length; i++) {
                 f[i + t1.length] = t2[i];
             }
-
+            return f;
         } else if (t1 != null) {
             return t1;
         } else if (t2 != null) {
             return t2;
         }
-
         return null;
     }
 }

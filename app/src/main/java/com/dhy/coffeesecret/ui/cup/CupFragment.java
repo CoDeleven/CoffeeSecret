@@ -19,7 +19,9 @@ import android.widget.ImageView;
 import android.widget.NumberPicker;
 
 import com.dhy.coffeesecret.R;
+import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.pojo.CuppingInfo;
+import com.dhy.coffeesecret.ui.container.LinesSelectedActivity;
 import com.dhy.coffeesecret.ui.container.fragments.BeanListFragment;
 import com.dhy.coffeesecret.ui.cup.adapter.CuppingListAdapter;
 import com.dhy.coffeesecret.utils.T;
@@ -32,11 +34,34 @@ import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.dhy.coffeesecret.R.string.acidity;
+import static com.dhy.coffeesecret.R.string.after_taste;
+import static com.dhy.coffeesecret.R.string.baked;
+import static com.dhy.coffeesecret.R.string.balance;
+import static com.dhy.coffeesecret.R.string.dry_and_frag;
+import static com.dhy.coffeesecret.R.string.faced;
+import static com.dhy.coffeesecret.R.string.flavor;
+import static com.dhy.coffeesecret.R.string.overdev;
+import static com.dhy.coffeesecret.R.string.scorched;
+import static com.dhy.coffeesecret.R.string.sweet;
+import static com.dhy.coffeesecret.R.string.taste;
+import static com.dhy.coffeesecret.R.string.tipped;
+import static com.dhy.coffeesecret.R.string.underdev;
 import static com.dhy.coffeesecret.ui.cup.NewCuppingActivity.*;
 import static com.dhy.coffeesecret.ui.cup.NewCuppingActivity.VIEW_TYPE;
 
 public class CupFragment extends Fragment {
 
+    private static final int GET_CUPPING_INFOS = 0x00001;
+    private static final int LOADING = 0x00010;
+    private static final int NO_LOADING = 0x00100;
+
+    public static final int REQ_CODE_NEW = 0x0002;
+    public static final int REQ_CODE_EDIT = 0x0020;
+    public static final int RESULT_CODE_ADD = 0x0200;
+    public static final int RESULT_CODE_UPDATE = 0x666;
+    public static final int RESULT_CODE_NONE = 0x2333;
+    public static final int RESULT_CODE_DElETE = 0x5555;
 
     private OnCupInteractionListener mListener;
     private View mCuppingView;
@@ -49,11 +74,6 @@ public class CupFragment extends Fragment {
 
     private List<CuppingInfo> cuppingInfos;
     private CuppingListAdapter mAdapter;
-
-
-    private static final int GET_CUPPING_INFOS = 0x00001;
-    private static final int LOADING = 0x00010;
-    private static final int NO_LOADING = 0x00100;
 
     public CupFragment() {
         cuppingInfos = new ArrayList<>();
@@ -77,10 +97,10 @@ public class CupFragment extends Fragment {
         mAdapter.setOnItemClickListener(new CuppingListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                Intent intent = new Intent(mContext,NewCuppingActivity.class);
-                intent.putExtra(TARGET,cuppingInfos.get(position));
+                Intent intent = new Intent(mContext, NewCuppingActivity.class);
+                intent.putExtra(TARGET, cuppingInfos.get(position));
                 intent.putExtra(VIEW_TYPE, SHOW_INFO);
-                startActivity(intent);
+                startActivityForResult(intent,REQ_CODE_EDIT);
             }
         });
 
@@ -93,12 +113,13 @@ public class CupFragment extends Fragment {
         mAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(),NewCuppingActivity.class);
+                Intent intent = new Intent(getActivity(), LinesSelectedActivity.class);
                 intent.putExtra(VIEW_TYPE, NEW_CUPPING);
-                startActivity(intent);
+                startActivityForResult(intent, REQ_CODE_NEW);
+//                startActivity(intent);
             }
         });
-        mHandler =  new CuppingInfoHandler(this);
+        mHandler = new CuppingInfoHandler(this);
         mHandler.sendEmptyMessage(GET_CUPPING_INFOS);
         mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -109,6 +130,24 @@ public class CupFragment extends Fragment {
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQ_CODE_EDIT) {
+            if (resultCode == RESULT_CODE_UPDATE) {
+                CuppingInfo info = (CuppingInfo) data.getSerializableExtra(TARGET);
+                mAdapter.update(info);
+            }else if(resultCode == RESULT_CODE_DElETE){
+                CuppingInfo info = (CuppingInfo) data.getSerializableExtra(TARGET);
+                mAdapter.delete(info);
+            }
+        } else if (requestCode == REQ_CODE_NEW) {
+            if (resultCode == RESULT_CODE_ADD) {
+                CuppingInfo info = (CuppingInfo) data.getSerializableExtra(TARGET);
+                mAdapter.add(info);
+            }
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mCuppingView = inflater.inflate(R.layout.fragment_cup, container, false);
@@ -116,11 +155,10 @@ public class CupFragment extends Fragment {
         return mCuppingView;
     }
 
-    public void setContext(Context mContext) {
-        this.mContext = mContext;
+    public void setContext(Context context) {
+        this.mContext = context;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onCupInteraction(uri);
@@ -144,34 +182,55 @@ public class CupFragment extends Fragment {
         mListener = null;
     }
 
-    public void loadInfos(){
+    public void loadInfos() {
         // TODO: 2017/2/23  加载数据
         for (int i = 0; i < 20; i++) {
             CuppingInfo cuppingInfo = new CuppingInfo();
-            cuppingInfo.setName("mxf---"+i);
-            cuppingInfo.setScore((60+5*i)%100);
+            cuppingInfo.setId(i);
+            cuppingInfo.setName("mxf---" + i);
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
             try {
-                Date date = format.parse("2011-2-"+i/5+1);
+                Date date = format.parse("2011-2-" + i / 5 + 1);
                 cuppingInfo.setDate(date);
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-
+            addData(cuppingInfo);
+            cuppingInfo.setBakeReport(new BakeReport());
             cuppingInfos.add(cuppingInfo);
         }
+    }
+
+    // TODO: 2017/2/26
+    void addData(CuppingInfo cuppingInfo) {
+        cuppingInfo.setAcidity(8);
+        cuppingInfo.setAfterTaste(8);
+        cuppingInfo.setBalance(8);
+        cuppingInfo.setDryAndFragrant(8);
+        cuppingInfo.setFlavor(8);
+        cuppingInfo.setTaste(8);
+        cuppingInfo.setBalance(2);
+        cuppingInfo.setSweetness(5);
+        cuppingInfo.setOverall(9);
+
+        cuppingInfo.setBaked(7);
+        cuppingInfo.setFaced(4);
+        cuppingInfo.setScorched(3);
+        cuppingInfo.setUnderdevelopment(2);
+        cuppingInfo.setTipped(9);
+        cuppingInfo.setOverdevelopment(6);
     }
 
     public interface OnCupInteractionListener {
         void onCupInteraction(Uri uri);
     }
 
-    private class CuppingInfoHandler extends Handler{
+    private class CuppingInfoHandler extends Handler {
 
         private WeakReference<CupFragment> mWeakReference;
 
-        CuppingInfoHandler(CupFragment fragment){
-            this.mWeakReference = new WeakReference<CupFragment>(fragment);
+        CuppingInfoHandler(CupFragment fragment) {
+            this.mWeakReference = new WeakReference<>(fragment);
         }
 
         @Override
@@ -180,7 +239,7 @@ public class CupFragment extends Fragment {
 
             switch (msg.what) {
                 case GET_CUPPING_INFOS:
-                    new Thread(){
+                    new Thread() {
                         @Override
                         public void run() {
                             CuppingInfoHandler.this.sendEmptyMessage(LOADING);
@@ -189,7 +248,7 @@ public class CupFragment extends Fragment {
                         }
                     }.start();
 
-                    CuppingInfoHandler.this.sendEmptyMessageDelayed(NO_LOADING,3000);
+                    CuppingInfoHandler.this.sendEmptyMessageDelayed(NO_LOADING, 3000);
                     break;
                 case LOADING:
                     if (!mRefreshLayout.isRefreshing()) {
