@@ -69,7 +69,7 @@ public class EditToolBar extends Fragment {
             @Override
             public void onClick(View view) {
                 if (mTitleClickListener != null){
-                    mTitleClickListener.onTitleClick();
+                    mTitleClickListener.onTitleClick(mTitle);
                 }
             }
         });
@@ -126,7 +126,7 @@ public class EditToolBar extends Fragment {
     }
 
     public interface OnTitleClickListener {
-        void onTitleClick();
+        void onTitleClick(String title);
     }
 
 

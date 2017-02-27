@@ -24,6 +24,7 @@ import com.dhy.coffeesecret.ui.cup.fragment.InputNameDialog;
 import com.dhy.coffeesecret.ui.cup.fragment.NormalToolBar;
 import com.dhy.coffeesecret.utils.T;
 
+import java.io.Console;
 import java.util.Date;
 import java.util.Map;
 
@@ -59,7 +60,6 @@ public class NewCuppingActivity extends AppCompatActivity
     private ViewPager mViewPager;
     private RadioGroup mRadioGroup;
     private InputNameDialog mInputNameDialog;
-    private InputNameDialog mConfirmDialog;
 
     private AlertDialog dialog;
 
@@ -108,6 +108,12 @@ public class NewCuppingActivity extends AppCompatActivity
                     showDialog();
                 }
             });
+            editToolBar.setTitleClickListener(new EditToolBar.OnTitleClickListener() {
+                @Override
+                public void onTitleClick(String name) {
+                    mInputNameDialog.show(getSupportFragmentManager(), "");
+                }
+            });
         }
         transaction.replace(R.id.line, editToolBar);
         transaction.commitNow();
@@ -117,19 +123,8 @@ public class NewCuppingActivity extends AppCompatActivity
             @Override
             public void onConfirm(String name) {
                 if (mCuppingInfo != null) {
-                    if (name == null || "".equals(name)) {
-                        T.showShort(NewCuppingActivity.this, "请输入杯测名称");
-                    } else {
-                        mCuppingInfo.setName(name);
-                        System.out.println("发送到服务器：" + mCuppingInfo); // TODO: 2017/2/25  发送到服务器
-                        loadShowInfoView();
-                        mInputNameDialog.dismiss();
-                        cuppingInfoFragment.setEditable(false);
-                        viewType = SHOW_INFO;
-                        mResultCode = CupFragment.RESULT_CODE_ADD;
-                        mResultIntent = new Intent();
-                        mResultIntent.putExtra(TARGET, mCuppingInfo);
-                    }
+                    mCuppingInfo.setName(name);
+                    editToolBar.setTitle(name);
                 }
             }
         });
@@ -143,6 +138,7 @@ public class NewCuppingActivity extends AppCompatActivity
         transaction.replace(R.id.line, normalToolBar);
         normalToolBar.setTitle(mCuppingInfo.getName());
         transaction.commitNow();
+        System.out.println("");
         normalToolBar.setEditBtnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -178,7 +174,7 @@ public class NewCuppingActivity extends AppCompatActivity
             });
             editToolBar.setTitleClickListener(new EditToolBar.OnTitleClickListener() {
                 @Override
-                public void onTitleClick() {
+                public void onTitleClick(String name) {
                     mInputNameDialog.show(getSupportFragmentManager(), "");
                 }
             });
@@ -287,7 +283,19 @@ public class NewCuppingActivity extends AppCompatActivity
         map2Bean(data, mCuppingInfo);
         if (NEW_CUPPING.equals(viewType)) {
             mCuppingInfo.setBakeReport(mBakeReport);
-            mInputNameDialog.show(getSupportFragmentManager(), "");
+            if (mCuppingInfo.getName() == null) {
+                T.showShort(this, "请输入杯测名称");
+                mInputNameDialog.show(getSupportFragmentManager(), "");
+            } else {
+                System.out.println("发送到服务器：" + mCuppingInfo); // TODO: 2017/2/25  发送到服务器
+                loadShowInfoView();
+                cuppingInfoFragment.setEditable(false);
+                viewType = SHOW_INFO;
+                mResultCode = CupFragment.RESULT_CODE_ADD;
+                mResultIntent = new Intent();
+                mResultIntent.putExtra(TARGET, mCuppingInfo);
+            }
+//          mInputNameDialog.show(getSupportFragmentManager(), "");
         } else {
             System.out.println("发送到服务器：" + mCuppingInfo); // TODO: 2017/2/25  发送到服务器
             loadShowInfoView();
@@ -304,13 +312,12 @@ public class NewCuppingActivity extends AppCompatActivity
         mResultCode = CupFragment.RESULT_CODE_DElETE;
         mResultIntent = new Intent();
         mResultIntent.putExtra(TARGET, mCuppingInfo);
-        System.out.println(mResultCode);
+        System.out.println("服务器发送删除请求：" + mCuppingInfo.getId());
         finish();
     }
 
     @Override
     public void finish() {
-        System.out.println(mResultCode);
         setResult(mResultCode, mResultIntent);
         super.finish();
     }

@@ -113,7 +113,8 @@ public class CupFragment extends Fragment {
         mAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), LinesSelectedActivity.class);
+//                Intent intent = new Intent(getActivity(), LinesSelectedActivity.class);
+                Intent intent = new Intent(getActivity(), NewCuppingActivity.class);
                 intent.putExtra(VIEW_TYPE, NEW_CUPPING);
                 startActivityForResult(intent, REQ_CODE_NEW);
 //                startActivity(intent);

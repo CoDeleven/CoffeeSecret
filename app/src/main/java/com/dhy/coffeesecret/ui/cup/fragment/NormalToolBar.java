@@ -46,13 +46,19 @@ public class NormalToolBar extends Fragment {
 
     public void setTitle(String title) {
         this.mTitle = title;
-        if(mTextView != null){
+        if (mTextView != null) {
             mTextView.setText(title);
         }
     }
 
     public void setEditBtnClickListener(View.OnClickListener listener) {
         mListener = listener;
+    }
+
+    public void addEditBtnClickListener(View.OnClickListener listener) {
+        if (mEditButton != null && !mEditButton.hasOnClickListeners()) {
+            mEditButton.setOnClickListener(listener);
+        }
     }
 
     public Toolbar getToolbar() {

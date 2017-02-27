@@ -11,6 +11,8 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.dhy.coffeesecret.R;
+import com.dhy.coffeesecret.ui.cup.NewCuppingActivity;
+import com.dhy.coffeesecret.utils.T;
 
 /**
  * Created by mxf on 2017/2/26.
@@ -43,10 +45,12 @@ public class InputNameDialog extends DialogFragment {
         mConfirm = (Button) mView.findViewById(R.id.btn_confirm);
         mCancel = (Button) mView.findViewById(R.id.btn_cancel);
         mEditText.setText(mCuppingName);
-        mEditText.setSelection(0,mCuppingName.length());
+        mEditText.setSelection(mCuppingName.length());
         mCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mEditText.setText(mCuppingName);
+                mEditText.setSelection(mCuppingName.length());
                 dismiss();
             }
         });
@@ -54,10 +58,14 @@ public class InputNameDialog extends DialogFragment {
         mConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String name = mEditText.getText().toString().trim();
+                final String name = mEditText.getText().toString().trim();
                 if(mOnConfirmListener != null){
-                    mOnConfirmListener.onConfirm(name);
-                    dismissAllowingStateLoss();
+                   if(name == null || "".equals(name)){
+                       T.showShort(getActivity(), "请输入杯测名称");
+                   }else {
+                       mOnConfirmListener.onConfirm(name);
+                       dismissAllowingStateLoss();
+                   }
                 }
             }
         });
