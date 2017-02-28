@@ -45,6 +45,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <TextView
+            android:id="@+id/id_score"
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"/>
+
         <com.dhy.coffeesecret.views.BakeDegreeCircleSeekBar
             android:id="@+id/id_bake_degree"
             android:layout_centerInParent="true"
@@ -53,6 +60,7 @@
             app:wheel_unreached_width="18dp"
             android:layout_marginBottom="20dp"
             android:padding="10dp"
+            app:wheel_max_process="70"
             app:wheel_pointer_radius="7dp"
             app:wheel_pointer_color="#FFF"
             android:layout_width="150dp"

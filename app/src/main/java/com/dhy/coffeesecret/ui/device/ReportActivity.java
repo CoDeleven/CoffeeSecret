@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
@@ -22,14 +21,16 @@ import android.widget.TextView;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BakeReportImm;
 import com.dhy.coffeesecret.pojo.BakeReportImmBeanFactory;
-import com.dhy.coffeesecret.pojo.BeanInfo;
 import com.dhy.coffeesecret.pojo.BeanInfoSimple;
 import com.dhy.coffeesecret.ui.device.formatter.XAxisFormatter4Time;
 import com.dhy.coffeesecret.utils.UnitConvert;
 import com.dhy.coffeesecret.views.BaseChart4Coffee;
+import com.dhy.coffeesecret.views.ReportMarker;
 import com.dhy.coffeesecret.views.ScrollViewContainer;
-
-import org.w3c.dom.Text;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,17 +44,12 @@ import static android.widget.LinearLayout.LayoutParams.WRAP_CONTENT;
 
 
 public class ReportActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener {
-    public static final String REPORT_FINAL = "com.dhy.coffeesecret.ui.device.ReportActivity.REPORT_FINAL";
-    private TableLayout tableLayout;
-    private BaseChart4Coffee mChart;
-    private TextView mOperator;
-    private List<BeanInfoSimple> beanInfos = new ArrayList<>();
-    private LinearLayout beanContainer;
-    private List<LinearLayout> beanContent;
-    private TextView mLineOperator;
-    private PopupWindow popupWindow;
-    private ScrollViewContainer scrollViewContainer;
-    private BakeReportImm imm;
+    @Bind(R.id.id_report_chart)
+    BaseChart4Coffee mChart;
+    @Bind(R.id.id_report_lineOperator)
+    TextView mLineOperator;
+    @Bind(R.id.id_report_scrollContainer)
+    ScrollViewContainer scrollViewContainer;
     @Bind(R.id.id_envTemp)
     TextView envTemp;
     @Bind(R.id.id_inputBeanTemp)
@@ -63,11 +59,19 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
     @Bind(R.id.id_developTime)
     TextView developTime;
     @Bind(R.id.id_developRate)
-            TextView developRate;
+    TextView developRate;
     @Bind(R.id.id_baking_bakeDate)
     TextView date;
     @Bind(R.id.id_baking_deviceName)
-            TextView device;
+    TextView device;
+    @Bind(R.id.id_score)
+    TextView score;
+    private TableLayout tableLayout;
+    private List<BeanInfoSimple> beanInfos = new ArrayList<>();
+    private LinearLayout beanContainer;
+    private List<LinearLayout> beanContent;
+    private PopupWindow popupWindow;
+    private BakeReportImm imm;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -83,23 +87,34 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
     }
 
     private void initParam() {
-        mChart = (BaseChart4Coffee) findViewById(R.id.id_baking_chart);
+        imm = BakeReportImmBeanFactory.getBakeReportImm();
+
         mChart.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
                     scrollViewContainer.requestDisallowInterceptTouchEvent(false);
-                    ((ScrollView)scrollViewContainer.getChildAt(0)).requestDisallowInterceptTouchEvent(false);
+                    ((ScrollView) scrollViewContainer.getChildAt(0)).requestDisallowInterceptTouchEvent(false);
                     scrollViewContainer.setCanPullup(true);
                 } else {
                     scrollViewContainer.requestDisallowInterceptTouchEvent(true);
-                    ((ScrollView)scrollViewContainer.getChildAt(0)).requestDisallowInterceptTouchEvent(true);
+                    ((ScrollView) scrollViewContainer.getChildAt(0)).requestDisallowInterceptTouchEvent(true);
                     scrollViewContainer.setCanPullup(false);
                 }
                 return false;
             }
         });
-        imm = BakeReportImmBeanFactory.getBakeReportImm();
+        mChart.setDrawMarkers(true);
+        mChart.setMarker(new ReportMarker(this, R.layout.report_marker));
+        mChart.initLine();
+
+        for(ILineDataSet lineDataSet: imm.getLineData().getDataSets()){
+            LineDataSet lineData = (LineDataSet)lineDataSet;
+            mChart.addNewDatas(lineData.getValues(), getIndexByLabels(lineData.getLabel()));
+        }
+
+
+
         envTemp.setText("环境温度:" + imm.getEnvTemp());
         startTemp.setText("入豆温度:" + imm.getStartTemp());
         endTemp.setText("结束温度:" + imm.getEndTemp());
@@ -108,17 +123,16 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
         beanInfos = imm.getBeanInfos();
         date.setText("烘焙日期：" + imm.getBakeDate());
         device.setText("设备：" + imm.getDevice());
-        mChart.setData(imm.getLineData());
 
-        mOperator = (TextView) findViewById(R.id.id_baking_lineOperator);
+
+        score.setText(imm.getBakeDegree() + "");
+
         tableLayout = (TableLayout) findViewById(R.id.id_report_table);
         beanContainer = (LinearLayout) findViewById(R.id.id_bean_container);
         beanContent = getNewInstance();
-        for(LinearLayout linearLayout:beanContent){
+        for (LinearLayout linearLayout : beanContent) {
             beanContainer.addView(linearLayout);
         }
-        mLineOperator = (TextView) findViewById(R.id.id_baking_lineOperator);
-        scrollViewContainer = (ScrollViewContainer) findViewById(R.id.id_report_scrollContainer);
 
         mLineOperator.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -164,7 +178,7 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
     }
 
     @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+    public void onCheckedChanged(CompoundButton buttonView, final boolean isChecked) {
         int id = buttonView.getId();
         int curIndex = 0;
         switch (id) {
@@ -187,10 +201,11 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
                 curIndex = BaseChart4Coffee.ACCOUTWINDLINE;
                 break;
         }
+        final int temp = curIndex;
         if (isChecked) {
-            mChart.showLine(curIndex);
+            mChart.showLine(temp);
         } else {
-            mChart.hideLine(curIndex);
+            mChart.hideLine(temp);
         }
     }
 
@@ -211,6 +226,7 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
             tableLayout.addView(tableRow, p);
         }
     }
+
 
     private List<LinearLayout> getNewInstance() {
         List<LinearLayout> linearLayouts = new ArrayList<>();
@@ -302,5 +318,18 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
             linearLayouts.add(outter);
         }
         return linearLayouts;
+    }
+
+    private int getIndexByLabels(String labels){
+        switch (labels){
+            case "豆温":return 0;
+            case "豆升温": return 1;
+            case "进风温": return 2;
+            case "进风升温": return 3;
+            case "出风温": return 4;
+            case "出风升温": return 5;
+            default:
+                return -1;
+        }
     }
 }

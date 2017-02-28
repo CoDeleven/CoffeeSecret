@@ -1,7 +1,10 @@
 package com.dhy.coffeesecret.ui.device;
 
 import android.content.Intent;
+import android.os.Binder;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -9,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BakeReportImm;
@@ -18,6 +22,8 @@ import com.dhy.coffeesecret.views.CircleSeekBar;
 import com.dhy.coffeesecret.views.WheelView;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.Event;
+
+import junit.framework.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,10 +38,8 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class EditBehindActiviy extends AppCompatActivity {
+public class EditBehindActiviy extends AppCompatActivity implements CircleSeekBar.OnSeekBarChangeListener {
 
-    public static final String BEAN_EVENTS = "com.dhy.coffeesecret.ui.device.EditBehindActiviy.BEAN_EVENTS";
-    public static final String BAKE_REPORT = "com.dhy.coffeesecret.ui.device.EditBehindActiviy.BAKE_REPORT";
     @Bind(R.id.id_bake_degree)
     CircleSeekBar mSeekBar;
     @Bind(R.id.id_bake_behind_wheelView)
@@ -46,19 +50,23 @@ public class EditBehindActiviy extends AppCompatActivity {
     Button save;
     @Bind(R.id.id_bake_behind_cookedWeight)
     EditText cookedWeight;
+    @Bind(R.id.id_score)
+    TextView score;
+    private float mCurValue;
     private List<String> content = new ArrayList<>();
     private List<Entry> entries = new ArrayList<>();
-    private int lastIndex = 1;
-    private String lastIndexString = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_behind_activiy);
         ButterKnife.bind(this);
+        mSeekBar.setOnSeekBarChangeListener(this);
         wheelView.setOffset(1);
         init();
         editText.setText(entries.get(0).getEvent().getDescription());
         wheelView.setItems(content);
+
         editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -100,6 +108,7 @@ public class EditBehindActiviy extends AppCompatActivity {
         BakeReportImm imm = BakeReportImmBeanFactory.getBakeReportImm();
         imm.setCookedBeanWeight(Float.parseFloat(cookedWeight.getText().toString()));
         imm.setBakeDegree(mSeekBar.getCurProcess());
+        imm.setBakeDegree(mCurValue);
         Intent other = new Intent(this, ReportActivity.class);
         sendJsonData(imm);
         startActivity(other);
@@ -111,6 +120,7 @@ public class EditBehindActiviy extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                Log.e("codelevex", "currentThread:" + Thread.currentThread().toString());
                 String url = "http://10.152.18.56:8080/CoffeeSecret/bake/add";
                 RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), ObjectJsonConvert.bakereport2Json(imm));
                 Log.e("codelevex", "wwwwww");
@@ -127,5 +137,21 @@ public class EditBehindActiviy extends AppCompatActivity {
                 }
             }
         }).start();
+    }
+
+    @Override
+    public void onChanged(CircleSeekBar seekbar, int curValue) {
+        Message msg = new Message();
+        Bundle bundle = new Bundle();
+        bundle.putFloat("curValue", curValue);
+        msg.setData(bundle);
+        new Handler(new Handler.Callback() {
+            @Override
+            public boolean handleMessage(Message msg) {
+                score.setText(((int)msg.getData().getFloat("curValue")) + "");
+                return false;
+            }
+        }).sendMessage(msg);
+        mCurValue = curValue;
     }
 }

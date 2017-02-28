@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -52,7 +53,13 @@ public class DeviceFragment extends Fragment implements BluetoothHelper.DataChan
     private Handler mShowHandler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
-            dialog = ProgressDialog.show(getContext(), "标题", "加载中，请稍后……");
+            if (msg.what == 0) {
+                dialog = ProgressDialog.show(getContext(), "标题", "加载中，请稍后……");
+            } else if (msg.what == 1) {
+                if(dialog != null){
+                    dialog.dismiss();
+                }
+            }
             return false;
         }
     });
@@ -147,7 +154,7 @@ public class DeviceFragment extends Fragment implements BluetoothHelper.DataChan
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            mShowHandler.sendMessage(new Message());
+                            mShowHandler.sendEmptyMessage(0);
                             while(true){
                                 if(isStart){
                                     Intent intent = new Intent(getContext(), BakeActivity.class);
@@ -157,10 +164,7 @@ public class DeviceFragment extends Fragment implements BluetoothHelper.DataChan
                                     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm");
                                     intent.putExtra(BakeActivity.BAKE_DATE, format.format(new Date()));
                                     intent.putExtra(BakeActivity.ENV_TEMP, envTemp);
-                                    Log.e("codelevex", beginTemp + "");
-                                    if(dialog != null){
-                                        dialog.dismiss();
-                                    }
+                                    mShowHandler.sendEmptyMessage(1);
                                     startActivity(intent);
                                     mHelper.setDataListener(null);
                                     Log.e("codelevex", "卧槽，开始烘焙");

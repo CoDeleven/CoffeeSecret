@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
+import android.util.Log;
 
 import com.dhy.coffeesecret.pojo.UniversalConfiguration;
 import com.dhy.coffeesecret.ui.device.formatter.XAxisFormatter4Time;
@@ -134,7 +135,6 @@ public class BaseChart4Coffee extends LineChart {
 
         // rightAxis.setDrawZeroLine(false);
         // rightAxis.setGranularityEnabled(false);
-        initLine();
     }
 
     public void addTempratureLine(int lineIndex, boolean isAcc) {
@@ -193,11 +193,13 @@ public class BaseChart4Coffee extends LineChart {
 
     public boolean showLine(int lineIndex) {
         lines.get(lineIndex).setVisible(true);
+        mHandler.sendEmptyMessage(0);
         return true;
     }
 
     public boolean hideLine(int lineIndex) {
         lines.get(lineIndex).setVisible(false);
+        mHandler.sendEmptyMessage(0);
         return true;
     }
 
@@ -208,15 +210,19 @@ public class BaseChart4Coffee extends LineChart {
     }
 
     public void addNewDatas(List<Entry> beanDatas, int lineIndex) {
-        ILineDataSet beanLine = new LineDataSet(beanDatas, labels.get(lineIndex));
+     /*   ILineDataSet beanLine = new LineDataSet(beanDatas, labels.get(lineIndex));
         lines.put(lineIndex, beanLine);
-        getData().addDataSet(beanLine);
+        LineData lineData = getData();
+        if(lineData == null){
+            lineData = new LineData();
+        }*/
 
-        notifyDataSetChanged();
-        invalidate();
+        ((LineDataSet)lines.get(lineIndex)).setValues(beanDatas);
+
+        mHandler.sendEmptyMessage(0);
     }
 
-    private void initLine() {
+    public void initLine() {
         addTempratureLine(BaseChart4Coffee.BEANLINE);
         addTempratureLine(BaseChart4Coffee.INWINDLINE);
         addTempratureLine(BaseChart4Coffee.OUTWINDLINE);

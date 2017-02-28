@@ -33,9 +33,9 @@ public class BakeReportImm implements Serializable {
     private float startTemp;
     private float bakeDegree;
     // 以下字段均不持久化
-    private List<BeanInfoSimple> beanInfos;
-    private LineData lineData;
-    private List<Entry> entriesWithEvents;
+    private transient List<BeanInfoSimple> beanInfos;
+    private transient LineData lineData;
+    private transient List<Entry> entriesWithEvents;
     public BakeReportImm() {
 
     }
@@ -205,7 +205,7 @@ public class BakeReportImm implements Serializable {
         public String event;
         public int curStatus;
 
-        private Entry entry;
+        private transient Entry entry;
 
         public EntryPojo(Entry entry) {
             this.entry = entry;

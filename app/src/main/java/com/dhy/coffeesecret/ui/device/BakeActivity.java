@@ -236,6 +236,8 @@ public class BakeActivity extends AppCompatActivity implements BluetoothHelper.D
         setContentView(R.layout.activity_bake);
 
         chart = (BaseChart4Coffee) findViewById(R.id.id_baking_chart);
+        chart.initLine();
+        Log.e("codelevex", "chart:" + chart);
         lineOperator = (TextView) findViewById(R.id.id_baking_lineOperator);
         mConfig = SettingTool.getConfig(this);
         enableDoubleConfirm = mConfig.isDoubleClick();
@@ -253,7 +255,7 @@ public class BakeActivity extends AppCompatActivity implements BluetoothHelper.D
         }
         mHelper.setDataListener(this);
         Log.e("codelevex", "我特么又被重启了？？");
-/*        if (!mHelper.isTestThreadAlive()) {
+        /*if (!mHelper.isTestThreadAlive()) {
             mHelper.test(getResources().openRawResource(R.raw.test));
         }*/
         startTime = System.currentTimeMillis();
@@ -438,9 +440,9 @@ public class BakeActivity extends AppCompatActivity implements BluetoothHelper.D
                                     dialog.dismiss();
                                 }
                                 mShowHandler.sendEmptyMessage(1);
-                                startActivity(intent);
                                 mHelper.stopRead();
                                 finish();
+                                startActivity(intent);
                                 break;
                             }
                         }
