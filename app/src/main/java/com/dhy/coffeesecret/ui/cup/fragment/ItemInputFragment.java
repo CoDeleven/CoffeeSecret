@@ -153,14 +153,17 @@ public class ItemInputFragment extends Fragment implements NumberPicker.OnValueC
         int val1 = mPickerSec.getValue();
         int val2 = mPickerThr.getValue();
         int val3 = mPickerFou.getValue();
-
+        float value;
         if(val0 == 1){
             mPickerSec.setValue(0);
             mPickerThr.setValue(0);
             mPickerFou.setValue(0);
             T.showShort(getActivity(),"分数上限为10分");
+            value = 10.00f;
+        }else {
+            value = val0 * 10 + val1 + val2 * 0.1f + val3 * 0.01f;
         }
-        float value = val0 * 10 + val1 + val2 * 0.1f + val3 * 0.01f;
+
         if (mListener != null) {
             mListener.onItemValueChange(mPosition, value);
         }

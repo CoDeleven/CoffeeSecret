@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.ImageButton;
 
 import com.dhy.coffeesecret.R;
@@ -61,7 +62,7 @@ public class InputDialogFragment extends DialogFragment
     private ImageButton mRightButton;
     private ViewPager mViewPager;
     private ItemPageAdapter mAdapter;
-
+    private Button mButton;
     private boolean isSlidable;
 
     public InputDialogFragment() {
@@ -153,8 +154,8 @@ public class InputDialogFragment extends DialogFragment
         } else {
             mContentView = inflater.inflate(R.layout.fragment_input, container, false);
         }
-
         getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
+//        getDialog().setCanceledOnTouchOutside(false);
         return mContentView;
     }
 
@@ -162,10 +163,18 @@ public class InputDialogFragment extends DialogFragment
     public void onActivityCreated(Bundle savedInstanceState) {
 
         mViewPager = (ViewPager) mContentView.findViewById(R.id.vp);
+        mButton = (Button) mContentView.findViewById(R.id.btn_confirm);
 
         mAdapter = new ItemPageAdapter(getChildFragmentManager());
         mViewPager.setAdapter(mAdapter);
         mViewPager.setCurrentItem(currentItem);
+
+        mButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
 
         if (isSlidable) {
             mLeftButton = (ImageButton) mContentView.findViewById(R.id.ib_left);
@@ -228,6 +237,7 @@ public class InputDialogFragment extends DialogFragment
 
     @Override
     public void onItemValueChange(int position, float value) {
+        defaultValue[position] = String.valueOf(value);
         if (mListener != null) {
             mListener.onValueChange(position, value);
         }

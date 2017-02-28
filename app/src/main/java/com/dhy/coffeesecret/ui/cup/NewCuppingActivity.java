@@ -37,6 +37,7 @@ import static com.dhy.coffeesecret.R.string.balance;
 import static com.dhy.coffeesecret.R.string.dry_and_frag;
 import static com.dhy.coffeesecret.R.string.faced;
 import static com.dhy.coffeesecret.R.string.flavor;
+import static com.dhy.coffeesecret.R.string.overall;
 import static com.dhy.coffeesecret.R.string.overdev;
 import static com.dhy.coffeesecret.R.string.scorched;
 import static com.dhy.coffeesecret.R.string.sweet;
@@ -54,6 +55,7 @@ public class NewCuppingActivity extends AppCompatActivity
     public static final String VIEW_TYPE = "viewType";
     public static final String TARGET = "target";
 
+    private boolean isNew;
     private CuppingInfo mCuppingInfo;
     private BakeReport mBakeReport;
 
@@ -98,10 +100,26 @@ public class NewCuppingActivity extends AppCompatActivity
      * 在添加杯测时加载添加对应的view
      */
     private void loadNewCuppingView() {
+        if (mCuppingInfo == null) {
+            mCuppingInfo = new CuppingInfo();
+            mCuppingInfo.setDate(new Date());
+        }
+
+        isNew = true;
+        mInputNameDialog = InputNameDialog.newInstance("");
+        mInputNameDialog.setOnConfirmClickListener(new InputNameDialog.OnConfirmListener() {
+            @Override
+            public void onConfirm(String name) {
+                if (mCuppingInfo != null) {
+                    mCuppingInfo.setName(name);
+                    editToolBar.setTitle(name);
+                }
+            }
+        });
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         if (editToolBar == null) {
             editToolBar = new EditToolBar();
-            editToolBar.setTitle("点击添加杯测名称");
+            editToolBar.setTitle("添加标题");
             editToolBar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -117,17 +135,6 @@ public class NewCuppingActivity extends AppCompatActivity
         }
         transaction.replace(R.id.line, editToolBar);
         transaction.commitNow();
-
-        mInputNameDialog = InputNameDialog.newInstance("");
-        mInputNameDialog.setOnConfirmClickListener(new InputNameDialog.OnConfirmListener() {
-            @Override
-            public void onConfirm(String name) {
-                if (mCuppingInfo != null) {
-                    mCuppingInfo.setName(name);
-                    editToolBar.setTitle(name);
-                }
-            }
-        });
     }
 
     public void loadShowInfoView() {
@@ -137,14 +144,13 @@ public class NewCuppingActivity extends AppCompatActivity
         }
         transaction.replace(R.id.line, normalToolBar);
         normalToolBar.setTitle(mCuppingInfo.getName());
-        transaction.commitNow();
-        System.out.println("");
         normalToolBar.setEditBtnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 loadEditView();
             }
         });
+        transaction.commitNow();
     }
 
     //加载编辑的view
@@ -273,15 +279,10 @@ public class NewCuppingActivity extends AppCompatActivity
     @Override
     public void onSave() {
 
-        if (mCuppingInfo == null) {
-            mCuppingInfo = new CuppingInfo();
-            mCuppingInfo.setDate(new Date());
-        }
-
         final Map<String, Float> data = cuppingInfoFragment.getData();
 
         map2Bean(data, mCuppingInfo);
-        if (NEW_CUPPING.equals(viewType)) {
+        if (NEW_CUPPING.equals(viewType) || isNew) {
             mCuppingInfo.setBakeReport(mBakeReport);
             if (mCuppingInfo.getName() == null) {
                 T.showShort(this, "请输入杯测名称");
@@ -309,10 +310,19 @@ public class NewCuppingActivity extends AppCompatActivity
 
     @Override
     public void onDelete() {
-        mResultCode = CupFragment.RESULT_CODE_DElETE;
-        mResultIntent = new Intent();
-        mResultIntent.putExtra(TARGET, mCuppingInfo);
-        System.out.println("服务器发送删除请求：" + mCuppingInfo.getId());
+        if (isNew){
+            mResultCode = CupFragment.RESULT_CODE_NONE;
+            if(EDIT_INFO.equals(viewType)){
+                System.out.println("发送到服务器，删除："+mCuppingInfo.getId());// TODO: 2017/2/25  发送到服务器
+            }else {
+                System.out.println("不需要：" + mCuppingInfo.getId());
+            }
+        }else {
+            mResultCode = CupFragment.RESULT_CODE_DElETE;
+            mResultIntent = new Intent();
+            mResultIntent.putExtra(TARGET, mCuppingInfo);
+            System.out.println("服务器发送删除请求：" + mCuppingInfo.getId());// TODO: 2017/2/25  发送到服务器
+        }
         finish();
     }
 
@@ -324,7 +334,6 @@ public class NewCuppingActivity extends AppCompatActivity
 
     private void map2Bean(Map<String, Float> data, CuppingInfo cuppingInfo) {
         MapUtils utils = new MapUtils(data);
-
         cuppingInfo.setAcidity(utils.getScore(acidity));
         cuppingInfo.setAfterTaste(utils.getScore(after_taste));
         cuppingInfo.setBalance(utils.getScore(balance));
@@ -335,7 +344,7 @@ public class NewCuppingActivity extends AppCompatActivity
         cuppingInfo.setSweetness(utils.getScore(sweet));
         cuppingInfo.setBaked((int) utils.getScore(baked));
         cuppingInfo.setFaced((int) utils.getScore(faced));
-        cuppingInfo.setOverall(utils.getScore(R.string.overall));
+        cuppingInfo.setOverall(utils.getScore(overall));
         cuppingInfo.setScorched((int) utils.getScore(scorched));
         cuppingInfo.setUnderdevelopment((int) utils.getScore(underdev));
         cuppingInfo.setTipped((int) utils.getScore(tipped));
