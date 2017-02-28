@@ -1,5 +1,9 @@
 package com.dhy.coffeesecret.pojo;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
 /**
  * Created by CoDeleven on 17-2-3.
  */
@@ -49,6 +53,8 @@ public class UniversalConfiguration {
     private int accOutwindColor;
     // 环境温
     private int envColor;
+    // 快速事件
+    private Set<String> quickEvents;
 
     public int getAccBeanColor() {
         return accBeanColor;
@@ -224,5 +230,42 @@ public class UniversalConfiguration {
 
     public void setWeightUnit(String weightUnit) {
         this.weightUnit = weightUnit;
+    }
+
+    public Set<String> getQuickEvents() {
+        return quickEvents;
+    }
+
+    public void setQuickEvents(Set<String> quickEvents) {
+        this.quickEvents = quickEvents;
+    }
+
+    @Override
+    public String toString() {
+        return "UniversalConfiguration{" +
+                "weightUnit='" + weightUnit + '\'' +
+                ", tempratureUnit='" + tempratureUnit + '\'' +
+                ", referDegree='" + referDegree + '\'' +
+                ", quickStart=" + quickStart +
+                ", doubleClick=" + doubleClick +
+                ", markByCircle=" + markByCircle +
+                ", maxX=" + maxX +
+                ", maxLeftY=" + maxLeftY +
+                ", maxRightY=" + maxRightY +
+                ", tempratureSmooth=" + tempratureSmooth +
+                ", tempratureAccSmooth=" + tempratureAccSmooth +
+                ", checkBeanTemp=" + checkBeanTemp +
+                ", checkInwindTemp=" + checkInwindTemp +
+                ", checkOutwindTemp=" + checkOutwindTemp +
+                ", checkEvnTemp=" + checkEvnTemp +
+                ", beanColor=" + beanColor +
+                ", inwindColor=" + inwindColor +
+                ", outwindColor=" + outwindColor +
+                ", accBeanColor=" + accBeanColor +
+                ", accInwindColor=" + accInwindColor +
+                ", accOutwindColor=" + accOutwindColor +
+                ", envColor=" + envColor +
+                ", quickEvents=" + quickEvents +
+                '}';
     }
 }

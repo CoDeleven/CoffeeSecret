@@ -1,14 +1,148 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activity_edit_behind_activiy"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="#FFF"
+    android:orientation="vertical"
     tools:context="com.dhy.coffeesecret.ui.device.EditBehindActiviy">
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_device_activtiy"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize">
 
-</RelativeLayout>
+        <TextView
+            android:id="@+id/id_toolbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:text="@string/title_device_child_activity"
+            android:textColor="#FFF"
+            android:textSize="20sp"/>
+        <Button
+            android:id="@+id/id_bake_behind_save"
+            android:layout_gravity="right|center_vertical"
+            android:background="@android:color/transparent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="17sp"
+            android:textColor="#FFF"
+            android:text="保存"/>
+    </android.support.v7.widget.Toolbar>
+    <TextView
+        android:paddingLeft="25.3125dp"
+        android:background="#ECECEC"
+        android:textColor="#a29e9b"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="烘焙度"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/id_score"
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"/>
+
+        <com.dhy.coffeesecret.views.BakeDegreeCircleSeekBar
+            android:id="@+id/id_bake_degree"
+            android:layout_centerInParent="true"
+            app:wheel_unreached_color="#969695"
+            app:wheel_reached_color="#936743"
+            app:wheel_unreached_width="18dp"
+            android:layout_marginBottom="20dp"
+            android:padding="10dp"
+            app:wheel_max_process="70"
+            app:wheel_pointer_radius="7dp"
+            app:wheel_pointer_color="#FFF"
+            android:layout_width="150dp"
+            android:layout_height="150dp"/>
+        <TextView
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/id_bake_degree"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Full City"/>
+        <TextView
+            android:layout_below="@id/id_bake_degree"
+            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="High City"/>
+        <TextView
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/id_bake_degree"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Mediam"/>
+    </RelativeLayout>
+    <TextView
+        android:paddingLeft="25.3125dp"
+        android:background="#ECECEC"
+        android:textColor="#a29e9b"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="烘焙事件"/>
+    <LinearLayout
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <com.dhy.coffeesecret.views.WheelView
+            android:id="@+id/id_bake_behind_wheelView"
+            android:layout_width="match_parent"
+            android:textColor="#000"
+            android:layout_height="wrap_content"></com.dhy.coffeesecret.views.WheelView>
+    </LinearLayout>
+
+    <LinearLayout
+        style="@style/behindEdit"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_baking_behind_event"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <EditText
+            android:id="@+id/id_bake_behind_event"
+            android:layout_gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="事件"/>
+    </LinearLayout>
+    <TextView
+        android:paddingLeft="25.3125dp"
+        android:background="#ECECEC"
+        android:textColor="#a29e9b"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="熟豆重量"/>
+    <LinearLayout
+        android:layout_marginTop="10dp"
+        style="@style/behindEdit"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_baking_behind_weight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <EditText
+            android:id="@+id/id_bake_behind_cookedWeight"
+            android:layout_gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="重量"/>
+    </LinearLayout>
+</LinearLayout>

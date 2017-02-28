@@ -9,12 +9,13 @@ import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.formatter.IValueFormatter;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by Philipp Jahoda on 21/10/15.
  */
-public interface IDataSet<T extends Entry> {
+public interface IDataSet<T extends Entry>{
 
     /** ###### ###### DATA RELATED METHODS ###### ###### */
 

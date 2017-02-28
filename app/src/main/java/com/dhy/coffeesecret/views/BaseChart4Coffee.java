@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
+import android.util.Log;
 
 import com.dhy.coffeesecret.pojo.UniversalConfiguration;
 import com.dhy.coffeesecret.ui.device.formatter.XAxisFormatter4Time;
@@ -31,9 +32,9 @@ import java.util.Map;
 
 public class BaseChart4Coffee extends LineChart {
 
-    public final static int BEANLINE = 1, ACCBEANLINE = -1, INWINDLINE = 2, ACCINWINDLINE = -2, OUTWINDLINE = 3, ACCOUTWINDLINE = -3;
+    public final static int BEANLINE = 0, ACCBEANLINE = 1, INWINDLINE = 2, ACCINWINDLINE = 3, OUTWINDLINE = 4, ACCOUTWINDLINE = 5;
     private UniversalConfiguration mConfig;
-    private Map<Integer, String> labels = new HashMap<>();
+    private static Map<Integer, String> labels = new HashMap<>();
     private Map<Integer, ILineDataSet> lines = new HashMap<>();
     private Handler mHandler = new Handler(new Handler.Callback() {
         @Override
@@ -43,7 +44,7 @@ public class BaseChart4Coffee extends LineChart {
         }
     });
 
-    {
+    static{
         labels.put(BEANLINE, "豆温");
         labels.put(ACCBEANLINE, "豆升温");
         labels.put(INWINDLINE, "进风温");
@@ -51,6 +52,10 @@ public class BaseChart4Coffee extends LineChart {
         labels.put(OUTWINDLINE, "出风温");
         labels.put(ACCOUTWINDLINE, "出风升温");
 
+    }
+
+    public static String Integer2StringLable(int index){
+        return labels.get(index);
     }
 
     public BaseChart4Coffee(Context context) {
@@ -130,7 +135,6 @@ public class BaseChart4Coffee extends LineChart {
 
         // rightAxis.setDrawZeroLine(false);
         // rightAxis.setGranularityEnabled(false);
-        initLine();
     }
 
     public void addTempratureLine(int lineIndex, boolean isAcc) {
@@ -189,11 +193,13 @@ public class BaseChart4Coffee extends LineChart {
 
     public boolean showLine(int lineIndex) {
         lines.get(lineIndex).setVisible(true);
+        mHandler.sendEmptyMessage(0);
         return true;
     }
 
     public boolean hideLine(int lineIndex) {
         lines.get(lineIndex).setVisible(false);
+        mHandler.sendEmptyMessage(0);
         return true;
     }
 
@@ -204,15 +210,19 @@ public class BaseChart4Coffee extends LineChart {
     }
 
     public void addNewDatas(List<Entry> beanDatas, int lineIndex) {
-        ILineDataSet beanLine = new LineDataSet(beanDatas, labels.get(lineIndex));
+     /*   ILineDataSet beanLine = new LineDataSet(beanDatas, labels.get(lineIndex));
         lines.put(lineIndex, beanLine);
-        getData().addDataSet(beanLine);
+        LineData lineData = getData();
+        if(lineData == null){
+            lineData = new LineData();
+        }*/
 
-        notifyDataSetChanged();
-        invalidate();
+        ((LineDataSet)lines.get(lineIndex)).setValues(beanDatas);
+
+        mHandler.sendEmptyMessage(0);
     }
 
-    private void initLine() {
+    public void initLine() {
         addTempratureLine(BaseChart4Coffee.BEANLINE);
         addTempratureLine(BaseChart4Coffee.INWINDLINE);
         addTempratureLine(BaseChart4Coffee.OUTWINDLINE);

@@ -14,6 +14,7 @@ import android.os.Message;
 import android.util.Log;
 
 import com.dhy.coffeesecret.pojo.Temprature;
+import com.github.mikephil.charting.data.Entry;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -58,10 +59,6 @@ public class BluetoothHelper {
             mViewListener.handleViewBeforeStartRead();
         }
     };
-
-    public String getCurBluetoothName(){
-        return mCurDevice.getName();
-    }
     private BluetoothGattCallback mGattCallback = new BluetoothGattCallback() {
         @Override
         public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
@@ -158,7 +155,6 @@ public class BluetoothHelper {
             mDeviceListener.notifyNewDevice(bluetoothDevice);
         }
     };
-
     private BluetoothHelper(Context context) {
         this.mContext = context;
         mAdapter = ((BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE)).getAdapter();
@@ -177,6 +173,10 @@ public class BluetoothHelper {
             return mHelper;
         }
         return null;
+    }
+
+    public String getCurBluetoothName() {
+        return mCurDevice.getName();
     }
 
     /**
@@ -308,8 +308,8 @@ public class BluetoothHelper {
                                 return;
                             }
                             try {
-                                // Thread.currentThread().sleep(1000);
-                                Thread.currentThread().sleep(5000);
+                                Thread.currentThread().sleep(1000);
+                                // Thread.currentThread().sleep(5000);
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
@@ -370,4 +370,5 @@ public class BluetoothHelper {
          */
         void handleViewBeforeStartRead();
     }
+
 }

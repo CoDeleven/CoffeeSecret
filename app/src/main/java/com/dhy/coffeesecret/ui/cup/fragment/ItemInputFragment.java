@@ -75,7 +75,7 @@ public class ItemInputFragment extends Fragment implements NumberPicker.OnValueC
     }
 
     private void initView() {
-        mTitleView = (TextView) mContentView.findViewById(R.id.tv_title);
+        mTitleView = (TextView) mContentView.findViewById(R.id.title_text);
         mPickerFir = (MaterialNumberPicker) mContentView.findViewById(R.id.np_fir);
         mPickerSec = (MaterialNumberPicker) mContentView.findViewById(R.id.np_sec);
         mPickerThr = (MaterialNumberPicker) mContentView.findViewById(R.id.np_thr);

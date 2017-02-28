@@ -14,11 +14,16 @@ import java.util.Map;
  * Created by CoDeleven on 17-2-25.
  */
 
-public class BakeReportImm implements Serializable{
-    private String baker;
+public class BakeReportImm implements Serializable {
+    private String bakeDate;
     private String device;
     private Map<Integer, Float> rawBeanWeight;
-    private List<List<EntryPojo>> tempratures;
+    private List<EntryPojo> beanTemps = new ArrayList<>();
+    private List<Float> inwindTemps = new ArrayList<>();
+    private List<Float> outwindTemps = new ArrayList<>();
+    private List<Float> accBeanTemps = new ArrayList<>();
+    private List<Float> accInwindTemps = new ArrayList<>();
+    private List<Float> accOutwindTemps = new ArrayList<>();
     private List<Float> timex = new ArrayList<>();
     private float cookedBeanWeight;
     private int developTime;
@@ -26,13 +31,49 @@ public class BakeReportImm implements Serializable{
     private float envTemp;
     private float endTemp;
     private float startTemp;
+    private float bakeDegree;
+    // 以下字段均不持久化
+    private transient List<BeanInfoSimple> beanInfos;
+    private transient LineData lineData;
+    private transient List<Entry> entriesWithEvents;
+    public BakeReportImm() {
 
-    public String getBaker() {
-        return baker;
     }
 
-    public void setBaker(String baker) {
-        this.baker = baker;
+    public List<Entry> getEntriesWithEvents() {
+        return entriesWithEvents;
+    }
+
+    public void setEntriesWithEvents(List<Entry> entriesWithEvents) {
+        this.entriesWithEvents = entriesWithEvents;
+    }
+
+    public String getBakeDate() {
+        return bakeDate;
+    }
+
+    public void setLineData(LineData lineData) {
+        this.lineData = lineData;
+    }
+
+    public void setBakeDate(String bakeDate) {
+        this.bakeDate = bakeDate;
+    }
+
+    public List<BeanInfoSimple> getBeanInfos() {
+        return beanInfos;
+    }
+
+    public void setBeanInfos(List<BeanInfoSimple> beanInfos) {
+        this.beanInfos = beanInfos;
+    }
+
+    public float getBakeDegree() {
+        return bakeDegree;
+    }
+
+    public void setBakeDegree(float bakeDegree) {
+        this.bakeDegree = bakeDegree;
     }
 
     public float getCookedBeanWeight() {
@@ -83,7 +124,6 @@ public class BakeReportImm implements Serializable{
         this.envTemp = envTemp;
     }
 
-
     public Map<Integer, Float> getRawBeanWeight() {
         return rawBeanWeight;
     }
@@ -100,45 +140,91 @@ public class BakeReportImm implements Serializable{
         this.startTemp = startTemp;
     }
 
-    public List<Float> getTimex(){
+    public List<Float> getTimex() {
         return timex;
     }
 
-    public BakeReportImm(){
-
+    public void setTimex(List<Float> timex) {
+        this.timex = timex;
     }
 
-    public void setTempratures(LineData lineData){
-        this.tempratures = lineData2Pojo(lineData);
+    public List<Float> getAccBeanTemps() {
+        return accBeanTemps;
     }
 
-    private List<List<EntryPojo>> lineData2Pojo(LineData lineData){
-        boolean isFillX = false;
-        List<List<EntryPojo>> outter = new ArrayList<>();
-        for(ILineDataSet lineDataSet: lineData.getDataSets()){
-            List<EntryPojo> inner = new ArrayList<>();
-            for(Entry entry: ((DataSet<Entry>)lineDataSet).getValues()){
-                inner.add(new EntryPojo(entry.getY(), entry.getEvent().getDescription(), entry.getEvent().getCurStatus()));
-                if(!isFillX){
-                    timex.add(entry.getX());
-                }
-            }
-            if(!isFillX){
-                isFillX = true;
-            }
-            outter.add(inner);
+    public void setAccBeanTemps(List<Float> accBeanTemps) {
+        this.accBeanTemps = accBeanTemps;
+    }
+
+    public List<Float> getAccInwindTemps() {
+        return accInwindTemps;
+    }
+
+    public void setAccInwindTemps(List<Float> accInwindTemps) {
+        this.accInwindTemps = accInwindTemps;
+    }
+
+    public List<Float> getAccOutwindTemps() {
+        return accOutwindTemps;
+    }
+
+    public void setAccOutwindTemps(List<Float> accOutwindTemps) {
+        this.accOutwindTemps = accOutwindTemps;
+    }
+
+    public List<EntryPojo> getBeanTemps() {
+        return beanTemps;
+    }
+
+    public void setBeanTemps(List<EntryPojo> beanTemps) {
+        this.beanTemps = beanTemps;
+    }
+
+    public List<Float> getInwindTemps() {
+        return inwindTemps;
+    }
+
+    public void setInwindTemps(List<Float> inwindTemps) {
+        this.inwindTemps = inwindTemps;
+    }
+
+    public List<Float> getOutwindTemps() {
+        return outwindTemps;
+    }
+
+    public void setOutwindTemps(List<Float> outwindTemps) {
+        this.outwindTemps = outwindTemps;
+    }
+
+    public LineData getLineData() {
+        return lineData;
+    }
+
+    public class EntryPojo implements Serializable {
+        public float y;
+        public String event;
+        public int curStatus;
+
+        private transient Entry entry;
+
+        public EntryPojo(Entry entry) {
+            this.entry = entry;
+
         }
-        return outter;
-    }
 
-    class EntryPojo {
-        float y;
-        String event;
-        int curStatus;
-        private EntryPojo(float y, String event, int curStatus){
-            this.y = y;
-            this.event = event;
-            this.curStatus = curStatus;
+        public String getEvent() {
+            return entry.getEvent().getDescription();
+        }
+        public int getCurStatus() {
+            return entry.getEvent().getCurStatus();
+        }
+
+        public float getY() {
+            return entry.getY();
+        }
+
+        public EntryPojo() {
+
         }
     }
 
