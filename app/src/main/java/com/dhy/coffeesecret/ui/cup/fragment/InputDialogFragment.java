@@ -155,7 +155,7 @@ public class InputDialogFragment extends DialogFragment
             mContentView = inflater.inflate(R.layout.fragment_input, container, false);
         }
         getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        getDialog().setCanceledOnTouchOutside(false);
+        getDialog().setCanceledOnTouchOutside(false);
         return mContentView;
     }
 
@@ -172,7 +172,7 @@ public class InputDialogFragment extends DialogFragment
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                dismissAllowingStateLoss();
             }
         });
 
