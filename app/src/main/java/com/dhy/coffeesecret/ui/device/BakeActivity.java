@@ -444,7 +444,6 @@ public class BakeActivity extends AppCompatActivity implements BluetoothHelper.D
                     T.showShort(this, "请先点击二爆");
                 } else {
                     updateCurBeanEntryEvent(new Event(Event.END, "结束"));
-                    mHelper.stopRead();
                     BakeReportImm imm = generateReport();
                     imm.setEntriesWithEvents(eventRecords);
                     Intent intent = new Intent(BakeActivity.this, EditBehindActiviy.class);

@@ -1,22 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:paddingTop="20dp"
+              android:paddingLeft="29.8125dp"
+              android:paddingBottom="20dp"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
     <ImageView
+        android:gravity="center_vertical"
+        android:layout_gravity="center_vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@mipmap/ic_launcher"/>
+        android:src="@drawable/ic_bluetooth_device"/>
 
     <TextView
+        android:paddingLeft="30dp"
+        android:gravity="center_vertical"
+        android:layout_gravity="center_vertical"
         android:id="@+id/text_name"
+        android:textSize="15sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         />
 
     <ProgressBar
+        android:gravity="center_vertical"
+        android:layout_gravity="right|center_vertical"
         android:id="@+id/circle_progress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
         android:visibility="gone"/>
 </LinearLayout>

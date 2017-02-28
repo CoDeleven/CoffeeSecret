@@ -14,7 +14,6 @@ import android.os.Message;
 import android.util.Log;
 
 import com.dhy.coffeesecret.pojo.Temprature;
-import com.github.mikephil.charting.data.Entry;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -151,14 +150,16 @@ public class BluetoothHelper {
     private BluetoothAdapter.LeScanCallback mScanCallback = new BluetoothAdapter.LeScanCallback() {
         @Override
         public void onLeScan(BluetoothDevice bluetoothDevice, int i, byte[] bytes) {
+            Log.e("codelevex", bluetoothDevice.getName() + "-" + bluetoothDevice.getBluetoothClass().getMajorDeviceClass());
             // 回调通知界面有新设备
             mDeviceListener.notifyNewDevice(bluetoothDevice);
         }
     };
+
     private BluetoothHelper(Context context) {
         this.mContext = context;
-        mAdapter = ((BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE)).getAdapter();
 
+        mAdapter = ((BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE)).getAdapter();
     }
 
     public static BluetoothHelper getNewInstance(Context context) {
@@ -186,6 +187,17 @@ public class BluetoothHelper {
      */
     public boolean scanBluetoothDevice() {
         return mAdapter.startLeScan(mScanCallback);
+    }
+
+    public void close() {
+        stopRead();
+        if (mGatt != null) {
+            mGatt.disconnect();
+            mGatt.close();
+        }
+        mAdapter.stopLeScan(mScanCallback);
+
+
     }
 
     /**
@@ -346,6 +358,14 @@ public class BluetoothHelper {
         return testThread != null && testThread.isAlive();
     }
 
+    public BluetoothAdapter getmAdapter() {
+        return mAdapter;
+    }
+
+    public boolean getEnableStatus() {
+        return mAdapter.isEnabled();
+    }
+
     public interface DeviceChangeListener {
         /**
          * 发现新设备时回调
@@ -370,5 +390,4 @@ public class BluetoothHelper {
          */
         void handleViewBeforeStartRead();
     }
-
 }

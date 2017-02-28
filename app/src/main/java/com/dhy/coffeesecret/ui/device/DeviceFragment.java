@@ -26,6 +26,7 @@ import com.dhy.coffeesecret.utils.FragmentTool;
 import com.dhy.coffeesecret.utils.ObjectJsonConvert;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -98,10 +99,15 @@ public class DeviceFragment extends Fragment implements BluetoothHelper.DataChan
     @Override
     public void onStart() {
         super.onStart();
+        hasPrepared = false;
         if (mHelper == null) {
             mHelper = BluetoothHelper.getNewInstance(getActivity().getApplicationContext());
-            mHelper.setDataListener(this);
         }
+        mHelper.setDataListener(this);
+        if(dialogBeanInfos != null){
+            dialogBeanInfos.clear();
+        }
+        switchStatus();
     }
 
     private void showDialogFragment() {

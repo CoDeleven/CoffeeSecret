@@ -32,7 +32,7 @@ import java.util.List;
  */
 
 public class BakeDialog extends DialogFragment {
-    private static List<DialogBeanInfo> dialogBeanInfos = new ArrayList<>();
+    private static List<DialogBeanInfo> dialogBeanInfos;
     private static int curItem;
     private Context mContext;
     private Button mCancel;
@@ -45,7 +45,7 @@ public class BakeDialog extends DialogFragment {
     private OnBeaninfosConfirmListener beaninfosConfirmListener;
 
     public BakeDialog() {
-
+        dialogBeanInfos = new ArrayList<>();
     }
 
     @Nullable
