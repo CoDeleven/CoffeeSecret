@@ -1,9 +1,9 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:app="http://schemas.android.com/apk/res-auto"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             tools:context="com.dhy.coffeesecret.ui.cup.fragment.EditToolBar">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context="com.dhy.coffeesecret.ui.cup.fragment.EditToolBar">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolBar"
@@ -30,7 +30,7 @@
                 android:paddingLeft="17dp"
                 android:paddingRight="17dp"
                 android:text="@string/save"
-                android:textColor="@android:color/white"/>
+                android:textColor="@android:color/white" />
 
             <TextView
                 android:id="@+id/tv"
@@ -38,9 +38,21 @@
                 android:layout_height="wrap_content"
                 android:layout_toLeftOf="@id/btn_save"
                 android:gravity="center"
-                android:text="@string/edit_cupping"
+                android:singleLine="true"
                 android:textColor="@android:color/white"
-                android:textSize="@dimen/actionbar_title_font_size"/>
+                android:textSize="@dimen/font_size_primary" />
+
+            <Button
+                android:id="@+id/btn_edit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv"
+                android:layout_toLeftOf="@id/btn_save"
+                android:background="@android:color/transparent"
+                android:minHeight="0dp"
+                android:text="@string/edit_cupping"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="10sp" />
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
 

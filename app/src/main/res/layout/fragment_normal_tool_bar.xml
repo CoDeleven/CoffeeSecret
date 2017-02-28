@@ -34,13 +34,15 @@
                 android:textColor="@android:color/white"/>
 
             <TextView
+                android:id="@+id/tv_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_toLeftOf="@id/btn_edit"
                 android:gravity="center"
+                android:singleLine="true"
+                android:textSize="@dimen/actionbar_title_font_size"
                 android:text="杯测名xxx"
-                android:textColor="@android:color/white"
-                android:textSize="@dimen/actionbar_title_font_size"/>
+                android:textColor="@android:color/white" />
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
 </FrameLayout>

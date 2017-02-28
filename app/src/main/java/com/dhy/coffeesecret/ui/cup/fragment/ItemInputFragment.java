@@ -9,28 +9,28 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.NumberPicker;
 import android.widget.TextView;
 
 import com.dhy.coffeesecret.R;
+import com.dhy.coffeesecret.utils.T;
 
 import biz.kasual.materialnumberpicker.MaterialNumberPicker;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link ItemInputFragment.OnFragmentInteractionListener} interface
+ * {@link OnItemValueChangeListener} interface
  * to handle interaction events.
  * Use the {@link ItemInputFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ItemInputFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+public class ItemInputFragment extends Fragment implements NumberPicker.OnValueChangeListener {
+
     private static final String ARG_POSITION = "position";
     private static final String ARG_TITLE = "title";
     private static final String ARG_VALUE = "value";
 
-    // TODO: Rename and change types of parameters
     private String mTitle;
     private String mValue;
     private int mPosition;
@@ -44,18 +44,17 @@ public class ItemInputFragment extends Fragment {
 
     private View mContentView;
 
-    private OnFragmentInteractionListener mListener;
+    private OnItemValueChangeListener mListener;
 
     public ItemInputFragment() {
-        // Required empty public constructor
     }
 
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param title      Parameter 1.
-     * @param defaultVal Parameter 2.
+     * @param title      title.
+     * @param defaultVal defaultVal.
      * @return A new instance of fragment ItemInputFragment.
      */
     public static ItemInputFragment newInstance(int position, String title, String defaultVal) {
@@ -92,6 +91,11 @@ public class ItemInputFragment extends Fragment {
         if (mPosition > 7) {
             lockPicker();
         }
+
+        mPickerFir.setOnValueChangedListener(this);
+        mPickerSec.setOnValueChangedListener(this);
+        mPickerThr.setOnValueChangedListener(this);
+        mPickerFou.setOnValueChangedListener(this);
     }
 
     public void lockPicker() {
@@ -125,21 +129,14 @@ public class ItemInputFragment extends Fragment {
         return mContentView;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (getParentFragment() instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) getParentFragment();
+        if (getParentFragment() instanceof OnItemValueChangeListener) {
+            mListener = (OnItemValueChangeListener) getParentFragment();
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement OnItemValueChangeListener");
         }
     }
 
@@ -149,18 +146,40 @@ public class ItemInputFragment extends Fragment {
         mListener = null;
     }
 
+    @Override
+    public void onValueChange(NumberPicker numberPicker, int i, int i1) {
+
+        int val0 = mPickerFir.getValue();
+        int val1 = mPickerSec.getValue();
+        int val2 = mPickerThr.getValue();
+        int val3 = mPickerFou.getValue();
+        float value;
+        if(val0 == 1){
+            mPickerSec.setValue(0);
+            mPickerThr.setValue(0);
+            mPickerFou.setValue(0);
+            T.showShort(getActivity(),"分数上限为10分");
+            value = 10.00f;
+        }else {
+            value = val0 * 10 + val1 + val2 * 0.1f + val3 * 0.01f;
+        }
+
+        if (mListener != null) {
+            mListener.onItemValueChange(mPosition, value);
+        }
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
      * to the activity and potentially other fragments contained in that
      * activity.
-     * <p/>
+     * <p>
      * See the Android Training lesson <a href=
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+    public interface OnItemValueChangeListener {
+        void onItemValueChange(int position, float value);
     }
 }

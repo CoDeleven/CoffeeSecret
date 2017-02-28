@@ -22,12 +22,16 @@ import com.dhy.coffeesecret.R;
 public class EditToolBar extends Fragment {
 
     private OnSaveListener mListener;
+    private OnTitleClickListener mTitleClickListener;
     private View mView;
 
     private Button mSaveButton;
+    private Button mEditButton;
     private Toolbar mToolbar;
     private View.OnClickListener onClickListener;
     private String mTitle;
+    private TextView mTextView;
+
 
 
     public EditToolBar() {
@@ -56,10 +60,19 @@ public class EditToolBar extends Fragment {
         mView = inflater.inflate(R.layout.fragment_edit_tool_bar, container, false);
         mSaveButton = (Button) mView.findViewById(R.id.btn_save);
         mToolbar = (Toolbar) mView.findViewById(R.id.toolBar);
+        mTextView = (TextView) mView.findViewById(R.id.tv);
+        mEditButton = (Button) mView.findViewById(R.id.btn_edit);
         if (mTitle != null) {
-            TextView tv = (TextView) mView.findViewById(R.id.tv);
-            tv.setText(mTitle);
+            mTextView.setText(mTitle);
         }
+        mEditButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mTitleClickListener != null){
+                    mTitleClickListener.onTitleClick(mTitle);
+                }
+            }
+        });
         return mView;
     }
 
@@ -76,7 +89,7 @@ public class EditToolBar extends Fragment {
             mListener = (OnSaveListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement OnItemValueChangeListener");
         }
     }
 
@@ -86,9 +99,17 @@ public class EditToolBar extends Fragment {
         mListener = null;
     }
 
-    public void setmTitle(String mTitle) {
-        this.mTitle = mTitle;
+    public void setTitle(String title) {
+        this.mTitle = title;
+        if(mTextView != null){
+            mTextView.setText(title);
+        }
     }
+
+    public void setTitleClickListener(OnTitleClickListener titleClickListener) {
+        this.mTitleClickListener = titleClickListener;
+    }
+
 
     /**
      * This interface must be implemented by activities that contain this
@@ -101,8 +122,11 @@ public class EditToolBar extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnSaveListener {
-        // TODO: Update argument type and name
         void onSave();
+    }
+
+    public interface OnTitleClickListener {
+        void onTitleClick(String title);
     }
 
 

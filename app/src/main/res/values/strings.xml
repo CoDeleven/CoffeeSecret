@@ -68,6 +68,20 @@
 
     <string name="progress_text_format_pattern">%d</string>
     <string name="edit">编辑</string>
-    <string name="edit_cupping">编辑杯测信息</string>
+    <string name="edit_cupping">点击修改</string>
+    <string name="dry_and_frag">干湿香</string>
+    <string name="flavor">风味</string>
+    <string name="after_taste">余韵</string>
+    <string name="acidity">酸质</string>
+    <string name="taste">口感</string>
+    <string name="sweet">甜感</string>
+    <string name="balance">均衡度</string>
+    <string name="overall">整体感受</string>
+    <string name="underdev">发展不充分</string>
+    <string name="overdev">过度发展</string>
+    <string name="baked">烤焙味</string>
+    <string name="scorched">自焙烫伤</string>
+    <string name="tipped">胚芽烫伤</string>
+    <string name="faced">豆表烫伤</string>
 
 </resources>
