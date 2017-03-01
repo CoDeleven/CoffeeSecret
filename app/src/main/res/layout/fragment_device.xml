@@ -143,7 +143,7 @@
                             android:id="@+id/bluetooth_status"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="已连接"
+                            android:text="未连接"
                             android:textColor="#000000"
                             android:textSize="19sp" />
                     </RelativeLayout>
@@ -155,7 +155,7 @@
                         android:layout_centerVertical="true"
                         android:layout_toRightOf="@id/id_layout_switch"
                         android:padding="10dp"
-                        android:text="切换"
+                        android:text="连接"
                         android:textColor="@color/colorPrimary"
                         android:textSize="11sp" />
                 </RelativeLayout>

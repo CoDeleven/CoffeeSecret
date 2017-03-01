@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal|center_vertical"
             android:gravity="center_vertical"
-            android:text="@string/title_device_child_activity"
+            android:text="设备选择"
             android:textColor="#FFF"
             android:textSize="20sp"/>
 
@@ -85,7 +85,7 @@
             <ListView
                 android:id="@+id/id_connecting_bluetooth_list"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"></ListView>
+                android:layout_height="match_parent"></ListView>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

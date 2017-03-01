@@ -446,7 +446,9 @@ public class BakeActivity extends AppCompatActivity implements BluetoothHelper.D
                     updateCurBeanEntryEvent(new Event(Event.END, "结束"));
                     BakeReportImm imm = generateReport();
                     imm.setEntriesWithEvents(eventRecords);
+                    imm.setEndTemp(curBeanEntry.getY());
                     Intent intent = new Intent(BakeActivity.this, EditBehindActiviy.class);
+                    mHelper.stopRead();
                     startActivity(intent);
                     finish();
                     status = true;
@@ -529,8 +531,6 @@ public class BakeActivity extends AppCompatActivity implements BluetoothHelper.D
         bakeReportImm.setDevelopRate(developBar.getDevelopRateWithoutFormat());
 
         bakeReportImm.setStartTemp(startTemp);
-
-        bakeReportImm.setEndTemp(endTemp);
 
         bakeReportImm.setEnvTemp(intent.getFloatExtra(ENV_TEMP, -1));
 

@@ -66,7 +66,6 @@ public class BakeDialog extends DialogFragment {
     }
 
     private void initComp(View view) {
-
         mCancel = (Button) view.findViewById(R.id.id_bake_dialog_cancel);
         mConfirm = (Button) view.findViewById(R.id.id_bake_dialog_confirm);
         mCheckBox = (CheckBox) view.findViewById(R.id.id_bake_dialog_checkbox);

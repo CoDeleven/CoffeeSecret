@@ -20,7 +20,7 @@
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="6.75dp">
+            android:layout_marginTop="19.125dp">
 
             <com.dhy.coffeesecret.views.ArcProgress
                 android:layout_width="101.25dp"
@@ -188,13 +188,13 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:layout_marginTop="32.0625dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <Button
             android:id="@+id/id_baking_dry"
             style="@style/bakingOperator"
-            android:layout_marginTop="21.375dp"
             android:text="脱水"/>
 
         <Button

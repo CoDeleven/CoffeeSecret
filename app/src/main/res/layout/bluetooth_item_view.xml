@@ -1,33 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:paddingTop="20dp"
               android:paddingLeft="29.8125dp"
-              android:paddingBottom="20dp"
+                android:paddingRight="29.8125dp"
+                android:paddingBottom="20dp"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
-    <ImageView
+    <!--<ImageView
+        android:layout_weight="1"
         android:gravity="center_vertical"
         android:layout_gravity="center_vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_bluetooth_device"/>
+        android:src="@drawable/ic_bluetooth_device"/>-->
 
     <TextView
-        android:paddingLeft="30dp"
+        android:layout_alignParentLeft="true"
         android:gravity="center_vertical"
         android:layout_gravity="center_vertical"
         android:id="@+id/text_name"
         android:textSize="15sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_bluetooth_device"
+        android:drawablePadding="30dp"
         />
-
     <ProgressBar
-        android:gravity="center_vertical"
+        android:layout_alignParentRight="true"
         android:layout_gravity="right|center_vertical"
         android:id="@+id/circle_progress"
         android:layout_width="15dp"
         android:layout_height="15dp"
         android:visibility="gone"/>
-</LinearLayout>
+    <ImageView
+        android:src="@drawable/ic_seleted_tick"
+        android:layout_alignParentRight="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/id_bluetooth_list_right"
+        android:layout_gravity="right|center_vertical"
+        android:visibility="gone"/>
+</RelativeLayout>
