@@ -101,10 +101,15 @@ public class SettingsActivity extends AppCompatActivity{
         textHeatingLine.setText("每秒的平均数为: " + config.getTempratureAccSmooth());
     }
 
-    @OnClick({R.id.quick_start, R.id.confirm_again, R.id.quick_event, R.id.weight_unit, R.id.temperature_unit, R.id.refer_degree, R.id.time_shaft, R.id.temperature_shaft, R.id.temperature_line, R.id.heating_line})
+    @OnClick({R.id.btn_back, R.id.quick_start, R.id.confirm_again, R.id.quick_event, R.id.weight_unit
+            , R.id.temperature_unit, R.id.refer_degree, R.id.time_shaft, R.id.temperature_shaft
+            , R.id.temperature_line, R.id.heating_line, R.id.line_color})
     public void onClick(View view) {
         Message msg;
         switch (view.getId()) {
+            case R.id.btn_back:
+                this.finish();
+                overridePendingTransition(R.anim.in_from_left, R.anim.out_to_right);
             case R.id.quick_start:
                 checkQuickStart.setChecked(!checkQuickStart.isChecked());
                 config.setQuickStart(checkQuickStart.isChecked());
@@ -130,7 +135,7 @@ public class SettingsActivity extends AppCompatActivity{
                 msg = new Message();
                 msg.what = SHOW_TEXT_DIALOG;
                 msg.arg1 = R.id.temperature_unit;
-                msg.obj = new String[]{"摄氏度", "华氏度"};
+                msg.obj = new String[]{"℃", "℉"};
                 mHandler.sendMessage(msg);
                 break;
             case R.id.refer_degree:
@@ -170,8 +175,8 @@ public class SettingsActivity extends AppCompatActivity{
                 break;
             case R.id.line_color:
                 msg = new Message();
-                msg.what = INTENT_TO_QUICK_EVENT;
-                msg.arg1 = R.id.quick_event;
+                msg.what = INTENT_TO_LINES_COLOR;
+                msg.arg1 = R.id.line_color;
                 mHandler.sendMessage(msg);
                 break;
         }
@@ -193,10 +198,10 @@ public class SettingsActivity extends AppCompatActivity{
                                 if (!whichItem.equals(config.getTempratureUnit())) {
                                     int maxLeftY = 0;
                                     switch (whichItem) {
-                                        case "摄氏度":
+                                        case "℃":
                                             maxLeftY = (int)((config.getMaxLeftY() - 32) / 1.8);
                                             break;
-                                        case "华氏度":
+                                        case "℉":
                                             maxLeftY = (int)(config.getMaxLeftY() * 1.8 + 32);
                                             break;
                                     }
@@ -317,28 +322,13 @@ public class SettingsActivity extends AppCompatActivity{
                     break;
                 case INTENT_TO_QUICK_EVENT:
                     Intent quickEvent = new Intent(activity, QuickEventActivity.class);
-                    startActivityForResult(quickEvent, msg.arg1);
+                    startActivity(quickEvent);
+                    overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
                     break;
                 case INTENT_TO_LINES_COLOR:
                     Intent linesColor = new Intent(activity, LinesColorActivity.class);
-                    startActivityForResult(linesColor, msg.arg1);
-                    break;
-            }
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            switch (requestCode) {
-                case R.id.quick_event:
-                    ArrayList<String> quickEventsList = data.getStringArrayListExtra("quick_events");
-                    HashSet<String> quickEventsSet = new HashSet<>();
-                    quickEventsSet.addAll(quickEventsList);
-                    config.setQuickEvents(quickEventsSet);
-                    break;
-                case R.id.line_color:
+                    startActivity(linesColor);
+                    overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
                     break;
             }
         }

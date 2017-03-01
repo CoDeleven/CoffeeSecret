@@ -6,6 +6,8 @@ import android.graphics.Color;
 import android.support.v4.content.SharedPreferencesCompat;
 
 import com.dhy.coffeesecret.pojo.UniversalConfiguration;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -32,7 +34,7 @@ public class SettingTool {
         mConfig = new UniversalConfiguration();
         mConfig.setWeightUnit(sharedPreferences.getString("weightUnit", "kg"));
         mConfig.setTempratureUnit(sharedPreferences.getString("tempratureUnit", "℃"));
-        mConfig.setReferDegree(sharedPreferences.getString("referDegree", "℃"));
+        mConfig.setReferDegree(sharedPreferences.getString("referDegree", "Agtron"));
         mConfig.setQuickStart(sharedPreferences.getBoolean("quickStart", false));
         mConfig.setDoubleClick(sharedPreferences.getBoolean("doubleClick", true));
         mConfig.setMarkByCircle(sharedPreferences.getBoolean("markByCircle", false));
@@ -52,7 +54,7 @@ public class SettingTool {
         mConfig.setAccBeanColor(sharedPreferences.getInt("accBeanColor", Color.parseColor("#FFFF00")));
         mConfig.setAccInwindColor(sharedPreferences.getInt("accInwindColor", Color.parseColor("#00FFFF")));
         mConfig.setAccOutwindColor(sharedPreferences.getInt("accOutwindColor", Color.parseColor("#FF00FF")));
-        mConfig.setQuickEvents(sharedPreferences.getStringSet("quickEvent", new HashSet<String>()));
+        mConfig.setQuickEvents(sharedPreferences.getString("quickEvent", TestData.quickEvents));
     }
 
     public static void saveConfig(UniversalConfiguration config) {
@@ -62,6 +64,7 @@ public class SettingTool {
         editor.putString("weightUnit", config.getWeightUnit());
         editor.putString("tempratureUnit", config.getTempratureUnit());
         editor.putString("referDegree", config.getReferDegree());
+        editor.putString("quickEvent", config.getQuickEvents());
         editor.putBoolean("quickStart", config.isQuickStart());
         editor.putBoolean("doubleClick", config.isDoubleClick());
         editor.putBoolean("markByCircle", config.isQuickStart());
@@ -77,7 +80,6 @@ public class SettingTool {
         editor.putInt("accBeanColor", config.getAccBeanColor());
         editor.putInt("accInwindColor", config.getAccInwindColor());
         editor.putInt("accOutwindColor", config.getAccOutwindColor());
-        editor.putStringSet("quickEvent", config.getQuickEvents());
         SharedPreferencesCompat.apply(editor);
     }
 
@@ -90,6 +92,22 @@ public class SettingTool {
         editor.putInt("checkEvnTemp", config.getCheckEvnTemp());
 
         SharedPreferencesCompat.apply(editor);
+    }
+
+    public static ArrayList<String> parse2List(String json) {
+
+        Gson gson = new Gson();
+        ArrayList<String> list = gson.fromJson(json, new TypeToken<ArrayList<String>>() {
+        }.getType());
+
+        return list != null ? list : new ArrayList<String>();
+    }
+
+    public static String parse2String(ArrayList<String> list) {
+
+        Gson gson = new Gson();
+
+        return list != null ? gson.toJson(list) : "";
     }
 
     private static class SharedPreferencesCompat {

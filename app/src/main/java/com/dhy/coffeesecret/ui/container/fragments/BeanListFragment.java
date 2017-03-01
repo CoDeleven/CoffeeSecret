@@ -27,6 +27,7 @@ import com.bigkoo.quicksidebar.QuickSideBarView;
 import com.bigkoo.quicksidebar.listener.OnQuickSideBarTouchListener;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BeanInfo;
+import com.dhy.coffeesecret.pojo.Global;
 import com.dhy.coffeesecret.ui.container.BeanInfoActivity;
 import com.dhy.coffeesecret.ui.container.adapters.BeanListAdapter;
 import com.dhy.coffeesecret.ui.container.adapters.CountryListAdapter;
@@ -35,11 +36,19 @@ import com.dhy.coffeesecret.utils.TestData;
 import com.dhy.coffeesecret.views.DividerDecoration;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
+import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
@@ -123,53 +132,6 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
         });
     }
 
-    private void getBeanInfos() {
-
-        Log.i(TAG, "------------------开始加载豆种信息------------------");
-        T.showShort(context, "BeanInfo start load");
-
-        ArrayList<BeanInfo> coffeeBeanInfoList = new ArrayList<>();
-        String[] beanLists = null;
-        switch (title) {
-            case "全部":
-                beanLists = TestData.beanList1;
-                break;
-            case "中美":
-                beanLists = TestData.beanList2;
-                break;
-            case "南美":
-                beanLists = TestData.beanList3;
-                break;
-            case "大洋":
-                beanLists = TestData.beanList4;
-                break;
-            case "亚洲":
-                beanLists = TestData.beanList5;
-                break;
-            case "非洲":
-                beanLists = TestData.beanList6;
-                break;
-            default:
-                beanLists = TestData.beanList7;
-                break;
-        }
-
-        for (int i = 0; i < beanLists.length; i++) {
-            BeanInfo beanInfo = new BeanInfo();
-            beanInfo.setName(beanLists[i]);
-
-            coffeeBeanInfoList.add(beanInfo);
-
-            if (!letters.containsKey(beanLists[i].substring(0, 1))) {
-                letters.put(beanLists[i].substring(0, 1), i);
-            }
-        }
-        coffeeBeanInfos.clear();
-        coffeeBeanInfos.addAll(coffeeBeanInfoList);
-
-        Log.i(TAG, "------------------豆种信息加载结束------------------");
-    }
-
     @TargetApi(Build.VERSION_CODES.CUPCAKE)
     public void initCountryPopupWindow() {
         initPopupWindow("country");
@@ -232,6 +194,74 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
             }
         });
         return popupWindow;
+    }
+
+    private void getBeanInfos() {
+
+        Log.i(TAG, "------------------开始加载豆种信息------------------");
+        mHandler.sendEmptyMessage(LOADING);
+
+        FormBody body = new FormBody.Builder()
+                .add("username", "Simo")
+                .add("action", "getBeanList")
+                .build();
+        Request request = new Request.Builder()
+//                .url(Global.DOMAIN + Global.ENTRANCE_1)
+                .url("http://httpbin.org/post")
+                .post(body)
+                .build();
+        new OkHttpClient().newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                mHandler.sendEmptyMessage(TOAST_1);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+            }
+        });
+        ArrayList<BeanInfo> coffeeBeanInfoList = new ArrayList<>();
+        String[] beanLists = null;
+        switch (title) {
+            case "全部":
+                beanLists = TestData.beanList1;
+                break;
+            case "中美":
+                beanLists = TestData.beanList2;
+                break;
+            case "南美":
+                beanLists = TestData.beanList3;
+                break;
+            case "大洋":
+                beanLists = TestData.beanList4;
+                break;
+            case "亚洲":
+                beanLists = TestData.beanList5;
+                break;
+            case "非洲":
+                beanLists = TestData.beanList6;
+                break;
+            default:
+                beanLists = TestData.beanList7;
+                break;
+        }
+
+        for (int i = 0; i < beanLists.length; i++) {
+            BeanInfo beanInfo = new BeanInfo();
+            beanInfo.setName(beanLists[i]);
+
+            coffeeBeanInfoList.add(beanInfo);
+
+            if (!letters.containsKey(beanLists[i].substring(0, 1))) {
+                letters.put(beanLists[i].substring(0, 1), i);
+            }
+        }
+        coffeeBeanInfos.clear();
+        coffeeBeanInfos.addAll(coffeeBeanInfoList);
+
+        mHandler.sendEmptyMessage(NO_LOADING);
+        Log.i(TAG, "------------------豆种信息加载结束------------------");
     }
 
     private void setCountryList(View contentView) {
@@ -305,6 +335,9 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
     private static final int LOADING = 222;
     private static final int NO_LOADING = 333;
     private static final int INIT_POPUP_WINDOW = 444;
+    private static final int TOAST_1 = 555;
+    private static final int TOAST_2 = 666;
+    private static final int TOAST_3 = 777;
 
     private Handler mHandler = new BeanListHandler(this);
 
@@ -322,38 +355,35 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
             final BeanListFragment activity = mActivity.get();
             switch (msg.what) {
                 case GET_BEAN_INFOS:
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            mHandler.sendEmptyMessage(LOADING);
-
-                            try {
-                                Thread.sleep(2000);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                            getBeanInfos();
-                        }
-                    }).start();
-
-                    mHandler.sendEmptyMessageDelayed(NO_LOADING, 4000);
-
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    activity.getBeanInfos();
                     break;
                 case LOADING:
                     if (!refreshBeanList.isRefreshing()) {
                         activity.refreshBeanList.setRefreshing(true);
                     }
-                    T.showShort(context, "refresh start");
                     break;
                 case NO_LOADING:
                     if (refreshBeanList.isRefreshing()) {
                         refreshBeanList.setRefreshing(false);
                     }
-                    T.showShort(context, "refresh finish");
                     break;
                 case INIT_POPUP_WINDOW:
                     initCountryPopupWindow();
                     initScreenPopupWindow();
+                    break;
+                case TOAST_1:
+                    T.showShort(context, "refresh start");
+                    break;
+                case TOAST_2:
+                    T.showShort(context, "BeanInfo start load");
+                    break;
+                case TOAST_3:
+                    T.showShort(context, "refresh finish");
                     break;
                 default:
                     T.showShort(context, "you send a wrong message");
