@@ -1,7 +1,6 @@
 package com.dhy.coffeesecret.ui.cup.fragment;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -18,7 +18,23 @@ import com.dhy.coffeesecret.ui.cup.listener.GridViewItemClickListener;
 import com.dhy.coffeesecret.utils.ArrayUtil;
 import com.dinuscxj.progressbar.CircleProgressBar;
 
-import static com.dhy.coffeesecret.R.drawable.*;
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.dhy.coffeesecret.R.drawable.ic_acidity;
+import static com.dhy.coffeesecret.R.drawable.ic_after_taste;
+import static com.dhy.coffeesecret.R.drawable.ic_baked;
+import static com.dhy.coffeesecret.R.drawable.ic_balance;
+import static com.dhy.coffeesecret.R.drawable.ic_dry_fragrant;
+import static com.dhy.coffeesecret.R.drawable.ic_faced;
+import static com.dhy.coffeesecret.R.drawable.ic_feel;
+import static com.dhy.coffeesecret.R.drawable.ic_flavor;
+import static com.dhy.coffeesecret.R.drawable.ic_overall;
+import static com.dhy.coffeesecret.R.drawable.ic_overdev;
+import static com.dhy.coffeesecret.R.drawable.ic_scorched;
+import static com.dhy.coffeesecret.R.drawable.ic_sweet;
+import static com.dhy.coffeesecret.R.drawable.ic_tipped;
+import static com.dhy.coffeesecret.R.drawable.ic_underdev;
 import static com.dhy.coffeesecret.ui.cup.listener.GridViewItemClickListener.FEEL_GRID;
 import static com.dhy.coffeesecret.ui.cup.listener.GridViewItemClickListener.FLAW_GRID;
 
@@ -40,12 +56,14 @@ public class CuppingInfoFragment extends Fragment implements InputDialogFragment
     private static final String FLAW_SCORES_ARRAY = "flawScores";
     private static final String FEEL_SCORES_ARRAY = "feelScores";
 
-    private OnFragmentInteractionListener mListener;
+    private OnDeleteListener mListener;
     private GridView mGridViewFeel;
     private GridView mGridViewFlaw;
     private CircleProgressBar feelProgressBar;
     private CircleProgressBar flawProgressBar;
     private CircleProgressBar finalProgressBar;
+    private Button mDeleteButton;
+    private View mScoresCircles;
 
     private View cuppingInfoView;
 
@@ -59,6 +77,8 @@ public class CuppingInfoFragment extends Fragment implements InputDialogFragment
     private GridViewItemClickListener mFlawGridListener;
     private boolean mEditable;
 
+    private Map<String, Float> mData;
+
     public CuppingInfoFragment() {
     }
 
@@ -71,29 +91,33 @@ public class CuppingInfoFragment extends Fragment implements InputDialogFragment
         return fragment;
     }
 
-    public void onButtonPressed(Uri uri) {
+    public void onDelete() {
         if (mListener != null) {
-            mListener.onCuppingFragmentInteraction(uri);
+            mListener.onDelete();
         }
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+
         mGridViewFeel = (GridView) cuppingInfoView.findViewById(R.id.gv_feel);
         mGridViewFlaw = (GridView) cuppingInfoView.findViewById(R.id.gv_flaw);
         feelProgressBar = (CircleProgressBar) cuppingInfoView.findViewById(R.id.cpb_feel);
         flawProgressBar = (CircleProgressBar) cuppingInfoView.findViewById(R.id.cpb_flaw);
         finalProgressBar = (CircleProgressBar) cuppingInfoView.findViewById(R.id.cpb_final);
+        mDeleteButton = (Button) cuppingInfoView.findViewById(R.id.btn_delete);
 
-        mFeelAdapter = new InfoGridViewAdapter(FEEL_ICONS, feelScores, FEEL_TITLES);
-        mFlawAdapter = new InfoGridViewAdapter(FLAW_ICONS, flawScores, FLAW_TITLES);
+        mScoresCircles = cuppingInfoView.findViewById(R.id.line_result);
+
+        mFeelAdapter = new InfoGridViewAdapter(FEEL_ICONS, mData, FEEL_TITLES);
+        mFlawAdapter = new InfoGridViewAdapter(FLAW_ICONS, mData, FLAW_TITLES);
 
         mGridViewFeel.setAdapter(mFeelAdapter);
         mGridViewFlaw.setAdapter(mFlawAdapter);
+
         feelProgressBar.setMax(FEEL_SCORE_MAX);
         flawProgressBar.setMax(FLAW_SCORE_MAX);
         finalProgressBar.setMax(FEEL_SCORE_MAX);
-
         InputDialogFragment fragment = InputDialogFragment.newInstance(isNewCupping, ArrayUtil.merge(feelScores, flawScores));
 
         mFeelGridListener = new GridViewItemClickListener(getChildFragmentManager(), fragment, FEEL_GRID);
@@ -101,7 +125,12 @@ public class CuppingInfoFragment extends Fragment implements InputDialogFragment
 
         mGridViewFeel.setOnItemClickListener(mFeelGridListener);
         mGridViewFlaw.setOnItemClickListener(mFlawGridListener);
-
+        mDeleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onDelete();
+            }
+        });
         setEditable(mEditable);
         super.onActivityCreated(savedInstanceState);
     }
@@ -114,6 +143,13 @@ public class CuppingInfoFragment extends Fragment implements InputDialogFragment
     public void setEditable(boolean editable) {
         mFeelGridListener.setEditable(editable);
         mFlawGridListener.setEditable(editable);
+        if (editable) {
+            mDeleteButton.setVisibility(View.VISIBLE);
+            mScoresCircles.setVisibility(View.GONE);
+        } else {
+            mDeleteButton.setVisibility(View.GONE);
+            mScoresCircles.setVisibility(View.VISIBLE);
+        }
     }
 
     public void initEditable(boolean editable) {
@@ -133,6 +169,10 @@ public class CuppingInfoFragment extends Fragment implements InputDialogFragment
         finalProgressBar.setProgress(feelScore - flawScore);
     }
 
+    public Map<String, Float> getData() {
+        return mData;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -146,13 +186,21 @@ public class CuppingInfoFragment extends Fragment implements InputDialogFragment
             flawScores = new float[]{0, 0, 0, 0, 0, 0};
             isNewCupping = true;
         }
+
+        mData = new HashMap<>();
+        for (int i = 0; i < FEEL_TITLES.length; i++) {
+            mData.put(FEEL_TITLES[i], feelScores[i]);
+        }
+        for (int i = 0; i < FLAW_TITLES.length; i++) {
+            mData.put(FLAW_TITLES[i], flawScores[i]);
+        }
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof OnDeleteListener) {
+            mListener = (OnDeleteListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnValueChangeListener");
@@ -174,29 +222,32 @@ public class CuppingInfoFragment extends Fragment implements InputDialogFragment
     }
 
     @Override
-    public void onValueChange(float value) {
-        // TODO: 2017/2/20
+    public void onValueChange(int position, float value) {
+        if (position < 8) {
+            mFeelAdapter.setScore(position, value);
+        } else {
+            mFlawAdapter.setScore(position - 8, value);
+        }
     }
 
-
-    public interface OnFragmentInteractionListener {
-        void onCuppingFragmentInteraction(Uri uri);
+    public interface OnDeleteListener {
+        void onDelete();
     }
 
     class InfoGridViewAdapter extends BaseAdapter {
 
         private String[] titles;
         private int[] icons;
-        private float[] scores;
+        private Map<String, Float> date;
 
-        InfoGridViewAdapter(int[] icons, float[] scores, String[] titles) {
+        InfoGridViewAdapter(int[] icons, Map<String, Float> date, String[] titles) {
             this.icons = icons;
-            this.scores = scores;
+            this.date = date;
             this.titles = titles;
         }
 
-        public void setScores(int index, float value) {
-            scores[index] = value;
+        public void setScore(int index, float value) {
+            date.put(titles[index], value);
             notifyDataSetChanged();
         }
 
@@ -223,7 +274,7 @@ public class CuppingInfoFragment extends Fragment implements InputDialogFragment
             TextView score = (TextView) inflate.findViewById(R.id.score);
             tv.setText(titles[i]);
             iv.setImageDrawable(getResources().getDrawable(icons[i]));
-            score.setText(scores[i] + "");
+            score.setText(mData.get(titles[i]) + "");
             return inflate;
         }
     }

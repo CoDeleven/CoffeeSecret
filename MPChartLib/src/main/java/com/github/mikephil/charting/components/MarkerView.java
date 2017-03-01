@@ -2,6 +2,7 @@ package com.github.mikephil.charting.components;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -112,7 +113,6 @@ public class MarkerView extends RelativeLayout implements IMarker {
         measure(MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED),
                 MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
         layout(0, 0, getMeasuredWidth(), getMeasuredHeight());
-
     }
 
     @Override

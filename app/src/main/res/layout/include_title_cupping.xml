@@ -14,7 +14,7 @@
             android:layout_centerInParent="true"
             android:text="杯测"
             android:textColor="@color/white"
-            android:textSize="15sp"/>
+            android:textSize="@dimen/actionbar_title_font_size"/>
 
         <ImageView
             android:id="@+id/iv_add"

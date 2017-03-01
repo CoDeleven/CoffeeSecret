@@ -58,10 +58,6 @@ public class BluetoothHelper {
             mViewListener.handleViewBeforeStartRead();
         }
     };
-
-    public String getCurBluetoothName(){
-        return mCurDevice.getName();
-    }
     private BluetoothGattCallback mGattCallback = new BluetoothGattCallback() {
         @Override
         public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
@@ -154,6 +150,7 @@ public class BluetoothHelper {
     private BluetoothAdapter.LeScanCallback mScanCallback = new BluetoothAdapter.LeScanCallback() {
         @Override
         public void onLeScan(BluetoothDevice bluetoothDevice, int i, byte[] bytes) {
+            Log.e("codelevex", bluetoothDevice.getName() + "-" + bluetoothDevice.getBluetoothClass().getMajorDeviceClass());
             // 回调通知界面有新设备
             mDeviceListener.notifyNewDevice(bluetoothDevice);
         }
@@ -161,8 +158,8 @@ public class BluetoothHelper {
 
     private BluetoothHelper(Context context) {
         this.mContext = context;
-        mAdapter = ((BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE)).getAdapter();
 
+        mAdapter = ((BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE)).getAdapter();
     }
 
     public static BluetoothHelper getNewInstance(Context context) {
@@ -179,6 +176,10 @@ public class BluetoothHelper {
         return null;
     }
 
+    public String getCurBluetoothName() {
+        return mCurDevice.getName();
+    }
+
     /**
      * 扫描设备
      *
@@ -186,6 +187,17 @@ public class BluetoothHelper {
      */
     public boolean scanBluetoothDevice() {
         return mAdapter.startLeScan(mScanCallback);
+    }
+
+    public void close() {
+        stopRead();
+        if (mGatt != null) {
+            mGatt.disconnect();
+            mGatt.close();
+        }
+        mAdapter.stopLeScan(mScanCallback);
+
+
     }
 
     /**
@@ -308,8 +320,8 @@ public class BluetoothHelper {
                                 return;
                             }
                             try {
-                                // Thread.currentThread().sleep(1000);
-                                Thread.currentThread().sleep(5000);
+                                Thread.currentThread().sleep(1000);
+                                // Thread.currentThread().sleep(5000);
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
@@ -344,6 +356,14 @@ public class BluetoothHelper {
 
     public boolean isTestThreadAlive() {
         return testThread != null && testThread.isAlive();
+    }
+
+    public BluetoothAdapter getmAdapter() {
+        return mAdapter;
+    }
+
+    public boolean getEnableStatus() {
+        return mAdapter.isEnabled();
     }
 
     public interface DeviceChangeListener {

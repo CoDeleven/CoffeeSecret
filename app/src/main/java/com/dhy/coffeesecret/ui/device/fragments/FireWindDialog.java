@@ -123,6 +123,11 @@ public class FireWindDialog extends DialogFragment implements CircleSeekBar.OnSe
         dismiss();
     }
 
+    @OnClick(R.id.id_baking_cancel)
+    public void onCancel(){
+        dismiss();
+    }
+
     @Override
     public void onResume() {
         super.onResume();

@@ -12,10 +12,11 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.Utils;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LineDataSet extends LineRadarDataSet<Entry> implements ILineDataSet {
+public class LineDataSet extends LineRadarDataSet<Entry> implements ILineDataSet{
 
     /**
      * Drawing mode for this line dataset

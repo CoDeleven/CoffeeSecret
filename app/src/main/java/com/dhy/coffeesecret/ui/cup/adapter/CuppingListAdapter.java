@@ -14,6 +14,8 @@ import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -31,6 +33,26 @@ public class CuppingListAdapter extends RecyclerView.Adapter implements StickyRe
         this.context = context;
         this.cuppingInfos = cuppingInfos;
     }
+
+    public void add(CuppingInfo info){
+        cuppingInfos.add(info);
+        notifyDataSetChanged();
+    }
+
+    public void update(CuppingInfo info){
+        int i = cuppingInfos.indexOf(info);
+        cuppingInfos.remove(i);
+        cuppingInfos.add(i,info);
+        notifyDataSetChanged();
+    }
+
+    public void delete(CuppingInfo info) {
+        int i = cuppingInfos.indexOf(info);
+        System.out.println(i);
+        cuppingInfos.remove(i);
+        notifyDataSetChanged();
+    }
+
 
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.mListener = listener;
@@ -87,7 +109,7 @@ public class CuppingListAdapter extends RecyclerView.Adapter implements StickyRe
     }
 
     public interface OnItemClickListener {
-        public void onItemClick(int position);
+        void onItemClick(int position);
     }
 
     private class CuppingViewHolder extends RecyclerView.ViewHolder {

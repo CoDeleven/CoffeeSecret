@@ -4,7 +4,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.dhy.coffeesecret.ui.cup.fragment.BakeInfoFragment">
-
+    <Button
+        android:text="添加烘焙信息"
+        android:textSize="@dimen/font_size_primary"
+        android:drawableLeft="@drawable/ic_container_add_plus"
+        android:id="@+id/btn_add"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="141dp"

@@ -1,19 +1,13 @@
 package com.dhy.coffeesecret.ui.cup.fragment;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.ExpandableListAdapter;
-import android.widget.ExpandableListView;
 
-import com.andexert.expandablelayout.library.ExpandableLayout;
 import com.andexert.expandablelayout.library.ExpandableLayoutItem;
 import com.andexert.expandablelayout.library.ExpandableLayoutListView;
 import com.dhy.coffeesecret.R;
@@ -25,6 +19,8 @@ public class BakeInfoFragment extends Fragment {
     private View mView;
     private ExpandableLayoutListView mListView;
     private BakeReport mBakeReport;
+    private OnBakeInfoLoadedListener mOnBakeInfoLoadedListener;
+
 
     public BakeInfoFragment() {
 
@@ -46,13 +42,29 @@ public class BakeInfoFragment extends Fragment {
         }
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_bake_info, container, false);
+        View view = mView.findViewById(R.id.btn_add);
+
+        if(mBakeReport != null){
+            view.setVisibility(View.GONE);
+        }else {
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    view.setVisibility(View.GONE);
+                    mBakeReport = new BakeReport();
+                    if(mOnBakeInfoLoadedListener != null){
+                        mOnBakeInfoLoadedListener.onLoaded(mBakeReport);
+                    }
+                }
+            });
+        }
         return mView;
     }
-
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -62,7 +74,8 @@ public class BakeInfoFragment extends Fragment {
         mListView.setAdapter(new BaseAdapter() {
             @Override
             public int getCount() {
-                return mBakeReport.getBeanInfoSimples().size();
+//                return mBakeReport.getBeanInfoSimples().size();
+                return 2;
             }
 
             @Override
@@ -88,5 +101,13 @@ public class BakeInfoFragment extends Fragment {
             }
         });
 
+    }
+
+    public void setOnBakeInfoLoadedListener(OnBakeInfoLoadedListener mOnBakeInfoLoadedListener) {
+        this.mOnBakeInfoLoadedListener = mOnBakeInfoLoadedListener;
+    }
+
+    public interface OnBakeInfoLoadedListener{
+        void onLoaded(BakeReport report);
     }
 }

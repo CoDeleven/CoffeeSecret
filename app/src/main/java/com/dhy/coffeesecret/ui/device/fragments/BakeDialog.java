@@ -15,7 +15,9 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BeanInfo;
@@ -30,7 +32,7 @@ import java.util.List;
  */
 
 public class BakeDialog extends DialogFragment {
-    private static List<DialogBeanInfo> dialogBeanInfos = new ArrayList<>();
+    private static List<DialogBeanInfo> dialogBeanInfos;
     private static int curItem;
     private Context mContext;
     private Button mCancel;
@@ -39,10 +41,11 @@ public class BakeDialog extends DialogFragment {
     private View mLinesSelector;
     private ListView mListView;
     private Button mAdd;
+    private Button mDel;
     private OnBeaninfosConfirmListener beaninfosConfirmListener;
 
     public BakeDialog() {
-
+        dialogBeanInfos = new ArrayList<>();
     }
 
     @Nullable
@@ -56,7 +59,7 @@ public class BakeDialog extends DialogFragment {
         // 初始化确认和取消
         initConfirmCancel();
         initLinesSelect();
-        initAddButton();
+        initAddDelButton();
 
 
         return view;
@@ -103,7 +106,7 @@ public class BakeDialog extends DialogFragment {
         });
     }
 
-    private void initAddButton() {
+    private void initAddDelButton() {
         mAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -142,6 +145,7 @@ public class BakeDialog extends DialogFragment {
                     convertView = LayoutInflater.from(mContext).inflate(R.layout.bake_dialog_item, parent, false);
                     holder.beanName = (Button) convertView.findViewById(R.id.id_bake_dialog_beanName);
                     holder.beanWeight = (EditText) convertView.findViewById(R.id.id_bake_dialog_beanWeight);
+                    holder.beanDel = (ImageView)convertView.findViewById(R.id.id_bake_dialog_delete);
                     convertView.setTag(holder);
                 } else {
                     holder = (ViewHolder) convertView.getTag();
@@ -154,7 +158,7 @@ public class BakeDialog extends DialogFragment {
                     @Override
                     public void onFocusChange(View v, boolean hasFocus) {
                         EditText editText = (EditText) v;
-                        if (!hasFocus && editText.getText().length() > 0) {
+                        if (dialogBeanInfos.size() > 0 && !hasFocus && editText.getText().length() > 0) {
                             dialogBeanInfos.get(position).setWeight(Float.parseFloat(editText.getText().toString()));
                         }
                     }
@@ -164,14 +168,25 @@ public class BakeDialog extends DialogFragment {
                     @Override
                     public void onClick(View v) {
                         curItem = position;
-                        Log.e("codelevex", "curItem:" + position);
                         Intent intent = new Intent(mContext, DialogBeanSelectedActivity.class);
                         startActivityForResult(intent, 7);
+                    }
+                });
+
+                holder.beanDel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        curItem = position;
+                        Log.e("codelevex", "position:" + position);
+                        dialogBeanInfos.remove(curItem);
+                        notifyDataSetChanged();
                     }
                 });
                 return convertView;
             }
         });
+
+
     }
 
     public void setBeanInfosListener(OnBeaninfosConfirmListener beanInfosListener) {
@@ -195,5 +210,6 @@ public class BakeDialog extends DialogFragment {
     class ViewHolder {
         public Button beanName;
         public EditText beanWeight;
+        public ImageView beanDel;
     }
 }

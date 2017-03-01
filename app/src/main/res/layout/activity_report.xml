@@ -23,6 +23,18 @@
             android:text="@string/title_device_child_activity"
             android:textColor="#FFF"
             android:textSize="20sp"/>
+        <TextView
+            android:id="@+id/id_report_home"
+            android:layout_gravity="left|center_vertical"
+            android:background="@android:color/transparent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="17sp"
+            android:textColor="#FFF"
+            android:drawableLeft="@drawable/ic_back"
+            android:gravity="center_vertical"
+            android:drawablePadding="5dp"
+            android:text="首页"/>
     </android.support.v7.widget.Toolbar>
 
     <com.dhy.coffeesecret.views.ScrollViewContainer
@@ -66,7 +78,6 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
-                                android:text="烘焙日期：2017-01-01 12:06"
                                 android:textColor="#000"
                                 android:textSize="13.5sp"/>
 
@@ -76,18 +87,29 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:layout_marginLeft="15dp"
-                                android:text="设备：HBCoffee"
                                 android:textColor="#000"
                                 android:textSize="13.5sp"/>
                         </LinearLayout>
 
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_marginBottom="21.375dp"
-                            android:layout_marginTop="32dp"
-                            android:src="@drawable/ic_report_test"/>
+                        <RelativeLayout
+                            android:gravity="center"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginBottom="10dp"
+
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                            <TextView
+                                android:id="@+id/id_score"
+                                android:layout_centerInParent="true"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="45"/>
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:src="@drawable/ic_report_bakedegree"/>
+                        </RelativeLayout>
                     </LinearLayout>
 
                     <View
@@ -148,7 +170,7 @@
                         android:layout_below="@id/id_baking_developbar">
 
                         <TextView
-                            android:id="@+id/id_baking_lineOperator"
+                            android:id="@+id/id_report_lineOperator"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerHorizontal="true"
@@ -158,16 +180,16 @@
                             android:textSize="15sp"/>
 
                         <com.dhy.coffeesecret.views.BaseChart4Coffee
-                            android:id="@+id/id_baking_chart"
+                            android:id="@+id/id_report_chart"
                             android:layout_width="344.25dp"
                             android:layout_height="200dp"
-                            android:layout_below="@id/id_baking_lineOperator"
+                            android:layout_below="@id/id_report_lineOperator"
                             android:layout_centerHorizontal="true"></com.dhy.coffeesecret.views.BaseChart4Coffee>
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_below="@id/id_baking_chart"
+                            android:layout_below="@id/id_report_chart"
                             android:layout_marginBottom="10dp"
                             android:layout_marginTop="23dp"
                             android:orientation="vertical">

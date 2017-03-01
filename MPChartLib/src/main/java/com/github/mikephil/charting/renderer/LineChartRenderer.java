@@ -651,7 +651,7 @@ public class LineChartRenderer extends LineRadarRenderer {
 
                 Bitmap circleBitmap = imageCache.getBitmap(j);
 
-                if (circleBitmap != null && e.getEvent() != null) {
+                if (circleBitmap != null && !"".equals(e.getEvent().getDescription()) ) {
                     c.drawBitmap(circleBitmap, mCirclesBuffer[0] - circleRadius, mCirclesBuffer[1] - circleRadius, mRenderPaint);
                 }
             }

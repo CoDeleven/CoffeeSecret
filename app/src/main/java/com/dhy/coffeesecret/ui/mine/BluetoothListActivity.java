@@ -14,18 +14,26 @@ import android.widget.TextView;
 
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.utils.BluetoothHelper;
+import com.kyleduo.switchbutton.SwitchButton;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BluetoothListActivity extends AppCompatActivity implements BluetoothHelper.DeviceChangeListener, BluetoothHelper.ViewHandlerListener {
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnCheckedChanged;
 
+public class BluetoothListActivity extends AppCompatActivity implements BluetoothHelper.DeviceChangeListener, BluetoothHelper.ViewHandlerListener, AdapterView.OnItemClickListener {
+
+    @Bind(R.id.id_connecting_bluetooth_list)
+    ListView canConnectDevice;
+    @Bind(R.id.id_bluetooth_switch)
+    SwitchButton switchButton;
     private BluetoothHelper mHelper;
-    private ListView listView;
     private BaseAdapter mAdapter = null;
     private ProgressBar progressCircle = null;
-    private Map<String, BluetoothDevice> deviceMap = new HashMap<>();
+    private Map<String, BluetoothDevice> canConnectDeviceMap = new HashMap<>();
 
     public BluetoothListActivity() {
         // 获取helper实例
@@ -34,12 +42,12 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
         mAdapter = new BaseAdapter() {
             @Override
             public int getCount() {
-                return deviceMap.size();
+                return canConnectDeviceMap.size();
             }
 
             @Override
             public Object getItem(int position) {
-                return new ArrayList<>(deviceMap.values()).get(position);
+                return new ArrayList<>(canConnectDeviceMap.values()).get(position);
             }
 
             @Override
@@ -59,6 +67,25 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
         };
     }
 
+    @OnCheckedChanged(R.id.id_bluetooth_switch)
+    public void enableBluetooth(boolean isEnable) {
+        if (isEnable) {
+            mHelper.getmAdapter().enable();
+            while(!mHelper.getEnableStatus()){
+                mHelper.scanBluetoothDevice();
+                Log.e("codelevex", "haha");
+            }
+        } else {
+            canConnectDeviceMap.clear();
+            mAdapter.notifyDataSetChanged();
+            canConnectDevice.invalidate();
+
+            mHelper.getmAdapter().disable();
+
+            mHelper.close();
+
+        }
+    }
 
     @Override
     protected void onStart() {
@@ -66,40 +93,32 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
         if (mHelper == null) {
             mHelper = BluetoothHelper.getNewInstance();
         }
+
         mHelper.setDeviceListener(this);
         mHelper.setViewHandlerListener(this);
-        mHelper.scanBluetoothDevice();
+        // mHelper.scanBluetoothDevice();
+        if (mHelper.getEnableStatus()) {
+            switchButton.setChecked(true);
+            mHelper.scanBluetoothDevice();
+        }
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bluetooth_list);
-        listView = (ListView) findViewById(R.id.id_bluetooth_list);
-
-        listView.setAdapter(mAdapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                progressCircle = (ProgressBar) view.findViewById(R.id.circle_progress);
-                progressCircle.setVisibility(View.VISIBLE);
-
-                BluetoothDevice device = (BluetoothDevice) parent.getItemAtPosition(position);
-                // FragmentTransaction tx = getFragmentManager().beginTransaction();
-                if (!mHelper.connectDevice(device)) {
-                    Log.e("codelevex", "连接失败");
-                    return;
-                }
-            }
-        });
+        ButterKnife.bind(this);
+        canConnectDevice.setDividerHeight(1);
+        canConnectDevice.setAdapter(mAdapter);
+        canConnectDevice.setOnItemClickListener(this);
     }
 
 
     @Override
     public void notifyNewDevice(BluetoothDevice device) {
-        if (!deviceMap.containsKey(device.getAddress())) {
+        if (!canConnectDeviceMap.containsKey(device.getAddress())) {
             Log.e("codelevex", "我activity的实现:Device" + device.getName());
-            deviceMap.put(device.getAddress(), device);
+            canConnectDeviceMap.put(device.getAddress(), device);
             refreshListView();
         }
     }
@@ -112,6 +131,18 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
 
     public void refreshListView() {
         mAdapter.notifyDataSetChanged();
-        listView.invalidate();
+        canConnectDevice.invalidate();
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        progressCircle = (ProgressBar) view.findViewById(R.id.circle_progress);
+        progressCircle.setVisibility(View.VISIBLE);
+
+        BluetoothDevice device = (BluetoothDevice) parent.getItemAtPosition(position);
+        if (!mHelper.connectDevice(device)) {
+            Log.e("codelevex", "连接失败");
+            return;
+        }
     }
 }

@@ -2,7 +2,6 @@ package com.dhy.coffeesecret.ui.cup.fragment;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -14,9 +13,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.ImageButton;
 
 import com.dhy.coffeesecret.R;
+
+import static com.dhy.coffeesecret.R.string.acidity;
+import static com.dhy.coffeesecret.R.string.after_taste;
+import static com.dhy.coffeesecret.R.string.baked;
+import static com.dhy.coffeesecret.R.string.balance;
+import static com.dhy.coffeesecret.R.string.dry_and_frag;
+import static com.dhy.coffeesecret.R.string.faced;
+import static com.dhy.coffeesecret.R.string.flavor;
+import static com.dhy.coffeesecret.R.string.overall;
+import static com.dhy.coffeesecret.R.string.overdev;
+import static com.dhy.coffeesecret.R.string.scorched;
+import static com.dhy.coffeesecret.R.string.sweet;
+import static com.dhy.coffeesecret.R.string.taste;
+import static com.dhy.coffeesecret.R.string.tipped;
+import static com.dhy.coffeesecret.R.string.underdev;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -27,14 +42,14 @@ import com.dhy.coffeesecret.R;
  * create an instance of this fragment.
  */
 public class InputDialogFragment extends DialogFragment
-        implements View.OnClickListener, ItemInputFragment.OnFragmentInteractionListener {
+        implements View.OnClickListener, ItemInputFragment.OnItemValueChangeListener {
 
     private static final String CURRENT_ITEM = "currentItem";
     private static final String DEFAULT_VALUE = "defaultValue";
 
 
-    private final static String[] ITEM_NAME = {"干湿度", "风味", "余韵", "酸质", "口感", "甜感", "均衡度", "整体感受",
-            "发展不充分", "过度发展", "烤焙味", "自焙烫伤", "胚芽烫伤", "豆表烫伤"};
+    private String[] itemName;
+
     private final static String IS_SLIDABLE = "isSlidable";
 
     private String[] defaultValue;
@@ -47,11 +62,10 @@ public class InputDialogFragment extends DialogFragment
     private ImageButton mRightButton;
     private ViewPager mViewPager;
     private ItemPageAdapter mAdapter;
-
+    private Button mButton;
     private boolean isSlidable;
 
     public InputDialogFragment() {
-        // Required empty public constructor
     }
 
     /**
@@ -80,6 +94,11 @@ public class InputDialogFragment extends DialogFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        itemName = new String[]{getString(dry_and_frag), getString(flavor), getString(after_taste), getString(acidity),
+                getString(taste), getString(sweet), getString(balance), getString(overall), getString(underdev), getString(overdev),
+                getString(baked), getString(scorched), getString(tipped), getString(faced)};
+
         if (getArguments() != null) {
             defaultValue = getArguments().getStringArray(DEFAULT_VALUE);
             isSlidable = getArguments().getBoolean(IS_SLIDABLE);
@@ -135,8 +154,8 @@ public class InputDialogFragment extends DialogFragment
         } else {
             mContentView = inflater.inflate(R.layout.fragment_input, container, false);
         }
-
         getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getDialog().setCanceledOnTouchOutside(false);
         return mContentView;
     }
 
@@ -144,10 +163,18 @@ public class InputDialogFragment extends DialogFragment
     public void onActivityCreated(Bundle savedInstanceState) {
 
         mViewPager = (ViewPager) mContentView.findViewById(R.id.vp);
+        mButton = (Button) mContentView.findViewById(R.id.btn_confirm);
 
         mAdapter = new ItemPageAdapter(getChildFragmentManager());
         mViewPager.setAdapter(mAdapter);
         mViewPager.setCurrentItem(currentItem);
+
+        mButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dismissAllowingStateLoss();
+            }
+        });
 
         if (isSlidable) {
             mLeftButton = (ImageButton) mContentView.findViewById(R.id.ib_left);
@@ -175,12 +202,6 @@ public class InputDialogFragment extends DialogFragment
             mRightButton.setOnClickListener(this);
         }
         super.onActivityCreated(savedInstanceState);
-    }
-
-    public void onValueChange(final float value) {
-        if (mListener != null) {
-            mListener.onValueChange(value);
-        }
     }
 
     @Override
@@ -215,8 +236,11 @@ public class InputDialogFragment extends DialogFragment
     }
 
     @Override
-    public void onFragmentInteraction(Uri uri) {
-
+    public void onItemValueChange(int position, float value) {
+        defaultValue[position] = String.valueOf(value);
+        if (mListener != null) {
+            mListener.onValueChange(position, value);
+        }
     }
 
     /**
@@ -230,8 +254,7 @@ public class InputDialogFragment extends DialogFragment
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnValueChangeListener {
-        // TODO: Update argument type and name
-        void onValueChange(float value);
+        void onValueChange(int position, float value);
     }
 
     class ItemPageAdapter extends FragmentPagerAdapter {
@@ -243,13 +266,13 @@ public class InputDialogFragment extends DialogFragment
         @Override
         public Fragment getItem(int position) {
             ItemInputFragment fragment =
-                    ItemInputFragment.newInstance(position, ITEM_NAME[position], defaultValue[position]);
+                    ItemInputFragment.newInstance(position, itemName[position], defaultValue[position]);
             return fragment;
         }
 
         @Override
         public int getCount() {
-            return ITEM_NAME.length;
+            return itemName.length;
         }
     }
 }

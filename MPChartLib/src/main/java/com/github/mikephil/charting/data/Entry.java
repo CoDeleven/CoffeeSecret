@@ -7,13 +7,15 @@ import android.os.Parcelable;
 
 import com.github.mikephil.charting.utils.Utils;
 
+import java.io.Serializable;
+
 /**
  * Class representing one entry in the chart. Might contain multiple values.
  * Might only contain a single value depending on the used constructor.
  * 
  * @author Philipp Jahoda
  */
-public class Entry extends BaseEntry implements Parcelable {
+public class Entry extends BaseEntry implements Serializable {
 
     public Event getEvent() {
         if(event == null){
@@ -119,7 +121,7 @@ public class Entry extends BaseEntry implements Parcelable {
         return "Entry, x: " + x + " y: " + getY();
     }
 
-    @Override
+/*    @Override
     public int describeContents() {
         return 0;
     }
@@ -138,7 +140,7 @@ public class Entry extends BaseEntry implements Parcelable {
         } else {
             dest.writeInt(0);
         }
-    }
+    }*/
 
     protected Entry(Parcel in) {
         this.x = in.readFloat();
