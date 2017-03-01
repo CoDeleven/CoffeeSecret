@@ -1,5 +1,6 @@
 package com.dhy.coffeesecret.ui.container;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -19,7 +20,10 @@ import android.widget.TextView;
 import com.bigkoo.pickerview.TimePickerView;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BeanInfo;
+import com.dhy.coffeesecret.utils.T;
+import com.google.gson.Gson;
 
+import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -29,16 +33,16 @@ import java.util.Locale;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class EditBeanActivity extends AppCompatActivity {
 
     private static final String TAG = "EditBeanActivity";
-    private static final int COUNTRY = 1234;
-    private static final int AREA = 2345;
-    private static final int MANOR = 3456;
-    private static final int SPECIES = 4567;
-    private static final int BEAN_NAME = 5678;
-    private static final int BEAN_ICON = 6789;
     @Bind(R.id.title_text)
     TextView titleText;
     @Bind(R.id.btn_cancel)
@@ -81,13 +85,14 @@ public class EditBeanActivity extends AppCompatActivity {
     TextView editCountry;
     @Bind(R.id.edit_layout_country)
     RelativeLayout editLayoutCountry;
+
     private TimePickerView pvTime;
     private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
     private String[] levelArray;
     private String[] handlerArray;
     private String currentLevel;
     private String currentHandler;
-    private EditBeanHandler mHandler = new EditBeanHandler(EditBeanActivity.this);
+    private Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +101,8 @@ public class EditBeanActivity extends AppCompatActivity {
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         ButterKnife.bind(this);
+
+        mContext = EditBeanActivity.this;
 
         init();
         initDatePicker();
@@ -256,7 +263,7 @@ public class EditBeanActivity extends AppCompatActivity {
     private void saveBeanInfo() {
 
         BeanInfo beanInfo = new BeanInfo();
-
+        beanInfo.setId(1);
         beanInfo.setName(editName.getText().toString());
         beanInfo.setCountry(editCountry.getText().toString());
         beanInfo.setArea(editArea.getText().toString());
@@ -271,8 +278,30 @@ public class EditBeanActivity extends AppCompatActivity {
         beanInfo.setStockWeight(Double.parseDouble(editWeight.getText().toString()));
         beanInfo.setDate(parseDate(editBuyDate.getText().toString()));
 
+        updateBeanInfo(beanInfo);
         Log.i(TAG, "saveBeanInfo: " + beanInfo.toString());
         exitToRight(beanInfo);
+    }
+
+    private void updateBeanInfo(final BeanInfo beanInfo) {
+        FormBody body = new FormBody.Builder().add("username", "Simo")
+                .add("beanInfo", new Gson().toJson(beanInfo))
+                .build();
+        Request request = new Request.Builder()
+                .url("http://httpbin.org/post")
+                .post(body)
+                .build();
+        new OkHttpClient().newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                updateBeanInfo(beanInfo);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                mHandler.sendEmptyMessage(TOAST_1);
+            }
+        });
     }
 
     @Override
@@ -323,6 +352,15 @@ public class EditBeanActivity extends AppCompatActivity {
         exitToRight();
     }
 
+    private static final int COUNTRY = 1234;
+    private static final int AREA = 2345;
+    private static final int MANOR = 3456;
+    private static final int SPECIES = 4567;
+    private static final int BEAN_NAME = 5678;
+    private static final int BEAN_ICON = 6789;
+    private static final int TOAST_1 = 7890;
+    private EditBeanHandler mHandler = new EditBeanHandler(EditBeanActivity.this);
+
     class EditBeanHandler extends Handler {
 
         private final WeakReference<EditBeanActivity> mActivity;
@@ -372,6 +410,8 @@ public class EditBeanActivity extends AppCompatActivity {
                         activity.editIcon.setImageResource(R.drawable.ic_container_al);
                     }
                     break;
+                case TOAST_1:
+                    T.showShort(mContext, "修改成功");
                 default:
                     break;
             }

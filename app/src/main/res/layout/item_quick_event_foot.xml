@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/add_quick_event"
+    android:layout_width="match_parent"
+    android:background="@drawable/option_selector"
+    android:layout_height="52dp">
+
+    <ImageView
+        android:id="@+id/ic_quick_event_add"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="30dp"
+        android:contentDescription="@null"
+        android:src="@drawable/ic_quick_event_add" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp"
+        android:layout_marginLeft="10.5dp"
+        android:layout_toEndOf="@id/ic_quick_event_add"
+        android:text="自定义添加选择"
+        android:textSize="14.5sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="9.5dp"
+        android:layout_marginRight="9.5dp"
+        android:background="@color/color_gray_c9" />
+</RelativeLayout>

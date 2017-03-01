@@ -43,5 +43,5 @@ public class TestData {
     public static String[] countryList6 = {"刚果", "象牙海岸", "安哥拉", "马达加斯加", "肯尼亚", "尚比亚"};
     public static String[] countryList7 = {"美国", "英国", "日本", "荷兰"};
 
-
+    public static String quickEvents = "[\"咖啡豆开始变黄\",\"咖啡豆颜色变深\",\"爆豆声变得强烈\",\"咖啡豆成爆米花了\",\"咖啡豆变成碳了\",\"烘咖啡机发出了强烈的悲鸣\",\"咖啡店发生了爆炸，上了今日头条\"]";
 }

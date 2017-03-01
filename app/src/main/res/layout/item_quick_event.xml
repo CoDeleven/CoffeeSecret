@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/quick_event_layout"
+    android:layout_width="match_parent"
+    android:layout_height="52dp"
+    android:background="@drawable/option_selector">
+
+    <TextView
+        android:id="@+id/text_quick_event"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:paddingBottom="15dp"
+        android:paddingTop="15dp"
+        android:text="快速事件1"
+        android:textSize="14.5sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="9.5dp"
+        android:layout_marginRight="9.5dp"
+        android:background="@color/color_gray_c9" />
+</RelativeLayout>
