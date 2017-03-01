@@ -51,7 +51,6 @@ public class LinesSelectedActivity extends AppCompatActivity implements View.OnC
         } else {
             finish();
         }
-        Log.e("codelevex", "被按下");
     }
 
     private void init() {
