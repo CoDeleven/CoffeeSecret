@@ -17,6 +17,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.dhy.coffeesecret.R;
+import com.dhy.coffeesecret.services.BluetoothService;
 import com.dhy.coffeesecret.utils.BluetoothHelper;
 import com.kyleduo.switchbutton.SwitchButton;
 
@@ -29,10 +30,9 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class BluetoothListActivity extends AppCompatActivity implements BluetoothHelper.DeviceChangeListener,
-        BluetoothHelper.ViewHandlerListener, AdapterView.OnItemClickListener,
-        CompoundButton.OnCheckedChangeListener {
-
+public class BluetoothListActivity extends AppCompatActivity implements AdapterView.OnItemClickListener,
+        CompoundButton.OnCheckedChangeListener, BluetoothService.DeviceChangedListener, BluetoothService.ViewControllerListener {
+    private BluetoothService.BluetoothOperator mBluetoothOperator;
     private static BluetoothDevice curDevice = null;
     @Bind(R.id.id_connecting_bluetooth_list)
     ListView canConnectDevice;
@@ -40,7 +40,6 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
     SwitchButton switchButton;
     @Bind(R.id.id_back)
     ImageView back;
-    private BluetoothHelper mHelper;
     private BaseAdapter mAdapter = null;
     private ProgressBar progressCircle = null;
     ImageView tick = null;
@@ -49,8 +48,8 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
     private BluetoothDevice temp;
 
     public BluetoothListActivity() {
-        // 获取helper实例
-        mHelper = BluetoothHelper.getNewInstance();
+
+
         // 生成适配器
         mAdapter = new BaseAdapter() {
             @Override
@@ -84,7 +83,7 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
                 viewHolder.machine.setText(((BluetoothDevice) getItem(viewHolder.position)).getName());
 
                 if(curDevice != null && canConnectDeviceValues.get(viewHolder.position) == curDevice){
-                    Log.e("codelevex", "已经打勾了");
+                    Log.d("codelevex", "已经打勾了");
                     convertView.findViewById(R.id.id_bluetooth_list_right).setVisibility(View.VISIBLE);
                 }
                 return convertView;
@@ -103,21 +102,21 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
     }
 
     public void enableBluetooth(boolean isEnable) {
-        Log.e("codelevex", "enableBluetooth");
-        if (mHelper.getmAdapter().getState() == BluetoothAdapter.STATE_OFF && isEnable) {
-            mHelper.getmAdapter().enable();
+        Log.d("codelevex", "enableBluetooth");
+        if (!mBluetoothOperator.isEnable() && isEnable) {
+            mBluetoothOperator.enable();
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    while (!mHelper.getEnableStatus()) {
-                        mHelper.getmAdapter().enable();
+                    while (!mBluetoothOperator.isEnable()) {
+                        mBluetoothOperator.enable();
                         try {
                             Thread.currentThread().sleep(1000);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
                     }
-                    mHelper.scanBluetoothDevice();
+                    mBluetoothOperator.startScanDevice();
                 }
             }).start();
         } else {
@@ -126,30 +125,23 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
             mAdapter.notifyDataSetChanged();
             canConnectDevice.invalidate();
 
-            mHelper.close();
-
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    mHelper.close();
-                    Log.e("codelevex", "关闭状态：" + mHelper.getmAdapter().disable());
-                }
-            }).start();
-
+            mBluetoothOperator.disableBluetooth();
         }
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        if (mHelper == null) {
-            mHelper = BluetoothHelper.getNewInstance();
+
+        if (mBluetoothOperator == null) {
+            // 获取helper实例
+            mBluetoothOperator = BluetoothService.BLUETOOTH_OPERATOR;
         }
-        mHelper.setDeviceListener(this);
-        mHelper.setViewHandlerListener(this);
-        if (mHelper.getEnableStatus()) {
+        mBluetoothOperator.setDeviceChangedListener(this);
+        mBluetoothOperator.setViewControllerListener(this);
+        if (mBluetoothOperator.isEnable()) {
             switchButton.setChecked(true);
-            mHelper.scanBluetoothDevice();
+            mBluetoothOperator.startScanDevice();
         }
         switchButton.setOnCheckedChangeListener(this);
 
@@ -171,6 +163,11 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
 
     }
 
+
+    @Override
+    public void notifyDeviceConnectStatus(boolean isConnected) {
+
+    }
 
     @Override
     public void notifyNewDevice(BluetoothDevice device) {
@@ -203,7 +200,7 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
         tick = (ImageView)view.findViewById(R.id.id_bluetooth_list_right);
 
         BluetoothDevice device = (BluetoothDevice) parent.getItemAtPosition(position);
-        if (!mHelper.connectDevice(device)) {
+        if (!mBluetoothOperator.connect(device)) {
             Log.e("codelevex", "连接失败");
             return;
         }
@@ -236,7 +233,7 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mHelper.stopScanBluetoothDevice();
+        mBluetoothOperator.stopScanDevice();
     }
 
     class ViewHolder {

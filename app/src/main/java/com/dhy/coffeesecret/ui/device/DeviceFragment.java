@@ -1,44 +1,45 @@
 package com.dhy.coffeesecret.ui.device;
 
 import android.app.ProgressDialog;
+import android.bluetooth.BluetoothDevice;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
+import android.os.IBinder;
 import android.os.Message;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.DialogBeanInfo;
 import com.dhy.coffeesecret.pojo.Temprature;
+import com.dhy.coffeesecret.services.BluetoothService;
 import com.dhy.coffeesecret.ui.device.fragments.BakeDialog;
 import com.dhy.coffeesecret.ui.mine.BluetoothListActivity;
-import com.dhy.coffeesecret.utils.BluetoothHelper;
 import com.dhy.coffeesecret.utils.FragmentTool;
-import com.dhy.coffeesecret.utils.ObjectJsonConvert;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class DeviceFragment extends Fragment implements BluetoothHelper.DataChangeListener, BluetoothHelper.ConnectStatusChangeListener {
+public class DeviceFragment extends Fragment implements BluetoothService.DeviceChangedListener, BluetoothService.DataChangedListener {
+    private BluetoothService.BluetoothOperator mBluetoothOperator;
     private Button mPrepareBake;
     private boolean hasPrepared = false;
     private List<DialogBeanInfo> dialogBeanInfos;
     private TextView titleText;
     private TextView bluetoothStatus;
     private TextView operator;
-    private BluetoothHelper mHelper;
     private TextView beanTemp;
     private TextView inwindTemp;
     private TextView outwindTemp;
@@ -52,12 +53,25 @@ public class DeviceFragment extends Fragment implements BluetoothHelper.DataChan
     private boolean isStart = false;
     private ProgressDialog dialog;
     private float envTemp;
-    private boolean isConnected = false;
+    private ServiceConnection conn = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            Log.d("codelevex", "获取BluetoothService");
+            mBluetoothOperator = (BluetoothService.BluetoothOperator) service;
+            mBluetoothOperator.setDataChangedListener(DeviceFragment.this);
+            mBluetoothOperator.setDeviceChangedListener(DeviceFragment.this);
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
+    };
 
     private Handler mTextHandler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
-            switch (msg.what){
+            switch (msg.what) {
                 case 0:
                     bluetoothStatus.setText(" 已连接");
                     operator.setText("切换");
@@ -76,7 +90,7 @@ public class DeviceFragment extends Fragment implements BluetoothHelper.DataChan
             if (msg.what == 0) {
                 dialog = ProgressDialog.show(getContext(), "标题", "加载中，请稍后……");
             } else if (msg.what == 1) {
-                if(dialog != null){
+                if (dialog != null) {
                     dialog.dismiss();
                 }
             }
@@ -105,13 +119,21 @@ public class DeviceFragment extends Fragment implements BluetoothHelper.DataChan
     });
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (mBluetoothOperator == null) {
+            Intent intent = new Intent(getContext().getApplicationContext(), BluetoothService.class);
+            getContext().getApplicationContext().bindService(intent, conn, Context.BIND_AUTO_CREATE);
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_device, container, false);
         init(view);
         switchStatus();
-
         return view;
     }
 
@@ -119,18 +141,16 @@ public class DeviceFragment extends Fragment implements BluetoothHelper.DataChan
     public void onStart() {
         super.onStart();
         hasPrepared = false;
-        if (mHelper == null) {
-            mHelper = BluetoothHelper.getNewInstance(getActivity().getApplicationContext());
-        }
-        mHelper.setDataListener(this);
-        mHelper.setConnectionStatusChangeListener(this);
-        if(dialogBeanInfos != null){
+
+        if (dialogBeanInfos != null) {
             dialogBeanInfos.clear();
         }
         switchStatus();
-        if(isConnected && !mHelper.isReading()){
-            mHelper.startRead();
-            mHelper.read();
+        if (mBluetoothOperator != null && mBluetoothOperator.isConnected() && !BluetoothService.READABLE) {
+            mBluetoothOperator.setDataChangedListener(DeviceFragment.this);
+            mBluetoothOperator.setDeviceChangedListener(DeviceFragment.this);
+            BluetoothService.READABLE = true;
+            mBluetoothOperator.read();
         }
 
     }
@@ -186,18 +206,18 @@ public class DeviceFragment extends Fragment implements BluetoothHelper.DataChan
                         @Override
                         public void run() {
                             mShowHandler.sendEmptyMessage(0);
-                            while(true){
-                                if(isStart){
+                            while (true) {
+                                if (isStart) {
                                     Intent intent = new Intent(getContext(), BakeActivity.class);
                                     intent.putExtra(BakeActivity.RAW_BEAN_INFO, dialogBeanInfos.toArray());
-                                    intent.putExtra(BakeActivity.DEVICE_NAME, mHelper.getCurBluetoothName());
+                                    intent.putExtra(BakeActivity.DEVICE_NAME, mBluetoothOperator.getCurDeviceName());
                                     intent.putExtra(BakeActivity.START_TEMP, beginTemp);
                                     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm");
                                     intent.putExtra(BakeActivity.BAKE_DATE, format.format(new Date()));
                                     intent.putExtra(BakeActivity.ENV_TEMP, envTemp);
                                     mShowHandler.sendEmptyMessage(1);
                                     startActivity(intent);
-                                    mHelper.setDataListener(null);
+                                    mBluetoothOperator.setDataChangedListener(null);
                                     Log.e("codelevex", "卧槽，开始烘焙");
                                     break;
                                 }
@@ -224,7 +244,7 @@ public class DeviceFragment extends Fragment implements BluetoothHelper.DataChan
         Message message = new Message();
         Bundle bundle = new Bundle();
         bundle.putSerializable("temprature", temprature);
-        if(!isStart){
+        if (!isStart) {
             beginTemp = temprature.getBeanTemp();
             isStart = true;
         }
@@ -263,11 +283,15 @@ public class DeviceFragment extends Fragment implements BluetoothHelper.DataChan
 
     @Override
     public void notifyDeviceConnectStatus(boolean isConnected) {
-        this.isConnected = isConnected;
-        if(this.isConnected){
+        if (isConnected) {
             mTextHandler.sendEmptyMessage(0);
-        }else{
+        } else {
             mTextHandler.sendEmptyMessage(1);
         }
+    }
+
+    @Override
+    public void notifyNewDevice(BluetoothDevice device) {
+
     }
 }

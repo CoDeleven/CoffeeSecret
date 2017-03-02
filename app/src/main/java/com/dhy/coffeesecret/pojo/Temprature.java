@@ -1,5 +1,7 @@
 package com.dhy.coffeesecret.pojo;
 
+import android.util.Log;
+
 import java.io.Serializable;
 
 /**
@@ -31,7 +33,6 @@ public class Temprature implements Serializable {
         float beanTemp = Float.parseFloat(subStr[4]);
         float inwindTemp = Float.parseFloat(subStr[1]);
         float outwindTemp = Float.parseFloat(subStr[2]);
-
         temp.setBeanTemp(beanTemp);
         temp.setInwindTemp(inwindTemp);
         temp.setOutwindTemp(outwindTemp);

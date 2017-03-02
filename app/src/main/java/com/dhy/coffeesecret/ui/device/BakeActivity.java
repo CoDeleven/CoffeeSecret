@@ -25,6 +25,7 @@ import com.dhy.coffeesecret.pojo.BeanInfoSimple;
 import com.dhy.coffeesecret.pojo.DialogBeanInfo;
 import com.dhy.coffeesecret.pojo.Temprature;
 import com.dhy.coffeesecret.pojo.UniversalConfiguration;
+import com.dhy.coffeesecret.services.BluetoothService;
 import com.dhy.coffeesecret.ui.device.fragments.FireWindDialog;
 import com.dhy.coffeesecret.ui.device.fragments.Other;
 import com.dhy.coffeesecret.utils.BluetoothHelper;
@@ -47,7 +48,7 @@ import java.util.TimerTask;
 import static com.dhy.coffeesecret.views.DevelopBar.AFTER160;
 import static com.dhy.coffeesecret.views.DevelopBar.RAWBEAN;
 
-public class BakeActivity extends AppCompatActivity implements BluetoothHelper.DataChangeListener, View.OnClickListener, CompoundButton.OnCheckedChangeListener, Other.OnOtherAddListener, FireWindDialog.OnFireWindAddListener {
+public class BakeActivity extends AppCompatActivity implements BluetoothService.DataChangedListener, View.OnClickListener, CompoundButton.OnCheckedChangeListener, Other.OnOtherAddListener, FireWindDialog.OnFireWindAddListener {
     public static final String RAW_BEAN_INFO = "com.dhy.coffeesercret.ui.device.BakeActivity.RAW_BEAN_INFO";
     public static final String DEVICE_NAME = "com.dhy.coffeesercret.ui.device.BakeActivity.DEVICE_NAME";
     public static final String START_TEMP = "com.dhy.coffeesercret.ui.device.BakeActivity.START_TIME";
@@ -57,7 +58,7 @@ public class BakeActivity extends AppCompatActivity implements BluetoothHelper.D
     private BaseChart4Coffee chart;
     private TextView lineOperator;
     private PopupWindow popupWindow;
-    private BluetoothHelper mHelper;
+    private BluetoothService.BluetoothOperator mBluetoothOperator;
     private int count = 0;
     private TextView[] beanTemps = new TextView[2];
     private TextView[] inwindTemps = new TextView[2];
@@ -226,8 +227,7 @@ public class BakeActivity extends AppCompatActivity implements BluetoothHelper.D
 
         mHandler.sendMessage(msg);
 
-        count += 5;
-        // ++count;
+        ++count;
     }
 
     @Override
@@ -254,17 +254,17 @@ public class BakeActivity extends AppCompatActivity implements BluetoothHelper.D
         super.onStart();
 
 
-        if (mHelper == null) {
-            mHelper = BluetoothHelper.getNewInstance();
+        if (mBluetoothOperator == null) {
+            mBluetoothOperator = BluetoothService.BLUETOOTH_OPERATOR;
         }
-        mHelper.setDataListener(this);
+        mBluetoothOperator.setDataChangedListener(this);
         Log.e("codelevex", "我特么又被重启了？？");
         /*if (!mHelper.isTestThreadAlive()) {
             mHelper.test(getResources().openRawResource(R.raw.test));
         }*/
         startTime = System.currentTimeMillis();
         isReading = true;
-        mHelper.setActivityDestroy(false);
+        // mHelper.setActivityDestroy(false);
         timer = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -448,7 +448,8 @@ public class BakeActivity extends AppCompatActivity implements BluetoothHelper.D
                     imm.setEntriesWithEvents(eventRecords);
                     imm.setEndTemp(curBeanEntry.getY());
                     Intent intent = new Intent(BakeActivity.this, EditBehindActiviy.class);
-                    mHelper.stopRead();
+                    // 停止读取
+                    BluetoothService.READABLE = false;
                     startActivity(intent);
                     finish();
                     status = true;
@@ -538,7 +539,7 @@ public class BakeActivity extends AppCompatActivity implements BluetoothHelper.D
         return bakeReportImm;
     }
 
-    private void updateCurBeanEntryEvent(Event event) {
+    private void updateCurBeanEntryEvent(final Event event) {
         curBeanEntry.setEvent(event);
         eventRecords.add(curBeanEntry);
         chart.invalidate();
