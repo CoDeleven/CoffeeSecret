@@ -1,3 +1,4 @@
+/*
 package com.dhy.coffeesecret.pojo;
 
 import com.github.mikephil.charting.data.DataSet;
@@ -7,9 +8,11 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.dhy.coffeesecret.pojo.BakeReportImm.EntryPojo;
 import java.util.List;
 
+*/
 /**
  * Created by CoDeleven on 17-2-26.
- */
+ *//*
+
 
 public class BakeReportImmBeanFactory {
     private static BakeReportImm bakeReportImm;
@@ -79,3 +82,4 @@ public class BakeReportImmBeanFactory {
 
     }
 }
+*/

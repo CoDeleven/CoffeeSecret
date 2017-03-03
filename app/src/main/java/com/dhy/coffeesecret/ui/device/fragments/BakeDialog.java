@@ -17,15 +17,19 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BeanInfo;
 import com.dhy.coffeesecret.pojo.DialogBeanInfo;
 import com.dhy.coffeesecret.ui.device.DialogBeanSelectedActivity;
+import com.dhy.coffeesecret.ui.mine.HistoryLineActivity;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by CoDeleven on 17-2-18.
@@ -34,16 +38,28 @@ import java.util.List;
 public class BakeDialog extends DialogFragment {
     private static List<DialogBeanInfo> dialogBeanInfos;
     private static int curItem;
-    private Context mContext;
-    private Button mCancel;
-    private Button mConfirm;
-    private CheckBox mCheckBox;
-    private View mLinesSelector;
-    private ListView mListView;
-    private Button mAdd;
-    private Button mDel;
+    @Bind(R.id.id_bake_dialog_refer_collection)
+    ImageView referCollection;
+    @Bind(R.id.id_bake_dialog_refer_history)
+    ImageView referHistory;
+    Context mContext;
+    @Bind(R.id.id_bake_dialog_cancel)
+    Button mCancel;
+    @Bind(R.id.id_bake_dialog_confirm)
+    Button mConfirm;
+    @Bind(R.id.id_bake_dialog_checkbox)
+    CheckBox mCheckBox;
+    @Bind(R.id.id_bake_dialog_refer_selector)
+    View mLinesSelector;
+    @Bind(R.id.id_bake_dialog_scroll)
+    ListView mListView;
+    @Bind(R.id.id_bake_dialog_add)
+    Button mAdd;
     private OnBeaninfosConfirmListener beaninfosConfirmListener;
+    private ArrayList<Float> referTempratures;
 
+    public static final int GET_HISTORY = 1;
+    public static final int GET_COLLECTION = 2;
     public BakeDialog() {
         dialogBeanInfos = new ArrayList<>();
     }
@@ -54,6 +70,7 @@ public class BakeDialog extends DialogFragment {
         mContext = getContext();
         getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
         View view = inflater.inflate(R.layout.bake_dialog, container, false);
+        ButterKnife.bind(this, view);
 
         initComp(view);
         // 初始化确认和取消
@@ -66,12 +83,7 @@ public class BakeDialog extends DialogFragment {
     }
 
     private void initComp(View view) {
-        mCancel = (Button) view.findViewById(R.id.id_bake_dialog_cancel);
-        mConfirm = (Button) view.findViewById(R.id.id_bake_dialog_confirm);
-        mCheckBox = (CheckBox) view.findViewById(R.id.id_bake_dialog_checkbox);
-        mLinesSelector = view.findViewById(R.id.id_bake_dialog_refer_selector);
-        mAdd = (Button) view.findViewById(R.id.id_bake_dialog_add);
-        mListView = (ListView) view.findViewById(R.id.id_bake_dialog_scroll);
+
     }
 
     private void initConfirmCancel() {
@@ -86,6 +98,7 @@ public class BakeDialog extends DialogFragment {
             public void onClick(View v) {
                 //处理确定情况
                 beaninfosConfirmListener.setBeanInfos(dialogBeanInfos);
+                beaninfosConfirmListener.setTempratures(referTempratures);
                 dismiss();
             }
         });
@@ -144,7 +157,7 @@ public class BakeDialog extends DialogFragment {
                     convertView = LayoutInflater.from(mContext).inflate(R.layout.bake_dialog_item, parent, false);
                     holder.beanName = (Button) convertView.findViewById(R.id.id_bake_dialog_beanName);
                     holder.beanWeight = (EditText) convertView.findViewById(R.id.id_bake_dialog_beanWeight);
-                    holder.beanDel = (ImageView)convertView.findViewById(R.id.id_bake_dialog_delete);
+                    holder.beanDel = (ImageView) convertView.findViewById(R.id.id_bake_dialog_delete);
                     convertView.setTag(holder);
                 } else {
                     holder = (ViewHolder) convertView.getTag();
@@ -197,13 +210,34 @@ public class BakeDialog extends DialogFragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (data != null) {
             BeanInfo beanInfo = (BeanInfo) data.getSerializableExtra("beanInfo");
-            dialogBeanInfos.get(curItem).setBeanInfo(beanInfo);
+            if(beanInfo != null){
+                dialogBeanInfos.get(curItem).setBeanInfo(beanInfo);
+            }
             ((BaseAdapter) mListView.getAdapter()).notifyDataSetChanged();
+            referTempratures = (ArrayList<Float>)data.getSerializableExtra(HistoryLineActivity.REFER_LINE);
         }
     }
 
     public interface OnBeaninfosConfirmListener {
         void setBeanInfos(List<DialogBeanInfo> beanInfos);
+        void setTempratures(ArrayList<Float> tempratures);
+    }
+
+    @OnClick({R.id.id_bake_dialog_refer_history, R.id.id_bake_dialog_refer_collection})
+    void click(View view){
+        Intent intent = null;
+        switch (view.getId()){
+            case R.id.id_bake_dialog_refer_history:
+                //TODO 完成历史参考曲线
+                intent = new Intent(getContext(), HistoryLineActivity.class);
+                startActivityForResult(intent, GET_HISTORY);
+
+                break;
+            case R.id.id_bake_dialog_refer_collection:
+                //TODO 完成收藏参考曲线
+                intent = new Intent(getContext(), HistoryLineActivity.class);
+                startActivityForResult(intent, GET_COLLECTION);
+        }
     }
 
     class ViewHolder {

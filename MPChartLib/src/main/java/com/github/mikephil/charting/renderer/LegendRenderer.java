@@ -112,7 +112,7 @@ public class LegendRenderer extends Renderer {
                         ));
                     }
 
-                    if (bds.getLabel() != null) {
+                    // if (bds.getLabel() != null && !"".equals(bds.getLabel())) {
                         // add the legend description label
                         computedEntries.add(new LegendEntry(
                                 dataSet.getLabel(),
@@ -122,7 +122,7 @@ public class LegendRenderer extends Renderer {
                                 null,
                                 ColorTemplate.COLOR_NONE
                         ));
-                    }
+                    // }
 
                 } else if (dataSet instanceof IPieDataSet) {
 

@@ -179,6 +179,8 @@ public class LineChartRenderer extends LineRadarRenderer {
 
         mBitmapCanvas.drawPath(cubicPath, mRenderPaint);
 
+        mRenderPaint.setShadowLayer(0, 0, 0, Color.parseColor("#FFFFFF"));
+
         mRenderPaint.setPathEffect(null);
     }
 

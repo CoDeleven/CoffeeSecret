@@ -19,18 +19,14 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.dhy.coffeesecret.R;
-import com.dhy.coffeesecret.pojo.BakeReportImm;
-import com.dhy.coffeesecret.pojo.BakeReportImmBeanFactory;
+import com.dhy.coffeesecret.pojo.BakeReportBeanFactory;
+import com.dhy.coffeesecret.pojo.BakeReportProxy;
 import com.dhy.coffeesecret.pojo.BeanInfoSimple;
 import com.dhy.coffeesecret.ui.device.formatter.XAxisFormatter4Time;
 import com.dhy.coffeesecret.utils.UnitConvert;
 import com.dhy.coffeesecret.views.BaseChart4Coffee;
 import com.dhy.coffeesecret.views.ReportMarker;
 import com.dhy.coffeesecret.views.ScrollViewContainer;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +37,12 @@ import butterknife.ButterKnife;
 import static android.widget.LinearLayout.LayoutParams;
 import static android.widget.LinearLayout.LayoutParams.MATCH_PARENT;
 import static android.widget.LinearLayout.LayoutParams.WRAP_CONTENT;
+import static com.dhy.coffeesecret.views.BaseChart4Coffee.ACCBEANLINE;
+import static com.dhy.coffeesecret.views.BaseChart4Coffee.ACCINWINDLINE;
+import static com.dhy.coffeesecret.views.BaseChart4Coffee.ACCOUTWINDLINE;
+import static com.dhy.coffeesecret.views.BaseChart4Coffee.BEANLINE;
+import static com.dhy.coffeesecret.views.BaseChart4Coffee.INWINDLINE;
+import static com.dhy.coffeesecret.views.BaseChart4Coffee.OUTWINDLINE;
 
 
 public class ReportActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener {
@@ -73,7 +75,7 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
     private LinearLayout beanContainer;
     private List<LinearLayout> beanContent;
     private PopupWindow popupWindow;
-    private BakeReportImm imm;
+    private BakeReportProxy proxy;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -89,7 +91,7 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
     }
 
     private void initParam() {
-        imm = BakeReportImmBeanFactory.getBakeReportImm();
+        proxy = BakeReportBeanFactory.getInstance();
 
         mChart.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -110,22 +112,29 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
         mChart.setMarker(new ReportMarker(this, R.layout.report_marker));
         mChart.initLine();
 
-        for(ILineDataSet lineDataSet: imm.getLineData().getDataSets()){
-            LineDataSet lineData = (LineDataSet)lineDataSet;
+        /*for (ILineDataSet lineDataSet : proxy.getLineData().getDataSets()) {
+            LineDataSet lineData = (LineDataSet) lineDataSet;
             mChart.addNewDatas(lineData.getValues(), getIndexByLabels(lineData.getLabel()));
-        }
-
-        envTemp.setText("环境温度:" + imm.getEnvTemp());
-        startTemp.setText("入豆温度:" + imm.getStartTemp());
-        endTemp.setText("结束温度:" + imm.getEndTemp());
-        developTime.setText("发展时间:" + XAxisFormatter4Time.formatString2Time(imm.getDevelopTime()));
-        developRate.setText("发展率:" + imm.getDevelopRate() * 100 + "%");
-        beanInfos = imm.getBeanInfos();
-        date.setText("烘焙日期：" + imm.getBakeDate());
-        device.setText("设备：" + imm.getDevice());
+        }*/
+        mChart.addNewDatas(proxy.getLineDataSetByIndex(BEANLINE).getValues(), BEANLINE);
+        mChart.addNewDatas(proxy.getLineDataSetByIndex(INWINDLINE).getValues(), INWINDLINE);
+        mChart.addNewDatas(proxy.getLineDataSetByIndex(OUTWINDLINE).getValues(), OUTWINDLINE);
+        mChart.addNewDatas(proxy.getLineDataSetByIndex(ACCBEANLINE).getValues(), ACCBEANLINE);
+        mChart.addNewDatas(proxy.getLineDataSetByIndex(ACCINWINDLINE).getValues(), ACCINWINDLINE);
+        mChart.addNewDatas(proxy.getLineDataSetByIndex(ACCOUTWINDLINE).getValues(), ACCOUTWINDLINE);
 
 
-        score.setText(imm.getBakeDegree() + "");
+        envTemp.setText("环境温度:" + proxy.getEnvTemp());
+        startTemp.setText("入豆温度:" + proxy.getStartTemp());
+        endTemp.setText("结束温度:" + proxy.getEndTemp());
+        developTime.setText("发展时间:" + proxy.getDevelopTime());
+        developRate.setText(proxy.getDevelopRate());
+        beanInfos = proxy.getBeanInfos();
+        date.setText("烘焙日期：" + proxy.getBakeDate());
+        device.setText("设备：" + proxy.getDevice());
+
+
+        score.setText(proxy.getBakeDegree());
 
         tableLayout = (TableLayout) findViewById(R.id.id_report_table);
         beanContainer = (LinearLayout) findViewById(R.id.id_bean_container);
@@ -325,18 +334,5 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
             linearLayouts.add(outter);
         }
         return linearLayouts;
-    }
-
-    private int getIndexByLabels(String labels){
-        switch (labels){
-            case "豆温":return 0;
-            case "豆升温": return 1;
-            case "进风温": return 2;
-            case "进风升温": return 3;
-            case "出风温": return 4;
-            case "出风升温": return 5;
-            default:
-                return -1;
-        }
     }
 }

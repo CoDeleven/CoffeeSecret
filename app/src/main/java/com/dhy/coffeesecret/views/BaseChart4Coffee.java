@@ -32,7 +32,7 @@ import java.util.Map;
 
 public class BaseChart4Coffee extends LineChart {
 
-    public final static int BEANLINE = 0, ACCBEANLINE = 1, INWINDLINE = 2, ACCINWINDLINE = 3, OUTWINDLINE = 4, ACCOUTWINDLINE = 5;
+    public final static int BEANLINE = 0, ACCBEANLINE = 1, INWINDLINE = 2, ACCINWINDLINE = 3, OUTWINDLINE = 4, ACCOUTWINDLINE = 5, REFERLINE = 6;
     private UniversalConfiguration mConfig;
     private static Map<Integer, String> labels = new HashMap<>();
     private Map<Integer, ILineDataSet> lines = new HashMap<>();
@@ -51,7 +51,7 @@ public class BaseChart4Coffee extends LineChart {
         labels.put(ACCINWINDLINE, "进风升温");
         labels.put(OUTWINDLINE, "出风温");
         labels.put(ACCOUTWINDLINE, "出风升温");
-
+        labels.put(REFERLINE, "");
     }
 
     public static String Integer2StringLable(int index){
@@ -138,7 +138,7 @@ public class BaseChart4Coffee extends LineChart {
     }
 
     public void addTempratureLine(int lineIndex, boolean isAcc) {
-        LineDataSet set = new LineDataSet(new ArrayList<Entry>(Arrays.asList(new Entry(1, 150))), labels.get(lineIndex));
+        LineDataSet set = new LineDataSet(new ArrayList<Entry>(), labels.get(lineIndex));
         if (isAcc) {
             set.setAxisDependency(YAxis.AxisDependency.RIGHT);
         } else {
@@ -182,6 +182,8 @@ public class BaseChart4Coffee extends LineChart {
             case ACCOUTWINDLINE:
                 set.setColor(mConfig.getAccOutwindColor());
                 break;
+            case REFERLINE:
+                set.setColor(Color.BLACK);
         }
         lines.put(lineIndex, set);
         setData(new LineData(new ArrayList<ILineDataSet>(lines.values())));
@@ -231,7 +233,30 @@ public class BaseChart4Coffee extends LineChart {
         addTempratureLine(BaseChart4Coffee.ACCOUTWINDLINE, true);
     }
 
-    interface InterceptorView {
+    public void enableReferLine(List<Entry> entries){
+        LineDataSet set = new LineDataSet(entries, "参考曲线");
+        lines.put(BaseChart4Coffee.REFERLINE, set);
 
+        set.setCircleColor(Color.parseColor("#6774a4"));
+        // set.setCircleColorHole(Color.WHITE);
+        set.setLineWidth(2f);
+        set.setCircleRadius(4f);
+        // set.setCircleHoleRadius(2f);
+        set.setFillAlpha(65);
+        set.setFillColor(ColorTemplate.colorWithAlpha(Color.YELLOW, 200));
+        set.setDrawCircleHole(false);
+        set.setDrawCircles(false);
+
+        set.setHighLightColor(Color.rgb(244, 117, 117));
+        set.setDrawValues(false);
+        set.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
+        set.setColor(Color.BLACK);
+
+        setData(new LineData(new ArrayList<ILineDataSet>(lines.values())));
     }
+
+    public static String getLableByIndex(int index){
+        return labels.get(index);
+    }
+
 }

@@ -34,7 +34,6 @@
         <activity android:name=".ui.device.DialogBeanSelectedActivity"/>
         <activity android:name=".ui.mine.BluetoothListActivity"/>
         <activity android:name=".ui.device.BakeActivity"/>
-        <activity android:name=".ui.device.TestActivity"/>
         <activity android:name=".ui.device.ReportActivity"/>
         <activity android:name=".ui.device.EditBehindActiviy"/>
         <activity android:name=".ui.container.SelectInfoActivity"/>
@@ -49,6 +48,9 @@
             android:enabled="true"
             android:exported="true">
         </service>
+
+        <activity android:name=".ui.mine.HistoryLineActivity">
+        </activity>
     </application>
 
 </manifest>

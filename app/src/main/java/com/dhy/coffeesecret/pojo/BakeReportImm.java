@@ -14,7 +14,7 @@ import java.util.Map;
  * Created by CoDeleven on 17-2-25.
  */
 
-public class BakeReportImm implements Serializable {
+/*public class BakeReportImm implements Serializable {
     private String bakeDate;
     private String device;
     private Map<Integer, Float> rawBeanWeight;
@@ -228,4 +228,4 @@ public class BakeReportImm implements Serializable {
         }
     }
 
-}
+}*/

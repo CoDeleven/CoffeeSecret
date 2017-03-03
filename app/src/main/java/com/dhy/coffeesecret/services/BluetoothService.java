@@ -213,7 +213,7 @@ public class BluetoothService extends Service {
 
         @Override
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
-
+            Log.e("codelevex", "status:" + status + "->" + newState);
             if (newState == BluetoothProfile.STATE_CONNECTED) {
                 mConnectionState = STATE_CONNECTED;
                 mBluetoothGatt.discoverServices();
