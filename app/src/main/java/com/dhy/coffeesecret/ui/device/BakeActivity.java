@@ -3,6 +3,7 @@ package com.dhy.coffeesecret.ui.device;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -241,7 +242,6 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
 
         chart = (BaseChart4Coffee) findViewById(R.id.id_baking_chart);
         chart.initLine();
-        Log.e("codelevex", "chart:" + chart);
         lineOperator = (TextView) findViewById(R.id.id_baking_lineOperator);
         mConfig = SettingTool.getConfig(this);
         enableDoubleConfirm = mConfig.isDoubleClick();
@@ -532,7 +532,6 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
         bakeReport.setDate(intent.getStringExtra(BAKE_DATE));
 
         bakeReport.setDevice(deviceName);
-
 
         bakeReport.setBeanInfoSimples(beanInfos);
 

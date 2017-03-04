@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.dhy.coffeesecret.pojo.BakeReport.EntryTemp;
 import static com.dhy.coffeesecret.views.BaseChart4Coffee.ACCBEANLINE;
 import static com.dhy.coffeesecret.views.BaseChart4Coffee.ACCINWINDLINE;
 import static com.dhy.coffeesecret.views.BaseChart4Coffee.ACCOUTWINDLINE;
@@ -71,11 +72,14 @@ public class BakeReportProxy {
 
     public void deseriData(LineData linedate){
         LineDataSet beanSet = (LineDataSet)linedate.getDataSetByLabel("豆温", true);
-        List<BakeReport.EntryTemp> entryTemp = new ArrayList<>();
+        List<EntryTemp> entryTemp = new ArrayList<>();
+        List<Float> timex = new ArrayList<>();
         for(Entry entry : beanSet.getValues()){
-            entryTemp.add(bakeReport.new EntryTemp(entry.getY(), entry.getEvent().getDescription(), entry.getEvent().getCurStatus()));
+            entryTemp.add(new EntryTemp(entry.getY(), entry.getEvent().getDescription(), entry.getEvent().getCurStatus()));
+            timex.add(entry.getX());
         }
         bakeReport.setBeanTemps(entryTemp);
+        bakeReport.setTimex(timex);
         lines.put(BEANLINE, beanSet);
 
         LineDataSet inwindSet = (LineDataSet)linedate.getDataSetByLabel("进风温", true);

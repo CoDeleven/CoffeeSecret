@@ -223,7 +223,7 @@ public class BakeReport implements Serializable{
         this.date = date;
     }
 
-    public class EntryTemp implements Serializable{
+    public static class EntryTemp implements Serializable{
         float y;
         String event;
         int curStatus;

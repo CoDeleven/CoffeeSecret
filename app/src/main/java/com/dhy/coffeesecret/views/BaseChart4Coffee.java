@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
-import android.util.Log;
 
 import com.dhy.coffeesecret.pojo.UniversalConfiguration;
 import com.dhy.coffeesecret.ui.device.formatter.XAxisFormatter4Time;
@@ -21,7 +20,6 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,18 +31,9 @@ import java.util.Map;
 public class BaseChart4Coffee extends LineChart {
 
     public final static int BEANLINE = 0, ACCBEANLINE = 1, INWINDLINE = 2, ACCINWINDLINE = 3, OUTWINDLINE = 4, ACCOUTWINDLINE = 5, REFERLINE = 6;
-    private UniversalConfiguration mConfig;
     private static Map<Integer, String> labels = new HashMap<>();
-    private Map<Integer, ILineDataSet> lines = new HashMap<>();
-    private Handler mHandler = new Handler(new Handler.Callback() {
-        @Override
-        public boolean handleMessage(Message msg) {
-            invalidate();
-            return false;
-        }
-    });
 
-    static{
+    static {
         labels.put(BEANLINE, "豆温");
         labels.put(ACCBEANLINE, "豆升温");
         labels.put(INWINDLINE, "进风温");
@@ -54,9 +43,15 @@ public class BaseChart4Coffee extends LineChart {
         labels.put(REFERLINE, "");
     }
 
-    public static String Integer2StringLable(int index){
-        return labels.get(index);
-    }
+    private UniversalConfiguration mConfig;
+    private Map<Integer, ILineDataSet> lines = new HashMap<>();
+    private Handler mHandler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            invalidate();
+            return false;
+        }
+    });
 
     public BaseChart4Coffee(Context context) {
         this(context, null);
@@ -72,6 +67,13 @@ public class BaseChart4Coffee extends LineChart {
         initConfig();
     }
 
+    public static String getLableByIndex(int index) {
+        return labels.get(index);
+    }
+
+    /**
+     * 通过获取用户的个性化设置初始化
+     */
     private void initConfig() {
 
         // 启用触屏手势
@@ -189,28 +191,57 @@ public class BaseChart4Coffee extends LineChart {
         setData(new LineData(new ArrayList<ILineDataSet>(lines.values())));
     }
 
-    public void addTempratureLine(int lineIndex) {
+    /**
+     * 添加一个温度曲线
+     *
+     * @param lineIndex
+     */
+    private void addTempratureLine(int lineIndex) {
         addTempratureLine(lineIndex, false);
     }
 
+    /**
+     * 显示曲线
+     *
+     * @param lineIndex
+     * @return
+     */
     public boolean showLine(int lineIndex) {
         lines.get(lineIndex).setVisible(true);
         mHandler.sendEmptyMessage(0);
         return true;
     }
 
+    /**
+     * 隐藏曲线
+     *
+     * @param lineIndex
+     * @return
+     */
     public boolean hideLine(int lineIndex) {
         lines.get(lineIndex).setVisible(false);
         mHandler.sendEmptyMessage(0);
         return true;
     }
 
+    /**
+     * 给指定的曲线添加一个值
+     *
+     * @param beanData  Entry值
+     * @param lineIndex 曲线编号
+     */
     public void addOneDataToLine(Entry beanData, int lineIndex) {
         LineDataSet beanLine = (LineDataSet) lines.get(lineIndex);
         beanLine.addEntry(beanData);
         mHandler.sendMessage(new Message());
     }
 
+    /**
+     * 增加新的数据给对应编号的曲线
+     *
+     * @param beanDatas 一组Entry数据
+     * @param lineIndex 曲线的编号
+     */
     public void addNewDatas(List<Entry> beanDatas, int lineIndex) {
      /*   ILineDataSet beanLine = new LineDataSet(beanDatas, labels.get(lineIndex));
         lines.put(lineIndex, beanLine);
@@ -219,11 +250,14 @@ public class BaseChart4Coffee extends LineChart {
             lineData = new LineData();
         }*/
 
-        ((LineDataSet)lines.get(lineIndex)).setValues(beanDatas);
+        ((LineDataSet) lines.get(lineIndex)).setValues(beanDatas);
 
         mHandler.sendEmptyMessage(0);
     }
 
+    /**
+     * 按照用户设置，初始化曲线,默认显示全部曲线
+     */
     public void initLine() {
         addTempratureLine(BaseChart4Coffee.BEANLINE);
         addTempratureLine(BaseChart4Coffee.INWINDLINE);
@@ -233,7 +267,12 @@ public class BaseChart4Coffee extends LineChart {
         addTempratureLine(BaseChart4Coffee.ACCOUTWINDLINE, true);
     }
 
-    public void enableReferLine(List<Entry> entries){
+    /**
+     * 启用参考曲线
+     *
+     * @param entries 曲线数据
+     */
+    public void enableReferLine(List<Entry> entries) {
         LineDataSet set = new LineDataSet(entries, "参考曲线");
         lines.put(BaseChart4Coffee.REFERLINE, set);
 
@@ -255,8 +294,15 @@ public class BaseChart4Coffee extends LineChart {
         setData(new LineData(new ArrayList<ILineDataSet>(lines.values())));
     }
 
-    public static String getLableByIndex(int index){
-        return labels.get(index);
+    /**
+     * 在initLine()之后调用可以更改曲线颜色
+     *
+     * @param color 带#的颜色字串
+     * @param index 曲线的编号
+     */
+    public void changeColorByIndex(String color, int index) {
+        ((LineDataSet) lines.get(index)).setColor(Color.parseColor(color));
+        notifyDataSetChanged();
     }
 
 }

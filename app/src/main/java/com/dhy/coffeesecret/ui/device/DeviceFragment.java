@@ -26,7 +26,6 @@ import com.dhy.coffeesecret.pojo.Temprature;
 import com.dhy.coffeesecret.services.BluetoothService;
 import com.dhy.coffeesecret.ui.device.fragments.BakeDialog;
 import com.dhy.coffeesecret.ui.mine.BluetoothListActivity;
-import com.dhy.coffeesecret.ui.mine.HistoryLineActivity;
 import com.dhy.coffeesecret.utils.FragmentTool;
 
 import java.text.SimpleDateFormat;
@@ -36,10 +35,8 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class DeviceFragment extends Fragment implements BluetoothService.DeviceChangedListener, BluetoothService.DataChangedListener {
-    private BluetoothService.BluetoothOperator mBluetoothOperator;
     @Bind(R.id.id_device_prepare_bake)
     Button mPrepareBake;
     boolean hasPrepared = false;
@@ -68,7 +65,7 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
     ImageView accInwindView;
     @Bind(R.id.id_bake_accOutwindView)
     ImageView accOutwindView;
-
+    private BluetoothService.BluetoothOperator mBluetoothOperator;
     private float beginTemp;
     private boolean isStart = false;
     private ProgressDialog dialog;
@@ -146,7 +143,6 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
             Intent intent = new Intent(getContext().getApplicationContext(), BluetoothService.class);
             getContext().getApplicationContext().bindService(intent, conn, Context.BIND_AUTO_CREATE);
         }
-
     }
 
     @Override
@@ -169,7 +165,7 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
             dialogBeanInfos.clear();
         }
         switchStatus();
-        if(mBluetoothOperator != null && mBluetoothOperator.isConnected()){
+        if (mBluetoothOperator != null && mBluetoothOperator.isConnected()) {
             mTextHandler.sendEmptyMessage(0);
             if (!BluetoothService.READABLE) {
                 mBluetoothOperator.setDataChangedListener(DeviceFragment.this);
@@ -177,7 +173,7 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
                 BluetoothService.READABLE = true;
                 mBluetoothOperator.read();
             }
-        }else{
+        } else {
             mTextHandler.sendEmptyMessage(1);
         }
 
@@ -236,7 +232,7 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
                                     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm");
                                     intent.putExtra(BakeActivity.BAKE_DATE, format.format(new Date()));
                                     intent.putExtra(BakeActivity.ENV_TEMP, envTemp);
-                                    if(referTempratures != null){
+                                    if (referTempratures != null) {
                                         intent.putExtra(BakeActivity.ENABLE_REFERLINE, referTempratures);
                                     }
                                     mShowHandler.sendEmptyMessage(1);

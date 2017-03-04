@@ -116,7 +116,7 @@ public class EditBehindActiviy extends AppCompatActivity implements CircleSeekBa
         new Thread(new Runnable() {
             @Override
             public void run() {
-                String url = "http://10.152.18.56:8080/CoffeeSecret/bake/add";
+                String url = "http://10.101.6.29:8080/CoffeeSecret/bake/add";
                 RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), ObjectJsonConvert.bakereport2Json(proxy));
                 Request request = new Request.Builder().url(url).post(requestBody).build();
                 try {
