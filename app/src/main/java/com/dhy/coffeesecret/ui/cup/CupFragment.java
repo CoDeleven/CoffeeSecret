@@ -24,15 +24,29 @@ import com.dhy.coffeesecret.pojo.CuppingInfo;
 import com.dhy.coffeesecret.ui.container.LinesSelectedActivity;
 import com.dhy.coffeesecret.ui.container.fragments.BeanListFragment;
 import com.dhy.coffeesecret.ui.cup.adapter.CuppingListAdapter;
+import com.dhy.coffeesecret.utils.HttpUtils;
 import com.dhy.coffeesecret.utils.T;
+import com.dhy.coffeesecret.utils.URLs;
 import com.dhy.coffeesecret.views.DividerDecoration;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
+import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 import static com.dhy.coffeesecret.R.string.acidity;
 import static com.dhy.coffeesecret.R.string.after_taste;
@@ -55,6 +69,8 @@ public class CupFragment extends Fragment {
     private static final int GET_CUPPING_INFOS = 0x00001;
     private static final int LOADING = 0x00010;
     private static final int NO_LOADING = 0x00100;
+    private static final int LOADING_SUCCESS = 0x200000;
+    private static final int LOADING_ERROR = 0x300000;
 
     public static final int REQ_CODE_NEW = 0x0002;
     public static final int REQ_CODE_EDIT = 0x0020;
@@ -100,7 +116,7 @@ public class CupFragment extends Fragment {
                 Intent intent = new Intent(mContext, NewCuppingActivity.class);
                 intent.putExtra(TARGET, cuppingInfos.get(position));
                 intent.putExtra(VIEW_TYPE, SHOW_INFO);
-                startActivityForResult(intent,REQ_CODE_EDIT);
+                startActivityForResult(intent, REQ_CODE_EDIT);
             }
         });
 
@@ -136,7 +152,7 @@ public class CupFragment extends Fragment {
             if (resultCode == RESULT_CODE_UPDATE) {
                 CuppingInfo info = (CuppingInfo) data.getSerializableExtra(TARGET);
                 mAdapter.update(info);
-            }else if(resultCode == RESULT_CODE_DElETE){
+            } else if (resultCode == RESULT_CODE_DElETE) {
                 CuppingInfo info = (CuppingInfo) data.getSerializableExtra(TARGET);
                 mAdapter.delete(info);
             }
@@ -182,28 +198,46 @@ public class CupFragment extends Fragment {
         super.onDetach();
         mListener = null;
     }
-
+    //加载数据
     public void loadInfos() {
-        // TODO: 2017/2/23  加载数据
-        for (int i = 0; i < 20; i++) {
-            CuppingInfo cuppingInfo = new CuppingInfo();
-            cuppingInfo.setId(i);
-            cuppingInfo.setName("mxf---" + i);
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-            try {
-                Date date = format.parse("2011-2-" + i / 5 + 1);
-                cuppingInfo.setDate(date);
-            } catch (Exception e) {
-                e.printStackTrace();
+        new Thread() {
+            @Override
+            public void run() {
+                try {
+                    String str = HttpUtils.getStringFromServer(URLs.GET_ALL_CUPPING);
+                    Type type = new TypeToken<ArrayList<CuppingInfo>>() {
+                    }.getType();
+                    Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+                    List<CuppingInfo> newInfos = gson.fromJson(str, type);
+                    cuppingInfos.clear();
+                    cuppingInfos.addAll(newInfos);
+                    mHandler.sendEmptyMessage(LOADING_SUCCESS);
+                } catch (IOException e) {
+                    mHandler.sendEmptyMessage(LOADING_ERROR);
+                    e.printStackTrace();
+                }
             }
-            addData(cuppingInfo);
-            cuppingInfo.setBakeReport(new BakeReport());
-            cuppingInfos.add(cuppingInfo);
-        }
+        }.start();
     }
 
+    //        for (int i = 0; i < 20; i++) {
+//            CuppingInfo cuppingInfo = new CuppingInfo();
+//            cuppingInfo.setId(i);
+//            cuppingInfo.setName("mxf---" + i);
+//            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+//            try {
+//                Date date = format.parse("2011-2-" + i / 5 + 1);
+//                cuppingInfo.setDate(date);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//            addData(cuppingInfo);
+//            cuppingInfo.setBakeReport(new BakeReport());
+//            cuppingInfos.add(cuppingInfo);
+//        }
     // TODO: 2017/2/26
     void addData(CuppingInfo cuppingInfo) {
+
         cuppingInfo.setAcidity(8);
         cuppingInfo.setAfterTaste(8);
         cuppingInfo.setBalance(8);
@@ -240,28 +274,26 @@ public class CupFragment extends Fragment {
 
             switch (msg.what) {
                 case GET_CUPPING_INFOS:
-                    new Thread() {
-                        @Override
-                        public void run() {
-                            CuppingInfoHandler.this.sendEmptyMessage(LOADING);
-                            SystemClock.sleep(2000);
-                            loadInfos();
-                        }
-                    }.start();
-
-                    CuppingInfoHandler.this.sendEmptyMessageDelayed(NO_LOADING, 3000);
+                    sendEmptyMessage(LOADING);
+                    loadInfos();
                     break;
                 case LOADING:
                     if (!mRefreshLayout.isRefreshing()) {
                         fragment.mRefreshLayout.setRefreshing(true);
                     }
-                    T.showShort(fragment.mContext, "refresh start");
                     break;
                 case NO_LOADING:
                     if (mRefreshLayout.isRefreshing()) {
                         fragment.mRefreshLayout.setRefreshing(false);
                     }
-                    T.showShort(fragment.mContext, "refresh start");
+                    break;
+                case LOADING_SUCCESS:
+                    T.showShort(mContext, "success");
+                    sendEmptyMessage(NO_LOADING);
+                    break;
+                case LOADING_ERROR:
+                    T.showShort(mContext, "error");
+                    sendEmptyMessage(NO_LOADING);
                     break;
             }
             super.handleMessage(msg);

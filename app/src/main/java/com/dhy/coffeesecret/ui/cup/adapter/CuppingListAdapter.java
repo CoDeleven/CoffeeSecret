@@ -48,7 +48,6 @@ public class CuppingListAdapter extends RecyclerView.Adapter implements StickyRe
 
     public void delete(CuppingInfo info) {
         int i = cuppingInfos.indexOf(info);
-        System.out.println(i);
         cuppingInfos.remove(i);
         notifyDataSetChanged();
     }
@@ -67,11 +66,11 @@ public class CuppingListAdapter extends RecyclerView.Adapter implements StickyRe
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         CuppingViewHolder cuppingViewHolder = (CuppingViewHolder) holder;
+        System.out.println(cuppingInfos);
         CuppingInfo info = cuppingInfos.get(position);
         float score = info.getScore() / 20f;
         cuppingViewHolder.itemTitle.setText(info.getName());
         cuppingViewHolder.ratingBar.setStar(score);
-
         cuppingViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

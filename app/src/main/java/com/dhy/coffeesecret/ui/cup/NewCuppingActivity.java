@@ -22,11 +22,27 @@ import com.dhy.coffeesecret.ui.cup.fragment.CuppingInfoFragment;
 import com.dhy.coffeesecret.ui.cup.fragment.EditToolBar;
 import com.dhy.coffeesecret.ui.cup.fragment.InputNameDialog;
 import com.dhy.coffeesecret.ui.cup.fragment.NormalToolBar;
+import com.dhy.coffeesecret.utils.HttpUtils;
 import com.dhy.coffeesecret.utils.T;
+import com.dhy.coffeesecret.utils.URLs;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.io.Console;
+import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 import static android.view.WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION;
 import static android.view.WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
@@ -288,6 +304,25 @@ public class NewCuppingActivity extends AppCompatActivity
                 T.showShort(this, "请输入杯测名称");
                 mInputNameDialog.show(getSupportFragmentManager(), "");
             } else {
+                new Thread() {
+                    @Override
+                    public void run() {
+
+                        HttpUtils.enqueue(URLs.ADD_CUPPING, mCuppingInfo, new Callback() {
+                            @Override
+                            public void onFailure(Call call, IOException e) {
+                                // TODO: 2017/3/4
+                            }   
+
+                            @Override
+                            public void onResponse(Call call, Response response) throws IOException {
+
+                            }
+                        });
+                        
+                    }
+                }.start();
+
                 System.out.println("发送到服务器：" + mCuppingInfo); // TODO: 2017/2/25  发送到服务器
                 loadShowInfoView();
                 cuppingInfoFragment.setEditable(false);
@@ -298,6 +333,40 @@ public class NewCuppingActivity extends AppCompatActivity
             }
 //          mInputNameDialog.show(getSupportFragmentManager(), "");
         } else {
+            new Thread() {
+                @Override
+                public void run() {
+                    Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+                    String json = gson.toJson(mCuppingInfo);
+                    MediaType type = MediaType.parse("application/json; charset=utf-8");
+                    RequestBody body = RequestBody.create(type, json);
+                    String url = "http://192.168.191.1:8080/CoffeeSecret/cupping/update";
+                    Request request = new Request.Builder().url(url).post(body).build();
+                    OkHttpClient client = new OkHttpClient();
+                    try {
+                        Response response = client.newCall(request).execute();
+                        if (response.isSuccessful()) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    T.showShort(NewCuppingActivity.this, "修改成功");
+                                }
+                            });
+                        } else {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    T.showShort(NewCuppingActivity.this, "修改失败");
+                                }
+                            });
+                        }
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }.start();
             System.out.println("发送到服务器：" + mCuppingInfo); // TODO: 2017/2/25  发送到服务器
             loadShowInfoView();
             cuppingInfoFragment.setEditable(false);
@@ -310,17 +379,77 @@ public class NewCuppingActivity extends AppCompatActivity
 
     @Override
     public void onDelete() {
-        if (isNew){
+        if (isNew) {
             mResultCode = CupFragment.RESULT_CODE_NONE;
-            if(EDIT_INFO.equals(viewType)){
-                System.out.println("发送到服务器，删除："+mCuppingInfo.getId());// TODO: 2017/2/25  发送到服务器
-            }else {
+            if (EDIT_INFO.equals(viewType)) {
+                new Thread() {
+                    @Override
+                    public void run() {
+                        String url = "http://192.168.191.1:8080/CoffeeSecret/cupping/" + mCuppingInfo.getId() + "/delete";
+                        Request request = new Request.Builder().url(url).build();
+                        OkHttpClient client = new OkHttpClient();
+                        try {
+                            Response response = client.newCall(request).execute();
+                            if (response.isSuccessful()) {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        T.showShort(NewCuppingActivity.this, "删除成功");
+                                    }
+                                });
+                            } else {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        T.showShort(NewCuppingActivity.this, "删除失败");
+                                    }
+                                });
+                            }
+
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }.start();
+                System.out.println("发送到服务器，删除：" + mCuppingInfo.getId());// TODO: 2017/2/25  发送到服务器
+            } else {
                 System.out.println("不需要：" + mCuppingInfo.getId());
             }
-        }else {
+        } else {
             mResultCode = CupFragment.RESULT_CODE_DElETE;
             mResultIntent = new Intent();
             mResultIntent.putExtra(TARGET, mCuppingInfo);
+            new Thread() {
+                @Override
+                public void run() {
+                    String url = "http://192.168.191.1:8080/CoffeeSecret/cupping/" + mCuppingInfo.getId() + "/delete";
+                    Request request = new Request.Builder().url(url).build();
+                    OkHttpClient client = new OkHttpClient();
+                    try {
+                        Response response = client.newCall(request).execute();
+                        if (response.isSuccessful()) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    T.showShort(NewCuppingActivity.this, "删除成功");
+                                }
+                            });
+                        } else {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    T.showShort(NewCuppingActivity.this, "删除失败");
+                                }
+                            });
+                        }
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }.start();
             System.out.println("服务器发送删除请求：" + mCuppingInfo.getId());// TODO: 2017/2/25  发送到服务器
         }
         finish();
