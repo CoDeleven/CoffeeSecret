@@ -30,6 +30,7 @@ import com.dhy.coffeesecret.ui.device.fragments.Other;
 import com.dhy.coffeesecret.utils.BluetoothHelper;
 import com.dhy.coffeesecret.utils.FragmentTool;
 import com.dhy.coffeesecret.utils.SettingTool;
+import com.dhy.coffeesecret.utils.T;
 import com.dhy.coffeesecret.utils.UnitConvert;
 import com.dhy.coffeesecret.views.BaseChart4Coffee;
 import com.dhy.coffeesecret.views.DevelopBar;
@@ -44,7 +45,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import static com.dhy.coffeesecret.views.DevelopBar.AFTER160;
-import static com.dhy.coffeesecret.views.DevelopBar.FIRST_BURST;
 import static com.dhy.coffeesecret.views.DevelopBar.RAWBEAN;
 
 public class BakeActivity extends AppCompatActivity implements BluetoothHelper.DataChangeListener, View.OnClickListener, CompoundButton.OnCheckedChangeListener, Other.OnOtherAddListener, FireWindDialog.OnFireWindAddListener {
@@ -53,6 +53,7 @@ public class BakeActivity extends AppCompatActivity implements BluetoothHelper.D
     public static final String START_TEMP = "com.dhy.coffeesercret.ui.device.BakeActivity.START_TIME";
     public static final String BAKE_DATE = "com.dhy.coffeesercret.ui.device.BakeActivity.BAKE_DATE";
     public static final String ENV_TEMP = "com.dhy.coffeesercret.ui.device.BakeActivity.ENV_TEMP";
+    public static final int DRY = 1, FIRST_BURST = 2, SECOND_BURST = 3, END = 4;
     private BaseChart4Coffee chart;
     private TextView lineOperator;
     private PopupWindow popupWindow;
@@ -86,6 +87,9 @@ public class BakeActivity extends AppCompatActivity implements BluetoothHelper.D
     private FragmentTool fragmentTool;
     private ProgressDialog dialog;
     private boolean isEnd = false;
+    private int curFlow = 0;
+    private Entry curBeanEntry;
+
     private Handler mShowHandler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
@@ -185,7 +189,7 @@ public class BakeActivity extends AppCompatActivity implements BluetoothHelper.D
         float accInwindTemp = temprature.getAccInwindTemp();
         float accOutwindTemp = temprature.getAccOutwindTemp();
 
-        Entry beanEntry = new Entry(count, beanTemp);
+        curBeanEntry = new Entry(count, beanTemp);
 
         if (beanTemp > 160 && isOverBottom && curStatus != FIRST_BURST) {
             curStatus = AFTER160;
@@ -193,8 +197,8 @@ public class BakeActivity extends AppCompatActivity implements BluetoothHelper.D
 
         if (curEvent != null) {
             Log.e("codelevex", "啊，我有事件啊:" + curEvent.getDescription());
-            beanEntry.setEvent(curEvent);
-            eventRecords.add(beanEntry);
+            curBeanEntry.setEvent(curEvent);
+            eventRecords.add(curBeanEntry);
             if (!isEnd && dialog != null) {
                 isEnd = true;
                 endTemp = beanTemp;
@@ -202,7 +206,7 @@ public class BakeActivity extends AppCompatActivity implements BluetoothHelper.D
             curEvent = null;
         }
 
-        chart.addOneDataToLine(beanEntry, BaseChart4Coffee.BEANLINE);
+        chart.addOneDataToLine(curBeanEntry, BaseChart4Coffee.BEANLINE);
         chart.addOneDataToLine(new Entry(count, inwindTemp), BaseChart4Coffee.INWINDLINE);
         chart.addOneDataToLine(new Entry(count, outwindTemp), BaseChart4Coffee.OUTWINDLINE);
         chart.addOneDataToLine(new Entry(count, accBeanTemp), BaseChart4Coffee.ACCBEANLINE);
@@ -409,45 +413,46 @@ public class BakeActivity extends AppCompatActivity implements BluetoothHelper.D
 
     private void addEvent(View v) {
         int id = v.getId();
+        boolean status = false;
         switch (id) {
             case R.id.id_baking_dry:
-                curEvent = new Event(Event.DRY);
-                curEvent.setDescription("脱水");
+                updateCurBeanEntryEvent(new Event(Event.DRY, "脱水"));
+                curFlow = DRY;
+                status = true;
                 break;
             case R.id.id_baking_firstBurst:
-                curEvent = new Event(Event.FIRST_BURST);
-                curEvent.setDescription("一爆");
-                curStatus = FIRST_BURST;
+                if (curFlow != DRY) {
+                    T.showShort(this, "请先进行脱水");
+                } else {
+                    updateCurBeanEntryEvent(new Event(Event.FIRST_BURST, "一爆"));
+                    curStatus = DevelopBar.FIRST_BURST;
+                    curFlow = FIRST_BURST;
+                    status = true;
+                }
                 break;
             case R.id.id_baking_secondBurst:
-                curEvent = new Event(Event.SECOND_BURST);
-                curEvent.setDescription("二爆");
+                if (curFlow != FIRST_BURST) {
+                    T.showShort(this, "请先点击一爆");
+                } else {
+                    updateCurBeanEntryEvent(new Event(Event.SECOND_BURST, "二爆"));
+                    curFlow = SECOND_BURST;
+                    status = true;
+                }
                 break;
             case R.id.id_baking_end:
-                curEvent = new Event(Event.END);
-                curEvent.setDescription("结束烘焙");
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mShowHandler.sendEmptyMessage(0);
-                        while (true) {
-                            if (isEnd) {
-                                BakeReportImm imm = generateReport();
-                                imm.setEntriesWithEvents(eventRecords);
-                                Intent intent = new Intent(BakeActivity.this, EditBehindActiviy.class);
-
-                                if (dialog != null) {
-                                    dialog.dismiss();
-                                }
-                                mShowHandler.sendEmptyMessage(1);
-                                mHelper.stopRead();
-                                finish();
-                                startActivity(intent);
-                                break;
-                            }
-                        }
-                    }
-                }).start();
+                if (curFlow != SECOND_BURST) {
+                    T.showShort(this, "请先点击二爆");
+                } else {
+                    updateCurBeanEntryEvent(new Event(Event.END, "结束"));
+                    BakeReportImm imm = generateReport();
+                    imm.setEntriesWithEvents(eventRecords);
+                    imm.setEndTemp(curBeanEntry.getY());
+                    Intent intent = new Intent(BakeActivity.this, EditBehindActiviy.class);
+                    mHelper.stopRead();
+                    startActivity(intent);
+                    finish();
+                    status = true;
+                }
                 break;
             case R.id.id_baking_wind_fire:
                 FireWindDialog fireWind = new FireWindDialog();
@@ -460,19 +465,21 @@ public class BakeActivity extends AppCompatActivity implements BluetoothHelper.D
                 fragmentTool.showDialogFragmen("otherFragment", other);
                 break;
         }
-        if (id != R.id.id_baking_wind_fire && id != R.id.id_baking_other) {
-            v.setEnabled(false);
+        if (id != R.id.id_baking_wind_fire & id != R.id.id_baking_other) {
+            if (status) {
+                v.setEnabled(false);
+            }
         }
     }
 
     @Override
     public void onFireWindChanged(Event event) {
-        curEvent = event;
+        updateCurBeanEntryEvent(event);
     }
 
     @Override
     public void onDataChanged(Event event) {
-        curEvent = event;
+        updateCurBeanEntryEvent(event);
     }
 
     @Override
@@ -525,13 +532,15 @@ public class BakeActivity extends AppCompatActivity implements BluetoothHelper.D
 
         bakeReportImm.setStartTemp(startTemp);
 
-        bakeReportImm.setEndTemp(endTemp);
-
         bakeReportImm.setEnvTemp(intent.getFloatExtra(ENV_TEMP, -1));
 
 
         return bakeReportImm;
     }
 
-
+    private void updateCurBeanEntryEvent(Event event) {
+        curBeanEntry.setEvent(event);
+        eventRecords.add(curBeanEntry);
+        chart.invalidate();
+    }
 }

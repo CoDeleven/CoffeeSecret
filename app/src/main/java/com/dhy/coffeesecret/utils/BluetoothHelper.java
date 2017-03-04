@@ -8,13 +8,13 @@ import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothManager;
+import android.bluetooth.BluetoothProfile;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
 import com.dhy.coffeesecret.pojo.Temprature;
-import com.github.mikephil.charting.data.Entry;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -34,8 +34,9 @@ public class BluetoothHelper {
     public static String firstChannel = "4348414e3b323130300a";
     public static String secondChannel = "4348414e3b333230300a";
     private static BluetoothHelper mHelper;
-    private static BluetoothAdapter mAdapter;
+    private static BluetoothAdapter mBluetoothAdapter;
     private BluetoothDevice mCurDevice;
+    private BluetoothManager mBluetoothManager;
     private BluetoothGatt mGatt;
     private boolean readable = false;
     private DeviceChangeListener mDeviceListener;
@@ -53,6 +54,7 @@ public class BluetoothHelper {
     private boolean readNewData = false;
     private boolean isActivityDestroy = false;
     private Thread testThread = null;
+    private ConnectStatusChangeListener mConnectionStatusChangeLisntener;
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -140,8 +142,13 @@ public class BluetoothHelper {
 
         @Override
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
-            Log.e("codelevex", "连接成功");
-            mGatt.discoverServices();
+
+            if (newState == BluetoothProfile.STATE_CONNECTED) {
+                mGatt.discoverServices();
+                mConnectionStatusChangeLisntener.notifyDeviceConnectStatus(true);
+            } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
+                mConnectionStatusChangeLisntener.notifyDeviceConnectStatus(false);
+            }
         }
     };
     private Context mContext;
@@ -151,14 +158,16 @@ public class BluetoothHelper {
     private BluetoothAdapter.LeScanCallback mScanCallback = new BluetoothAdapter.LeScanCallback() {
         @Override
         public void onLeScan(BluetoothDevice bluetoothDevice, int i, byte[] bytes) {
+            Log.e("codelevex", bluetoothDevice.getName() + "-" + bluetoothDevice.getBluetoothClass().getMajorDeviceClass());
             // 回调通知界面有新设备
             mDeviceListener.notifyNewDevice(bluetoothDevice);
         }
     };
+
     private BluetoothHelper(Context context) {
         this.mContext = context;
-        mAdapter = ((BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE)).getAdapter();
 
+        initialize();
     }
 
     public static BluetoothHelper getNewInstance(Context context) {
@@ -175,6 +184,30 @@ public class BluetoothHelper {
         return null;
     }
 
+    public void setConnectionStatusChangeListener(ConnectStatusChangeListener mConnectionStatusChangeLisntener) {
+        this.mConnectionStatusChangeLisntener = mConnectionStatusChangeLisntener;
+    }
+
+    public boolean initialize() {
+        // For API level 18 and above, get a reference to BluetoothAdapter through
+        // BluetoothManager.
+        if (mBluetoothManager == null) {
+            mBluetoothManager = (BluetoothManager) mContext.getSystemService(Context.BLUETOOTH_SERVICE);
+            if (mBluetoothManager == null) {
+                Log.e("codelevex", "Unable to initialize BluetoothManager.");
+                return false;
+            }
+        }
+
+        mBluetoothAdapter = mBluetoothManager.getAdapter();
+        if (mBluetoothAdapter == null) {
+            Log.e("codelevex", "Unable to obtain a BluetoothAdapter.");
+            return false;
+        }
+
+        return true;
+    }
+
     public String getCurBluetoothName() {
         return mCurDevice.getName();
     }
@@ -184,8 +217,21 @@ public class BluetoothHelper {
      *
      * @return
      */
-    public boolean scanBluetoothDevice() {
-        return mAdapter.startLeScan(mScanCallback);
+    public void scanBluetoothDevice() {
+        mBluetoothAdapter.startLeScan(mScanCallback);
+    }
+    public void stopScanBluetoothDevice(){
+        mBluetoothAdapter.stopLeScan(mScanCallback);
+    }
+    public void close() {
+        stopRead();
+        if (mGatt != null) {
+            mGatt.disconnect();
+            mGatt.close();
+        }
+        mBluetoothAdapter.stopLeScan(mScanCallback);
+
+
     }
 
     /**
@@ -241,6 +287,10 @@ public class BluetoothHelper {
         mThread.start();
     }
 
+    public boolean isReading() {
+        return readable;
+    }
+
     /**
      * 发送读取数据命令
      */
@@ -288,7 +338,9 @@ public class BluetoothHelper {
     public void stopRead() {
         readable = false;
     }
-
+    public void startRead(){
+        readable = true;
+    }
     /**
      * 仅用于模拟烘焙过程的数据
      */
@@ -342,8 +394,14 @@ public class BluetoothHelper {
         isActivityDestroy = activityDestroy;
     }
 
-    public boolean isTestThreadAlive() {
-        return testThread != null && testThread.isAlive();
+    public BluetoothAdapter getmAdapter() {
+        return mBluetoothAdapter;
+    }
+
+    public boolean getEnableStatus() {
+        int status = mBluetoothAdapter.getState();
+        Log.e("codelevex", "当前的状态啊：" + status);
+        return status == BluetoothAdapter.STATE_ON;
     }
 
     public interface DeviceChangeListener {
@@ -371,4 +429,7 @@ public class BluetoothHelper {
         void handleViewBeforeStartRead();
     }
 
+    public interface ConnectStatusChangeListener {
+        void notifyDeviceConnectStatus(boolean isConnected);
+    }
 }

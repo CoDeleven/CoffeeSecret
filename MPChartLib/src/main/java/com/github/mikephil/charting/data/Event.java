@@ -16,7 +16,10 @@ public class Event implements Serializable {
     public Event(int eventId){
         this.curStatus = eventId;
     }
-
+    public Event(int eventId, String description){
+        this.curStatus = eventId;
+        this.description = description;
+    }
     public String getDescription() {
         return description;
     }

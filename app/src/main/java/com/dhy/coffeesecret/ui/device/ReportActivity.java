@@ -66,6 +66,8 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
     TextView device;
     @Bind(R.id.id_score)
     TextView score;
+    @Bind(R.id.id_report_home)
+    TextView home;
     private TableLayout tableLayout;
     private List<BeanInfoSimple> beanInfos = new ArrayList<>();
     private LinearLayout beanContainer;
@@ -113,8 +115,6 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
             mChart.addNewDatas(lineData.getValues(), getIndexByLabels(lineData.getLabel()));
         }
 
-
-
         envTemp.setText("环境温度:" + imm.getEnvTemp());
         startTemp.setText("入豆温度:" + imm.getStartTemp());
         endTemp.setText("结束温度:" + imm.getEndTemp());
@@ -133,6 +133,13 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
         for (LinearLayout linearLayout : beanContent) {
             beanContainer.addView(linearLayout);
         }
+
+        home.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         mLineOperator.setOnClickListener(new View.OnClickListener() {
             @Override

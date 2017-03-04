@@ -1,430 +1,450 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <LinearLayout xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/activity_settings"
+    <include layout="@layout/title_bar_back" />
+
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:orientation="vertical"
-        tools:context="com.dhy.coffeesecret.ui.mine.SettingsActivity">
+        android:layout_height="match_parent">
 
-        <RelativeLayout
-            android:id="@+id/quick_start"
+        <LinearLayout xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/activity_settings"
             android:layout_width="match_parent"
-            android:layout_height="62.5dp">
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="vertical"
+            tools:context="com.dhy.coffeesecret.ui.mine.SettingsActivity">
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="30dp"
-                android:gravity="left"
-                android:orientation="vertical"
-                android:paddingTop="15.5dp">
+            <RelativeLayout
+                android:id="@+id/quick_start"
+                android:layout_width="match_parent"
+                android:layout_height="62.5dp"
+                android:background="@drawable/option_selector">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="30dp"
+                    android:gravity="left"
+                    android:orientation="vertical"
+                    android:paddingTop="15.5dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="快速开始"
+                        android:textColor="@color/text_mine"
+                        android:textSize="14.5sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:text="点击开始进入烘焙"
+                        android:textColor="@color/list_text_color_2"
+                        android:textSize="11sp" />
+                </LinearLayout>
+
+                <CheckBox
+                    android:id="@+id/check_quick_start"
+                    android:layout_width="17.5dp"
+                    android:layout_height="17.5dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="30dp"
+                    android:background="@drawable/check_box_selector"
+                    android:button="@null"
+                    android:checked="true" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="9.5dp"
+                android:layout_marginRight="9.5dp"
+                android:background="@color/color_gray_c9" />
+
+            <RelativeLayout
+                android:id="@+id/confirm_again"
+                android:layout_width="match_parent"
+                android:layout_height="62.5dp"
+                android:background="@drawable/option_selector">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="30dp"
+                    android:gravity="left"
+                    android:orientation="vertical"
+                    android:paddingTop="15.5dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="再确认"
+                        android:textColor="@color/text_mine"
+                        android:textSize="14.5sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:text="停止烘焙需要按两次按钮"
+                        android:textColor="@color/list_text_color_2"
+                        android:textSize="11sp" />
+                </LinearLayout>
+
+                <CheckBox
+                    android:id="@+id/check_confirm_again"
+                    android:layout_width="17.5dp"
+                    android:layout_height="17.5dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="30dp"
+                    android:background="@drawable/check_box_selector"
+                    android:button="@null" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="9.5dp"
+                android:layout_marginRight="9.5dp"
+                android:background="@color/color_gray_c9" />
+
+            <RelativeLayout
+                android:id="@+id/quick_event"
+                android:layout_width="match_parent"
+                android:layout_height="62.5dp"
+                android:background="@drawable/option_selector">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="30dp"
+                    android:gravity="left"
+                    android:orientation="vertical"
+                    android:paddingTop="15.5dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="快速事件"
+                        android:textColor="@color/text_mine"
+                        android:textSize="14.5sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:text="标记时使用的标签"
+                        android:textColor="@color/list_text_color_2"
+                        android:textSize="11sp" />
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="30dp"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_right" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:background="@color/bg_reportinfo" />
+
+            <RelativeLayout
+                android:id="@+id/weight_unit"
+                android:layout_width="match_parent"
+                android:layout_height="62.5dp"
+                android:background="@drawable/option_selector"
+                android:paddingLeft="30dp">
+
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="快速开始"
+                    android:layout_centerVertical="true"
+                    android:text="重量单位"
                     android:textColor="@color/text_mine"
                     android:textSize="14.5sp" />
 
                 <TextView
+                    android:id="@+id/text_weight_unit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="3dp"
-                    android:text="点击开始进入烘焙"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="30dp"
+                    android:text="千克"
                     android:textColor="@color/list_text_color_2"
-                    android:textSize="11sp" />
-            </LinearLayout>
+                    android:textSize="14.5sp" />
 
-            <CheckBox
-                android:id="@+id/check_quick_start"
-                android:layout_width="17.5dp"
-                android:layout_height="17.5dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="30dp"
-                android:background="@drawable/check_box_selector"
-                android:button="@null"
-                android:checked="true" />
+            </RelativeLayout>
 
-        </RelativeLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="9.5dp"
+                android:layout_marginRight="9.5dp"
+                android:background="@color/color_gray_c9" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginLeft="9.5dp"
-            android:layout_marginRight="9.5dp"
-            android:background="@color/color_gray_c9" />
+            <RelativeLayout
+                android:id="@+id/temperature_unit"
+                android:layout_width="match_parent"
+                android:layout_height="62.5dp"
+                android:background="@drawable/option_selector"
+                android:paddingLeft="30dp">
 
-        <RelativeLayout
-            android:id="@+id/confirm_again"
-            android:layout_width="match_parent"
-            android:layout_height="62.5dp">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="30dp"
-                android:gravity="left"
-                android:orientation="vertical"
-                android:paddingTop="15.5dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="再确认"
+                    android:layout_centerVertical="true"
+                    android:text="温度单位"
                     android:textColor="@color/text_mine"
                     android:textSize="14.5sp" />
 
                 <TextView
+                    android:id="@+id/text_temperature_unit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="3dp"
-                    android:text="停止烘焙需要按两次按钮"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="30dp"
+                    android:text="摄氏度"
                     android:textColor="@color/list_text_color_2"
-                    android:textSize="11sp" />
-            </LinearLayout>
+                    android:textSize="14.5sp" />
 
-            <CheckBox
-                android:id="@+id/check_confirm_again"
-                android:layout_width="17.5dp"
-                android:layout_height="17.5dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="30dp"
-                android:background="@drawable/check_box_selector"
-                android:button="@null" />
+            </RelativeLayout>
 
-        </RelativeLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="9.5dp"
+                android:layout_marginRight="9.5dp"
+                android:background="@color/color_gray_c9" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginLeft="9.5dp"
-            android:layout_marginRight="9.5dp"
-            android:background="@color/color_gray_c9" />
+            <RelativeLayout
+                android:id="@+id/refer_degree"
+                android:layout_width="match_parent"
+                android:layout_height="62.5dp"
+                android:background="@drawable/option_selector"
+                android:paddingLeft="30dp">
 
-        <RelativeLayout
-            android:id="@+id/quick_event"
-            android:layout_width="match_parent"
-            android:layout_height="62.5dp">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="30dp"
-                android:gravity="left"
-                android:orientation="vertical"
-                android:paddingTop="15.5dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="快速事件"
+                    android:layout_centerVertical="true"
+                    android:text="参考标准"
                     android:textColor="@color/text_mine"
                     android:textSize="14.5sp" />
 
                 <TextView
+                    android:id="@+id/text_refer_degree"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="3dp"
-                    android:text="标记时使用的标签"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="30dp"
+                    android:text="Agtron"
                     android:textColor="@color/list_text_color_2"
-                    android:textSize="11sp" />
-            </LinearLayout>
+                    android:textSize="14.5sp" />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:contentDescription="@null"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="30dp"
-                android:src="@drawable/ic_right"/>
+            </RelativeLayout>
 
-        </RelativeLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:background="@color/bg_reportinfo" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="20dp"
-            android:background="@color/bg_reportinfo" />
-
-        <RelativeLayout
-            android:id="@+id/weight_unit"
-            android:layout_width="match_parent"
-            android:layout_height="62.5dp"
-            android:paddingLeft="30dp">
+            <RelativeLayout
+                android:id="@+id/time_shaft"
+                android:layout_width="match_parent"
+                android:layout_height="62.5dp"
+                android:background="@drawable/option_selector"
+                android:paddingLeft="30dp">
 
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:text="重量单位"
-                android:textColor="@color/text_mine"
-                android:textSize="14.5sp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="时间轴"
+                    android:textColor="@color/text_mine"
+                    android:textSize="14.5sp" />
 
-            <TextView
-                android:id="@+id/text_weight_unit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="30dp"
-                android:text="千克"
-                android:textColor="@color/list_text_color_2"
-                android:textSize="14.5sp" />
+                <TextView
+                    android:id="@+id/text_time_shaft"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="30dp"
+                    android:text="最长20分钟"
+                    android:textColor="@color/list_text_color_2"
+                    android:textSize="14.5sp" />
 
-        </RelativeLayout>
+            </RelativeLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginLeft="9.5dp"
-            android:layout_marginRight="9.5dp"
-            android:background="@color/color_gray_c9" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="9.5dp"
+                android:layout_marginRight="9.5dp"
+                android:background="@color/color_gray_c9" />
 
-        <RelativeLayout
-            android:id="@+id/temperature_unit"
-            android:layout_width="match_parent"
-            android:layout_height="62.5dp"
-            android:paddingLeft="30dp">
-
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:text="温度单位"
-                android:textColor="@color/text_mine"
-                android:textSize="14.5sp" />
-
-            <TextView
-                android:id="@+id/text_temperature_unit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="30dp"
-                android:text="摄氏度"
-                android:textColor="@color/list_text_color_2"
-                android:textSize="14.5sp" />
-
-        </RelativeLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_alignParentBottom="true"
-            android:layout_marginLeft="9.5dp"
-            android:layout_marginRight="9.5dp"
-            android:background="@color/color_gray_c9" />
-
-        <RelativeLayout
-            android:id="@+id/refer_degree"
-            android:layout_width="match_parent"
-            android:layout_height="62.5dp"
-            android:paddingLeft="30dp">
+            <RelativeLayout
+                android:id="@+id/temperature_shaft"
+                android:layout_width="match_parent"
+                android:layout_height="62.5dp"
+                android:background="@drawable/option_selector"
+                android:paddingLeft="30dp">
 
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:text="参考标准"
-                android:textColor="@color/text_mine"
-                android:textSize="14.5sp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="温度轴"
+                    android:textColor="@color/text_mine"
+                    android:textSize="14.5sp" />
 
-            <TextView
-                android:id="@+id/text_refer_degree"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="30dp"
-                android:text="Agtron"
-                android:textColor="@color/list_text_color_2"
-                android:textSize="14.5sp" />
+                <TextView
+                    android:id="@+id/text_temperature_shaft"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="30dp"
+                    android:text="最高100.25℃"
+                    android:textColor="@color/list_text_color_2"
+                    android:textSize="14.5sp" />
+            </RelativeLayout>
 
-        </RelativeLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:background="@color/bg_reportinfo" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="20dp"
-            android:background="@color/bg_reportinfo" />
-
-        <RelativeLayout
-            android:id="@+id/time_shaft"
-            android:layout_width="match_parent"
-            android:layout_height="62.5dp"
-            android:paddingLeft="30dp">
-
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:text="时间轴"
-                android:textColor="@color/text_mine"
-                android:textSize="14.5sp" />
-
-            <TextView
-                android:id="@+id/text_time_shaft"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="30dp"
-                android:text="最长20分钟"
-                android:textColor="@color/list_text_color_2"
-                android:textSize="14.5sp" />
-
-        </RelativeLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginLeft="9.5dp"
-            android:layout_marginRight="9.5dp"
-            android:background="@color/color_gray_c9" />
-
-        <RelativeLayout
-            android:id="@+id/temperature_shaft"
-            android:layout_width="match_parent"
-            android:layout_height="62.5dp"
-            android:paddingLeft="30dp">
+            <RelativeLayout
+                android:id="@+id/temperature_line"
+                android:layout_width="match_parent"
+                android:layout_height="62.5dp"
+                android:background="@drawable/option_selector"
+                android:paddingLeft="30dp">
 
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:text="温度轴"
-                android:textColor="@color/text_mine"
-                android:textSize="14.5sp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="温度曲线平滑"
+                    android:textColor="@color/text_mine"
+                    android:textSize="14.5sp" />
 
-            <TextView
-                android:id="@+id/text_temperature_shaft"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="30dp"
-                android:text="最高100.25℃"
-                android:textColor="@color/list_text_color_2"
-                android:textSize="14.5sp" />
-        </RelativeLayout>
+                <TextView
+                    android:id="@+id/text_temperature_line"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="30dp"
+                    android:text="每秒的平均数3"
+                    android:textColor="@color/list_text_color_2"
+                    android:textSize="14.5sp" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="20dp"
-            android:background="@color/bg_reportinfo" />
+            </RelativeLayout>
 
-        <RelativeLayout
-            android:id="@+id/temperature_line"
-            android:layout_width="match_parent"
-            android:layout_height="62.5dp"
-            android:paddingLeft="30dp">
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="9.5dp"
+                android:layout_marginRight="9.5dp"
+                android:background="@color/color_gray_c9" />
 
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:text="温度曲线平滑"
-                android:textColor="@color/text_mine"
-                android:textSize="14.5sp" />
-
-            <TextView
-                android:id="@+id/text_temperature_line"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="30dp"
-                android:text="每秒的平均数3"
-                android:textColor="@color/list_text_color_2"
-                android:textSize="14.5sp" />
-
-        </RelativeLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginLeft="9.5dp"
-            android:layout_marginRight="9.5dp"
-            android:background="@color/color_gray_c9" />
-
-        <RelativeLayout
-            android:id="@+id/heating_line"
-            android:layout_width="match_parent"
-            android:layout_height="62.5dp"
-            android:paddingLeft="30dp">
+            <RelativeLayout
+                android:id="@+id/heating_line"
+                android:layout_width="match_parent"
+                android:layout_height="62.5dp"
+                android:background="@drawable/option_selector"
+                android:paddingLeft="30dp">
 
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:text="升温率平滑"
-                android:textColor="@color/text_mine"
-                android:textSize="14.5sp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="升温率平滑"
+                    android:textColor="@color/text_mine"
+                    android:textSize="14.5sp" />
 
-            <TextView
-                android:id="@+id/text_heating_line"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="30dp"
-                android:text="每秒的平均数10"
-                android:textColor="@color/list_text_color_2"
-                android:textSize="14.5sp" />
+                <TextView
+                    android:id="@+id/text_heating_line"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="30dp"
+                    android:text="每秒的平均数10"
+                    android:textColor="@color/list_text_color_2"
+                    android:textSize="14.5sp" />
 
-        </RelativeLayout>
+            </RelativeLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginLeft="9.5dp"
-            android:layout_marginRight="9.5dp"
-            android:background="@color/color_gray_c9" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="9.5dp"
+                android:layout_marginRight="9.5dp"
+                android:background="@color/color_gray_c9" />
 
-        <RelativeLayout
-            android:id="@+id/line_color"
-            android:layout_width="match_parent"
-            android:layout_height="62.5dp"
-            android:paddingLeft="30dp">
+            <RelativeLayout
+                android:id="@+id/line_color"
+                android:layout_width="match_parent"
+                android:layout_height="62.5dp"
+                android:background="@drawable/option_selector"
+                android:paddingLeft="30dp">
 
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:text="升温率平滑"
-                android:textColor="@color/text_mine"
-                android:textSize="14.5sp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="曲线颜色"
+                    android:textColor="@color/text_mine"
+                    android:textSize="14.5sp" />
 
-            <ImageView
-                android:layout_width="13dp"
-                android:layout_height="13dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="30dp"
-                android:contentDescription="@null"
-                android:src="@drawable/ic_right" />
+                <ImageView
+                    android:layout_width="13dp"
+                    android:layout_height="13dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="30dp"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_right" />
 
-        </RelativeLayout>
+            </RelativeLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:background="@color/bg_reportinfo" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:background="@color/bg_reportinfo" />
 
-    </LinearLayout>
+        </LinearLayout>
 
-</ScrollView>
+    </ScrollView>
+
+</LinearLayout>
+

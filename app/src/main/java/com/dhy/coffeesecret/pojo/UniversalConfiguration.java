@@ -15,6 +15,8 @@ public class UniversalConfiguration {
     private String tempratureUnit;
     // 参考标准
     private String referDegree;
+    // 快速事件
+    private String quickEvents;
     // 三个开关
     private boolean quickStart;
     // 双击启动按钮
@@ -53,8 +55,6 @@ public class UniversalConfiguration {
     private int accOutwindColor;
     // 环境温
     private int envColor;
-    // 快速事件
-    private Set<String> quickEvents;
 
     public int getAccBeanColor() {
         return accBeanColor;
@@ -232,11 +232,11 @@ public class UniversalConfiguration {
         this.weightUnit = weightUnit;
     }
 
-    public Set<String> getQuickEvents() {
+    public String getQuickEvents() {
         return quickEvents;
     }
 
-    public void setQuickEvents(Set<String> quickEvents) {
+    public void setQuickEvents(String quickEvents) {
         this.quickEvents = quickEvents;
     }
 

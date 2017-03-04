@@ -7,6 +7,7 @@ import com.dhy.coffeesecret.R;
 import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.utils.MPPointF;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -29,8 +30,12 @@ public class ReportMarker extends MarkerView {
         if(!"".equals(e.getEvent().getDescription())){
             temp.setText("温度:" + e.getY());
             event.setText("事件:" + e.getEvent().getDescription());
-            super.refreshContent(e, highlight);
         }
+        super.refreshContent(e, highlight);
     }
 
+    @Override
+    public MPPointF getOffset() {
+        return new MPPointF(-(getWidth() / 2), -getHeight());
+    }
 }

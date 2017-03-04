@@ -6,5 +6,14 @@
     android:layout_height="match_parent"
     tools:context="com.dhy.coffeesecret.ui.mine.QuickEventActivity">
 
+    <include
+        android:id="@+id/title_bar"
+        layout="@layout/title_bar_back" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/quick_event_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/title_bar" />
 
 </RelativeLayout>

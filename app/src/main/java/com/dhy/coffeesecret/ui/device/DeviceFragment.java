@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -26,10 +27,11 @@ import com.dhy.coffeesecret.utils.FragmentTool;
 import com.dhy.coffeesecret.utils.ObjectJsonConvert;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class DeviceFragment extends Fragment implements BluetoothHelper.DataChangeListener {
+public class DeviceFragment extends Fragment implements BluetoothHelper.DataChangeListener, BluetoothHelper.ConnectStatusChangeListener {
     private Button mPrepareBake;
     private boolean hasPrepared = false;
     private List<DialogBeanInfo> dialogBeanInfos;
@@ -50,6 +52,24 @@ public class DeviceFragment extends Fragment implements BluetoothHelper.DataChan
     private boolean isStart = false;
     private ProgressDialog dialog;
     private float envTemp;
+    private boolean isConnected = false;
+
+    private Handler mTextHandler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            switch (msg.what){
+                case 0:
+                    bluetoothStatus.setText(" 已连接");
+                    operator.setText("切换");
+                    break;
+                case 1:
+                    bluetoothStatus.setText(" 未连接");
+                    operator.setText("连接");
+            }
+            return false;
+        }
+    });
+
     private Handler mShowHandler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
@@ -98,10 +118,21 @@ public class DeviceFragment extends Fragment implements BluetoothHelper.DataChan
     @Override
     public void onStart() {
         super.onStart();
+        hasPrepared = false;
         if (mHelper == null) {
             mHelper = BluetoothHelper.getNewInstance(getActivity().getApplicationContext());
-            mHelper.setDataListener(this);
         }
+        mHelper.setDataListener(this);
+        mHelper.setConnectionStatusChangeListener(this);
+        if(dialogBeanInfos != null){
+            dialogBeanInfos.clear();
+        }
+        switchStatus();
+        if(isConnected && !mHelper.isReading()){
+            mHelper.startRead();
+            mHelper.read();
+        }
+
     }
 
     private void showDialogFragment() {
@@ -230,14 +261,13 @@ public class DeviceFragment extends Fragment implements BluetoothHelper.DataChan
         }
     }
 
-    public void showProgressDialogInstance(){
-        dialog = new ProgressDialog(getContext());
-        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        dialog.setTitle("");
-        dialog.setIcon(null);
-        dialog.setMessage("正在处理...");
-        dialog.setCancelable(false);
-        dialog.setIndeterminate(false);
-        dialog.show();
+    @Override
+    public void notifyDeviceConnectStatus(boolean isConnected) {
+        this.isConnected = isConnected;
+        if(this.isConnected){
+            mTextHandler.sendEmptyMessage(0);
+        }else{
+            mTextHandler.sendEmptyMessage(1);
+        }
     }
 }
