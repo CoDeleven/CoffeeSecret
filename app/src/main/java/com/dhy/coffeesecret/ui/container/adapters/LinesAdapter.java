@@ -53,7 +53,7 @@ public class LinesAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) view.getTag();
         }
         viewHolder.lineName.setText(reports.get(i).getSingleBeanName());
-        viewHolder.dateName.setText("日期:" + String.format("%1$tY-%1$tm-%1$te", reports.get(i).getDate()));
+        viewHolder.dateName.setText("日期:" + reports.get(i).getDate());
         return view;
     }
 }

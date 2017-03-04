@@ -116,6 +116,7 @@
                 android:paddingRight="55.125dp">
 
                 <ImageView
+                    android:id="@+id/id_bake_dialog_refer_collection"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -124,6 +125,7 @@
                     android:src="@drawable/ic_bake_dialog_collection"/>
 
                 <ImageView
+                    android:id="@+id/id_bake_dialog_refer_history"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"

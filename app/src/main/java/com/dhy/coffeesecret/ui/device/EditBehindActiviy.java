@@ -1,7 +1,6 @@
 package com.dhy.coffeesecret.ui.device;
 
 import android.content.Intent;
-import android.os.Binder;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -9,21 +8,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.dhy.coffeesecret.R;
-import com.dhy.coffeesecret.pojo.BakeReportImm;
-import com.dhy.coffeesecret.pojo.BakeReportImmBeanFactory;
+import com.dhy.coffeesecret.pojo.BakeReport;
+import com.dhy.coffeesecret.pojo.BakeReportBeanFactory;
+import com.dhy.coffeesecret.pojo.BakeReportProxy;
 import com.dhy.coffeesecret.utils.ObjectJsonConvert;
 import com.dhy.coffeesecret.views.CircleSeekBar;
 import com.dhy.coffeesecret.views.WheelView;
 import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.Event;
-
-import junit.framework.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -95,41 +91,39 @@ public class EditBehindActiviy extends AppCompatActivity implements CircleSeekBa
     }
 
     private void init() {
-        entries = BakeReportImmBeanFactory.getBakeReportImm().getEntriesWithEvents();
-        for(Entry entry : entries){
+        entries = BakeReportBeanFactory.getInstance().getEntriesWithEvents();
+        for (Entry entry : entries) {
             int time = (int) entry.getX();
             int minutes = time / 60;
             int seconds = time % 60;
             content.add(String.format("%1$02d", minutes) + ":" + String.format("%1$02d", seconds));
         }
     }
+
     @OnClick(R.id.id_bake_behind_save)
-    protected void onSave(){
-        BakeReportImm imm = BakeReportImmBeanFactory.getBakeReportImm();
-        imm.setCookedBeanWeight(Float.parseFloat(cookedWeight.getText().toString()));
-        imm.setBakeDegree(mSeekBar.getCurProcess());
-        imm.setBakeDegree(mCurValue);
+    protected void onSave() {
+        BakeReportProxy proxy = BakeReportBeanFactory.getInstance();
+        proxy.setCookedBeanWeight(Float.parseFloat(cookedWeight.getText().toString()));
+        proxy.setBakeDegree(mCurValue);
         Intent other = new Intent(this, ReportActivity.class);
-        sendJsonData(imm);
+        sendJsonData(proxy.getBakeReport());
         startActivity(other);
         finish();
     }
 
-    private void sendJsonData(final BakeReportImm imm){
+    private void sendJsonData(final BakeReport proxy) {
         final OkHttpClient okHttpClient = new OkHttpClient();
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Log.e("codelevex", "currentThread:" + Thread.currentThread().toString());
-                String url = "http://10.152.18.56:8080/CoffeeSecret/bake/add";
-                RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), ObjectJsonConvert.bakereport2Json(imm));
-                Log.e("codelevex", "wwwwww");
+                String url = "http://10.101.6.29:8080/CoffeeSecret/bake/add";
+                RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), ObjectJsonConvert.bakereport2Json(proxy));
                 Request request = new Request.Builder().url(url).post(requestBody).build();
-                try{
+                try {
                     Response response = okHttpClient.newCall(request).execute();
-                    if(response.isSuccessful()){
+                    if (response.isSuccessful()) {
                         Log.e("codelevex", "成功获取");
-                    }else{
+                    } else {
                         Log.e("codelevex", "失败啦！！！:" + response.code());
                     }
                 } catch (IOException e) {
@@ -148,7 +142,7 @@ public class EditBehindActiviy extends AppCompatActivity implements CircleSeekBa
         new Handler(new Handler.Callback() {
             @Override
             public boolean handleMessage(Message msg) {
-                score.setText(((int)msg.getData().getFloat("curValue")) + "");
+                score.setText(((int) msg.getData().getFloat("curValue")) + "");
                 return false;
             }
         }).sendMessage(msg);

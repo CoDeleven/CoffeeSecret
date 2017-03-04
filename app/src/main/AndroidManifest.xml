@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.dhy.coffeesecret">
-    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
-    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"></uses-permission>
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.BLUETOOTH"/>
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
@@ -23,26 +23,34 @@
             android:name=".MainActivity"
             android:windowSoftInputMode="adjustPan">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".ui.container.BeanInfoActivity" />
-        <activity android:name=".ui.container.LinesSelectedActivity" />
-        <activity android:name=".ui.cup.NewCuppingActivity" />
-        <activity android:name=".ui.device.DialogBeanSelectedActivity" />
-        <activity android:name=".ui.mine.BluetoothListActivity" />
-        <activity android:name=".ui.device.BakeActivity" />
-        <activity android:name=".ui.device.TestActivity" />
-        <activity android:name=".ui.device.ReportActivity" />
-        <activity android:name=".ui.device.EditBehindActiviy" />
-        <activity android:name=".ui.container.SelectInfoActivity" />
-        <activity android:name=".ui.mine.AboutUsActivity" />
-        <activity android:name=".ui.mine.SettingsActivity" />
-        <activity android:name=".ui.mine.QuickEventActivity" />
-        <activity android:name=".ui.container.EditBeanActivity" />
+        <activity android:name=".ui.container.BeanInfoActivity"/>
+        <activity android:name=".ui.container.LinesSelectedActivity"/>
+        <activity android:name=".ui.cup.NewCuppingActivity"/>
+        <activity android:name=".ui.device.DialogBeanSelectedActivity"/>
+        <activity android:name=".ui.mine.BluetoothListActivity"/>
+        <activity android:name=".ui.device.BakeActivity"/>
+        <activity android:name=".ui.device.ReportActivity"/>
+        <activity android:name=".ui.device.EditBehindActiviy"/>
+        <activity android:name=".ui.container.SelectInfoActivity"/>
+        <activity android:name=".ui.mine.AboutUsActivity"/>
+        <activity android:name=".ui.mine.SettingsActivity"/>
+        <activity android:name=".ui.mine.QuickEventActivity"/>
+        <activity android:name=".ui.container.EditBeanActivity"/>
         <activity android:name=".ui.mine.LinesColorActivity"/>
+
+        <service
+            android:name=".services.BluetoothService"
+            android:enabled="true"
+            android:exported="true">
+        </service>
+
+        <activity android:name=".ui.mine.HistoryLineActivity">
+        </activity>
     </application>
 
 </manifest>

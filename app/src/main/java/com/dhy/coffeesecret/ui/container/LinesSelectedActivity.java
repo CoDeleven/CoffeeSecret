@@ -20,6 +20,7 @@ import com.dhy.coffeesecret.ui.device.ReportActivity;
 import com.dhy.coffeesecret.views.SearchEditText;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -81,7 +82,7 @@ public class LinesSelectedActivity extends AppCompatActivity implements View.OnC
         for (int i = 0; i < 30; ++i) {
             BakeReport report = new BakeReport();
             report.setSingleBeanName(i + " -> " + Math.random() * 100);
-            report.setDate(new Date());
+            report.setDate(new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date()));
             reportList.add(report);
         }
         return reportList;

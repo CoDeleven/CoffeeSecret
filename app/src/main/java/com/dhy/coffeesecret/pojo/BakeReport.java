@@ -1,5 +1,7 @@
 package com.dhy.coffeesecret.pojo;
 
+import com.github.mikephil.charting.data.Entry;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -19,12 +21,24 @@ public class BakeReport implements Serializable{
 	private String device;
 	// 熟豆重量
 	private String cookedBeanWeight;
-	// 生豆重量
-	private String rawBeanWeight;
 	// 烘焙度
 	private String roastDegree;
-	// 曲线文件路径
-	private String curveFilePath;
+
+    // 豆温
+    private List<EntryTemp> beanTemps = new ArrayList<>();
+    // 入风温
+    private List<Float> inwindTemps = new ArrayList<>();
+    // 出风温
+    private List<Float> outwindTemps = new ArrayList<>();
+    // 豆温升
+    private List<Float> accBeanTemps = new ArrayList<>();
+    // 入风温升
+    private List<Float> accInwindTemps = new ArrayList<>();
+    // 出风温升
+    private List<Float> accOutwindTemps = new ArrayList<>();
+    // 时间
+    private List<Float> timex = new ArrayList<>();
+
 	// 发展时间
 	private String developmentTime;
 	// 发展率
@@ -34,11 +48,12 @@ public class BakeReport implements Serializable{
 	// 结束温度
 	private String endTemperature;
 	// 入豆温度
-	private String beanTemperature;
+	private String startTemperature;
 	//烘焙日期
-	private Date date;
+	private String date;
 	//豆子缩略信息
 	private List<BeanInfoSimple> beanInfoSimples = new ArrayList<>();
+
 
 	// 用于测试单个豆种
 	{
@@ -80,28 +95,12 @@ public class BakeReport implements Serializable{
 		this.cookedBeanWeight = cookedBeanWeight;
 	}
 
-	public String getRawBeanWeight() {
-		return rawBeanWeight;
-	}
-
-	public void setRawBeanWeight(String rawBeanWeight) {
-		this.rawBeanWeight = rawBeanWeight;
-	}
-
 	public String getRoastDegree() {
 		return roastDegree;
 	}
 
 	public void setRoastDegree(String roastDegree) {
 		this.roastDegree = roastDegree;
-	}
-
-	public String getCurveFilePath() {
-		return curveFilePath;
-	}
-
-	public void setCurveFilePath(String curveFilePath) {
-		this.curveFilePath = curveFilePath;
 	}
 	
 	public String getDevelopmentTime() {
@@ -136,15 +135,15 @@ public class BakeReport implements Serializable{
 		this.endTemperature = endTemperature;
 	}
 
-	public String getBeanTemperature() {
-		return beanTemperature;
-	}
+    public String getStartTemperature() {
+        return startTemperature;
+    }
 
-	public void setBeanTemperature(String beanTemperature) {
-		this.beanTemperature = beanTemperature;
-	}
+    public void setStartTemperature(String startTemperature) {
+        this.startTemperature = startTemperature;
+    }
 
-	public CuppingInfo getCuppingInfo() {
+    public CuppingInfo getCuppingInfo() {
 		return cuppingInfo;
 	}
 
@@ -160,13 +159,83 @@ public class BakeReport implements Serializable{
 		this.beanInfoSimples = beanInfoSimples;
 	}
 
-	public Date getDate() {
-		return date;
-	}
+    public List<Float> getAccBeanTemps() {
+        return accBeanTemps;
+    }
 
-	public void setDate(Date date) {
-		this.date = date;
-	}
+    public void setAccBeanTemps(List<Float> accBeanTemps) {
+        this.accBeanTemps = accBeanTemps;
+    }
+
+    public List<Float> getAccInwindTemps() {
+        return accInwindTemps;
+    }
+
+    public void setAccInwindTemps(List<Float> accInwindTemps) {
+        this.accInwindTemps = accInwindTemps;
+    }
+
+    public List<Float> getAccOutwindTemps() {
+        return accOutwindTemps;
+    }
+
+    public void setAccOutwindTemps(List<Float> accOutwindTemps) {
+        this.accOutwindTemps = accOutwindTemps;
+    }
+
+    public List<EntryTemp> getBeanTemps() {
+        return beanTemps;
+    }
+
+    public void setBeanTemps(List<EntryTemp> beanTemps) {
+        this.beanTemps = beanTemps;
+    }
+
+    public List<Float> getInwindTemps() {
+        return inwindTemps;
+    }
+
+    public void setInwindTemps(List<Float> inwindTemps) {
+        this.inwindTemps = inwindTemps;
+    }
+
+    public List<Float> getOutwindTemps() {
+        return outwindTemps;
+    }
+
+    public void setOutwindTemps(List<Float> outwindTemps) {
+        this.outwindTemps = outwindTemps;
+    }
+
+    public List<Float> getTimex() {
+        return timex;
+    }
+
+    public void setTimex(List<Float> timex) {
+        this.timex = timex;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public static class EntryTemp implements Serializable{
+        float y;
+        String event;
+        int curStatus;
+        public EntryTemp(){
+
+        }
+        public EntryTemp(float y, String event, int curStatus){
+            this.y = y;
+            this.event = event;
+            this.curStatus = curStatus;
+        }
+    }
 
 	// 用于测试
 	public String getSingleBeanName(){
