@@ -71,57 +71,59 @@ public class BakeReportProxy {
     }
 
     public void deseriData(LineData linedate){
-        LineDataSet beanSet = (LineDataSet)linedate.getDataSetByLabel("豆温", true);
-        List<EntryTemp> entryTemp = new ArrayList<>();
-        List<Float> timex = new ArrayList<>();
-        for(Entry entry : beanSet.getValues()){
-            entryTemp.add(new EntryTemp(entry.getY(), entry.getEvent().getDescription(), entry.getEvent().getCurStatus()));
-            timex.add(entry.getX());
-        }
-        bakeReport.setBeanTemps(entryTemp);
-        bakeReport.setTimex(timex);
-        lines.put(BEANLINE, beanSet);
+        synchronized (linedate){
+            LineDataSet beanSet = (LineDataSet)linedate.getDataSetByLabel("豆温", true);
+            List<EntryTemp> entryTemp = new ArrayList<>();
+            List<Float> timex = new ArrayList<>();
+            for(Entry entry : beanSet.getValues()){
+                entryTemp.add(new EntryTemp(entry.getY(), entry.getEvent().getDescription(), entry.getEvent().getCurStatus()));
+                timex.add(entry.getX());
+            }
+            bakeReport.setBeanTemps(entryTemp);
+            bakeReport.setTimex(timex);
+            lines.put(BEANLINE, beanSet);
 
-        LineDataSet inwindSet = (LineDataSet)linedate.getDataSetByLabel("进风温", true);
-        List<Float> inwind = new ArrayList<>();
-        for(Entry entry: inwindSet.getValues()){
-            inwind.add(entry.getY());
-        }
-        bakeReport.setInwindTemps(inwind);
-        lines.put(INWINDLINE, inwindSet);
+            LineDataSet inwindSet = (LineDataSet)linedate.getDataSetByLabel("进风温", true);
+            List<Float> inwind = new ArrayList<>();
+            for(Entry entry: inwindSet.getValues()){
+                inwind.add(entry.getY());
+            }
+            bakeReport.setInwindTemps(inwind);
+            lines.put(INWINDLINE, inwindSet);
 
-        LineDataSet outwindSet = (LineDataSet)linedate.getDataSetByLabel("出风温", true);
-        List<Float> outwind = new ArrayList<>();
-        for(Entry entry: outwindSet.getValues()){
-            outwind.add(entry.getY());
-        }
-        bakeReport.setOutwindTemps(outwind);
-        lines.put(OUTWINDLINE, outwindSet);
+            LineDataSet outwindSet = (LineDataSet)linedate.getDataSetByLabel("出风温", true);
+            List<Float> outwind = new ArrayList<>();
+            for(Entry entry: outwindSet.getValues()){
+                outwind.add(entry.getY());
+            }
+            bakeReport.setOutwindTemps(outwind);
+            lines.put(OUTWINDLINE, outwindSet);
 
-        LineDataSet accBeanSet = (LineDataSet)linedate.getDataSetByLabel("豆升温", true);
-        List<Float> accBean = new ArrayList<>();
-        for(Entry entry: accBeanSet.getValues()){
-            accBean.add(entry.getY());
-        }
-        bakeReport.setAccBeanTemps(accBean);
-        lines.put(ACCBEANLINE, accBeanSet);
+            LineDataSet accBeanSet = (LineDataSet)linedate.getDataSetByLabel("豆升温", true);
+            List<Float> accBean = new ArrayList<>();
+            for(Entry entry: accBeanSet.getValues()){
+                accBean.add(entry.getY());
+            }
+            bakeReport.setAccBeanTemps(accBean);
+            lines.put(ACCBEANLINE, accBeanSet);
 
-        LineDataSet accInwindSet = (LineDataSet)linedate.getDataSetByLabel("进风升温", true);
-        List<Float> accInwind = new ArrayList<>();
-        for(Entry entry: accInwindSet.getValues()){
-            accInwind.add(entry.getY());
-        }
-        bakeReport.setAccInwindTemps(accInwind);
-        lines.put(ACCINWINDLINE, accInwindSet);
+            LineDataSet accInwindSet = (LineDataSet)linedate.getDataSetByLabel("进风升温", true);
+            List<Float> accInwind = new ArrayList<>();
+            for(Entry entry: accInwindSet.getValues()){
+                accInwind.add(entry.getY());
+            }
+            bakeReport.setAccInwindTemps(accInwind);
+            lines.put(ACCINWINDLINE, accInwindSet);
 
-        LineDataSet accOutwindSet = (LineDataSet)linedate.getDataSetByLabel("出风升温", true);
-        List<Float> accOutwind = new ArrayList<>();
-        for(Entry entry: accOutwindSet.getValues()){
-            accOutwind.add(entry.getY());
-        }
-        bakeReport.setAccOutwindTemps(accOutwind);
-        lines.put(ACCOUTWINDLINE, accOutwindSet);
+            LineDataSet accOutwindSet = (LineDataSet)linedate.getDataSetByLabel("出风升温", true);
+            List<Float> accOutwind = new ArrayList<>();
+            for(Entry entry: accOutwindSet.getValues()){
+                accOutwind.add(entry.getY());
+            }
+            bakeReport.setAccOutwindTemps(accOutwind);
+            lines.put(ACCOUTWINDLINE, accOutwindSet);
 
+        }
     }
 
     public LineDataSet getLineDataSetByIndex(int index) {

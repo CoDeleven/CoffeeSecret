@@ -226,6 +226,9 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
         msg.setData(bundle);
 
         mHandler.sendMessage(msg);
+        if(count == 0){
+            chart.notifyDataSetChanged();
+        }
 
         ++count;
     }
@@ -233,7 +236,6 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
 
         // 设置横屏和隐藏状态栏
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -243,6 +245,7 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
         chart = (BaseChart4Coffee) findViewById(R.id.id_baking_chart);
         chart.initLine();
         lineOperator = (TextView) findViewById(R.id.id_baking_lineOperator);
+        // chart.changeColorByIndex("#000000", BaseChart4Coffee.BEANLINE);
         mConfig = SettingTool.getConfig(this);
         enableDoubleConfirm = mConfig.isDoubleClick();
 

@@ -3,6 +3,7 @@ package com.dhy.coffeesecret.pojo;
 import android.util.Log;
 
 import java.io.Serializable;
+import java.text.DecimalFormat;
 
 /**
  * Created by CoDeleven on 17-2-12.
@@ -39,9 +40,9 @@ public class Temprature implements Serializable {
         temp.setEnvTemp(Float.parseFloat(subStr[0]));
 
         if (lastTemprature != null) {
-            temp.setAccBeanTemp(beanTemp - lastTemprature.getBeanTemp());
-            temp.setAccInwindTemp(inwindTemp - lastTemprature.getInwindTemp());
-            temp.setAccOutwindTemp(outwindTemp - lastTemprature.getOutwindTemp());
+            temp.setAccBeanTemp(get2Precision(beanTemp - lastTemprature.getBeanTemp()));
+            temp.setAccInwindTemp(get2Precision(inwindTemp - lastTemprature.getInwindTemp()));
+            temp.setAccOutwindTemp(get2Precision(outwindTemp - lastTemprature.getOutwindTemp()));
         }
         lastTemprature = temp;
         return temp;
@@ -101,5 +102,9 @@ public class Temprature implements Serializable {
 
     public void setEnvTemp(float envTemp) {
         this.envTemp = envTemp;
+    }
+
+    private static float get2Precision(float val){
+        return (float)(Math.round(val * 100) / 100.0);
     }
 }

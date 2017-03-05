@@ -1,6 +1,5 @@
 package com.dhy.coffeesecret.ui.mine;
 
-import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -11,14 +10,12 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.services.BluetoothService;
-import com.dhy.coffeesecret.utils.BluetoothHelper;
 import com.kyleduo.switchbutton.SwitchButton;
 
 import java.util.ArrayList;
@@ -32,7 +29,6 @@ import butterknife.OnClick;
 
 public class BluetoothListActivity extends AppCompatActivity implements AdapterView.OnItemClickListener,
         CompoundButton.OnCheckedChangeListener, BluetoothService.DeviceChangedListener, BluetoothService.ViewControllerListener {
-    private BluetoothService.BluetoothOperator mBluetoothOperator;
     private static BluetoothDevice curDevice = null;
     @Bind(R.id.id_connecting_bluetooth_list)
     ListView canConnectDevice;
@@ -40,12 +36,14 @@ public class BluetoothListActivity extends AppCompatActivity implements AdapterV
     SwitchButton switchButton;
     @Bind(R.id.id_back)
     ImageView back;
+    ImageView tick = null;
+    private BluetoothService.BluetoothOperator mBluetoothOperator;
     private BaseAdapter mAdapter = null;
     private ProgressBar progressCircle = null;
-    ImageView tick = null;
     private Map<String, BluetoothDevice> canConnectDeviceMap = new HashMap<>();
     private List<BluetoothDevice> canConnectDeviceValues = new ArrayList<>();
     private BluetoothDevice temp;
+    private View curView;
 
     public BluetoothListActivity() {
 
@@ -82,8 +80,7 @@ public class BluetoothListActivity extends AppCompatActivity implements AdapterV
 
                 viewHolder.machine.setText(((BluetoothDevice) getItem(viewHolder.position)).getName());
 
-                if(curDevice != null && canConnectDeviceValues.get(viewHolder.position) == curDevice){
-                    Log.d("codelevex", "已经打勾了");
+                if (curDevice != null && canConnectDeviceValues.get(viewHolder.position) == curDevice) {
                     convertView.findViewById(R.id.id_bluetooth_list_right).setVisibility(View.VISIBLE);
                 }
                 return convertView;
@@ -92,7 +89,7 @@ public class BluetoothListActivity extends AppCompatActivity implements AdapterV
     }
 
     @OnClick(R.id.id_back)
-    public void back(){
+    public void back() {
         finish();
     }
 
@@ -158,7 +155,6 @@ public class BluetoothListActivity extends AppCompatActivity implements AdapterV
         ButterKnife.bind(this);
         canConnectDevice.setAdapter(mAdapter);
         canConnectDevice.setOnItemClickListener(this);
-        setListViewHeightBasedOnChildren(canConnectDevice);
         switchButton.setOnCheckedChangeListener(null);
 
     }
@@ -172,7 +168,6 @@ public class BluetoothListActivity extends AppCompatActivity implements AdapterV
     @Override
     public void notifyNewDevice(BluetoothDevice device) {
         if (!canConnectDeviceMap.containsKey(device.getAddress())) {
-            Log.e("codelevex", "我activity的实现:Device" + device.getName());
             canConnectDeviceValues.add(device);
             canConnectDeviceMap.put(device.getAddress(), device);
             refreshListView();
@@ -184,7 +179,7 @@ public class BluetoothListActivity extends AppCompatActivity implements AdapterV
         progressCircle.setVisibility(View.GONE);
         tick.setVisibility(View.VISIBLE);
         curDevice = temp;
-
+        temp = null;
         finish();
     }
 
@@ -195,40 +190,21 @@ public class BluetoothListActivity extends AppCompatActivity implements AdapterV
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        if ((temp != null || curDevice != null) && curView != null) {
+            curView.findViewById(R.id.circle_progress).setVisibility(View.GONE);
+        }
         progressCircle = (ProgressBar) view.findViewById(R.id.circle_progress);
         progressCircle.setVisibility(View.VISIBLE);
-        tick = (ImageView)view.findViewById(R.id.id_bluetooth_list_right);
+        tick = (ImageView) view.findViewById(R.id.id_bluetooth_list_right);
 
         BluetoothDevice device = (BluetoothDevice) parent.getItemAtPosition(position);
         if (!mBluetoothOperator.connect(device)) {
-            Log.e("codelevex", "连接失败");
             return;
         }
         temp = device;
+        curView = view;
     }
 
-    public void setListViewHeightBasedOnChildren(ListView listView) {
-        // 获取ListView对应的Adapter
-        ListAdapter listAdapter = mAdapter;
-        if (listAdapter == null) {
-            return;
-        }
-        int totalHeight = 0;
-        for (int i = 0, len = listAdapter.getCount(); i < len; i++) {
-            // listAdapter.getCount()返回数据项的数目
-            View listItem = listAdapter.getView(i, null, listView);
-            // 计算子项View 的宽高
-            listItem.measure(0, 0);
-            // 统计所有子项的总高度
-            totalHeight += listItem.getMeasuredHeight();
-        }
-
-        ViewGroup.LayoutParams params = listView.getLayoutParams();
-        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
-        // listView.getDividerHeight()获取子项间分隔符占用的高度
-        // params.height最后得到整个ListView完整显示需要的高度
-        listView.setLayoutParams(params);
-    }
 
     @Override
     protected void onDestroy() {

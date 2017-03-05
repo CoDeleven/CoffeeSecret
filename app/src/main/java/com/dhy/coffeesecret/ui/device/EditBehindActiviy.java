@@ -7,7 +7,6 @@ import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -16,7 +15,8 @@ import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.pojo.BakeReportBeanFactory;
 import com.dhy.coffeesecret.pojo.BakeReportProxy;
-import com.dhy.coffeesecret.utils.ObjectJsonConvert;
+import com.dhy.coffeesecret.utils.HttpUtils;
+import com.dhy.coffeesecret.utils.URLs;
 import com.dhy.coffeesecret.views.CircleSeekBar;
 import com.dhy.coffeesecret.views.WheelView;
 import com.github.mikephil.charting.data.Entry;
@@ -28,11 +28,6 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
 
 public class EditBehindActiviy extends AppCompatActivity implements CircleSeekBar.OnSeekBarChangeListener {
 
@@ -112,20 +107,11 @@ public class EditBehindActiviy extends AppCompatActivity implements CircleSeekBa
     }
 
     private void sendJsonData(final BakeReport proxy) {
-        final OkHttpClient okHttpClient = new OkHttpClient();
         new Thread(new Runnable() {
             @Override
             public void run() {
-                String url = "http://10.101.6.29:8080/CoffeeSecret/bake/add";
-                RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), ObjectJsonConvert.bakereport2Json(proxy));
-                Request request = new Request.Builder().url(url).post(requestBody).build();
                 try {
-                    Response response = okHttpClient.newCall(request).execute();
-                    if (response.isSuccessful()) {
-                        Log.e("codelevex", "成功获取");
-                    } else {
-                        Log.e("codelevex", "失败啦！！！:" + response.code());
-                    }
+                    HttpUtils.execute(URLs.ADD_BAKE_REPORT, proxy);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
