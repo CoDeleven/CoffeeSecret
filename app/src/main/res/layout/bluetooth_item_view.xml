@@ -25,17 +25,23 @@
         android:drawableLeft="@drawable/ic_bluetooth_device"
         android:drawablePadding="30dp"
         />
-    <ProgressBar
-        android:layout_gravity="right|center_vertical"
-        android:id="@+id/circle_progress"
-        android:layout_width="15dp"
-        android:layout_height="15dp"
-        android:visibility="gone"/>
-    <ImageView
-        android:src="@drawable/ic_seleted_tick"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/id_bluetooth_list_right"
-        android:layout_gravity="right|center_vertical"
-        android:visibility="gone"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ProgressBar
+            android:layout_alignParentRight="true"
+            android:layout_gravity="right|center_vertical"
+            android:id="@+id/circle_progress"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:visibility="gone"/>
+        <ImageView
+            android:layout_alignParentRight="true"
+            android:src="@drawable/ic_seleted_tick"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/id_bluetooth_list_right"
+            android:layout_gravity="right|center_vertical"
+            android:visibility="gone"/>
+    </RelativeLayout>
 </LinearLayout>
