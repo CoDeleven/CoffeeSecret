@@ -196,7 +196,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:background="@drawable/bg_round_pricolor_selector"
+            android:background="@drawable/bg_round_radius_danger"
             android:minHeight="30dp"
             android:text="删除"
             android:textColor="@android:color/white"
