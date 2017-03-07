@@ -7,10 +7,12 @@ import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.pojo.BakeReportBeanFactory;
@@ -50,6 +52,7 @@ public class EditBehindActiviy extends AppCompatActivity implements CircleSeekBa
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         setContentView(R.layout.activity_edit_behind_activiy);
         ButterKnife.bind(this);
         mSeekBar.setOnSeekBarChangeListener(this);
@@ -86,7 +89,7 @@ public class EditBehindActiviy extends AppCompatActivity implements CircleSeekBa
     }
 
     private void init() {
-        entries = BakeReportBeanFactory.getInstance().getEntriesWithEvents();
+        entries = ((MyApplication)getApplication()).getBakeReport().getEntriesWithEvents();
         for (Entry entry : entries) {
             int time = (int) entry.getX();
             int minutes = time / 60;

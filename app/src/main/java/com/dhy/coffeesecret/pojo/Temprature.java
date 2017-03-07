@@ -105,6 +105,6 @@ public class Temprature implements Serializable {
     }
 
     private static float get2Precision(float val){
-        return (float)(Math.round(val * 100) / 100.0);
+        return (float)(Math.round(val * 6000) / 100.0);
     }
 }

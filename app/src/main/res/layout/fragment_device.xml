@@ -116,7 +116,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="bottom"
                             android:paddingLeft="3dp"
-                            android:text="℃/s"
+                            android:text="℃/m"
                             android:textColor="#936743"
                             android:textSize="21.375sp" />
                     </LinearLayout>
@@ -272,7 +272,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="bottom"
                             android:paddingLeft="3dp"
-                            android:text="℃/s"
+                            android:text="℃/m"
                             android:textColor="#936743"
                             android:textSize="7.88sp" />
                     </LinearLayout>
@@ -376,7 +376,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="bottom"
                             android:paddingLeft="3dp"
-                            android:text="℃/s"
+                            android:text="℃/m"
                             android:textColor="#936743"
                             android:textSize="7.88sp" />
 

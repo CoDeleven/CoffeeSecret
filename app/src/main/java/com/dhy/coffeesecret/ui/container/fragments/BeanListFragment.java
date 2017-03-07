@@ -27,7 +27,6 @@ import com.bigkoo.quicksidebar.QuickSideBarView;
 import com.bigkoo.quicksidebar.listener.OnQuickSideBarTouchListener;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BeanInfo;
-import com.dhy.coffeesecret.pojo.Global;
 import com.dhy.coffeesecret.ui.container.BeanInfoActivity;
 import com.dhy.coffeesecret.ui.container.adapters.BeanListAdapter;
 import com.dhy.coffeesecret.ui.container.adapters.CountryListAdapter;
@@ -61,7 +60,13 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 public class BeanListFragment extends Fragment implements OnQuickSideBarTouchListener {
 
     private static final String TAG = "BeanListFragment";
-
+    private static final int GET_BEAN_INFOS = 111;
+    private static final int LOADING = 222;
+    private static final int NO_LOADING = 333;
+    private static final int INIT_POPUP_WINDOW = 444;
+    private static final int TOAST_1 = 555;
+    private static final int TOAST_2 = 666;
+    private static final int TOAST_3 = 777;
     private HashMap<String, Integer> letters = new HashMap<>();
     private ArrayList<BeanInfo> coffeeBeanInfos;
     private View beanListView;
@@ -77,7 +82,7 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
     private Context context;
     private String title = "";
     private boolean isPopupWindowShowing = false;
-    private boolean isRefresh = false;
+    private Handler mHandler = new BeanListHandler(this);
 
     public BeanListFragment() {
         super();
@@ -331,15 +336,10 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
         //可以自己加入动画效果渐显渐隐
         quickSideBarTipsView.setVisibility(touching ? View.VISIBLE : View.INVISIBLE);
     }
-    private static final int GET_BEAN_INFOS = 111;
-    private static final int LOADING = 222;
-    private static final int NO_LOADING = 333;
-    private static final int INIT_POPUP_WINDOW = 444;
-    private static final int TOAST_1 = 555;
-    private static final int TOAST_2 = 666;
-    private static final int TOAST_3 = 777;
 
-    private Handler mHandler = new BeanListHandler(this);
+    public List<BeanInfo> getBeaninfoList() {
+        return this.coffeeBeanInfos;
+    }
 
     private class BeanListHandler extends Handler {
 
@@ -390,9 +390,5 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
                     break;
             }
         }
-    }
-
-    public List<BeanInfo> getBeaninfoList() {
-        return this.coffeeBeanInfos;
     }
 }

@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
+import java.util.concurrent.ArrayBlockingQueue;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -30,6 +32,7 @@ import butterknife.OnClick;
 public class BluetoothListActivity extends AppCompatActivity implements AdapterView.OnItemClickListener,
         CompoundButton.OnCheckedChangeListener, BluetoothService.DeviceChangedListener, BluetoothService.ViewControllerListener {
     private static BluetoothDevice curDevice = null;
+    private static Queue<Integer> rssiQueue = new ArrayBlockingQueue<Integer>(10);
     @Bind(R.id.id_connecting_bluetooth_list)
     ListView canConnectDevice;
     @Bind(R.id.id_bluetooth_switch)
@@ -73,13 +76,15 @@ public class BluetoothListActivity extends AppCompatActivity implements AdapterV
                     viewHolder = new ViewHolder();
                     viewHolder.machine = (TextView) convertView.findViewById(R.id.text_name);
                     viewHolder.position = position;
+                    viewHolder.rssi = (TextView) convertView.findViewById(R.id.id_device_rssi);
                     convertView.setTag(viewHolder);
                 } else {
                     viewHolder = (ViewHolder) convertView.getTag();
                 }
 
-                viewHolder.machine.setText(((BluetoothDevice) getItem(viewHolder.position)).getName());
-
+                BluetoothDevice device = (BluetoothDevice) getItem(viewHolder.position);
+                viewHolder.machine.setText(device.getName());
+                viewHolder.rssi.setText(rssiQueue.poll() + "");
                 if (curDevice != null && canConnectDeviceValues.get(viewHolder.position) == curDevice) {
                     convertView.findViewById(R.id.id_bluetooth_list_right).setVisibility(View.VISIBLE);
                 }
@@ -166,10 +171,11 @@ public class BluetoothListActivity extends AppCompatActivity implements AdapterV
     }
 
     @Override
-    public void notifyNewDevice(BluetoothDevice device) {
+    public void notifyNewDevice(BluetoothDevice device, int rssi) {
         if (!canConnectDeviceMap.containsKey(device.getAddress())) {
             canConnectDeviceValues.add(device);
             canConnectDeviceMap.put(device.getAddress(), device);
+            rssiQueue.add(rssi);
             refreshListView();
         }
     }
@@ -214,6 +220,7 @@ public class BluetoothListActivity extends AppCompatActivity implements AdapterV
 
     class ViewHolder {
         int position;
+        TextView rssi;
         TextView machine;
     }
 }

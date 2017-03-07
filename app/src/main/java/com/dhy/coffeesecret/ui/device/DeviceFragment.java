@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.bluetooth.BluetoothDevice;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.os.IBinder;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -68,7 +70,6 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
     private BluetoothService.BluetoothOperator mBluetoothOperator;
     private float beginTemp;
     private boolean isStart = false;
-    private ProgressDialog dialog;
     private float envTemp;
     private ArrayList<Float> referTempratures;
     private ServiceConnection conn = new ServiceConnection() {
@@ -95,6 +96,7 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
                     operator.setText("切换");
                     break;
                 case 1:
+
                     bluetoothStatus.setText(" 未连接");
                     operator.setText("连接");
             }
@@ -105,13 +107,26 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
     private Handler mShowHandler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
-            if (msg.what == 0) {
-                dialog = ProgressDialog.show(getContext(), "标题", "加载中，请稍后……");
-            } else if (msg.what == 1) {
-                if (dialog != null) {
+            final AlertDialog.Builder dialog =
+                    new AlertDialog.Builder(getContext());
+            dialog.setTitle("");
+            dialog.setMessage("当前尚未连接蓝牙设备，请确认");
+            dialog.setCancelable(false);
+            dialog.setPositiveButton("去设置", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Intent intent = new Intent(getContext(), BluetoothListActivity.class);
+                    startActivity(intent);
                     dialog.dismiss();
                 }
-            }
+            });
+            dialog.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            dialog.show();
             return false;
         }
     });
@@ -219,31 +234,27 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
             mPrepareBake.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            mShowHandler.sendEmptyMessage(0);
-                            while (true) {
-                                if (isStart) {
-                                    Intent intent = new Intent(getContext(), BakeActivity.class);
-                                    intent.putExtra(BakeActivity.RAW_BEAN_INFO, dialogBeanInfos.toArray());
-                                    intent.putExtra(BakeActivity.DEVICE_NAME, mBluetoothOperator.getCurDeviceName());
-                                    intent.putExtra(BakeActivity.START_TEMP, beginTemp);
-                                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm");
-                                    intent.putExtra(BakeActivity.BAKE_DATE, format.format(new Date()));
-                                    intent.putExtra(BakeActivity.ENV_TEMP, envTemp);
-                                    if (referTempratures != null) {
-                                        intent.putExtra(BakeActivity.ENABLE_REFERLINE, referTempratures);
-                                    }
-                                    mShowHandler.sendEmptyMessage(1);
-                                    startActivity(intent);
-                                    mBluetoothOperator.setDataChangedListener(null);
-                                    Log.e("codelevex", "卧槽，开始烘焙");
-                                    break;
-                                }
-                            }
-                        }
-                    }).start();
+                    if(!mBluetoothOperator.isConnected()){
+                        mShowHandler.sendEmptyMessage(0);
+                        return;
+                    }
+                    if(!(dialogBeanInfos.size() > 0)){
+                        return;
+                    }
+                    Intent intent = new Intent(getContext(), BakeActivity.class);
+                    intent.putExtra(BakeActivity.RAW_BEAN_INFO, dialogBeanInfos.toArray());
+                    intent.putExtra(BakeActivity.DEVICE_NAME, mBluetoothOperator.getCurDeviceName());
+                    intent.putExtra(BakeActivity.START_TEMP, beginTemp);
+                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+                    intent.putExtra(BakeActivity.BAKE_DATE, format.format(new Date()));
+                    intent.putExtra(BakeActivity.ENV_TEMP, envTemp);
+                    if (referTempratures != null) {
+                        intent.putExtra(BakeActivity.ENABLE_REFERLINE, referTempratures);
+                    }
+                    mShowHandler.sendEmptyMessage(1);
+                    startActivity(intent);
+                    mBluetoothOperator.setDataChangedListener(null);
+                    Log.e("codelevex", "卧槽，开始烘焙");
                 }
             });
         } else {
@@ -311,7 +322,7 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
     }
 
     @Override
-    public void notifyNewDevice(BluetoothDevice device) {
+    public void notifyNewDevice(BluetoothDevice device, int rssi) {
 
     }
 

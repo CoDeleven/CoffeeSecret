@@ -4,6 +4,7 @@ import android.app.Application;
 import android.util.Log;
 
 import com.dhy.coffeesecret.pojo.BakeReport;
+import com.dhy.coffeesecret.pojo.BakeReportProxy;
 import com.dhy.coffeesecret.pojo.BeanInfo;
 import com.dhy.coffeesecret.pojo.CuppingInfo;
 import com.dhy.coffeesecret.utils.CacheUtils;
@@ -23,17 +24,18 @@ import static com.dhy.coffeesecret.utils.HttpUtils.getStringFromServer;
 
 public class MyApplication extends Application {
     private static Map<String, Object> objs = new HashMap<>();
+    private static Map<String, BeanInfo> beanInfos = new HashMap<>();
+    private static Map<String, CuppingInfo> cupInfos = new HashMap<>();
+    private static Map<String, BakeReport> bakeReports = new HashMap<>();
     private static String url = "-1";
     private static CacheUtils cacheUtils;
+    private static BakeReportProxy BAKE_REPORT;
 
     public MyApplication() {
         super();
     }
 
     public <T> T getObjectById(String id, Class<T> clazz) {
-        if (cacheUtils == null) {
-            cacheUtils = CacheUtils.getCacheUtils(this);
-        }
         T temp = null;
         // 获取id前缀
         String prefix = getPrefix(clazz);
@@ -51,7 +53,7 @@ public class MyApplication extends Application {
             initMapFromServer(clazz);
             Log.e("codelevex", "从服务器获取");
             temp = getObjectById(id, clazz);
-            if(temp == null){
+            if (temp == null) {
                 return null;
             }
         }
@@ -60,9 +62,57 @@ public class MyApplication extends Application {
     }
 
     /**
+     * 获取所有的bakeReports
+     *
+     * @return
+     */
+    public Map<String, ? extends BakeReport> getBakeReports() {
+        if (beanInfos.isEmpty() || objs.isEmpty()) {
+            initMap(BakeReport.class);
+        }
+        for (String key : objs.keySet()) {
+            if (key.contains(CacheUtils.BAKE_REPORT_PREFIX)) {
+                bakeReports.put(key, (BakeReport) objs.get(key));
+            }
+        }
+        return bakeReports;
+    }
+
+    /**
+     * 获取所有豆子信息
+     *
+     * @return
+     */
+    public Map<String, ? extends BeanInfo> getBeanInfos() {
+        for (String key : objs.keySet()) {
+            if (key.contains(CacheUtils.BEAN_INFO_PREFIX)) {
+                beanInfos.put(key, (BeanInfo) objs.get(key));
+            }
+        }
+        return beanInfos;
+    }
+
+    /**
+     * 获取所有杯测信息
+     *
+     * @return
+     */
+    public Map<String, ? extends CuppingInfo> getCupInfos() {
+        for (String key : objs.keySet()) {
+            if (key.contains(CacheUtils.CUP_INFO_PREFEX)) {
+                cupInfos.put(key, (CuppingInfo) objs.get(key));
+            }
+        }
+        return cupInfos;
+    }
+
+    /**
      * 需要的文件没加载，整体获取
      */
     private void initMap(Class clazz) {
+        if (cacheUtils == null) {
+            cacheUtils = CacheUtils.getCacheUtils(this);
+        }
         objs.putAll(cacheUtils.getListObjectFromCache(clazz));
     }
 
@@ -114,5 +164,17 @@ public class MyApplication extends Application {
             return CacheUtils.CUP_INFO_PREFEX;
         }
         return null;
+    }
+
+    public void setBakeReport(BakeReport bakeReport) {
+        BAKE_REPORT = new BakeReportProxy(bakeReport);
+    }
+
+    public BakeReportProxy getBakeReport() {
+        return BAKE_REPORT;
+    }
+
+    public void setBakeReport(BakeReportProxy bakeReport) {
+        this.BAKE_REPORT = bakeReport;
     }
 }
