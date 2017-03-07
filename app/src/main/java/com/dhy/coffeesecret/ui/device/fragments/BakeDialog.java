@@ -21,6 +21,7 @@ import android.widget.ListView;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BeanInfo;
 import com.dhy.coffeesecret.pojo.DialogBeanInfo;
+import com.dhy.coffeesecret.ui.container.LinesSelectedActivity;
 import com.dhy.coffeesecret.ui.device.DialogBeanSelectedActivity;
 import com.dhy.coffeesecret.ui.mine.HistoryLineActivity;
 
@@ -229,7 +230,7 @@ public class BakeDialog extends DialogFragment {
         switch (view.getId()){
             case R.id.id_bake_dialog_refer_history:
                 //TODO 完成历史参考曲线
-                intent = new Intent(getContext(), HistoryLineActivity.class);
+                intent = new Intent(getContext(), LinesSelectedActivity.class);
                 startActivityForResult(intent, GET_HISTORY);
 
                 break;

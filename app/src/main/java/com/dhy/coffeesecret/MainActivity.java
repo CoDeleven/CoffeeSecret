@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements CupFragment.OnCup
         }
 
 
-        mViewPager.setCurrentItem(0);
+        mViewPager.setCurrentItem(2);
         // 设置tablayout固定
         mTabLayout.setTabMode(TabLayout.MODE_FIXED);
 

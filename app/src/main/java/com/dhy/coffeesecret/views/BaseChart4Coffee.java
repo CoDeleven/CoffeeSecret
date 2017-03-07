@@ -84,7 +84,8 @@ public class BaseChart4Coffee extends LineChart {
         setDragDecelerationFrictionCoef(0.9f);
         // 启用放大缩小
         setDragEnabled(true);
-        setScaleEnabled(true);
+        setScaleXEnabled(true);
+        setScaleYEnabled(false);
         setDrawGridBackground(false);
         setHighlightPerDragEnabled(true);
         setBackgroundColor(Color.WHITE);
@@ -134,7 +135,6 @@ public class BaseChart4Coffee extends LineChart {
         rightAxis.setAxisMinimum(0f);
         rightAxis.setDrawGridLines(false);
         rightAxis.unit = mConfig.getTempratureUnit();
-
         // rightAxis.setDrawZeroLine(false);
         // rightAxis.setGranularityEnabled(false);
     }

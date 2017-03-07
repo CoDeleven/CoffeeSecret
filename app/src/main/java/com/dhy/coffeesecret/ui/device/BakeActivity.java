@@ -273,7 +273,6 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
             mBluetoothOperator = BluetoothService.BLUETOOTH_OPERATOR;
         }
         mBluetoothOperator.setDataChangedListener(this);
-        Log.e("codelevex", "我特么又被重启了？？");
         startTime = System.currentTimeMillis();
         isReading = true;
         timer = new Thread(new Runnable() {

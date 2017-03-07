@@ -1,6 +1,6 @@
 package com.dhy.coffeesecret.ui.device;
 
-import android.app.ProgressDialog;
+import android.app.Dialog;
 import android.bluetooth.BluetoothDevice;
 import android.content.ComponentName;
 import android.content.Context;
@@ -109,23 +109,57 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
         public boolean handleMessage(Message msg) {
             final AlertDialog.Builder dialog =
                     new AlertDialog.Builder(getContext());
-            dialog.setTitle("");
-            dialog.setMessage("当前尚未连接蓝牙设备，请确认");
-            dialog.setCancelable(false);
-            dialog.setPositiveButton("去设置", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    Intent intent = new Intent(getContext(), BluetoothListActivity.class);
-                    startActivity(intent);
-                    dialog.dismiss();
-                }
-            });
-            dialog.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            });
+            switch (msg.what){
+                case 0:
+                    dialog.setTitle("");
+                    dialog.setMessage("当前尚未连接蓝牙设备，请确认");
+                    dialog.setCancelable(false);
+                    dialog.setPositiveButton("去设置", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent intent = new Intent(getContext(), BluetoothListActivity.class);
+                            startActivity(intent);
+                            dialog.dismiss();
+                        }
+                    });
+                    dialog.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    break;
+                case 1:
+                    dialog.setMessage("当前尚未添加豆种");
+                    dialog.setPositiveButton("去添加", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            showDialogFragment();
+                            dialog.dismiss();
+                        }
+                    });
+                    dialog.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                case 2:
+                    dialog.setMessage("蓝牙已断开连接");
+                    dialog.setPositiveButton("去重连?", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            // TODO 重连
+                            dialog.dismiss();
+                        }
+                    });
+                    dialog.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+            }
             dialog.show();
             return false;
         }
@@ -234,11 +268,12 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
             mPrepareBake.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(!mBluetoothOperator.isConnected()){
+                    if (!mBluetoothOperator.isConnected()) {
                         mShowHandler.sendEmptyMessage(0);
                         return;
                     }
-                    if(!(dialogBeanInfos.size() > 0)){
+                    if (!(dialogBeanInfos.size() > 0)) {
+                        mShowHandler.sendEmptyMessage(1);
                         return;
                     }
                     Intent intent = new Intent(getContext(), BakeActivity.class);
@@ -251,10 +286,8 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
                     if (referTempratures != null) {
                         intent.putExtra(BakeActivity.ENABLE_REFERLINE, referTempratures);
                     }
-                    mShowHandler.sendEmptyMessage(1);
                     startActivity(intent);
                     mBluetoothOperator.setDataChangedListener(null);
-                    Log.e("codelevex", "卧槽，开始烘焙");
                 }
             });
         } else {
@@ -318,6 +351,7 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
             mTextHandler.sendEmptyMessage(0);
         } else {
             mTextHandler.sendEmptyMessage(1);
+            mShowHandler.sendEmptyMessage(2);
         }
     }
 
