@@ -115,21 +115,23 @@ public class BluetoothService extends Service {
 
         @Override
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
-            Log.e("codelevex", "status:" + status + "->" + newState + ", " + gatt.getDevice().getName());
-            if (newState == BluetoothProfile.STATE_CONNECTED) {
-                if (mRunThread != null) {
-                    mRunThread.setReadable(false);
-                    mRunThread.interrupt();
-                    mRunThread.setDataChangedListener(null);
-                    mRunThread = null;
+            Log.e("codelevex", gatt.getDevice().toString() + ":" + status + "->" + newState + ", " + gatt.getDevice().getName());
+            if(gatt.getDevice().getAddress().equals(mCurDevice.getAddress())){
+                if (newState == BluetoothProfile.STATE_CONNECTED) {
+                    if (mRunThread != null) {
+                        mRunThread.setReadable(false);
+                        mRunThread.interrupt();
+                        mRunThread.setDataChangedListener(null);
+                        mRunThread = null;
+                    }
+                    mConnectionState = STATE_CONNECTED;
+                    mBluetoothGatt.discoverServices();
+                    deviceChangedListener.notifyDeviceConnectStatus(true);
+                } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
+                    mConnectionState = STATE_DISCONNECTED;
+                    disconnect();
+                    deviceChangedListener.notifyDeviceConnectStatus(false);
                 }
-                mConnectionState = STATE_CONNECTED;
-                mBluetoothGatt.discoverServices();
-                deviceChangedListener.notifyDeviceConnectStatus(true);
-            } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
-                mConnectionState = STATE_DISCONNECTED;
-                disconnect();
-                deviceChangedListener.notifyDeviceConnectStatus(false);
             }
         }
 
@@ -187,20 +189,13 @@ public class BluetoothService extends Service {
 
         // 直接连接设备
         mBluetoothGatt = device.connectGatt(this, false, mGattCallback);
-        Log.d("codelevex", "Trying to create a new connection.");
+        Log.e("codelevex", "Trying to create a new connection.");
         mCurDevice = device;
         mConnectionState = STATE_CONNECTING;
         return true;
     }
 
-    public boolean reConnect(String address){
-        BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
-        if(device == null){
-            return false;
-        }else{
-            return connect(device);
-        }
-    }
+
 
     public void disconnect() {
         if (mBluetoothAdapter == null || mBluetoothGatt == null) {
@@ -334,6 +329,15 @@ public class BluetoothService extends Service {
 
         public boolean connect(BluetoothDevice device) {
             return BluetoothService.this.connect(device);
+        }
+
+        public boolean reConnect(){
+            BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(mCurDevice.getAddress());
+            if(device == null){
+                return false;
+            }else{
+                return connect(device);
+            }
         }
     }
 

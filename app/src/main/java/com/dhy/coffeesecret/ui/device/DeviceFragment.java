@@ -1,6 +1,7 @@
 package com.dhy.coffeesecret.ui.device;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.bluetooth.BluetoothDevice;
 import android.content.ComponentName;
 import android.content.Context;
@@ -34,6 +35,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -107,14 +110,15 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
     private Handler mShowHandler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
-            final AlertDialog.Builder dialog =
+            final AlertDialog.Builder dialogBuilder =
                     new AlertDialog.Builder(getContext());
+            final ProgressDialog progressDialog = new ProgressDialog(getActivity());
             switch (msg.what){
                 case 0:
-                    dialog.setTitle("");
-                    dialog.setMessage("当前尚未连接蓝牙设备，请确认");
-                    dialog.setCancelable(false);
-                    dialog.setPositiveButton("去设置", new DialogInterface.OnClickListener() {
+                    dialogBuilder.setTitle("");
+                    dialogBuilder.setMessage("当前尚未连接蓝牙设备，请确认");
+                    dialogBuilder.setCancelable(false);
+                    dialogBuilder.setPositiveButton("去设置", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             Intent intent = new Intent(getContext(), BluetoothListActivity.class);
@@ -122,7 +126,7 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
                             dialog.dismiss();
                         }
                     });
-                    dialog.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    dialogBuilder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
@@ -130,37 +134,47 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
                     });
                     break;
                 case 1:
-                    dialog.setMessage("当前尚未添加豆种");
-                    dialog.setPositiveButton("去添加", new DialogInterface.OnClickListener() {
+                    dialogBuilder.setMessage("当前尚未添加豆种");
+                    dialogBuilder.setPositiveButton("去添加", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             showDialogFragment();
                             dialog.dismiss();
                         }
                     });
-                    dialog.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    dialogBuilder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
                         }
                     });
                 case 2:
-                    dialog.setMessage("蓝牙已断开连接");
-                    dialog.setPositiveButton("去重连?", new DialogInterface.OnClickListener() {
+                    new Timer().schedule(new TimerTask(){
                         @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            // TODO 重连
-                            dialog.dismiss();
+                        public void run() {
+                            progressDialog.dismiss();
+                            dialogBuilder.setMessage("重连失败，请检查蓝牙设备");
+                            dialogBuilder.setPositiveButton("手动连接", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // TODO 去连接界面
+                                    dialog.dismiss();
+                                }
+                            });
+                            dialogBuilder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                            dialogBuilder.show();
                         }
-                    });
-                    dialog.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
+                    }, 5000);
+                    mBluetoothOperator.reConnect();
+                    progressDialog.show();
+
             }
-            dialog.show();
+            dialogBuilder.show();
             return false;
         }
     });
