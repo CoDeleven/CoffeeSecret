@@ -18,19 +18,20 @@ public final class URLs {
     public static final String ADD_BAKE_REPORT = URL_COMMON + "/bake/add";
     public static final String UPDATE_BAKE_REPORT = URL_COMMON + "/bake/update";
 
-    private static final String DELETE_BAKE_REPORT = "/bake/delete";
-    private static final String DELETE_BEAN_INFO = "/bean/delete";
-    private static final String DELETE_CUPPING = "/cupping/delete";
+    private static final String DELETE_BAKE_REPORT = "/bake/";
+    private static final String DELETE_BEAN_INFO = "/bean/";
+    private static final String DELETE_CUPPING = "/cupping/";
+    private static final String DELETE = "/delete";
 
     public static String getDeleteBeanInfo(long id) {
-        return URL_COMMON + "/" + id + DELETE_BEAN_INFO;
+        return URL_COMMON + DELETE_BEAN_INFO + id + DELETE;
     }
 
     public static String getDeleteBakeReport(long id) {
-        return URL_COMMON + "/" + id + DELETE_BAKE_REPORT;
+        return URL_COMMON + DELETE_BAKE_REPORT + id + DELETE;
     }
 
     public static String getDeleteCupping(long id) {
-        return URL_COMMON + "/" + id + DELETE_CUPPING;
+        return URL_COMMON + DELETE_CUPPING + id + DELETE;
     }
 }

@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFF"
     android:orientation="vertical">
     <!-- 标题栏-->
     <LinearLayout
@@ -18,41 +19,46 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp">
 
-           <!-- <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:src="@drawable/ic_bake_dialog_line"/>
--->
+            <!-- <ImageView
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_gravity="center_vertical"
+                 android:src="@drawable/ic_bake_dialog_line"/>
+ -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:text="杯测名称"
-                android:textSize="@dimen/font_size_primary"/>
+                android:textSize="@dimen/font_size_primary" />
         </LinearLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="#DBD8D7"/>
+            android:background="#DBD8D7" />
     </LinearLayout>
 
     <EditText
-        android:layout_below="@id/line_title"
         android:id="@+id/et_name"
-        android:hint="请输入杯测名称"
-        android:textSize="@dimen/font_size_primary"
-        android:textColorLink="@color/colorPrimary"
-        android:foreground="@color/colorPrimary"
-        android:layout_margin="4dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <RelativeLayout
-        android:layout_below="@id/et_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/line_title"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="15dp"
+        android:paddingLeft="4dp"
+        android:paddingRight="2dp"
+        android:foreground="@color/colorPrimary"
+        android:hint="请输入杯测名称"
+        android:textColorLink="@color/colorPrimary"
+        android:textSize="@dimen/font_size_primary" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/et_name"
         android:layout_marginTop="9dp"
         android:background="#FFF"
         android:paddingBottom="7.3125dp"
@@ -65,21 +71,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:background="@drawable/bg_round_5radius"
+            android:background="@android:color/transparent"
             android:minHeight="25dp"
             android:minWidth="50dp"
             android:text="取消"
-            android:textColor="#FFF"/>
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/font_size_primary" />
 
         <Button
             android:id="@+id/btn_confirm"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:background="@drawable/bg_round_5radius"
+            android:background="@android:color/transparent"
             android:minHeight="25dp"
             android:minWidth="50dp"
             android:text="确定"
-            android:textColor="#FFF"/>
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/font_size_primary" />
     </RelativeLayout>
 </RelativeLayout>

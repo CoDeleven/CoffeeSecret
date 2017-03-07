@@ -1,9 +1,15 @@
 package com.dhy.coffeesecret.ui.cup;
 
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
@@ -12,6 +18,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.Window;
 import android.widget.RadioGroup;
 
 import com.dhy.coffeesecret.R;
@@ -50,9 +57,11 @@ import static com.dhy.coffeesecret.R.string.acidity;
 import static com.dhy.coffeesecret.R.string.after_taste;
 import static com.dhy.coffeesecret.R.string.baked;
 import static com.dhy.coffeesecret.R.string.balance;
+import static com.dhy.coffeesecret.R.string.cancel;
 import static com.dhy.coffeesecret.R.string.dry_and_frag;
 import static com.dhy.coffeesecret.R.string.faced;
 import static com.dhy.coffeesecret.R.string.flavor;
+import static com.dhy.coffeesecret.R.string.handler;
 import static com.dhy.coffeesecret.R.string.overall;
 import static com.dhy.coffeesecret.R.string.overdev;
 import static com.dhy.coffeesecret.R.string.scorched;
@@ -71,16 +80,24 @@ public class NewCuppingActivity extends AppCompatActivity
     public static final String VIEW_TYPE = "viewType";
     public static final String TARGET = "target";
 
+    private static final int UPDATE = 0x3;
+    private static final int DELETE = 0x2;
+    private static final int SAVING = 0x1;
+    private static final int CANCEL = 0x0;
+    private static final int SUCCESS = 0x666;
+    private static final int ERROR = 0x2333;
+
     private boolean isNew;
     private CuppingInfo mCuppingInfo;
     private BakeReport mBakeReport;
+    private Handler mHandler;
 
     private ViewPager mViewPager;
     private RadioGroup mRadioGroup;
     private InputNameDialog mInputNameDialog;
 
     private AlertDialog dialog;
-
+    private ProgressDialog progress;
 
     private String viewType;
 
@@ -97,9 +114,9 @@ public class NewCuppingActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_cupping);
+        mHandler = new NewCuppingHandler();
         Intent intent = getIntent();
         viewType = intent.getStringExtra(VIEW_TYPE);
-
         if (SHOW_INFO.equals(viewType)) {
             mCuppingInfo = (CuppingInfo) intent.getSerializableExtra(TARGET);
             mBakeReport = mCuppingInfo.getBakeReport();
@@ -152,8 +169,20 @@ public class NewCuppingActivity extends AppCompatActivity
         transaction.replace(R.id.line, editToolBar);
         transaction.commitNow();
     }
-
+    private void loadShowViewInMain(){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                loadShowInfoView();
+            }
+        });
+    }
     public void loadShowInfoView() {
+
+        if(cuppingInfoFragment != null){
+            cuppingInfoFragment.setEditable(false);
+        }
+        viewType = SHOW_INFO;
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         if (normalToolBar == null) {
             normalToolBar = new NormalToolBar();
@@ -307,74 +336,77 @@ public class NewCuppingActivity extends AppCompatActivity
                 new Thread() {
                     @Override
                     public void run() {
-
+                        mHandler.sendEmptyMessage(SAVING);
                         HttpUtils.enqueue(URLs.ADD_CUPPING, mCuppingInfo, new Callback() {
                             @Override
                             public void onFailure(Call call, IOException e) {
-                                // TODO: 2017/3/4
-                            }   
+                                mHandler.sendEmptyMessage(ERROR);
+                                e.printStackTrace();
+                            }
 
                             @Override
-                            public void onResponse(Call call, Response response) throws IOException {
+                            public void onResponse(Call call, final Response response) throws IOException {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        T.showShort(NewCuppingActivity.this,response.message());
+                                    }
+                                });
 
+                                mHandler.sendEmptyMessage(SUCCESS);
+                                // TODO: 2017/3/4 返回主键 并设置主键
+                                //mCuppingInfo.setId();
+                                loadShowViewInMain();
+                                mResultCode = CupFragment.RESULT_CODE_ADD;
+                                mResultIntent = new Intent();
+                                mResultIntent.putExtra(TARGET, mCuppingInfo);
                             }
                         });
-                        
+
                     }
                 }.start();
-
-                System.out.println("发送到服务器：" + mCuppingInfo); // TODO: 2017/2/25  发送到服务器
-                loadShowInfoView();
-                cuppingInfoFragment.setEditable(false);
-                viewType = SHOW_INFO;
-                mResultCode = CupFragment.RESULT_CODE_ADD;
-                mResultIntent = new Intent();
-                mResultIntent.putExtra(TARGET, mCuppingInfo);
             }
 //          mInputNameDialog.show(getSupportFragmentManager(), "");
         } else {
             new Thread() {
                 @Override
                 public void run() {
-                    Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
-                    String json = gson.toJson(mCuppingInfo);
-                    MediaType type = MediaType.parse("application/json; charset=utf-8");
-                    RequestBody body = RequestBody.create(type, json);
-                    String url = "http://192.168.191.1:8080/CoffeeSecret/cupping/update";
-                    Request request = new Request.Builder().url(url).post(body).build();
-                    OkHttpClient client = new OkHttpClient();
-                    try {
-                        Response response = client.newCall(request).execute();
-                        if (response.isSuccessful()) {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    T.showShort(NewCuppingActivity.this, "修改成功");
-                                }
-                            });
-                        } else {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    T.showShort(NewCuppingActivity.this, "修改失败");
-                                }
-                            });
+                    mHandler.sendEmptyMessage(UPDATE);
+                    HttpUtils.enqueue(URLs.UPDATE_CUPPING, mCuppingInfo, new Callback() {
+                        @Override
+                        public void onFailure(Call call, IOException e) {
+                            mHandler.sendEmptyMessage(ERROR);
                         }
 
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
+                        @Override
+                        public void onResponse(Call call, final Response response) throws IOException {
+                            mResultCode = CupFragment.RESULT_CODE_UPDATE;
+                            mResultIntent = new Intent();
+                            mResultIntent.putExtra(TARGET, mCuppingInfo);
+                            mHandler.sendEmptyMessage(SUCCESS);
+                            loadShowViewInMain();
+                        }
+                    });
                 }
             }.start();
-            System.out.println("发送到服务器：" + mCuppingInfo); // TODO: 2017/2/25  发送到服务器
-            loadShowInfoView();
-            cuppingInfoFragment.setEditable(false);
-            viewType = SHOW_INFO;
-            mResultCode = CupFragment.RESULT_CODE_UPDATE;
-            mResultIntent = new Intent();
-            mResultIntent.putExtra(TARGET, mCuppingInfo);
         }
+    }
+
+    private void delete() {
+        String url = URLs.getDeleteCupping(mCuppingInfo.getId());
+        mHandler.sendEmptyMessage(DELETE);
+        HttpUtils.enqueue(url, mCuppingInfo, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                mHandler.sendEmptyMessage(ERROR);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                mHandler.sendEmptyMessage(SUCCESS);
+                finish();
+            }
+        });
     }
 
     @Override
@@ -385,36 +417,11 @@ public class NewCuppingActivity extends AppCompatActivity
                 new Thread() {
                     @Override
                     public void run() {
-                        String url = "http://192.168.191.1:8080/CoffeeSecret/cupping/" + mCuppingInfo.getId() + "/delete";
-                        Request request = new Request.Builder().url(url).build();
-                        OkHttpClient client = new OkHttpClient();
-                        try {
-                            Response response = client.newCall(request).execute();
-                            if (response.isSuccessful()) {
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        T.showShort(NewCuppingActivity.this, "删除成功");
-                                    }
-                                });
-                            } else {
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        T.showShort(NewCuppingActivity.this, "删除失败");
-                                    }
-                                });
-                            }
-
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-
+                        delete();
                     }
                 }.start();
-                System.out.println("发送到服务器，删除：" + mCuppingInfo.getId());// TODO: 2017/2/25  发送到服务器
             } else {
-                System.out.println("不需要：" + mCuppingInfo.getId());
+                finish();
             }
         } else {
             mResultCode = CupFragment.RESULT_CODE_DElETE;
@@ -423,36 +430,10 @@ public class NewCuppingActivity extends AppCompatActivity
             new Thread() {
                 @Override
                 public void run() {
-                    String url = "http://192.168.191.1:8080/CoffeeSecret/cupping/" + mCuppingInfo.getId() + "/delete";
-                    Request request = new Request.Builder().url(url).build();
-                    OkHttpClient client = new OkHttpClient();
-                    try {
-                        Response response = client.newCall(request).execute();
-                        if (response.isSuccessful()) {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    T.showShort(NewCuppingActivity.this, "删除成功");
-                                }
-                            });
-                        } else {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    T.showShort(NewCuppingActivity.this, "删除失败");
-                                }
-                            });
-                        }
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
+                  delete();
                 }
             }.start();
-            System.out.println("服务器发送删除请求：" + mCuppingInfo.getId());// TODO: 2017/2/25  发送到服务器
         }
-        finish();
     }
 
     @Override
@@ -490,6 +471,37 @@ public class NewCuppingActivity extends AppCompatActivity
 
         private float getScore(int id) {
             return data.get(getString(id));
+        }
+    }
+
+    class NewCuppingHandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case SAVING:
+                    progress = ProgressDialog.show(NewCuppingActivity.this, null, "保存中...", true);
+                    break;
+                case UPDATE:
+                    progress = ProgressDialog.show(NewCuppingActivity.this, null, "更新中...", true);
+
+                    break;
+                case CANCEL:
+                    if (progress != null && progress.isShowing()) {
+                        progress.cancel();
+                    }
+                    break;
+                case DELETE:
+                    progress = ProgressDialog.show(NewCuppingActivity.this, null, "正在删除...", true);
+                    break;
+                case SUCCESS:
+                    sendEmptyMessage(CANCEL);
+                    T.showShort(getApplicationContext(), "success");
+                    break;
+                case ERROR:
+                    sendEmptyMessage(CANCEL);
+                    T.showShort(getApplicationContext(), "error");
+                    break;
+            }
         }
     }
 }
