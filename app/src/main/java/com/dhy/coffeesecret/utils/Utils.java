@@ -56,7 +56,8 @@ public class Utils {
     }
 
     public static String getFirstPinYinLetter(String cha) {
-        return PinyinHelper.toHanyuPinyinStringArray(cha.charAt(0))[0].substring(0, 1);
+        String pinyin = PinyinHelper.toHanyuPinyinStringArray(cha.charAt(0))[0];
+        return pinyin.toUpperCase().substring(0, 1);
     }
 
 }
