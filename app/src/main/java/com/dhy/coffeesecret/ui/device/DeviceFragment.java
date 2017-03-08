@@ -1,6 +1,5 @@
 package com.dhy.coffeesecret.ui.device;
 
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothDevice;
 import android.content.ComponentName;
@@ -11,6 +10,7 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -30,6 +30,7 @@ import com.dhy.coffeesecret.services.BluetoothService;
 import com.dhy.coffeesecret.ui.device.fragments.BakeDialog;
 import com.dhy.coffeesecret.ui.mine.BluetoothListActivity;
 import com.dhy.coffeesecret.utils.FragmentTool;
+import com.dhy.coffeesecret.utils.SettingTool;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -78,10 +79,17 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
     private ServiceConnection conn = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            Log.d("codelevex", "获取BluetoothService");
+            // 获取蓝牙服务
             mBluetoothOperator = (BluetoothService.BluetoothOperator) service;
             mBluetoothOperator.setDataChangedListener(DeviceFragment.this);
             mBluetoothOperator.setDeviceChangedListener(DeviceFragment.this);
+
+            // 获取上一次连接的蓝牙设备地址
+            String address = SettingTool.getConfig(getContext()).getAddress();
+            // 如果不为空，则尝试直接连接该蓝牙
+            if (!"".equals(address)) {
+                mBluetoothOperator.connect(address);
+            }
         }
 
         @Override
@@ -113,7 +121,7 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
             final AlertDialog.Builder dialogBuilder =
                     new AlertDialog.Builder(getContext());
             final ProgressDialog progressDialog = new ProgressDialog(getActivity());
-            switch (msg.what){
+            switch (msg.what) {
                 case 0:
                     dialogBuilder.setTitle("");
                     dialogBuilder.setMessage("当前尚未连接蓝牙设备，请确认");
@@ -132,6 +140,7 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
                             dialog.dismiss();
                         }
                     });
+                    dialogBuilder.show();
                     break;
                 case 1:
                     dialogBuilder.setMessage("当前尚未添加豆种");
@@ -148,8 +157,10 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
                             dialog.dismiss();
                         }
                     });
+                    dialogBuilder.show();
+                    break;
                 case 2:
-                    new Timer().schedule(new TimerTask(){
+                    new Timer().schedule(new TimerTask() {
                         @Override
                         public void run() {
                             progressDialog.dismiss();
@@ -167,14 +178,16 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
                                     dialog.dismiss();
                                 }
                             });
+                            Looper.prepare();
                             dialogBuilder.show();
                         }
                     }, 5000);
                     mBluetoothOperator.reConnect();
                     progressDialog.show();
+                    break;
+                case 3:
 
             }
-            dialogBuilder.show();
             return false;
         }
     });
@@ -206,6 +219,7 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
             Intent intent = new Intent(getContext().getApplicationContext(), BluetoothService.class);
             getContext().getApplicationContext().bindService(intent, conn, Context.BIND_AUTO_CREATE);
         }
+
     }
 
     @Override
@@ -222,20 +236,21 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
     @Override
     public void onStart() {
         super.onStart();
+        // 默认每次重启不准备
         hasPrepared = false;
-
+        // 清空上一次的beanInfo
         if (dialogBeanInfos != null) {
             dialogBeanInfos.clear();
         }
+        // 根据是否准备，更换按钮事件
         switchStatus();
+        // 如果连接
         if (mBluetoothOperator != null && mBluetoothOperator.isConnected()) {
+            // 更改已连接的视图
             mTextHandler.sendEmptyMessage(0);
-            if (!BluetoothService.READABLE) {
-                mBluetoothOperator.setDataChangedListener(DeviceFragment.this);
-                mBluetoothOperator.setDeviceChangedListener(DeviceFragment.this);
-                BluetoothService.READABLE = true;
-                mBluetoothOperator.read();
-            }
+            // 重新设置回调接口到本对象
+            mBluetoothOperator.setDataChangedListener(DeviceFragment.this);
+            mBluetoothOperator.setDeviceChangedListener(DeviceFragment.this);
         } else {
             mTextHandler.sendEmptyMessage(1);
         }
@@ -360,7 +375,7 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
     }
 
     @Override
-    public void notifyDeviceConnectStatus(boolean isConnected) {
+    public void notifyDeviceConnectStatus(boolean isConnected, BluetoothDevice device) {
         if (isConnected) {
             mTextHandler.sendEmptyMessage(0);
         } else {

@@ -7,7 +7,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.dhy.coffeesecret.R;
@@ -22,14 +23,13 @@ import java.util.Map;
  */
 
 public class BluetoothListAdapter extends RecyclerView.Adapter<BluetoothListAdapter.BluetoothViewHolder> {
+    public static String lastConnectedAddress = null;
     private Context context;
     private LayoutInflater layoutInflater;
     private List<BluetoothDevice> devices = new ArrayList<>();
     private Map<String, TextView> rssiTextView = new HashMap<>();
     private Map<String, Integer> rssiMac = new HashMap<>();
     private OnItemClickListener onItemClickListener;
-    private static BluetoothListAdapter adapter = null;
-    private BluetoothDevice lastConnectedDevice = null;
 
     public BluetoothListAdapter(Context context) {
         this.context = context;
@@ -50,10 +50,24 @@ public class BluetoothListAdapter extends RecyclerView.Adapter<BluetoothListAdap
     @Override
     public void onBindViewHolder(final BluetoothViewHolder holder, int position) {
         final BluetoothDevice device = devices.get(position);
+        /*
+            因ListActivity重新生成，所以判断上一次因连接成功关闭activity时，所设置地址是否和本次地址一致，true则直接默认该设备tick可见
+          */
+        if (device.getAddress() == lastConnectedAddress) {
+            // 默认设置tick可见
+            holder.tick.setVisibility(View.VISIBLE);
+            // 重置该属性,防止重复连接时出现勾圈同存情况
+            lastConnectedAddress = null;
+        }else{
+            // 默认设置tick可见
+            holder.tick.setVisibility(View.GONE);
+        }
         holder.machine.setText(device.getName());
         rssiTextView.put(device.getAddress(), holder.rssi);
-        int rssiValue = rssiMac.get(device.getAddress());
-        if (rssiValue != 1) {
+        // 从map中获取rssi的值
+        Integer rssiValue = rssiMac.get(device.getAddress());
+        // 如果rssiValue不为空，则重新设置rssi的文本
+        if (rssiValue != null) {
             holder.rssi.setText(rssiValue + "");
         }
         holder.layout.setOnClickListener(new View.OnClickListener() {
@@ -73,46 +87,39 @@ public class BluetoothListAdapter extends RecyclerView.Adapter<BluetoothListAdap
         devices.add(device);
     }
 
-    public interface OnItemClickListener{
-        void onItemClick(BluetoothDevice device, View view);
-    }
-
-    public void setOnItemClickListener(OnItemClickListener onItemClickListener){
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
     }
 
-    public void setLastConnectedDevice(BluetoothDevice bluetoothDevice){
-        lastConnectedDevice = bluetoothDevice;
+
+    public void clearDevices() {
+        devices.clear();
     }
 
-    public void clearDevices(){
-        devices.clear();
-        rssiMac.clear();
+    public interface OnItemClickListener {
+        void onItemClick(BluetoothDevice device, View view);
     }
 
     class BluetoothViewHolder extends RecyclerView.ViewHolder {
         private TextView rssi;
         private TextView machine;
         private View layout;
+        private ProgressBar progressCircle;
+        private ImageView tick;
+
         public BluetoothViewHolder(View itemView) {
             super(itemView);
             this.layout = itemView;
             machine = (TextView) itemView.findViewById(R.id.text_name);
             rssi = (TextView) itemView.findViewById(R.id.id_device_rssi);
+            progressCircle = (ProgressBar) itemView.findViewById(R.id.circle_progress);
+            tick = (ImageView) itemView.findViewById(R.id.id_bluetooth_list_right);
         }
 
         @Override
         public String toString() {
             return super.toString();
         }
-    }
-
-    public static BluetoothListAdapter getAdapterInstance(Context context){
-        if(adapter == null){
-            adapter = new BluetoothListAdapter(context);
-            return adapter;
-        }
-        return adapter;
     }
 
 }

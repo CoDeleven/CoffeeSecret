@@ -55,6 +55,16 @@ public class UniversalConfiguration {
     private int accOutwindColor;
     // 环境温
     private int envColor;
+    // 上一次关闭app时，连接着的蓝牙地址
+    String address;
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
     public int getAccBeanColor() {
         return accBeanColor;
