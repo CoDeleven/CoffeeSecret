@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <com.dhy.coffeesecret.views.BaseChart4Coffee
+        android:id="@+id/preview_chart"
+        android:layout_width="269dp"
+        android:layout_height="97dp"
+        android:layout_marginTop="20dp" />
+
+    <Button
+        android:id="@+id/btn_use_dialog"
+        android:layout_width="54.25dp"
+        android:layout_height="25.25dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/ic_btn_use" />
+</LinearLayout>

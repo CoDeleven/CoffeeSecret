@@ -30,10 +30,17 @@ import com.dhy.coffeesecret.pojo.BeanInfo;
 import com.dhy.coffeesecret.ui.container.BeanInfoActivity;
 import com.dhy.coffeesecret.ui.container.adapters.BeanListAdapter;
 import com.dhy.coffeesecret.ui.container.adapters.CountryListAdapter;
+import com.dhy.coffeesecret.utils.HttpUtils;
 import com.dhy.coffeesecret.utils.T;
 import com.dhy.coffeesecret.utils.TestData;
+import com.dhy.coffeesecret.utils.URLs;
+import com.dhy.coffeesecret.utils.Utils;
 import com.dhy.coffeesecret.views.DividerDecoration;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
+
+import net.sourceforge.pinyin4j.PinyinHelper;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -205,29 +212,44 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
 
         Log.i(TAG, "------------------开始加载豆种信息------------------");
         mHandler.sendEmptyMessage(LOADING);
+//
+//        FormBody body = new FormBody.Builder()
+//                .add("username", "Simo")
+//                .add("action", "getBeanList")
+//                .build();
+//        Request request = new Request.Builder()
+////                .url(Global.DOMAIN + Global.ENTRANCE_1)
+//                .url("http://httpbin.org/post")
+//                .post(body)
+//                .build();
+//        new OkHttpClient().newCall(request).enqueue(new Callback() {
+//            @Override
+//            public void onFailure(Call call, IOException e) {
+//                mHandler.sendEmptyMessage(TOAST_1);
+//            }
+//
+//            @Override
+//            public void onResponse(Call call, Response response) throws IOException {
+//
+//            }
+//        });
 
-        FormBody body = new FormBody.Builder()
-                .add("username", "Simo")
-                .add("action", "getBeanList")
-                .build();
-        Request request = new Request.Builder()
-//                .url(Global.DOMAIN + Global.ENTRANCE_1)
-                .url("http://httpbin.org/post")
-                .post(body)
-                .build();
-        new OkHttpClient().newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                mHandler.sendEmptyMessage(TOAST_1);
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-
-            }
-        });
+        String beanInfoListJson = "";
+        try {
+            beanInfoListJson = HttpUtils.getStringFromServer(URLs.GET_ALL_BEAN_INFO);
+            Log.i(TAG, "getBeanInfos: "+ beanInfoListJson);
+        } catch (IOException e) {
+            mHandler.sendEmptyMessage(888);
+            Log.i(TAG, "getBeanInfos: " + e.toString());
+        }
         ArrayList<BeanInfo> coffeeBeanInfoList = new ArrayList<>();
         String[] beanLists = null;
+        Gson gson = new Gson();
+        beanInfoListJson = TestData.beaninfos;
+        ArrayList<BeanInfo> beanInfoss = gson.fromJson(beanInfoListJson, new TypeToken<ArrayList<BeanInfo>>() {
+        }.getType());
+
+        getLetters(beanInfoss);
         switch (title) {
             case "全部":
                 beanLists = TestData.beanList1;
@@ -258,15 +280,23 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
 
             coffeeBeanInfoList.add(beanInfo);
 
-            if (!letters.containsKey(beanLists[i].substring(0, 1))) {
-                letters.put(beanLists[i].substring(0, 1), i);
-            }
         }
-        coffeeBeanInfos.clear();
+        if (coffeeBeanInfos != null) {
+            coffeeBeanInfos.clear();
+        }
         coffeeBeanInfos.addAll(coffeeBeanInfoList);
 
         mHandler.sendEmptyMessage(NO_LOADING);
         Log.i(TAG, "------------------豆种信息加载结束------------------");
+    }
+
+    private void getLetters(ArrayList<BeanInfo> beanInfoss) {
+        List<String> letterList = new ArrayList<>();
+
+        for (BeanInfo b : beanInfoss) {
+            letterList.add(Utils.getFirstPinYinLetter(b.getArea()));
+        }
+        Log.i(TAG, "getLetters: " + letterList);
     }
 
     private void setCountryList(View contentView) {
@@ -355,20 +385,21 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
             final BeanListFragment activity = mActivity.get();
             switch (msg.what) {
                 case GET_BEAN_INFOS:
-                    try {
-                        Thread.sleep(2000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    activity.getBeanInfos();
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            activity.getBeanInfos();
+
+                        }
+                    }).start();
                     break;
                 case LOADING:
-                    if (!refreshBeanList.isRefreshing()) {
+                    if (refreshBeanList != null && !refreshBeanList.isRefreshing()) {
                         activity.refreshBeanList.setRefreshing(true);
                     }
                     break;
                 case NO_LOADING:
-                    if (refreshBeanList.isRefreshing()) {
+                    if (refreshBeanList != null && refreshBeanList.isRefreshing()) {
                         refreshBeanList.setRefreshing(false);
                     }
                     break;

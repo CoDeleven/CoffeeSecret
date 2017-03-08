@@ -20,7 +20,10 @@ import android.widget.TextView;
 import com.bigkoo.pickerview.TimePickerView;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BeanInfo;
+import com.dhy.coffeesecret.utils.HttpUtils;
+import com.dhy.coffeesecret.utils.SettingTool;
 import com.dhy.coffeesecret.utils.T;
+import com.dhy.coffeesecret.utils.URLs;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -35,38 +38,42 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.FormBody;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import okhttp3.Response;
 
 public class EditBeanActivity extends AppCompatActivity {
 
-    private static final String TAG = "EditBeanActivity";
-    @Bind(R.id.title_text)
-    TextView titleText;
     @Bind(R.id.btn_cancel)
     TextView btnCancel;
+    @Bind(R.id.title_text)
+    TextView titleText;
     @Bind(R.id.btn_save)
     TextView btnSave;
     @Bind(R.id.edit_icon)
     ImageView editIcon;
     @Bind(R.id.edit_name)
     TextView editName;
+    @Bind(R.id.edit_country)
+    TextView editCountry;
+    @Bind(R.id.edit_layout_country)
+    RelativeLayout editLayoutCountry;
     @Bind(R.id.edit_area)
-    TextView editArea;
+    EditText editArea;
     @Bind(R.id.edit_manor)
-    TextView editManor;
+    EditText editManor;
     @Bind(R.id.edit_altitude)
     EditText editAltitude;
     @Bind(R.id.edit_species)
     TextView editSpecies;
+    @Bind(R.id.edit_layout_species)
+    RelativeLayout editLayoutSpecies;
     @Bind(R.id.edit_level)
     Spinner editLevel;
     @Bind(R.id.edit_water_content)
     EditText editWaterContent;
     @Bind(R.id.edit_handler)
     Spinner editHandler;
+    @Bind(R.id.edit_another_handler)
+    EditText editAnotherHandler;
     @Bind(R.id.edit_supplier)
     EditText editSupplier;
     @Bind(R.id.edit_price)
@@ -75,24 +82,18 @@ public class EditBeanActivity extends AppCompatActivity {
     EditText editWeight;
     @Bind(R.id.edit_buy_date)
     TextView editBuyDate;
-    @Bind(R.id.edit_layout_area)
-    RelativeLayout editLayoutArea;
-    @Bind(R.id.edit_layout_manor)
-    RelativeLayout editLayoutManor;
-    @Bind(R.id.edit_layout_species)
-    RelativeLayout editLayoutSpecies;
-    @Bind(R.id.edit_country)
-    TextView editCountry;
-    @Bind(R.id.edit_layout_country)
-    RelativeLayout editLayoutCountry;
-
+    @Bind(R.id.edit_weight_unit)
+    TextView editWeightUnit;
     private TimePickerView pvTime;
+
     private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
     private String[] levelArray;
     private String[] handlerArray;
     private String currentLevel;
     private String currentHandler;
     private Context mContext;
+
+    private static final String TAG = "EditBeanActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,11 +105,16 @@ public class EditBeanActivity extends AppCompatActivity {
 
         mContext = EditBeanActivity.this;
 
+        initParams();
         init();
-        initDatePicker();
     }
 
-    private void initDatePicker() {
+    private void initParams() {
+        levelArray = getResources().getStringArray(R.array.level);
+        handlerArray = getResources().getStringArray(R.array.handler);
+        currentLevel = levelArray[0];
+        currentHandler = handlerArray[0];
+
         pvTime = new TimePickerView(this, TimePickerView.Type.YEAR_MONTH_DAY);
         pvTime.setTime(new Date());
         pvTime.setCyclic(false);
@@ -122,9 +128,6 @@ public class EditBeanActivity extends AppCompatActivity {
     }
 
     private void init() {
-
-        levelArray = getResources().getStringArray(R.array.level);
-        handlerArray = getResources().getStringArray(R.array.handler);
 
         BeanInfo beanInfo = (BeanInfo) getIntent().getSerializableExtra("beanInfo");
 
@@ -146,9 +149,11 @@ public class EditBeanActivity extends AppCompatActivity {
         editLevel.setSelection(getLevelSelection(beanInfo.getLevel()), true);
         editWaterContent.setText(beanInfo.getWaterContent() * 100 + "");
         editHandler.setSelection(getHandlerSelection(beanInfo.getProcess()), true);
+        editAnotherHandler.setEnabled(false);
         editSupplier.setText(beanInfo.getSupplier());
         editPrice.setText(beanInfo.getPrice() + "");
         editWeight.setText(beanInfo.getStockWeight() + "");
+        editWeightUnit.setText(SettingTool.getConfig(mContext).getWeightUnit());
         editBuyDate.setText(formatDate(beanInfo.getDate()));
 
         editLevel.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -167,6 +172,12 @@ public class EditBeanActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 currentHandler = handlerArray[position];
+                if (currentHandler.equals("其它")) {
+                    editAnotherHandler.setEnabled(true);
+                } else {
+                    editAnotherHandler.setText("");
+                    editAnotherHandler.setEnabled(false);
+                }
             }
 
             @Override
@@ -192,6 +203,11 @@ public class EditBeanActivity extends AppCompatActivity {
         return null;
     }
 
+    /**
+     * 获取显示的处理方式
+     * @param handler   豆子的处理方式
+     * @return 该处理方式在 spinner 中的位置
+     */
     private int getHandlerSelection(String handler) {
 
         if (handler != null) {
@@ -204,6 +220,11 @@ public class EditBeanActivity extends AppCompatActivity {
         return 0;
     }
 
+    /**
+     * 获取初始被选择的等级
+     * @param level 豆子的等级
+     * @return 该等级在 spinner 的位置
+     */
     private int getLevelSelection(String level) {
 
         if (level != null) {
@@ -217,8 +238,7 @@ public class EditBeanActivity extends AppCompatActivity {
         return 0;
     }
 
-    @OnClick({R.id.btn_cancel, R.id.btn_save, R.id.edit_layout_country, R.id.edit_layout_area,
-            R.id.edit_layout_manor, R.id.edit_layout_species, R.id.edit_buy_date})
+    @OnClick({R.id.btn_cancel, R.id.btn_save, R.id.edit_layout_country, R.id.edit_layout_species, R.id.edit_buy_date})
     public void onClick(View view) {
         Intent intent;
         switch (view.getId()) {
@@ -227,24 +247,13 @@ public class EditBeanActivity extends AppCompatActivity {
                 exitToRight();
                 break;
             case R.id.btn_save:
+                btnSave.setClickable(false);
                 saveBeanInfo();
                 break;
             case R.id.edit_layout_country:
                 intent = new Intent(EditBeanActivity.this, SelectInfoActivity.class);
                 intent.putExtra("info_type", "country");
                 startActivityForResult(intent, COUNTRY);
-                exitToLeft();
-                break;
-            case R.id.edit_layout_area:
-                intent = new Intent(EditBeanActivity.this, SelectInfoActivity.class);
-                intent.putExtra("info_type", "area");
-                startActivityForResult(intent, AREA);
-                exitToLeft();
-                break;
-            case R.id.edit_layout_manor:
-                intent = new Intent(EditBeanActivity.this, SelectInfoActivity.class);
-                intent.putExtra("info_type", "manor");
-                startActivityForResult(intent, MANOR);
                 exitToLeft();
                 break;
             case R.id.edit_layout_species:
@@ -263,7 +272,6 @@ public class EditBeanActivity extends AppCompatActivity {
     private void saveBeanInfo() {
 
         BeanInfo beanInfo = new BeanInfo();
-        beanInfo.setId(1);
         beanInfo.setName(editName.getText().toString());
         beanInfo.setCountry(editCountry.getText().toString());
         beanInfo.setArea(editArea.getText().toString());
@@ -272,34 +280,33 @@ public class EditBeanActivity extends AppCompatActivity {
         beanInfo.setSpecies(editSpecies.getText().toString());
         beanInfo.setLevel(currentLevel);
         beanInfo.setWaterContent(Float.parseFloat(editWaterContent.getText().toString()));
-        beanInfo.setProcess(currentHandler);
         beanInfo.setSupplier(editSupplier.getText().toString());
         beanInfo.setPrice(Double.parseDouble(editPrice.getText().toString()));
         beanInfo.setStockWeight(Double.parseDouble(editWeight.getText().toString()));
         beanInfo.setDate(parseDate(editBuyDate.getText().toString()));
 
+        if (currentHandler.equals("其它")) {
+            beanInfo.setProcess(editAnotherHandler.getText().toString());
+        } else {
+            beanInfo.setProcess(currentHandler);
+        }
         updateBeanInfo(beanInfo);
         Log.i(TAG, "saveBeanInfo: " + beanInfo.toString());
-        exitToRight(beanInfo);
     }
 
     private void updateBeanInfo(final BeanInfo beanInfo) {
-        FormBody body = new FormBody.Builder().add("username", "Simo")
-                .add("beanInfo", new Gson().toJson(beanInfo))
-                .build();
-        Request request = new Request.Builder()
-                .url("http://httpbin.org/post")
-                .post(body)
-                .build();
-        new OkHttpClient().newCall(request).enqueue(new Callback() {
+        Gson gson = new Gson();
+
+        HttpUtils.enqueue(URLs.UPDATE_BEAN_INFO, gson.toJson(beanInfo), new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                updateBeanInfo(beanInfo);
+                mHandler.sendEmptyMessage(TOAST_2);
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 mHandler.sendEmptyMessage(TOAST_1);
+                exitToRight(beanInfo);
             }
         });
     }
@@ -312,12 +319,6 @@ public class EditBeanActivity extends AppCompatActivity {
             switch (requestCode) {
                 case COUNTRY:
                     msg.what = COUNTRY;
-                    break;
-                case AREA:
-                    msg.what = AREA;
-                    break;
-                case MANOR:
-                    msg.what = MANOR;
                     break;
                 case SPECIES:
                     msg.what = SPECIES;
@@ -359,6 +360,7 @@ public class EditBeanActivity extends AppCompatActivity {
     private static final int BEAN_NAME = 5678;
     private static final int BEAN_ICON = 6789;
     private static final int TOAST_1 = 7890;
+    private static final int TOAST_2 = 7899;
     private EditBeanHandler mHandler = new EditBeanHandler(EditBeanActivity.this);
 
     class EditBeanHandler extends Handler {
@@ -411,7 +413,12 @@ public class EditBeanActivity extends AppCompatActivity {
                     }
                     break;
                 case TOAST_1:
-                    T.showShort(mContext, "修改成功");
+                    T.showShort(mContext, "保存成功");
+                    break;
+                case TOAST_2:
+                    activity.btnSave.setClickable(true);
+                    T.showShort(mContext, "保存失败，请稍后再试");
+                    break;
                 default:
                     break;
             }

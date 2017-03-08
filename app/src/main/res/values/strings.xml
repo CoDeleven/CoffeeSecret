@@ -16,7 +16,7 @@
     <string name="level">等级</string>
     <string name="water_content">含水量</string>
     <string name="handler">处理方式</string>
-    <string name="supplier">厂家</string>
+    <string name="supplier">供应商</string>
     <string name="price">价格</string>
     <string name="weight">库存量</string>
     <string name="buy_date">购买日期</string>

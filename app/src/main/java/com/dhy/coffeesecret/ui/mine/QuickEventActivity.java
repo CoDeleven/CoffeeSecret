@@ -45,6 +45,8 @@ public class QuickEventActivity extends AppCompatActivity {
     private UniversalConfiguration mConfig;
     private ArrayList<String> quickEvents;
 
+    private static final String TAG = "QuickEventActivity";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,10 +67,17 @@ public class QuickEventActivity extends AppCompatActivity {
         quickEvents.addAll(SettingTool.parse2List(mConfig.getQuickEvents()));
 
         quickEventAdapter = new QuickEventAdapter(mContext, quickEvents, getFootView());
-        quickEventAdapter.setOnItemLongClickListener(new QuickEventAdapter.OnItemLongClickListener() {
+        quickEventAdapter.setOnItemClickListener(new QuickEventAdapter.onItemClickListener() {
             @Override
-            public void onItemLongClicked(String itemString) {
+            public void onItemClicked(String itemString) {
                 showEditDialog(itemString);
+            }
+        });
+        quickEventAdapter.setOnDeleteClickListener(new QuickEventAdapter.OnDeleteClickListener() {
+            @Override
+            public void onDeleteClicked(int position) {
+                quickEvents.remove(position);
+                quickEventAdapter.notifyDataSetChanged();
             }
         });
 
@@ -95,7 +104,8 @@ public class QuickEventActivity extends AppCompatActivity {
     private void editQuickEvent(String newQuickEvent, String oldQuickEvent) {
 
         if (quickEvents.contains(newQuickEvent)) {
-            showEditDialog(oldQuickEvent);
+            T.showShort(mContext, "该事件已存在");
+//            showEditDialog(oldQuickEvent);
             return;
         }
 

@@ -16,5 +16,6 @@
         <item>日晒</item>
         <item>风干</item>
         <item>抽湿</item>
+        <item>其它</item>
     </string-array>
 </resources>

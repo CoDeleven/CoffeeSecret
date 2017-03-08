@@ -93,7 +93,7 @@ public class BeanInfoActivity extends AppCompatActivity {
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finish();
+                BeanInfoActivity.this.onBackPressed();
             }
         });
         btnEdit.setOnClickListener(new View.OnClickListener() {

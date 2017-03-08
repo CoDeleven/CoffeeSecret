@@ -89,7 +89,6 @@ public class SettingsActivity extends AppCompatActivity{
 
     private void init() {
         config = SettingTool.getConfig(this);
-        Log.i(TAG, "init: " + config.toString());
         checkQuickStart.setChecked(config.isQuickStart());
         checkConfirmAgain.setChecked(config.isDoubleClick());
         textWeightUnit.setText(config.getWeightUnit());
