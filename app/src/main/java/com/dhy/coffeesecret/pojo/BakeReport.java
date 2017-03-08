@@ -21,7 +21,7 @@ public class BakeReport implements Serializable {
     // 烘焙度
     private String roastDegree;
 
-    // 豆温
+/*    // 豆温
     private List<EntryTemp> beanTemps = new ArrayList<>();
     // 入风温
     private List<Float> inwindTemps = new ArrayList<>();
@@ -34,7 +34,9 @@ public class BakeReport implements Serializable {
     // 出风温升
     private List<Float> accOutwindTemps = new ArrayList<>();
     // 时间
-    private List<Float> timex = new ArrayList<>();
+    private List<Float> timex = new ArrayList<>();*/
+
+    private TempratureSet tempratureSet;
 
     // 发展时间
     private String developmentTime;
@@ -155,60 +157,12 @@ public class BakeReport implements Serializable {
         this.beanInfoSimples = beanInfoSimples;
     }
 
-    public List<Float> getAccBeanTemps() {
-        return accBeanTemps;
+    public TempratureSet getTempratureSet() {
+        return tempratureSet;
     }
 
-    public void setAccBeanTemps(List<Float> accBeanTemps) {
-        this.accBeanTemps = accBeanTemps;
-    }
-
-    public List<Float> getAccInwindTemps() {
-        return accInwindTemps;
-    }
-
-    public void setAccInwindTemps(List<Float> accInwindTemps) {
-        this.accInwindTemps = accInwindTemps;
-    }
-
-    public List<Float> getAccOutwindTemps() {
-        return accOutwindTemps;
-    }
-
-    public void setAccOutwindTemps(List<Float> accOutwindTemps) {
-        this.accOutwindTemps = accOutwindTemps;
-    }
-
-    public List<EntryTemp> getBeanTemps() {
-        return beanTemps;
-    }
-
-    public void setBeanTemps(List<EntryTemp> beanTemps) {
-        this.beanTemps = beanTemps;
-    }
-
-    public List<Float> getInwindTemps() {
-        return inwindTemps;
-    }
-
-    public void setInwindTemps(List<Float> inwindTemps) {
-        this.inwindTemps = inwindTemps;
-    }
-
-    public List<Float> getOutwindTemps() {
-        return outwindTemps;
-    }
-
-    public void setOutwindTemps(List<Float> outwindTemps) {
-        this.outwindTemps = outwindTemps;
-    }
-
-    public List<Float> getTimex() {
-        return timex;
-    }
-
-    public void setTimex(List<Float> timex) {
-        this.timex = timex;
+    public void setTempratureSet(TempratureSet tempratureSet) {
+        this.tempratureSet = tempratureSet;
     }
 
     public String getDate() {

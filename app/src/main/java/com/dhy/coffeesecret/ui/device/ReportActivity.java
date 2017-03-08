@@ -112,10 +112,6 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
         mChart.setMarker(new ReportMarker(this, R.layout.report_marker));
         mChart.initLine();
 
-        /*for (ILineDataSet lineDataSet : proxy.getLineData().getDataSets()) {
-            LineDataSet lineData = (LineDataSet) lineDataSet;
-            mChart.addNewDatas(lineData.getValues(), getIndexByLabels(lineData.getLabel()));
-        }*/
         mChart.addNewDatas(proxy.getLineDataSetByIndex(BEANLINE).getValues(), BEANLINE);
         mChart.addNewDatas(proxy.getLineDataSetByIndex(INWINDLINE).getValues(), INWINDLINE);
         mChart.addNewDatas(proxy.getLineDataSetByIndex(OUTWINDLINE).getValues(), OUTWINDLINE);
