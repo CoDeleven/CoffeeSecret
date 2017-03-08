@@ -38,54 +38,53 @@
             android:textSize="17sp"/>
     </android.support.v7.widget.Toolbar>
 
-    <ScrollView
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="20dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:paddingLeft="29.8125dp"
+                android:text="蓝牙"/>
+
+            <com.kyleduo.switchbutton.SwitchButton
+                android:id="@+id/id_bluetooth_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:paddingRight="29.8125dp"/>
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:background="#ECECEC">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:layout_marginTop="20dp">
-
-                <TextView
-                    android:layout_centerVertical="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:paddingLeft="29.8125dp"
-                    android:text="蓝牙"/>
-
-                <com.kyleduo.switchbutton.SwitchButton
-                    android:layout_centerVertical="true"
-                    android:id="@+id/id_bluetooth_switch"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:paddingRight="29.8125dp"/>
-            </RelativeLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#ECECEC">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="可连接设备"
-                    android:textColor="#a29e9b"
-                    android:textSize="13.5sp"/>
-            </LinearLayout>
-            <ListView
-                android:id="@+id/id_connecting_bluetooth_list"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"></ListView>
+                android:text="可连接设备"
+                android:textColor="#a29e9b"
+                android:textSize="13.5sp"/>
         </LinearLayout>
-    </ScrollView>
+
+    </LinearLayout>
+
+
+    <ListView
+        android:id="@+id/id_connecting_bluetooth_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></ListView>
 </LinearLayout>

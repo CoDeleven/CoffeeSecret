@@ -7,10 +7,9 @@
 
     <TextView
         android:id="@+id/btn_cancel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="20dp"
+        android:layout_width="?attr/actionBarSize"
+        android:layout_height="?attr/actionBarSize"
+        android:gravity="center"
         android:text="@string/cancel"
         android:textColor="@color/white"
         android:textSize="14.5sp" />
@@ -26,11 +25,10 @@
 
     <TextView
         android:id="@+id/btn_save"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="?attr/actionBarSize"
+        android:layout_height="?attr/actionBarSize"
         android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="20dp"
+        android:gravity="center"
         android:text="@string/save"
         android:textColor="@color/white"
         android:textSize="14.5sp" />

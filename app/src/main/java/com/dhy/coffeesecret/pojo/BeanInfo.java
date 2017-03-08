@@ -41,7 +41,7 @@ public class BeanInfo implements Serializable {
 	private String continent;
 
 	// 不需要持久化
-	private List<BakeReport> bakeReports;
+//	private List<BakeReport> bakeReports;
 
 	// 是否有烘焙报告
 	private boolean hasBakeReports;
@@ -157,35 +157,35 @@ public class BeanInfo implements Serializable {
 		this.date = date;
 	}
 
-	public List<BakeReport> getBakeReports() {
-		return bakeReports;
-	}
+//	public List<BakeReport> getBakeReports() {
+//		return bakeReports;
+//	}
 
-	@Deprecated
-	public void setBakeReports(List<BakeReport> bakeReports) {
-		this.bakeReports = bakeReports;
-	}
-
-	public void addBakeReport(BakeReport bakeReport) {
-		if (bakeReport != null) {
-			if (bakeReports == null) {
-				bakeReports = new ArrayList<>();
-			}
-			bakeReports.add(bakeReport);
-		}
-	}
-
-	public void removeBakeReport(BakeReport bakeReport) {
-		if (bakeReport != null) {
-			if (bakeReports == null) {
-				bakeReports = new ArrayList<>();
-			}
-
-			if (bakeReports.contains(bakeReport)) {
-				bakeReports.remove(bakeReport);
-			}
-		}
-	}
+//	@Deprecated
+//	public void setBakeReports(List<BakeReport> bakeReports) {
+//		this.bakeReports = bakeReports;
+//	}
+//
+//	public void addBakeReport(BakeReport bakeReport) {
+//		if (bakeReport != null) {
+//			if (bakeReports == null) {
+//				bakeReports = new ArrayList<>();
+//			}
+//			bakeReports.add(bakeReport);
+//		}
+//	}
+//
+//	public void removeBakeReport(BakeReport bakeReport) {
+//		if (bakeReport != null) {
+//			if (bakeReports == null) {
+//				bakeReports = new ArrayList<>();
+//			}
+//
+//			if (bakeReports.contains(bakeReport)) {
+//				bakeReports.remove(bakeReport);
+//			}
+//		}
+//	}
 
 	public String getDrawablePath() {
 		return drawablePath;
@@ -211,4 +211,28 @@ public class BeanInfo implements Serializable {
 		this.hasBakeReports = hasBakeReports;
 	}
 
+
+	@Override
+	public String toString() {
+		return "BeanInfo{" +
+				"id=" + id +
+				", name='" + name + '\'' +
+				", manor='" + manor + '\'' +
+				", drawablePath='" + drawablePath + '\'' +
+				", stockWeight=" + stockWeight +
+				", country='" + country + '\'' +
+				", area='" + area + '\'' +
+				", altitude='" + altitude + '\'' +
+				", species='" + species + '\'' +
+				", level='" + level + '\'' +
+				", process='" + process + '\'' +
+				", waterContent=" + waterContent +
+				", supplier='" + supplier + '\'' +
+				", price=" + price +
+				", date=" + date +
+				", continent='" + continent + '\'' +
+//				", bakeReports=" + bakeReports +
+				", hasBakeReports=" + hasBakeReports +
+				'}';
+	}
 }

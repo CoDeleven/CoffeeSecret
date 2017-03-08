@@ -48,4 +48,5 @@ dependencies {
     compile 'com.hedgehog.ratingbar:app:1.1.2'
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.squareup.okhttp3:okhttp:3.6.0'
+    compile files('lib/pinyin4j-2.5.0.jar')
 }

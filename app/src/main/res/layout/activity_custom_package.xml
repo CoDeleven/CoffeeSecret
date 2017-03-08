@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_custom_package"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_reportinfo"
+    android:orientation="vertical"
+    tools:context="com.dhy.coffeesecret.ui.mine.CustomPackageActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize">
+
+        <include layout="@layout/title_bar_back" />
+
+        <TextView
+            android:id="@+id/btn_save"
+            android:layout_width="?attr/actionBarSize"
+            android:layout_height="?attr/actionBarSize"
+            android:text="保存"
+            android:textSize="14.5sp"
+            android:textColor="@color/white"
+            android:background="@drawable/image_selector"
+            android:layout_alignParentRight="true"
+            android:gravity="center"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="17dp"
+            android:text="豆温"
+            android:textColor="@color/colorPrimary"
+            android:textSize="14.5sp" />
+
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/color_preview_bean"
+            android:layout_width="22.5dp"
+            android:layout_height="22.5dp"
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@+id/btn_choose_bean"
+            android:scaleType="centerCrop"
+            android:src="@color/simo_cyan100"
+            app:riv_corner_radius="30dp"
+            app:riv_oval="true" />
+
+        <Button
+            android:id="@+id/btn_choose_bean"
+            android:layout_width="54.25dp"
+            android:layout_height="25.25dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="17dp"
+            android:layout_marginRight="17dp"
+            android:background="@drawable/ic_btn_choose" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="9.5dp"
+            android:layout_marginRight="9.5dp"
+            android:background="@color/color_gray_c9" />
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="17dp"
+            android:text="进风温"
+            android:textColor="@color/colorPrimary"
+            android:textSize="14.5sp" />
+
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/color_preview_in_wind"
+            android:layout_width="22.5dp"
+            android:layout_height="22.5dp"
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@+id/btn_choose_in_wind"
+            android:scaleType="centerCrop"
+            android:src="@color/simo_cyan100"
+            app:riv_corner_radius="30dp"
+            app:riv_oval="true" />
+
+        <Button
+            android:id="@+id/btn_choose_in_wind"
+            android:layout_width="54.25dp"
+            android:layout_height="25.25dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="17dp"
+            android:layout_marginRight="17dp"
+            android:background="@drawable/ic_btn_choose" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="9.5dp"
+            android:layout_marginRight="9.5dp"
+            android:background="@color/color_gray_c9" />
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="17dp"
+            android:text="出风温"
+            android:textColor="@color/colorPrimary"
+            android:textSize="14.5sp" />
+
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/color_preview_out_wind"
+            android:layout_width="22.5dp"
+            android:layout_height="22.5dp"
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@+id/btn_choose_out_wind"
+            android:scaleType="centerCrop"
+            android:src="@color/simo_cyan100"
+            app:riv_corner_radius="30dp"
+            app:riv_oval="true" />
+
+        <Button
+            android:id="@+id/btn_choose_out_wind"
+            android:layout_width="54.25dp"
+            android:layout_height="25.25dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="17dp"
+            android:layout_marginRight="17dp"
+            android:background="@drawable/ic_btn_choose" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="9.5dp"
+            android:layout_marginRight="9.5dp"
+            android:background="@color/color_gray_c9" />
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="17dp"
+            android:text="豆温升温率"
+            android:textColor="@color/colorPrimary"
+            android:textSize="14.5sp" />
+
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/color_preview_acc_bean"
+            android:layout_width="22.5dp"
+            android:layout_height="22.5dp"
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@+id/btn_choose_acc_bean"
+            android:scaleType="centerCrop"
+            android:src="@color/simo_cyan100"
+            app:riv_corner_radius="30dp"
+            app:riv_oval="true" />
+
+        <Button
+            android:id="@+id/btn_choose_acc_bean"
+            android:layout_width="54.25dp"
+            android:layout_height="25.25dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="17dp"
+            android:layout_marginRight="17dp"
+            android:background="@drawable/ic_btn_choose" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="9.5dp"
+            android:layout_marginRight="9.5dp"
+            android:background="@color/color_gray_c9" />
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="17dp"
+            android:text="进风升温率"
+            android:textColor="@color/colorPrimary"
+            android:textSize="14.5sp" />
+
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/color_preview_acc_in_wind"
+            android:layout_width="22.5dp"
+            android:layout_height="22.5dp"
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@+id/btn_choose_acc_in_wind"
+            android:scaleType="centerCrop"
+            android:src="@color/simo_cyan100"
+            app:riv_corner_radius="30dp"
+            app:riv_oval="true" />
+
+        <Button
+            android:id="@+id/btn_choose_acc_in_wind"
+            android:layout_width="54.25dp"
+            android:layout_height="25.25dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="17dp"
+            android:layout_marginRight="17dp"
+            android:background="@drawable/ic_btn_choose" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="9.5dp"
+            android:layout_marginRight="9.5dp"
+            android:background="@color/color_gray_c9" />
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="17dp"
+            android:text="出风升温率"
+            android:textColor="@color/colorPrimary"
+            android:textSize="14.5sp" />
+
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/color_preview_acc_out_wind"
+            android:layout_width="22.5dp"
+            android:layout_height="22.5dp"
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@+id/btn_choose_acc_out_wind"
+            android:scaleType="centerCrop"
+            android:src="@color/simo_cyan100"
+            app:riv_corner_radius="30dp"
+            app:riv_oval="true" />
+
+        <Button
+            android:id="@+id/btn_choose_acc_out_wind"
+            android:layout_width="54.25dp"
+            android:layout_height="25.25dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="17dp"
+            android:layout_marginRight="17dp"
+            android:background="@drawable/ic_btn_choose" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="9.5dp"
+            android:layout_marginRight="9.5dp"
+            android:background="@color/color_gray_c9" />
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="17dp"
+            android:text="环境温度"
+            android:textColor="@color/colorPrimary"
+            android:textSize="14.5sp" />
+
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/color_preview_env"
+            android:layout_width="22.5dp"
+            android:layout_height="22.5dp"
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@+id/btn_choose_env"
+            android:scaleType="centerCrop"
+            android:src="@color/simo_cyan100"
+            app:riv_corner_radius="30dp"
+            app:riv_oval="true" />
+
+        <Button
+            android:id="@+id/btn_choose_env"
+            android:layout_width="54.25dp"
+            android:layout_height="25.25dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="17dp"
+            android:layout_marginRight="17dp"
+            android:background="@drawable/ic_btn_choose" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="9.5dp"
+            android:layout_marginRight="9.5dp"
+            android:background="@color/color_gray_c9" />
+
+
+    </RelativeLayout>
+
+</LinearLayout>

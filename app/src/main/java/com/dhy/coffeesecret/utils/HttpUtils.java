@@ -24,7 +24,7 @@ public class HttpUtils {
     private static final OkHttpClient mOkHttpClient;
     private static final Gson mGson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 
-    private static final long TIMEOUT =  4;
+    private static final long TIMEOUT = 4;
     private static final String CHARSET_NAME = "UTF-8";
 
     private static final MediaType TYPE = MediaType.parse("application/json; charset=utf-8");
@@ -62,6 +62,11 @@ public class HttpUtils {
 
     public static Response execute(String url, Object obj) throws IOException {
         Request request = getRequest(url, obj);
+        return mOkHttpClient.newCall(request).execute();
+    }
+
+    public static Response execute(String url) throws IOException {
+        Request request = getRequest(url);
         return mOkHttpClient.newCall(request).execute();
     }
 

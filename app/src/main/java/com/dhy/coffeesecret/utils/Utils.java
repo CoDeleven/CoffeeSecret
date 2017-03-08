@@ -1,6 +1,10 @@
 package com.dhy.coffeesecret.utils;
 
 
+import net.sourceforge.pinyin4j.PinyinHelper;
+
+import java.util.List;
+
 /**
  * Created by CoDeleven on 17-2-9.
  */
@@ -49,6 +53,11 @@ public class Utils {
                     16).byteValue();
         }
         return temp;
+    }
+
+    public static String getFirstPinYinLetter(String cha) {
+        String pinyin = PinyinHelper.toHanyuPinyinStringArray(cha.charAt(0))[0];
+        return pinyin.toUpperCase().substring(0, 1);
     }
 
 }

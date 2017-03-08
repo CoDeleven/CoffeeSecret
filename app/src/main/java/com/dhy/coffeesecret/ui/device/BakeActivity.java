@@ -19,6 +19,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BakeReportBeanFactory;
 import com.dhy.coffeesecret.pojo.BakeReportProxy;
@@ -109,13 +110,13 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
             Bundle bundle = msg.getData();
 
             beanTemps[0].setText(String.format("%1$.2f", bundle.getFloat("bean")) + "℃");
-            beanTemps[1].setText(String.format("%1$.2f", bundle.getFloat("accBean")) + "℃/s");
+            beanTemps[1].setText(String.format("%1$.2f", bundle.getFloat("accBean")) + "℃/m");
 
             inwindTemps[0].setText(String.format("%1$.2f", bundle.getFloat("inwind")) + "℃");
-            inwindTemps[1].setText(String.format("%1$.2f", bundle.getFloat("accInwind")) + "℃/s");
+            inwindTemps[1].setText(String.format("%1$.2f", bundle.getFloat("accInwind")) + "℃/m");
 
             outwindTemps[0].setText(String.format("%1$.2f", bundle.getFloat("outwind")) + "℃");
-            outwindTemps[1].setText(String.format("%1$.2f", bundle.getFloat("accOutwind")) + "℃/s");
+            outwindTemps[1].setText(String.format("%1$.2f", bundle.getFloat("accOutwind")) + "℃/m");
 
             if (curStatus == FIRST_BURST) {
                 developTime.setText(developBar.getDevelopTime());
@@ -226,6 +227,9 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
         msg.setData(bundle);
 
         mHandler.sendMessage(msg);
+        if(count == 0){
+            chart.notifyDataSetChanged();
+        }
 
         ++count;
     }
@@ -233,7 +237,6 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
 
         // 设置横屏和隐藏状态栏
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -243,6 +246,7 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
         chart = (BaseChart4Coffee) findViewById(R.id.id_baking_chart);
         chart.initLine();
         lineOperator = (TextView) findViewById(R.id.id_baking_lineOperator);
+        // chart.changeColorByIndex("#000000", BaseChart4Coffee.BEANLINE);
         mConfig = SettingTool.getConfig(this);
         enableDoubleConfirm = mConfig.isDoubleClick();
 
@@ -270,12 +274,8 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
         }
         mBluetoothOperator.setDataChangedListener(this);
         Log.e("codelevex", "我特么又被重启了？？");
-        /*if (!mHelper.isTestThreadAlive()) {
-            mHelper.test(getResources().openRawResource(R.raw.test));
-        }*/
         startTime = System.currentTimeMillis();
         isReading = true;
-        // mHelper.setActivityDestroy(false);
         timer = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -404,7 +404,7 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
             timer.schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    isDoubleClick = true;
+                    isDoubleClick = false;
                 }
             }, 2000);
         } else {
@@ -525,7 +525,7 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
         }
         float startTemp = intent.getFloatExtra(START_TEMP, -1);
 
-        BakeReportProxy bakeReport = BakeReportBeanFactory.getInstance();
+        BakeReportProxy bakeReport = new BakeReportProxy();
 
         bakeReport.deseriData(chart.getLineData());
 
@@ -543,6 +543,7 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
 
         bakeReport.setAmbientTemperature(intent.getFloatExtra(ENV_TEMP, -1) + "");
 
+        ((MyApplication)getApplication()).setBakeReport(bakeReport);
 
         return bakeReport;
     }
