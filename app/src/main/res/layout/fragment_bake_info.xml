@@ -4,13 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.dhy.coffeesecret.ui.cup.fragment.BakeInfoFragment">
-    <Button
-        android:text="添加烘焙信息"
-        android:textSize="@dimen/font_size_primary"
-        android:drawableLeft="@drawable/ic_container_add_plus"
-        android:id="@+id/btn_add"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="141dp"
@@ -57,6 +51,7 @@
                 android:textSize="@dimen/font_size_primary" />
 
             <Button
+                android:id="@+id/btn_bake"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
@@ -87,35 +82,128 @@
             android:layout_height="wrap_content"
             android:minHeight="160dp" />
 
-        <TableLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <TableRow android:paddingTop="10dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="10dp">
 
-                <TextView
-                    android:text="@string/devTime"
-                    android:textSize="@dimen/font_size_primary" />
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
 
-                <TextView
-                    android:text="@string/endTemp"
-                    android:textSize="@dimen/font_size_primary" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/devTime"
+                        android:textSize="@dimen/font_size_primary" />
 
-                <TextView
-                    android:text="@string/startTemp"
-                    android:textSize="@dimen/font_size_primary" />
-            </TableRow>
+                    <TextView
+                        android:id="@+id/dev_time"
+                        android:paddingLeft="5dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textSize="@dimen/font_size_primary" />
+                </LinearLayout>
 
-            <TableRow android:paddingTop="7dp">
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
 
-                <TextView
-                    android:text="@string/devRate"
-                    android:textSize="@dimen/font_size_primary" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/endTemp"
+                        android:textSize="@dimen/font_size_primary" />
 
-                <TextView
-                    android:text="@string/reportEnvTime"
-                    android:textSize="@dimen/font_size_primary" />
-            </TableRow>
-        </TableLayout>
+                    <TextView
+                        android:id="@+id/end_temp"
+                        android:paddingLeft="5dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/font_size_primary" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/startTemp"
+                        android:textSize="@dimen/font_size_primary" />
+
+                    <TextView
+                        android:id="@+id/start_temp"
+                        android:paddingLeft="5dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/font_size_primary" />
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="7dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/devRate"
+                        android:textSize="@dimen/font_size_primary" />
+
+                    <TextView
+                        android:id="@+id/dev_rate"
+                        android:paddingLeft="5dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/font_size_primary" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/reportEnvTime"
+                        android:textSize="@dimen/font_size_primary" />
+
+                    <TextView
+                        android:id="@+id/env_time"
+                        android:paddingLeft="5dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/font_size_primary" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>
