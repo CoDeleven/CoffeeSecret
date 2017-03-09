@@ -13,7 +13,7 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_marginLeft="25dp"
-        android:src="@mipmap/ic_launcher"/>
+        android:src="@drawable/ic_container_add_bean"/>
 
     <com.zhy.android.percent.support.PercentLinearLayout
         android:layout_width="match_parent"

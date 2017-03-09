@@ -129,9 +129,6 @@ public class EditBeanActivity extends AppCompatActivity {
     }
 
     private void init() {
-
-        Log.i(TAG, "init: " + R.drawable.ic_container_add_bean);
-
         BeanInfo beanInfo = (BeanInfo) getIntent().getSerializableExtra("beanInfo");
 
         if (beanInfo == null) {
@@ -273,7 +270,7 @@ public class EditBeanActivity extends AppCompatActivity {
     }
 
     private void saveBeanInfo() {
-
+        // TODO
         BeanInfo beanInfo = new BeanInfo();
         beanInfo.setDrawablePath(drawPath);
         beanInfo.setName(editName.getText().toString());

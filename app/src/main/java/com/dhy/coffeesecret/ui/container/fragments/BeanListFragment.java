@@ -236,9 +236,11 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
             mHandler.sendEmptyMessage(888);
         }
 //        String[] beanLists = null;
-        beanInfoListJson = TestData.beaninfos;
+//        beanInfoListJson = TestData.beaninfos;
+
         ArrayList<BeanInfo> beanInfoss = gson.fromJson(beanInfoListJson, new TypeToken<ArrayList<BeanInfo>>() {
         }.getType());
+        Log.i(TAG, "getBeanInfos: " + beanInfoss);
         beanInfoss = sortByArea(beanInfoss);
         getLetters(beanInfoss);
 
@@ -265,6 +267,9 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
         {
             for (int j = 0; j < i; ++j) {
 
+                if (beanInfoss.get(j).getArea() == null) {
+                    break;
+                }
                 char a = Utils.getFirstPinYinLetter(beanInfoss.get(j + 1).getArea()).charAt(0);
                 char b = Utils.getFirstPinYinLetter(beanInfoss.get(j).getArea()).charAt(0);
                 if (a < b) {
