@@ -157,35 +157,35 @@ public class BeanInfo implements Serializable {
 		this.date = date;
 	}
 
-//	public List<BakeReport> getBakeReports() {
-//		return bakeReports;
-//	}
+	public List<BakeReport> getBakeReports() {
+		return bakeReports;
+	}
 
-//	@Deprecated
-//	public void setBakeReports(List<BakeReport> bakeReports) {
-//		this.bakeReports = bakeReports;
-//	}
-//
-//	public void addBakeReport(BakeReport bakeReport) {
-//		if (bakeReport != null) {
-//			if (bakeReports == null) {
-//				bakeReports = new ArrayList<>();
-//			}
-//			bakeReports.add(bakeReport);
-//		}
-//	}
-//
-//	public void removeBakeReport(BakeReport bakeReport) {
-//		if (bakeReport != null) {
-//			if (bakeReports == null) {
-//				bakeReports = new ArrayList<>();
-//			}
-//
-//			if (bakeReports.contains(bakeReport)) {
-//				bakeReports.remove(bakeReport);
-//			}
-//		}
-//	}
+	@Deprecated
+	public void setBakeReports(List<BakeReport> bakeReports) {
+		this.bakeReports = bakeReports;
+	}
+
+	public void addBakeReport(BakeReport bakeReport) {
+		if (bakeReport != null) {
+			if (bakeReports == null) {
+				bakeReports = new ArrayList<>();
+			}
+			bakeReports.add(bakeReport);
+		}
+	}
+
+	public void removeBakeReport(BakeReport bakeReport) {
+		if (bakeReport != null) {
+			if (bakeReports == null) {
+				bakeReports = new ArrayList<>();
+			}
+
+			if (bakeReports.contains(bakeReport)) {
+				bakeReports.remove(bakeReport);
+			}
+		}
+	}
 
 	public String getDrawablePath() {
 		return drawablePath;
@@ -231,7 +231,7 @@ public class BeanInfo implements Serializable {
 				", price=" + price +
 				", date=" + date +
 				", continent='" + continent + '\'' +
-//				", bakeReports=" + bakeReports +
+				", bakeReports=" + bakeReports +
 				", hasBakeReports=" + hasBakeReports +
 				'}';
 	}

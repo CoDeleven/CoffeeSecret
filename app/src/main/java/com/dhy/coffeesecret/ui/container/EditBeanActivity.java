@@ -297,6 +297,7 @@ public class EditBeanActivity extends AppCompatActivity {
         }
 //        Log.i(TAG, "saveBeanInfo: " + beanInfo.toString());
         updateBeanInfo(beanInfo);
+        Log.i(TAG, "saveBeanInfo: " + beanInfo.toString());
     }
 
     private void updateBeanInfo(final BeanInfo beanInfo) {
@@ -407,15 +408,14 @@ public class EditBeanActivity extends AppCompatActivity {
                     break;
                 case BEAN_ICON:
                     if (species.toLowerCase().contains("a")) {
-                        drawPath = R.drawable.ic_container_aa + "";
+                        activity.editIcon.setImageResource(R.drawable.ic_container_aa);
                     } else if (species.toLowerCase().contains("c")) {
-                        drawPath = R.drawable.ic_container_ac + "";
+                        activity.editIcon.setImageResource(R.drawable.ic_container_ac);
                     } else if (species.toLowerCase().contains("e")) {
-                        drawPath = R.drawable.ic_container_ae + "";
+                        activity.editIcon.setImageResource(R.drawable.ic_container_ae);
                     } else {
-                        drawPath = R.drawable.ic_container_al + "";
+                        activity.editIcon.setImageResource(R.drawable.ic_container_al);
                     }
-                    activity.editIcon.setImageResource(Integer.parseInt(drawPath));
                     break;
                 case TOAST_1:
                     T.showShort(mContext, "保存成功");

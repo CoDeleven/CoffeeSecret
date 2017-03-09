@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical">
+
+    <RadioGroup
+        android:id="@+id/rg_type"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
+
+        <RadioButton
+            android:id="@+id/tv_max"
+            style="@style/SortRadioButton"
+            android:text="@string/max_score" />
+
+        <View
+            style="@style/HorizontalLine"
+            android:layout_height="1px" />
+
+        <RadioButton
+            android:id="@+id/tv_min"
+            style="@style/SortRadioButton"
+            android:text="@string/min_score" />
+
+        <View
+            style="@style/HorizontalLine"
+            android:layout_height="1px" />
+
+        <RadioButton
+            android:id="@+id/tv_early"
+            style="@style/SortRadioButton"
+            android:text="@string/early_cupping" />
+
+        <View
+            style="@style/HorizontalLine"
+            android:layout_height="1px" />
+
+        <RadioButton
+            android:id="@+id/tv_later"
+            style="@style/SortRadioButton"
+            android:checked="true"
+            android:text="@string/later_cupping" />
+
+    </RadioGroup>
+    <View
+        style="@style/HorizontalLine"
+        android:layout_height="1px" />
+</LinearLayout>

@@ -68,7 +68,7 @@ public class CuppingListAdapter extends RecyclerView.Adapter implements StickyRe
         CuppingViewHolder cuppingViewHolder = (CuppingViewHolder) holder;
         System.out.println(cuppingInfos);
         CuppingInfo info = cuppingInfos.get(position);
-        float score = info.getScore() / 20f;
+        float score = info.getScore() / 16f;
         cuppingViewHolder.itemTitle.setText(info.getName());
         cuppingViewHolder.ratingBar.setStar(score);
         cuppingViewHolder.itemView.setOnClickListener(new View.OnClickListener() {

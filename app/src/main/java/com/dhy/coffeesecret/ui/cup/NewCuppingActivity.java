@@ -1,12 +1,8 @@
 package com.dhy.coffeesecret.ui.cup;
 
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -18,7 +14,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.Window;
 import android.widget.RadioGroup;
 
 import com.dhy.coffeesecret.R;
@@ -32,23 +27,13 @@ import com.dhy.coffeesecret.ui.cup.fragment.NormalToolBar;
 import com.dhy.coffeesecret.utils.HttpUtils;
 import com.dhy.coffeesecret.utils.T;
 import com.dhy.coffeesecret.utils.URLs;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
-import java.io.Console;
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 
 import static android.view.WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION;
@@ -57,11 +42,9 @@ import static com.dhy.coffeesecret.R.string.acidity;
 import static com.dhy.coffeesecret.R.string.after_taste;
 import static com.dhy.coffeesecret.R.string.baked;
 import static com.dhy.coffeesecret.R.string.balance;
-import static com.dhy.coffeesecret.R.string.cancel;
 import static com.dhy.coffeesecret.R.string.dry_and_frag;
 import static com.dhy.coffeesecret.R.string.faced;
 import static com.dhy.coffeesecret.R.string.flavor;
-import static com.dhy.coffeesecret.R.string.handler;
 import static com.dhy.coffeesecret.R.string.overall;
 import static com.dhy.coffeesecret.R.string.overdev;
 import static com.dhy.coffeesecret.R.string.scorched;
@@ -86,6 +69,7 @@ public class NewCuppingActivity extends AppCompatActivity
     private static final int CANCEL = 0x0;
     private static final int SUCCESS = 0x666;
     private static final int ERROR = 0x2333;
+    public static final int SELECT_LINE = 0x111;
 
     private boolean isNew;
     private CuppingInfo mCuppingInfo;
@@ -110,6 +94,7 @@ public class NewCuppingActivity extends AppCompatActivity
     private int mResultCode = CupFragment.RESULT_CODE_NONE;
     private Intent mResultIntent;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -120,6 +105,7 @@ public class NewCuppingActivity extends AppCompatActivity
         if (SHOW_INFO.equals(viewType)) {
             mCuppingInfo = (CuppingInfo) intent.getSerializableExtra(TARGET);
             mBakeReport = mCuppingInfo.getBakeReport();
+            System.out.println("............"+mBakeReport);
             loadShowInfoView();
         } else if (NEW_CUPPING.equals(viewType)) {
             loadNewCuppingView();
@@ -128,7 +114,6 @@ public class NewCuppingActivity extends AppCompatActivity
         }
         initParam();
     }
-
     /****************************
      * 在添加杯测时加载添加对应的view
      */
@@ -169,7 +154,8 @@ public class NewCuppingActivity extends AppCompatActivity
         transaction.replace(R.id.line, editToolBar);
         transaction.commitNow();
     }
-    private void loadShowViewInMain(){
+
+    private void loadShowViewInMain() {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -177,9 +163,10 @@ public class NewCuppingActivity extends AppCompatActivity
             }
         });
     }
+
     public void loadShowInfoView() {
 
-        if(cuppingInfoFragment != null){
+        if (cuppingInfoFragment != null) {
             cuppingInfoFragment.setEditable(false);
         }
         viewType = SHOW_INFO;
@@ -236,7 +223,7 @@ public class NewCuppingActivity extends AppCompatActivity
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == 4 && EDIT_INFO.equals(viewType)) {
+        if (keyCode == 4 && (EDIT_INFO.equals(viewType)||NEW_CUPPING.equals(viewType))) {
             showDialog();
         }
         return super.onKeyDown(keyCode, event);
@@ -253,7 +240,7 @@ public class NewCuppingActivity extends AppCompatActivity
             cuppingInfoFragment = CuppingInfoFragment.newInstance(flawScores, feelScores);
         }
 
-        bakeInfoFragment = BakeInfoFragment.newInstance(mBakeReport);
+        bakeInfoFragment = BakeInfoFragment.newInstance(mBakeReport,NEW_CUPPING.equals(viewType));
 
         bakeInfoFragment.setOnBakeInfoLoadedListener(new BakeInfoFragment.OnBakeInfoLoadedListener() {
             @Override
@@ -349,7 +336,7 @@ public class NewCuppingActivity extends AppCompatActivity
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        T.showShort(NewCuppingActivity.this,response.message());
+                                        T.showShort(NewCuppingActivity.this, response.message());
                                     }
                                 });
 
@@ -430,7 +417,7 @@ public class NewCuppingActivity extends AppCompatActivity
             new Thread() {
                 @Override
                 public void run() {
-                  delete();
+                    delete();
                 }
             }.start();
         }
