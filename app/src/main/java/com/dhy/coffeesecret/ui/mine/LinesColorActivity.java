@@ -55,6 +55,9 @@ public class LinesColorActivity extends AppCompatActivity {
     }
 
     private void init() {
+
+        titleText.setText("颜色选择");
+
         getColorsPackages();
 
         linesColorAdapter = new LinesColorAdapter(context, linesColorList, getFootView());

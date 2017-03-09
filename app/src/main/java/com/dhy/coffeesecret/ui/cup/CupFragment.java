@@ -335,7 +335,6 @@ public class CupFragment extends Fragment {
                     mHandler.sendEmptyMessage(LOADING_SUCCESS);
                 } catch (IOException e) {
                     mHandler.sendEmptyMessage(LOADING_ERROR);
-                    e.printStackTrace();
                 }
             }
         }.start();

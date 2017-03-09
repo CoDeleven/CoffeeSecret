@@ -19,7 +19,6 @@ import android.widget.TextView;
 
 import com.bigkoo.pickerview.TimePickerView;
 import com.dhy.coffeesecret.R;
-import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.pojo.BeanInfo;
 import com.dhy.coffeesecret.utils.HttpUtils;
 import com.dhy.coffeesecret.utils.SettingTool;
@@ -31,7 +30,6 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
@@ -93,6 +91,7 @@ public class EditBeanActivity extends AppCompatActivity {
     private String[] handlerArray;
     private String currentLevel;
     private String currentHandler;
+    private String drawPath;
     private Context mContext;
 
     private static final String TAG = "EditBeanActivity";
@@ -130,6 +129,8 @@ public class EditBeanActivity extends AppCompatActivity {
     }
 
     private void init() {
+
+        Log.i(TAG, "init: " + R.drawable.ic_container_add_bean);
 
         BeanInfo beanInfo = (BeanInfo) getIntent().getSerializableExtra("beanInfo");
 
@@ -207,8 +208,7 @@ public class EditBeanActivity extends AppCompatActivity {
 
     /**
      * 获取显示的处理方式
-     *
-     * @param handler 豆子的处理方式
+     * @param handler   豆子的处理方式
      * @return 该处理方式在 spinner 中的位置
      */
     private int getHandlerSelection(String handler) {
@@ -225,7 +225,6 @@ public class EditBeanActivity extends AppCompatActivity {
 
     /**
      * 获取初始被选择的等级
-     *
      * @param level 豆子的等级
      * @return 该等级在 spinner 的位置
      */
@@ -276,7 +275,9 @@ public class EditBeanActivity extends AppCompatActivity {
     private void saveBeanInfo() {
 
         BeanInfo beanInfo = new BeanInfo();
+        beanInfo.setDrawablePath(drawPath);
         beanInfo.setName(editName.getText().toString());
+        beanInfo.setContinent("");
         beanInfo.setCountry(editCountry.getText().toString());
         beanInfo.setArea(editArea.getText().toString());
         beanInfo.setManor(editManor.getText().toString());
@@ -289,23 +290,18 @@ public class EditBeanActivity extends AppCompatActivity {
         beanInfo.setStockWeight(Double.parseDouble(editWeight.getText().toString()));
         beanInfo.setDate(parseDate(editBuyDate.getText().toString()));
 
-        beanInfo.setContinent("");
-        beanInfo.setDrawablePath("");
-        beanInfo.setHasBakeReports(false);
-        beanInfo.setBakeReports(new ArrayList<BakeReport>());
         if (currentHandler.equals("其它")) {
             beanInfo.setProcess(editAnotherHandler.getText().toString());
         } else {
             beanInfo.setProcess(currentHandler);
         }
+//        Log.i(TAG, "saveBeanInfo: " + beanInfo.toString());
         updateBeanInfo(beanInfo);
         Log.i(TAG, "saveBeanInfo: " + beanInfo.toString());
     }
 
     private void updateBeanInfo(final BeanInfo beanInfo) {
-//        Gson gson = new Gson();
-        // FIXME: 2017/3/8 对象传入该方法会自动解析为json
-//        HttpUtils.enqueue(URLs.UPDATE_BEAN_INFO, gson.toJson(beanInfo), new Callback() {
+
         HttpUtils.enqueue(URLs.UPDATE_BEAN_INFO, beanInfo, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
