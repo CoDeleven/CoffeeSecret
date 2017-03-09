@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -241,14 +242,17 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
         ArrayList<BeanInfo> beanInfoss = gson.fromJson(beanInfoListJson, new TypeToken<ArrayList<BeanInfo>>() {
         }.getType());
         Log.i(TAG, "getBeanInfos: " + beanInfoss);
-        beanInfoss = sortByArea(beanInfoss);
-        getLetters(beanInfoss);
-
-        for (BeanInfo b : beanInfoss) {
-            if (b.getContinent().equals(title)) {
-                coffeeBeanInfoTemp.add(b);
-            } else if (title.equals("全部")) {
-                coffeeBeanInfoTemp.add(b);
+        if (beanInfoss == null) {
+            mHandler.sendEmptyMessage(TOAST_3);
+        } else {
+            beanInfoss = sortByArea(beanInfoss);
+            getLetters(beanInfoss);
+            for (BeanInfo b : beanInfoss) {
+                if (b.getContinent().equals(title)) {
+                    coffeeBeanInfoTemp.add(b);
+                } else if (title.equals("全部")) {
+                    coffeeBeanInfoTemp.add(b);
+                }
             }
         }
 
@@ -434,10 +438,9 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
                     T.showShort(activity.getActivity(), "BeanInfo start load");
                     break;
                 case TOAST_3:
-                    T.showShort(activity.getActivity(), "refresh finish");
+                    T.showShort(activity.getActivity(), "网络连接失败");
                     break;
                 default:
-                    T.showShort(activity.getActivity(), "you send a wrong message");
                     break;
             }
         }
