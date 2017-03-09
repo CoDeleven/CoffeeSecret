@@ -82,7 +82,7 @@ public class BakeReportProxy {
         List<Entry> entries = new ArrayList<>();
         for (int i = 0; i < timex.size(); ++i) {
             Entry entry = new Entry(timex.get(i), beanTemps.get(i));
-            String time = "" + timex;
+            String time = timex.get(i) + "";
             String str = "";
             if ((str = events.get(time)) != null) {
                 // 转换id
@@ -198,4 +198,7 @@ public class BakeReportProxy {
         this.bakeReport = bakeReport;
     }
 
+    public List<Float> getTimex(){
+        return bakeReport.getTempratureSet().getTimex();
+    }
 }

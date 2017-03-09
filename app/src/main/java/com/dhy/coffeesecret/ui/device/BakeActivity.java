@@ -56,7 +56,6 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
     public static final String BAKE_DATE = "com.dhy.coffeesercret.ui.device.BakeActivity.BAKE_DATE";
     public static final String ENV_TEMP = "com.dhy.coffeesercret.ui.device.BakeActivity.ENV_TEMP";
     public static final String ENABLE_REFERLINE = "com.dhy.coffeesercret.ui.device.BakeActivity.REFER_LINE";
-    public static final int DRY = 1, FIRST_BURST = 2, SECOND_BURST = 3, END = 4;
     @Bind(R.id.id_baking_chart)
     BaseChart4Coffee chart;
     @Bind(R.id.id_baking_lineOperator)
@@ -108,21 +107,11 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
     private FragmentTool fragmentTool;
     private ProgressDialog dialog;
     private boolean isEnd = false;
-    private int curFlow = 0;
     private Entry curBeanEntry;
+    private boolean isFisrtBurstEnd = false;
+    private boolean isSecondBurstEnd = false;
     private ArrayList<Float> tempratures;
     private TempratureSet set = new TempratureSet();
-    private Handler mShowHandler = new Handler(new Handler.Callback() {
-        @Override
-        public boolean handleMessage(Message msg) {
-            if (msg.what == 0) {
-                dialog = ProgressDialog.show(BakeActivity.this, "标题", "加载中，请稍后……");
-            } else if (msg.what == 1) {
-                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-            }
-            return false;
-        }
-    });
     // 执行UI操作
     private Handler mHandler = new Handler(new Handler.Callback() {
         @Override
@@ -140,7 +129,7 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
             outwindTemps[0].setText(String.format("%1$.2f", bundle.getFloat("outwind")) + "℃");
             outwindTemps[1].setText(String.format("%1$.2f", accOutwind) + "℃/m");
 
-            if (curStatus == FIRST_BURST) {
+            if (curStatus == DevelopBar.FIRST_BURST) {
                 developTime.setText(developBar.getDevelopTime());
                 developRate.setText(developBar.getDevelopRate());
             }
@@ -220,13 +209,15 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
 
         curBeanEntry = new Entry(lastTime, beanTemp);
 
-        if (beanTemp > 160 && isOverBottom && curStatus != FIRST_BURST) {
+        if (beanTemp > 160 && isOverBottom && curStatus != DevelopBar.FIRST_BURST) {
             curStatus = AFTER160;
         }
 
         if (curEvent != null) {
             curBeanEntry.setEvent(curEvent);
             eventRecords.add(curBeanEntry);
+            // 存储事件详情时，最后一个冒号后面是该事件的类别
+            set.addEvent(lastTime + "", curEvent.getDescription() + ":" + curStatus);
             if (!isEnd && dialog != null) {
                 isEnd = true;
                 endTemp = beanTemp;
@@ -240,9 +231,6 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
         set.addAccBeanTemp(accBeanTemp);
         set.addAccInwindTemp(accInwindTemp);
         set.addAccOutwindTemp(accOutwindTemp);
-        if (curEvent != null) {
-            set.addEvent(lastTime + "", curEvent.getDescription() + ":" + curEvent.getCurStatus());
-        }
         set.addTimex(lastTime);
 
         chart.addOneDataToLine(curBeanEntry, BaseChart4Coffee.BEANLINE);
@@ -299,7 +287,6 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
     @Override
     protected void onStart() {
         super.onStart();
-
 
         if (mBluetoothOperator == null) {
             mBluetoothOperator = BluetoothService.BLUETOOTH_OPERATOR;
@@ -366,7 +353,7 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
     private PopupWindow getPopupwindow() {
         if (popupWindow == null) {
             final View view = getLayoutInflater().inflate(R.layout.bake_lines_operator, null, false);
-            popupWindow = new PopupWindow(view, UnitConvert.dp2px(getResources(), 86), UnitConvert.dp2px(getResources(), 135), true);
+            popupWindow = new PopupWindow(view, UnitConvert.dp2px(getResources(), 86), UnitConvert.dp2px(getResources(), 150), true);
             popupWindow.setAnimationStyle(R.style.PopupWindowAnimation);
             view.setOnTouchListener(new View.OnTouchListener() {
                 @Override
@@ -447,20 +434,36 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
         switch (id) {
             case R.id.id_baking_dry:
                 updateCurBeanEntryEvent(new Event(Event.DRY, "脱水"));
-                curFlow = DRY;
                 status = true;
                 break;
             case R.id.id_baking_firstBurst:
+                if (isFisrtBurstEnd) {
+                    updateCurBeanEntryEvent(new Event(Event.FIRST_BURST, "一爆结束"));
+                    curStatus = DevelopBar.FIRST_BURST;
+                    v.setEnabled(false);
+                } else {
+                    updateCurBeanEntryEvent(new Event(Event.FIRST_BURST, "一爆"));
+                    curStatus = DevelopBar.FIRST_BURST;
+                    isFisrtBurstEnd = true;
+                    ((TextView) v).setText("一爆结束");
+                    return;
 
-                updateCurBeanEntryEvent(new Event(Event.FIRST_BURST, "一爆"));
-                curStatus = DevelopBar.FIRST_BURST;
-                curFlow = FIRST_BURST;
+                }
+
                 status = true;
 
                 break;
             case R.id.id_baking_secondBurst:
-                updateCurBeanEntryEvent(new Event(Event.SECOND_BURST, "二爆"));
-                curFlow = SECOND_BURST;
+                if (isSecondBurstEnd) {
+                    updateCurBeanEntryEvent(new Event(Event.SECOND_BURST, "二爆结束"));
+                    v.setEnabled(false);
+
+                } else {
+                    updateCurBeanEntryEvent(new Event(Event.SECOND_BURST, "二爆"));
+                    isSecondBurstEnd = true;
+                    ((TextView) v).setText("二爆结束");
+                    return;
+                }
                 status = true;
 
                 break;
@@ -468,7 +471,7 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
 
                 updateCurBeanEntryEvent(new Event(Event.END, "结束"));
                 BakeReportProxy imm = generateReport();
-                imm.setEntriesWithEvents(eventRecords);
+                // imm.setEntriesWithEvents(eventRecords);
                 imm.setEndTemp(curBeanEntry.getY());
                 Intent intent = new Intent(BakeActivity.this, EditBehindActiviy.class);
                 // 停止读取
@@ -489,7 +492,7 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
                 fragmentTool.showDialogFragmen("otherFragment", other);
                 break;
         }
-        if (id != R.id.id_baking_wind_fire & id != R.id.id_baking_other) {
+        if (id != R.id.id_baking_wind_fire & id != R.id.id_baking_other & id != R.id.id_baking_firstBurst & id != R.id.id_baking_secondBurst) {
             if (status) {
                 v.setEnabled(false);
             }
@@ -521,7 +524,6 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.e("codelevex", "尼玛的什么情况个");
         isReading = false;
     }
 
@@ -563,6 +565,7 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
     private void updateCurBeanEntryEvent(final Event event) {
         curBeanEntry.setEvent(event);
         eventRecords.add(curBeanEntry);
+        curEvent = event;
         chart.invalidate();
     }
 

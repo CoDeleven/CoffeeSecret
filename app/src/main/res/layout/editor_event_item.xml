@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="horizontal"
+              android:paddingTop="20dp"
+              android:paddingBottom="20dp"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+    <ImageView
+        android:layout_gravity="center_vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_baking_behind_time">
+    </ImageView>
+    <TextView
+        android:layout_gravity="center_vertical"
+        android:paddingLeft="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/id_edit_event_item_timeNode"
+        android:text="00:00"/>
+    <TextView
+        android:layout_gravity="center_vertical"
+        android:paddingLeft="20dp"
+        android:id="@+id/id_edit_event_item_event"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+</LinearLayout>

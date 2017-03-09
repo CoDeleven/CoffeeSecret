@@ -51,5 +51,9 @@ public class Utils {
         return temp;
     }
 
-
+    public static String getTimeWithFormat(float time){
+        int minutes = (int) (time / 60);
+        int seconds = (int) (time % 60);
+        return String.format("%1$02d", minutes) + ":" + String.format("%1$02d", seconds);
+    }
 }

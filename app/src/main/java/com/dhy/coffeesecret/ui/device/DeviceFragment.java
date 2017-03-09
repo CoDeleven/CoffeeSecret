@@ -183,6 +183,7 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
                         }
                     }, 5000);
                     mBluetoothOperator.reConnect();
+                    progressDialog.setMessage("正在尝试重连...请稍后...");
                     progressDialog.show();
                     break;
                 case 3:

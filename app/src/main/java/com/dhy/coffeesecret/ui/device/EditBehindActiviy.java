@@ -5,11 +5,15 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.dhy.coffeesecret.MyApplication;
@@ -17,9 +21,11 @@ import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.pojo.BakeReportBeanFactory;
 import com.dhy.coffeesecret.pojo.BakeReportProxy;
+import com.dhy.coffeesecret.ui.device.adapter.EditEventListAdapter;
 import com.dhy.coffeesecret.utils.HttpUtils;
 import com.dhy.coffeesecret.utils.URLs;
 import com.dhy.coffeesecret.views.CircleSeekBar;
+import com.dhy.coffeesecret.views.DividerDecoration;
 import com.dhy.coffeesecret.views.WheelView;
 import com.github.mikephil.charting.data.Entry;
 
@@ -35,10 +41,8 @@ public class EditBehindActiviy extends AppCompatActivity implements CircleSeekBa
 
     @Bind(R.id.id_bake_degree)
     CircleSeekBar mSeekBar;
-    @Bind(R.id.id_bake_behind_wheelView)
-    WheelView wheelView;
-    @Bind(R.id.id_bake_behind_event)
-    EditText editText;
+    @Bind(R.id.id_edit_list)
+    RecyclerView recyclerView;
     @Bind(R.id.id_bake_behind_save)
     Button save;
     @Bind(R.id.id_bake_behind_cookedWeight)
@@ -56,36 +60,11 @@ public class EditBehindActiviy extends AppCompatActivity implements CircleSeekBa
         setContentView(R.layout.activity_edit_behind_activiy);
         ButterKnife.bind(this);
         mSeekBar.setOnSeekBarChangeListener(this);
-        wheelView.setOffset(1);
         init();
-        editText.setText(entries.get(0).getEvent().getDescription());
-        wheelView.setItems(content);
-
-        editText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                int temp = wheelView.getSeletedIndex();
-                entries.get(temp).getEvent().setDescription(s.toString());
-            }
-        });
-        wheelView.setOnWheelViewListener(new WheelView.OnWheelViewListener() {
-            @Override
-            public void onSelected(final int selectedIndex, String item) {
-                String eventDescriptor = entries.get(selectedIndex - 1).getEvent().getDescription();
-                editText.setText(eventDescriptor);
-            }
-        });
-
+        LinearLayoutManager manager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(manager);
+        recyclerView.setAdapter(new EditEventListAdapter(this, entries));
+        recyclerView.addItemDecoration(new DividerDecoration(this));
     }
 
     private void init() {

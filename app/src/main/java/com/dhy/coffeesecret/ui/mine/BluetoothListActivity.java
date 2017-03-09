@@ -129,9 +129,11 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
             Log.e("codelevex", "开启扫描");
             switchButton.setChecked(true);
             mBluetoothOperator.startScanDevice();
-            curDevice = mBluetoothOperator.getBluetoothDevice();
-            adapter.lastConnectedAddress = curDevice.getAddress();
-            adapter.addDevice(curDevice);
+            if (curDevice != null) {
+                curDevice = mBluetoothOperator.getBluetoothDevice();
+                adapter.lastConnectedAddress = curDevice.getAddress();
+                adapter.addDevice(curDevice);
+            }
 
         }
 

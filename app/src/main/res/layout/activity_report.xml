@@ -291,21 +291,21 @@
                         style="@style/GridSize"
 
                         android:layout_weight="1"
-                        android:text="@string/reportEnvTime"/>
+                        android:text="@string/reportBeanTemp"/>
 
                     <TextView
                         style="@style/GridSize"
 
 
                         android:layout_weight="1"
-                        android:text="@string/reportBeanTemp"
+                        android:text="@string/reportInwindTemp"
                         />
 
                     <TextView
                         style="@style/GridSize"
 
                         android:layout_weight="1"
-                        android:text="@string/reportDryTemp"/>
+                        android:text="@string/reportOutwindtemp"/>
 
                     <TextView
                         style="@style/GridSize"

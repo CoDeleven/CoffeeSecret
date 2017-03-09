@@ -16,6 +16,7 @@ public class TempratureSet {
     private List<Float> accBeanTemps = new ArrayList<>();
     private List<Float> accInwindTemps = new ArrayList<>();
     private List<Float> accOutwindTemps = new ArrayList<>();
+    // 第一个String为时间，第二个String为事件详情和事件类别编号的组合，用:来划分
     private Map<String, String> events = new HashMap<>();
     private List<Float> timex = new ArrayList<>();
 

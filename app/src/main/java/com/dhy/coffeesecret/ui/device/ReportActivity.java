@@ -25,9 +25,11 @@ import com.dhy.coffeesecret.pojo.BakeReportBeanFactory;
 import com.dhy.coffeesecret.pojo.BakeReportProxy;
 import com.dhy.coffeesecret.pojo.BeanInfoSimple;
 import com.dhy.coffeesecret.utils.UnitConvert;
+import com.dhy.coffeesecret.utils.Utils;
 import com.dhy.coffeesecret.views.BaseChart4Coffee;
 import com.dhy.coffeesecret.views.ReportMarker;
 import com.dhy.coffeesecret.views.ScrollViewContainer;
+import com.github.mikephil.charting.data.Entry;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -165,7 +167,7 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
     private PopupWindow getPopupwindow() {
         if (popupWindow == null) {
             final View view = getLayoutInflater().inflate(R.layout.bake_lines_operator, null, false);
-            popupWindow = new PopupWindow(view, UnitConvert.dp2px(getResources(), 86), UnitConvert.dp2px(getResources(), 145), true);
+            popupWindow = new PopupWindow(view, UnitConvert.dp2px(getResources(), 86), UnitConvert.dp2px(getResources(), 150), true);
             popupWindow.setAnimationStyle(R.style.PopupWindowAnimation);
             view.setOnTouchListener(new View.OnTouchListener() {
                 @Override
@@ -223,16 +225,28 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
     }
 
     private void init() {
-        for (int i = 0; i < 40; ++i) {
+        List<Entry> beanTemps = proxy.getLineDataSetByIndex(BEANLINE).getValues();
+        List<Entry> inwindTemps = proxy.getLineDataSetByIndex(INWINDLINE).getValues();
+        List<Entry> outwindTemps = proxy.getLineDataSetByIndex(OUTWINDLINE).getValues();
+        List<Entry> accBeanTemps = proxy.getLineDataSetByIndex(ACCBEANLINE).getValues();
+        List<Float> timex = proxy.getTimex();
+        for (int i = 0; i < beanTemps.size(); i += 30) {
             TableRow tableRow = new TableRow(this);
             tableRow.setPadding(10, 10, 10, 10);
             TableLayout.LayoutParams p = new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT);
             tableRow.setLayoutParams(p);
+            String[] content = new String[5];
+            content[0] = Utils.getTimeWithFormat(timex.get(i));
+            content[1] = beanTemps.get(i).getY() + "";
+            content[2] = inwindTemps.get(i).getY() + "";
+            content[3] = outwindTemps.get(i).getY() + "";
+            content[4] = accBeanTemps.get(i).getY() + "";
+
             for (int j = 0; j < 5; ++j) {
                 TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1);
                 TextView textView = new TextView(this);
                 textView.setGravity(Gravity.CENTER);
-                textView.setText("ggggg");
+                textView.setText(content[j]);
                 tableRow.addView(textView, lp);
             }
             tableRow.setGravity(Gravity.CENTER);
