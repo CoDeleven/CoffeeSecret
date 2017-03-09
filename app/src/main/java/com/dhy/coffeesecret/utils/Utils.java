@@ -55,9 +55,36 @@ public class Utils {
         return temp;
     }
 
+    /**
+     * 将中文转换为拼音首字母
+     * @param cha 中文
+     * @return
+     */
     public static String getFirstPinYinLetter(String cha) {
-        String pinyin = PinyinHelper.toHanyuPinyinStringArray(cha.charAt(0))[0];
-        return pinyin.toUpperCase().substring(0, 1);
+        String pinyin = "";
+        for (int i = 0; i < cha.length(); i++) {
+            char c = cha.charAt(i);
+            if (isChinese(c)) {
+                pinyin += PinyinHelper.toHanyuPinyinStringArray(cha.charAt(i))[0].substring(0, 1);
+            } else {
+                pinyin += c;
+            }
+        }
+        return pinyin.toUpperCase();
+    }
+
+    // 判断一个字符是否是中文
+    public static boolean isChinese(char c) {
+        return c >= 0x4E00 &&  c <= 0x9FA5;// 根据字节码判断
+    }
+
+    // 判断一个字符串是否含有中文
+    public static boolean isChinese(String str) {
+        if (str == null) return false;
+        for (char c : str.toCharArray()) {
+            if (isChinese(c)) return true;// 有一个中文字符就返回
+        }
+        return false;
     }
 
 }

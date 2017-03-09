@@ -59,6 +59,7 @@ public class SearchFragment extends Fragment {
     private String entrance;
     private SearchHandler mHandler = new SearchHandler(this);
     private OnSearchCallBack onSearchCallBack;
+    private boolean isRemoved = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -84,7 +85,7 @@ public class SearchFragment extends Fragment {
                 @Override
                 public void onItemClicked(int position) {
                     Intent intent = new Intent(mContext, BeanInfoActivity.class);
-                    intent.putExtra("beanInfo", "beanInfo");
+                    intent.putExtra("beanInfo", beanInfos.get(position));
                     remove();
                     startActivity(intent);
                 }
@@ -220,6 +221,11 @@ public class SearchFragment extends Fragment {
         tx.setCustomAnimations(R.anim.in_from_left, R.anim.out_to_right);
         tx.remove(SearchFragment.this);
         tx.commit();
+        isRemoved = true;
+    }
+
+    public boolean isRemoved(){
+        return isRemoved;
     }
 
     @Override
@@ -277,7 +283,7 @@ public class SearchFragment extends Fragment {
                         beanInfos.clear();
 
                         for (BeanInfo beanInfo : activity.beanInfoTemp) {
-                            if (beanInfo.getName().toLowerCase().contains(msgObj)) {
+                            if (beanInfo.getArea().toLowerCase().contains(msgObj)) {
                                 activity.beanInfos.add(beanInfo);
                             }
                         }

@@ -5,10 +5,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
@@ -23,6 +25,7 @@ import com.dhy.coffeesecret.ui.container.adapters.InfoListAdapter;
 import com.dhy.coffeesecret.ui.container.fragments.SearchFragment;
 import com.dhy.coffeesecret.utils.T;
 import com.dhy.coffeesecret.utils.TestData;
+import com.dhy.coffeesecret.utils.Utils;
 import com.dhy.coffeesecret.views.DividerDecoration;
 import com.dhy.coffeesecret.views.SearchEditText;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
@@ -43,6 +46,7 @@ public class SelectInfoActivity extends AppCompatActivity implements OnQuickSide
     private static final int GET_MANOR_LIST = 333;
     private static final int GET_SPECIES_LIST = 444;
     private static final int SHOW_WRONG_TOAST = 555;
+    private static final String TAG = "SelectInfoActivity";
     @Bind(R.id.btn_cancel)
     TextView btnCancel;
     @Bind(R.id.title_text)
@@ -152,54 +156,124 @@ public class SelectInfoActivity extends AppCompatActivity implements OnQuickSide
     }
 
     private void getDataList(int listType) {
+        dataList.clear();
         switch (listType) {
             case GET_COUNTRY_LIST:
-                dataList.clear();
-                Collections.addAll(dataList, TestData.beanList7);
-                infoAdapter.notifyDataSetChanged();
+                Collections.addAll(dataList, TestData.countryList1);
                 break;
             case GET_AREA_LIST:
-                dataList.clear();
                 Collections.addAll(dataList, TestData.beanList1);
-                infoAdapter.notifyDataSetChanged();
                 break;
             case GET_MANOR_LIST:
-                dataList.clear();
                 Collections.addAll(dataList, TestData.beanList2);
-                infoAdapter.notifyDataSetChanged();
                 break;
             case GET_SPECIES_LIST:
-                speciesList.clear();
-                for (String country : TestData.countryList1) {
+                for (String country : TestData.beanList1) {
                     Species species = new Species();
                     species.setSpecies(country);
                     species.setOneSpecies(country);
 
                     speciesList.add(species);
                 }
-                infoAdapter.notifyDataSetChanged();
                 break;
             default:
                 break;
         }
+        dataList = sortByInfo(dataList);
+        getLetters(dataList);
+        speciesList = sortBySpecies(speciesList);
+        getLetters(getStrings(speciesList));
+        infoAdapter.notifyDataSetChanged();
+    }
 
-        for (int i = 0; i < dataList.size(); i++) {
+    /**
+     * 将传出的 list 中需要排序的数据传入到另一个 list 中
+     *
+     * @param list
+     * @return
+     */
+    private ArrayList<Species> sortBySpecies(ArrayList<Species> list) {
+        ArrayList<String> infos = getStrings(list);
+        ArrayList<Species> specieses = new ArrayList<>();
 
-            if (!letters.containsKey(dataList.get(0).substring(0, 1))) {
-                letters.put(dataList.get(0).substring(0, 1), i);
+        infos = sortByInfo(infos);
+
+        for (int i = 0; i < infos.size(); i++) {
+            list.get(i).setSpecies(infos.get(i));
+        }
+
+        return list;
+    }
+
+    @NonNull
+    private ArrayList<String> getStrings(ArrayList<Species> list) {
+        ArrayList<String> infos = new ArrayList<>();
+
+        for (int i = 0; i < list.size(); i++) {
+            infos.add((list.get(i)).getSpecies());
+        }
+        return infos;
+    }
+
+    private ArrayList<String> sortByInfo(ArrayList<String> infos) {
+
+        for (int i = infos.size() - 1; i > 0; --i) {
+            for (int j = 0; j < i; ++j) {
+
+                char a = Utils.getFirstPinYinLetter(infos.get(j + 1)).charAt(0);
+                char b = Utils.getFirstPinYinLetter(infos.get(j)).charAt(0);
+                if (a < b) {
+                    String s = infos.get(j);
+                    infos.set(j, infos.get(j + 1));
+                    infos.set(j + 1, s);
+                } else if (a == b) {
+                    char c = Utils.getFirstPinYinLetter(infos.get(j + 1)).charAt(1);
+                    char d = Utils.getFirstPinYinLetter(infos.get(j)).charAt(1);
+                    if (c < d) {
+                        String s = infos.get(j);
+                        infos.set(j, infos.get(j + 1));
+                        infos.set(j + 1, s);
+                    }
+                }
             }
         }
+
+        return infos;
+    }
+
+    private void getLetters(ArrayList<String> infos) {
+
+        int i = 0;
+
+        for (String s : infos) {
+            String letter = Utils.getFirstPinYinLetter(s).substring(0, 1);
+            Log.i(TAG, "getLetters: " + letter);
+            if (!letters.containsKey(letter)) {
+                letters.put(letter, i);
+            }
+            i++;
+        }
+
     }
 
     @Override
     public void starSearchPage() {
+        //TODO  类似这个的代码需要重构一遍
+
         FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
         tx.setCustomAnimations(R.anim.in_from_right, R.anim.out_to_left);
 
-        if (!isAddSearchFragment && dataList.size() > 0) {
+        if (searchFragment != null) {
+            isAddSearchFragment = !searchFragment.isRemoved();
+        }
+        if (!isAddSearchFragment) {
             searchFragment = new SearchFragment();
             Bundle bundle = new Bundle();
-            bundle.putStringArrayList("infoList", dataList);
+            if (dataList.size() > 0) {
+                bundle.putStringArrayList("infoList", dataList);
+            } else if (speciesList.size() > 0) {
+                bundle.putStringArrayList("infoList", getStrings(speciesList));
+            }
             searchFragment.setArguments(bundle);
             searchFragment.addOnSearchCallBack(new SearchFragment.OnSearchCallBack() {
                 @Override
@@ -234,6 +308,9 @@ public class SelectInfoActivity extends AppCompatActivity implements OnQuickSide
 
     @Override
     public void onBackPressed() {
+        if (searchFragment != null) {
+            isAddSearchFragment = !searchFragment.isRemoved();
+        }
         if (isAddSearchFragment) {
             searchFragment.remove();
             isAddSearchFragment = false;
