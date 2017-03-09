@@ -199,8 +199,8 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
             Temprature temprature = (Temprature) bundle.getSerializable("temprature");
             beanTemp.setText(String.format("%1$.2f", temprature.getBeanTemp()));
             // 随时保存开始烘焙的温度
-            beginTemp = temprature.getBeanTemp();
-            envTemp = temprature.getEnvTemp();
+            beginTemp = (temprature.getBeanTemp() * 100) / 100.f;
+            envTemp = (temprature.getEnvTemp() * 100) / 100.f;
             inwindTemp.setText(String.format("%1$.2f", temprature.getInwindTemp()));
             outwindTemp.setText(String.format("%1$.2f", temprature.getOutwindTemp()));
             accBeanTemp.setText(String.format("%1$.2f", temprature.getAccBeanTemp()));

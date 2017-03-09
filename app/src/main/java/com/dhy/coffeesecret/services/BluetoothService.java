@@ -466,7 +466,6 @@ public class BluetoothService extends Service {
                 }
 
                 dataReader.setHandling(true);
-                Log.e(TAG, Thread.currentThread().toString() + "->当前:" + readable);
                 try {
                     Thread.currentThread().sleep(sleepTime);
                 } catch (InterruptedException e) {

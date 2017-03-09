@@ -213,17 +213,16 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
             curStatus = AFTER160;
         }
 
-        if (curEvent != null) {
+/*        if (curEvent != null) {
             curBeanEntry.setEvent(curEvent);
             eventRecords.add(curBeanEntry);
-            // 存储事件详情时，最后一个冒号后面是该事件的类别
-            set.addEvent(lastTime + "", curEvent.getDescription() + ":" + curStatus);
+
             if (!isEnd && dialog != null) {
                 isEnd = true;
                 endTemp = beanTemp;
             }
             curEvent = null;
-        }
+        }*/
 
         set.addBeanTemp(beanTemp);
         set.addInwindTemp(inwindTemp);
@@ -565,7 +564,8 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
     private void updateCurBeanEntryEvent(final Event event) {
         curBeanEntry.setEvent(event);
         eventRecords.add(curBeanEntry);
-        curEvent = event;
+        // 存储事件详情时，最后一个冒号后面是该事件的类别
+        set.addEvent(lastTime + "", event.getDescription() + ":" + event.getCurStatus());
         chart.invalidate();
     }
 

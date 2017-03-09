@@ -108,7 +108,7 @@ public class BakeReportProxy {
     public List<Entry> convertFloatData2Entry(List<Float> temp, List<Float> timex) {
         List<Entry> entries = new ArrayList<>();
         for (int i = 0; i < timex.size(); ++i) {
-            Entry entry = new Entry(timex.get(i), temp.get(0));
+            Entry entry = new Entry(timex.get(i), temp.get(i));
             entries.add(entry);
         }
         return entries;

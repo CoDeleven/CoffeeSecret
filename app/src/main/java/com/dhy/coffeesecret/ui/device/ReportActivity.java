@@ -24,6 +24,7 @@ import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.pojo.BakeReportBeanFactory;
 import com.dhy.coffeesecret.pojo.BakeReportProxy;
 import com.dhy.coffeesecret.pojo.BeanInfoSimple;
+import com.dhy.coffeesecret.utils.SettingTool;
 import com.dhy.coffeesecret.utils.UnitConvert;
 import com.dhy.coffeesecret.utils.Utils;
 import com.dhy.coffeesecret.views.BaseChart4Coffee;
@@ -73,6 +74,9 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
     TextView score;
     @Bind(R.id.id_report_home)
     TextView home;
+    @Bind(R.id.id_report_total_weight)
+    TextView totalWeight;
+    private String unit;
     private TableLayout tableLayout;
     private List<BeanInfoSimple> beanInfos = new ArrayList<>();
     private LinearLayout beanContainer;
@@ -95,6 +99,7 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
 
     private void initParam() {
         proxy = ((MyApplication)getApplication()).getBakeReport();
+        unit = Utils.convertUnitChineses2Eng(SettingTool.getConfig(this).getWeightUnit());
         mChart.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -131,8 +136,9 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
         date.setText("烘焙日期：" + proxy.getBakeDate());
         device.setText("设备：" + proxy.getDevice());
 
-
         score.setText(proxy.getBakeDegree());
+
+        totalWeight.setText("熟豆重量：" + proxy.getBakeReport().getCookedBeanWeight() + unit);
 
         tableLayout = (TableLayout) findViewById(R.id.id_report_table);
         beanContainer = (LinearLayout) findViewById(R.id.id_bean_container);
@@ -321,6 +327,10 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
             beanArea.setText("地区：" + beanInfo.getArea());
             beanArea.setLayoutParams(temp);
 
+            TextView beanRawWeight = new TextView(this);
+            beanRawWeight.setText("生豆重量：" + beanInfo.getUsage() + unit);
+            beanRawWeight.setLayoutParams(temp);
+
             content[0].addView(beanName);
             content[0].addView(beanSpecies);
             content[0].addView(beanCountry);
@@ -331,7 +341,7 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
             content[1].addView(beanHandler);
             content[1].addView(beanWaterContent);
             content[1].addView(beanManor);
-
+            content[1].addView(beanRawWeight);
 
             // 设置外linearlayout
             LayoutParams lp = new LayoutParams(MATCH_PARENT, MATCH_PARENT);

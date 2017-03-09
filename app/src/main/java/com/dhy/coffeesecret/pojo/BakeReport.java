@@ -21,21 +21,6 @@ public class BakeReport implements Serializable {
     // 烘焙度
     private String roastDegree;
 
-/*    // 豆温
-    private List<EntryTemp> beanTemps = new ArrayList<>();
-    // 入风温
-    private List<Float> inwindTemps = new ArrayList<>();
-    // 出风温
-    private List<Float> outwindTemps = new ArrayList<>();
-    // 豆温升
-    private List<Float> accBeanTemps = new ArrayList<>();
-    // 入风温升
-    private List<Float> accInwindTemps = new ArrayList<>();
-    // 出风温升
-    private List<Float> accOutwindTemps = new ArrayList<>();
-    // 时间
-    private List<Float> timex = new ArrayList<>();*/
-
     private TempratureSet tempratureSet;
 
     // 发展时间

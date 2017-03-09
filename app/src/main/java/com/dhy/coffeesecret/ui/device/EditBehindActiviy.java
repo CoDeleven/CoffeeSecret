@@ -23,7 +23,9 @@ import com.dhy.coffeesecret.pojo.BakeReportBeanFactory;
 import com.dhy.coffeesecret.pojo.BakeReportProxy;
 import com.dhy.coffeesecret.ui.device.adapter.EditEventListAdapter;
 import com.dhy.coffeesecret.utils.HttpUtils;
+import com.dhy.coffeesecret.utils.SettingTool;
 import com.dhy.coffeesecret.utils.URLs;
+import com.dhy.coffeesecret.utils.Utils;
 import com.dhy.coffeesecret.views.CircleSeekBar;
 import com.dhy.coffeesecret.views.DividerDecoration;
 import com.dhy.coffeesecret.views.WheelView;
@@ -52,7 +54,7 @@ public class EditBehindActiviy extends AppCompatActivity implements CircleSeekBa
     private float mCurValue;
     private List<String> content = new ArrayList<>();
     private List<Entry> entries = new ArrayList<>();
-
+    private String unit;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +63,8 @@ public class EditBehindActiviy extends AppCompatActivity implements CircleSeekBa
         ButterKnife.bind(this);
         mSeekBar.setOnSeekBarChangeListener(this);
         init();
+        unit = Utils.convertUnitChineses2Eng(SettingTool.getConfig(this).getWeightUnit());
+        cookedWeight.setHint("请填写熟豆重量，此处单位为" + unit);
         LinearLayoutManager manager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(manager);
         recyclerView.setAdapter(new EditEventListAdapter(this, entries));
@@ -79,7 +83,7 @@ public class EditBehindActiviy extends AppCompatActivity implements CircleSeekBa
 
     @OnClick(R.id.id_bake_behind_save)
     protected void onSave() {
-        BakeReportProxy proxy = BakeReportBeanFactory.getInstance();
+        BakeReportProxy proxy = ((MyApplication)getApplication()).getBakeReport();
         proxy.setCookedBeanWeight(Float.parseFloat(cookedWeight.getText().toString()));
         proxy.setBakeDegree(mCurValue);
         Intent other = new Intent(this, ReportActivity.class);
