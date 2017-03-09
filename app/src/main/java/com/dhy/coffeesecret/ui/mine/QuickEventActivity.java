@@ -39,7 +39,6 @@ public class QuickEventActivity extends AppCompatActivity {
     @Bind(R.id.activity_quick_event)
     RelativeLayout activityQuickEvent;
 
-
     private Context mContext;
     private QuickEventAdapter quickEventAdapter;
     private UniversalConfiguration mConfig;
