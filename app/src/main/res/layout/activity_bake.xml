@@ -226,7 +226,7 @@
                     android:id="@+id/id_baking_chart"
                     android:layout_width="344.25dp"
                     android:layout_height="match_parent"
-                    android:layout_below="@id/id_baking_lineOperator"></com.dhy.coffeesecret.views.BaseChart4Coffee>
+                    android:layout_below="@id/id_baking_lineOperator" />
             </RelativeLayout>
         </RelativeLayout>
     </RelativeLayout>

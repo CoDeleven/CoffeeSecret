@@ -16,7 +16,7 @@
         android:layout_height="1dp"
         android:layout_marginLeft="5.625dp"
         android:layout_marginRight="5.625dp"
-        android:background="#F1F2F0"></View>
+        android:background="#F1F2F0" />
 
     <TextView
         android:id="@+id/id_baking_quick2"
@@ -28,7 +28,7 @@
         android:layout_height="1dp"
         android:layout_marginLeft="5.625dp"
         android:layout_marginRight="5.625dp"
-        android:background="#F1F2F0"></View>
+        android:background="#F1F2F0" />
 
     <TextView
         android:id="@+id/id_baking_quick3"
@@ -40,7 +40,7 @@
         android:layout_height="1dp"
         android:layout_marginLeft="5.625dp"
         android:layout_marginRight="5.625dp"
-        android:background="#F1F2F0"></View>
+        android:background="#F1F2F0" />
 
     <TextView
         android:id="@+id/id_baking_quick4"
@@ -53,7 +53,7 @@
         android:layout_height="1dp"
         android:layout_marginLeft="5.625dp"
         android:layout_marginRight="5.625dp"
-        android:background="#F1F2F0"></View>
+        android:background="#F1F2F0" />
 
     <TextView
         style="@style/bakingOtherSelect"

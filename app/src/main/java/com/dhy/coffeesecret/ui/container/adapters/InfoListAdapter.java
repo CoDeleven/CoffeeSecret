@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.Species;
+import com.dhy.coffeesecret.utils.Utils;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
 
 import java.util.ArrayList;
@@ -46,7 +47,8 @@ public class InfoListAdapter extends RecyclerView.Adapter<InfoListAdapter.InfoLi
 
     @Override
     public long getHeaderId(int position) {
-        return speciesList == null || speciesList.size() == 0 ? infoList.get(position).charAt(0) : speciesList.get(position).getOneSpecies().charAt(0);
+        return speciesList == null || speciesList.size() == 0 ? Utils.getFirstPinYinLetter(infoList.get(position)).charAt(0) :
+                Utils.getFirstPinYinLetter(speciesList.get(position).getOneSpecies()).charAt(0);
     }
 
     @Override
@@ -58,7 +60,7 @@ public class InfoListAdapter extends RecyclerView.Adapter<InfoListAdapter.InfoLi
     public void onBindHeaderViewHolder(final InfoListViewHolder holder, int position) {
         TextView letter = (TextView) holder.itemView;
         if (speciesList == null || speciesList.size() == 0) {
-            letter.setText(String.valueOf(infoList.get(position).charAt(0)));
+            letter.setText(Utils.getFirstPinYinLetter(infoList.get(position)).substring(0,1));
         } else {
             final String headItem = speciesList.get(position).getOneSpecies();
             letter.setText(headItem);

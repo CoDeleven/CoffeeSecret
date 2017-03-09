@@ -22,6 +22,7 @@ import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.pojo.BakeReportBeanFactory;
 import com.dhy.coffeesecret.pojo.BakeReportProxy;
 import com.dhy.coffeesecret.ui.device.adapter.EditEventListAdapter;
+import com.dhy.coffeesecret.utils.CacheUtils;
 import com.dhy.coffeesecret.utils.HttpUtils;
 import com.dhy.coffeesecret.utils.SettingTool;
 import com.dhy.coffeesecret.utils.URLs;
@@ -98,6 +99,9 @@ public class EditBehindActiviy extends AppCompatActivity implements CircleSeekBa
             public void run() {
                 try {
                     HttpUtils.execute(URLs.ADD_BAKE_REPORT, proxy);
+                    // 先如此使用着,id这个问题需要得到解决
+                    ((MyApplication)getApplication()).setUrl(URLs.GET_ALL_BAKE_REPORT);
+                    ((MyApplication)getApplication()).initMapFromServer(BakeReport.class);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

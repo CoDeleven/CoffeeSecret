@@ -9,38 +9,100 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <TextView
-            style="@style/BeanInfoTextView"
-            android:text="国家" />
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
 
-        <TextView
-            style="@style/BeanInfoTextView"
-            android:text="等级" />
+            <TextView
+                style="@style/BeanInfoTextView"
+                android:text="国家:" />
+
+            <TextView
+                android:id="@+id/tv_country"
+                style="@style/BeanInfoTextView" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <TextView
+                style="@style/BeanInfoTextView"
+                android:text="等级:" />
+
+            <TextView
+                android:id="@+id/tv_level"
+                style="@style/BeanInfoTextView" />
+        </LinearLayout>
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <TextView
-            style="@style/BeanInfoTextView"
-            android:text="产地" />
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
 
-        <TextView
-            style="@style/BeanInfoTextView"
-            android:text="海拔" />
+            <TextView
+                style="@style/BeanInfoTextView"
+                android:text="产地:" />
+
+            <TextView
+                android:id="@+id/tv_area"
+                style="@style/BeanInfoTextView" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <TextView
+                style="@style/BeanInfoTextView"
+                android:text="海拔:" />
+
+            <TextView
+                android:id="@+id/tv_altitude"
+                style="@style/BeanInfoTextView" />
+        </LinearLayout>
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <TextView
-            style="@style/BeanInfoTextView"
-            android:text="庄园" />
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
 
-        <TextView
-            style="@style/BeanInfoTextView"
-            android:text="处理方式" />
+            <TextView
+                style="@style/BeanInfoTextView"
+                android:text="庄园:" />
+
+            <TextView
+                android:id="@+id/tv_manor"
+                style="@style/BeanInfoTextView" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <TextView
+                style="@style/BeanInfoTextView"
+                android:text="处理方式:" />
+
+            <TextView
+                android:id="@+id/tv_process"
+                style="@style/BeanInfoTextView" />
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

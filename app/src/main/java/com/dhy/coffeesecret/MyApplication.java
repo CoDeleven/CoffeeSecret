@@ -130,7 +130,7 @@ public class MyApplication extends Application {
         }
     }
 
-    private void initMapFromServer(final Class clazz) {
+    public void initMapFromServer(final Class clazz) {
 
         //启动一个新线程将数据存储到本地
         Thread thread = new Thread(new Runnable() {
@@ -192,5 +192,9 @@ public class MyApplication extends Application {
 
     public void setBakeReport(BakeReportProxy bakeReport) {
         this.BAKE_REPORT = bakeReport;
+    }
+
+    public static void setUrl(String temp){
+        url = temp;
     }
 }

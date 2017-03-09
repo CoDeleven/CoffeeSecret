@@ -80,7 +80,9 @@ public class ContainerFragment extends Fragment {
             public void starSearchPage() {
                 FragmentTransaction tx = ((MainActivity)context).getSupportFragmentManager().beginTransaction();
                 tx.setCustomAnimations(R.anim.in_from_right, R.anim.out_to_left);
-
+                if (searchFragment != null) {
+                    isAddSearchFragment = !searchFragment.isRemoved();
+                }
                 if (!isAddSearchFragment) {
                     searchFragment = new SearchFragment();
                     Bundle bundle = new Bundle();
@@ -147,7 +149,10 @@ public class ContainerFragment extends Fragment {
     }
 
     public void onBackPressed() {
-        if (searchFragment != null && !searchFragment.isHidden()) {
+        if (searchFragment != null) {
+            isAddSearchFragment = !searchFragment.isRemoved();
+        }
+        if (isAddSearchFragment) {
             searchFragment.remove();
             isAddSearchFragment = false;
         }

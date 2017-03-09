@@ -93,7 +93,7 @@ public class BeanInfoActivity extends AppCompatActivity {
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finish();
+                BeanInfoActivity.this.onBackPressed();
             }
         });
         btnEdit.setOnClickListener(new View.OnClickListener() {
@@ -119,6 +119,7 @@ public class BeanInfoActivity extends AppCompatActivity {
             return;
         }
 
+        beanName.setText(beanInfo.getCountry() + beanInfo.getSpecies());
         infoArea.setText(beanInfo.getArea());
         infoManor.setText(beanInfo.getManor());
         infoAltitude.setText(beanInfo.getAltitude());

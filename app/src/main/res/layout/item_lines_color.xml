@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="52dp"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/color_package_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="17dp"
+            android:text="海洋蓝"
+            android:textSize="14.5sp" />
+
+        <RadioButton
+            android:id="@+id/btn_use"
+            android:layout_width="54.25dp"
+            android:layout_height="25.25dp"
+            android:button="@null"
+            android:checked="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="17dp"
+            android:layout_marginRight="17dp"
+            android:background="@drawable/btn_use_selector" />
+
+        <Button
+            android:id="@+id/btn_preview"
+            android:layout_width="54.25dp"
+            android:layout_height="25.25dp"
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@id/btn_use"
+            android:background="@drawable/ic_btn_preview" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="9.5dp"
+            android:layout_marginRight="9.5dp"
+            android:background="@color/color_gray_c9" />
+
+    </RelativeLayout>
+
+</LinearLayout>

@@ -188,7 +188,7 @@ public class BeanInfo implements Serializable {
 	}
 
 	public String getDrawablePath() {
-		return drawablePath;
+		return drawablePath == null ? "" : drawablePath;
 	}
 
 	public void setDrawablePath(String drawablePath) {
@@ -211,4 +211,28 @@ public class BeanInfo implements Serializable {
 		this.hasBakeReports = hasBakeReports;
 	}
 
+
+	@Override
+	public String toString() {
+		return "BeanInfo{" +
+				"id=" + id +
+				", name='" + name + '\'' +
+				", manor='" + manor + '\'' +
+				", drawablePath='" + drawablePath + '\'' +
+				", stockWeight=" + stockWeight +
+				", country='" + country + '\'' +
+				", area='" + area + '\'' +
+				", altitude='" + altitude + '\'' +
+				", species='" + species + '\'' +
+				", level='" + level + '\'' +
+				", process='" + process + '\'' +
+				", waterContent=" + waterContent +
+				", supplier='" + supplier + '\'' +
+				", price=" + price +
+				", date=" + date +
+				", continent='" + continent + '\'' +
+				", bakeReports=" + bakeReports +
+				", hasBakeReports=" + hasBakeReports +
+				'}';
+	}
 }

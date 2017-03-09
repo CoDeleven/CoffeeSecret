@@ -47,6 +47,7 @@ public class SettingTool {
         mConfig.setCheckInwindTemp(sharedPreferences.getInt("checkInwindTemp", 0));
         mConfig.setCheckOutwindTemp(sharedPreferences.getInt("checkOutwindTemp", 0));
         mConfig.setCheckEvnTemp(sharedPreferences.getInt("checkEvnTemp", 0));
+        mConfig.setColorPackageName(sharedPreferences.getString("colorPackageName", "海洋"));
         mConfig.setBeanColor(sharedPreferences.getInt("beanColor", Color.parseColor("#FF0000")));
         mConfig.setInwindColor(sharedPreferences.getInt("inwindColor", Color.parseColor("#00FF00")));
         mConfig.setOutwindColor(sharedPreferences.getInt("outwindColor", Color.parseColor("#0000FF")));
@@ -66,6 +67,7 @@ public class SettingTool {
         editor.putString("tempratureUnit", config.getTempratureUnit());
         editor.putString("referDegree", config.getReferDegree());
         editor.putString("quickEvent", config.getQuickEvents());
+        editor.putString("colorPackageName", config.getColorPackageName());
         editor.putBoolean("quickStart", config.isQuickStart());
         editor.putBoolean("doubleClick", config.isDoubleClick());
         editor.putBoolean("markByCircle", config.isQuickStart());

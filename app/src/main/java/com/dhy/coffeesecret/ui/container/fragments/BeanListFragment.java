@@ -30,9 +30,14 @@ import com.dhy.coffeesecret.pojo.BeanInfo;
 import com.dhy.coffeesecret.ui.container.BeanInfoActivity;
 import com.dhy.coffeesecret.ui.container.adapters.BeanListAdapter;
 import com.dhy.coffeesecret.ui.container.adapters.CountryListAdapter;
+import com.dhy.coffeesecret.utils.HttpUtils;
 import com.dhy.coffeesecret.utils.T;
 import com.dhy.coffeesecret.utils.TestData;
+import com.dhy.coffeesecret.utils.URLs;
+import com.dhy.coffeesecret.utils.Utils;
 import com.dhy.coffeesecret.views.DividerDecoration;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
 import java.io.IOException;
@@ -41,13 +46,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.FormBody;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
@@ -69,6 +67,7 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
     private static final int TOAST_3 = 777;
     private HashMap<String, Integer> letters = new HashMap<>();
     private ArrayList<BeanInfo> coffeeBeanInfos;
+    private ArrayList<BeanInfo> coffeeBeanInfoTemp;
     private View beanListView;
     private LinearLayout btnCountryChoose = null;
     private LinearLayout btnScreen = null;
@@ -79,6 +78,7 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
     private QuickSideBarTipsView quickSideBarTipsView = null;
     private PopupWindow mSortPopupWindow;
     private PopupWindow mScreenPopupWindow;
+    private BeanListAdapter beanListAdapter;
     private Context context;
     private String title = "";
     private boolean isPopupWindowShowing = false;
@@ -106,12 +106,13 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
         quickSideBarTipsView = (QuickSideBarTipsView) beanListView.findViewById(R.id.quickSideBarTipsView);
 
         coffeeBeanInfos = new ArrayList<>();
+        coffeeBeanInfoTemp = new ArrayList<>();
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(context);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         beanListRecycler.setLayoutManager(layoutManager);
 
-        BeanListAdapter adapter = new BeanListAdapter(context, coffeeBeanInfos, new BeanListAdapter.OnItemClickListener() {
+        beanListAdapter = new BeanListAdapter(context, coffeeBeanInfos, new BeanListAdapter.OnItemClickListener() {
             @Override
             public void onItemClicked(int position) {
                 Intent intent = new Intent(context, BeanInfoActivity.class);
@@ -121,9 +122,9 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
             }
         });
 
-        beanListRecycler.setAdapter(adapter);
+        beanListRecycler.setAdapter(beanListAdapter);
 
-        StickyRecyclerHeadersDecoration headersDecoration = new StickyRecyclerHeadersDecoration(adapter);
+        StickyRecyclerHeadersDecoration headersDecoration = new StickyRecyclerHeadersDecoration(beanListAdapter);
         beanListRecycler.addItemDecoration(headersDecoration);
         beanListRecycler.addItemDecoration(new DividerDecoration(context));
 
@@ -206,67 +207,104 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
         Log.i(TAG, "------------------开始加载豆种信息------------------");
         mHandler.sendEmptyMessage(LOADING);
 
-        FormBody body = new FormBody.Builder()
-                .add("username", "Simo")
-                .add("action", "getBeanList")
-                .build();
-        Request request = new Request.Builder()
-//                .url(Global.DOMAIN + Global.ENTRANCE_1)
-                .url("http://httpbin.org/post")
-                .post(body)
-                .build();
-        new OkHttpClient().newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                mHandler.sendEmptyMessage(TOAST_1);
-            }
+//        FormBody body = new FormBody.Builder()
+//                .add("username", "Simo")
+//                .add("action", "getBeanList")
+//                .build();
+//        Request request = new Request.Builder()
+////                .url(Global.DOMAIN + Global.ENTRANCE_1)
+//                .url("http://httpbin.org/post")
+//                .post(body)
+//                .build();
+//        new OkHttpClient().newCall(request).enqueue(new Callback() {
+//            @Override
+//            public void onFailure(Call call, IOException e) {
+//                mHandler.sendEmptyMessage(TOAST_1);
+//            }
+//
+//            @Override
+//            public void onResponse(Call call, Response response) throws IOException {
+//
+//            }
+//        });
 
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
+        Gson gson = new Gson();
+        String beanInfoListJson = "";
+        try {
+            beanInfoListJson = HttpUtils.getStringFromServer(URLs.GET_ALL_BEAN_INFO);
+        } catch (IOException e) {
+            mHandler.sendEmptyMessage(888);
+        }
+//        String[] beanLists = null;
+//        beanInfoListJson = TestData.beaninfos;
 
+        ArrayList<BeanInfo> beanInfoss = gson.fromJson(beanInfoListJson, new TypeToken<ArrayList<BeanInfo>>() {
+        }.getType());
+        Log.i(TAG, "getBeanInfos: " + beanInfoss);
+        beanInfoss = sortByArea(beanInfoss);
+
+
+        getLetters(beanInfoss);
+
+        for (BeanInfo b : beanInfoss) {
+            if (b.getContinent().equals(title)) {
+                coffeeBeanInfoTemp.add(b);
+            } else if (title.equals("全部")) {
+                coffeeBeanInfoTemp.add(b);
             }
-        });
-        ArrayList<BeanInfo> coffeeBeanInfoList = new ArrayList<>();
-        String[] beanLists = null;
-        switch (title) {
-            case "全部":
-                beanLists = TestData.beanList1;
-                break;
-            case "中美":
-                beanLists = TestData.beanList2;
-                break;
-            case "南美":
-                beanLists = TestData.beanList3;
-                break;
-            case "大洋":
-                beanLists = TestData.beanList4;
-                break;
-            case "亚洲":
-                beanLists = TestData.beanList5;
-                break;
-            case "非洲":
-                beanLists = TestData.beanList6;
-                break;
-            default:
-                beanLists = TestData.beanList7;
-                break;
         }
 
-        for (int i = 0; i < beanLists.length; i++) {
-            BeanInfo beanInfo = new BeanInfo();
-            beanInfo.setName(beanLists[i]);
-
-            coffeeBeanInfoList.add(beanInfo);
-
-            if (!letters.containsKey(beanLists[i].substring(0, 1))) {
-                letters.put(beanLists[i].substring(0, 1), i);
-            }
+        if (coffeeBeanInfos != null) {
+            coffeeBeanInfos.clear();
+            coffeeBeanInfos.addAll(coffeeBeanInfoTemp);
         }
-        coffeeBeanInfos.clear();
-        coffeeBeanInfos.addAll(coffeeBeanInfoList);
 
         mHandler.sendEmptyMessage(NO_LOADING);
         Log.i(TAG, "------------------豆种信息加载结束------------------");
+    }
+
+    private ArrayList<BeanInfo> sortByArea(ArrayList<BeanInfo> beanInfoss) {
+        for (int i = beanInfoss.size() - 1; i > 0; --i)
+        {
+            for (int j = 0; j < i; ++j) {
+
+                if (beanInfoss.get(j).getArea() == null) {
+                    break;
+                }
+                char a = Utils.getFirstPinYinLetter(beanInfoss.get(j + 1).getArea()).charAt(0);
+                char b = Utils.getFirstPinYinLetter(beanInfoss.get(j).getArea()).charAt(0);
+                if (a < b) {
+                    BeanInfo beanInfo = beanInfoss.get(j);
+                    beanInfoss.set(j, beanInfoss.get(j + 1));
+                    beanInfoss.set(j + 1, beanInfo);
+                } else if (a == b) {
+                    char c = Utils.getFirstPinYinLetter(beanInfoss.get(j + 1).getArea()).charAt(1);
+                    char d = Utils.getFirstPinYinLetter(beanInfoss.get(j).getArea()).charAt(1);
+                    if (c < d) {
+                        BeanInfo beanInfo = beanInfoss.get(j);
+                        beanInfoss.set(j, beanInfoss.get(j + 1));
+                        beanInfoss.set(j + 1, beanInfo);
+                    }
+                }
+            }
+        }
+
+        return beanInfoss;
+    }
+
+    private void getLetters(ArrayList<BeanInfo> beanInfoss) {
+
+        int i = 0;
+
+        for (BeanInfo b : beanInfoss) {
+            String letter = Utils.getFirstPinYinLetter(b.getArea()).substring(0,1);
+
+            if (!letters.containsKey(letter)) {
+                letters.put(letter, i);
+            }
+            i++;
+        }
+
     }
 
     private void setCountryList(View contentView) {
@@ -302,7 +340,20 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
         countryList.setAdapter(new CountryListAdapter(context, countries, new CountryListAdapter.OnCountryClickListener() {
             @Override
             public void onCountryClicked(int position) {
-                countryName.setText(countries.get(position));
+                String cName = countries.get(position);
+                countryName.setText(cName);
+                if (cName.equals("全部")) {
+                    coffeeBeanInfos.clear();
+                    coffeeBeanInfos.addAll(coffeeBeanInfoTemp);
+                } else {
+                    coffeeBeanInfos.clear();
+                    for (BeanInfo beanInfo : coffeeBeanInfoTemp) {
+                        if (beanInfo.getCountry().equals(cName)) {
+                            coffeeBeanInfos.add(beanInfo);
+                        }
+                    }
+                }
+                beanListAdapter.notifyDataSetChanged();
                 mSortPopupWindow.dismiss();
             }
         }));
@@ -355,20 +406,21 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
             final BeanListFragment activity = mActivity.get();
             switch (msg.what) {
                 case GET_BEAN_INFOS:
-                    try {
-                        Thread.sleep(2000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    activity.getBeanInfos();
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            activity.getBeanInfos();
+
+                        }
+                    }).start();
                     break;
                 case LOADING:
-                    if (!refreshBeanList.isRefreshing()) {
+                    if (refreshBeanList != null && !refreshBeanList.isRefreshing()) {
                         activity.refreshBeanList.setRefreshing(true);
                     }
                     break;
                 case NO_LOADING:
-                    if (refreshBeanList.isRefreshing()) {
+                    if (refreshBeanList != null && refreshBeanList.isRefreshing()) {
                         refreshBeanList.setRefreshing(false);
                     }
                     break;
@@ -377,16 +429,16 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
                     initScreenPopupWindow();
                     break;
                 case TOAST_1:
-                    T.showShort(context, "refresh start");
+                    T.showShort(activity.getActivity(), "refresh start");
                     break;
                 case TOAST_2:
-                    T.showShort(context, "BeanInfo start load");
+                    T.showShort(activity.getActivity(), "BeanInfo start load");
                     break;
                 case TOAST_3:
-                    T.showShort(context, "refresh finish");
+                    T.showShort(activity.getActivity(), "refresh finish");
                     break;
                 default:
-                    T.showShort(context, "you send a wrong message");
+                    T.showShort(activity.getActivity(), "you send a wrong message");
                     break;
             }
         }

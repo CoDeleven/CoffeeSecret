@@ -5,11 +5,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BeanInfo;
+import com.dhy.coffeesecret.utils.SettingTool;
+import com.dhy.coffeesecret.utils.Utils;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
 
 import java.util.List;
@@ -39,7 +42,7 @@ public class BeanListAdapter extends RecyclerView.Adapter<BeanListAdapter.BeanLi
 
     @Override
     public long getHeaderId(int position) {
-        return coffeeBeanInfoList.get(position).getName().charAt(0);
+        return Utils.getFirstPinYinLetter(coffeeBeanInfoList.get(position).getArea()).charAt(0);
     }
 
     @Override
@@ -50,7 +53,7 @@ public class BeanListAdapter extends RecyclerView.Adapter<BeanListAdapter.BeanLi
     @Override
     public void onBindHeaderViewHolder(BeanListViewHolder holder, int position) {
         TextView letter = (TextView) holder.itemView;
-        letter.setText(String.valueOf(coffeeBeanInfoList.get(position).getName().charAt(0)));
+        letter.setText(Utils.getFirstPinYinLetter(coffeeBeanInfoList.get(position).getArea()).substring(0, 1));
     }
 
     @Override
@@ -60,14 +63,26 @@ public class BeanListAdapter extends RecyclerView.Adapter<BeanListAdapter.BeanLi
 
 
     @Override
-    public void onBindViewHolder(BeanListViewHolder holder, final int position) {
-        holder.beanName.setText(coffeeBeanInfoList.get(position).getName());
+    public void onBindViewHolder(final BeanListViewHolder holder, int position) {
+
+        BeanInfo beaninfo = coffeeBeanInfoList.get(position);
+        if (beaninfo.getDrawablePath().equals("")) {
+            beaninfo.setDrawablePath("2130837661");
+        }
+        if (!beaninfo.getDrawablePath().trim().equals("")) {
+            holder.beanIcon.setImageResource(Integer.parseInt(beaninfo.getDrawablePath()));
+        }
+        holder.beanArea.setText(beaninfo.getArea());
+        holder.beanManor.setText(beaninfo.getManor());
+        holder.beanWeight.setText(beaninfo.getStockWeight() + SettingTool.getConfig(context).getWeightUnit());
         holder.itemBeanLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onItemClickListener.onItemClicked(position);
+                onItemClickListener.onItemClicked(holder.getAdapterPosition());
             }
         });
+
+
     }
 
     @Override
@@ -81,12 +96,19 @@ public class BeanListAdapter extends RecyclerView.Adapter<BeanListAdapter.BeanLi
 
     class BeanListViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView beanName = null;
+        private ImageView beanIcon = null;
+        private TextView beanArea = null;
+        private TextView beanManor = null;
+        private TextView beanWeight = null;
         private LinearLayout itemBeanLayout = null;
 
         BeanListViewHolder(View itemView) {
             super(itemView);
-            beanName = (TextView) itemView.findViewById(R.id.list_bean_produceArea);
+
+            beanIcon = (ImageView) itemView.findViewById(R.id.list_bean_icon);
+            beanArea = (TextView) itemView.findViewById(R.id.list_bean_produceArea);
+            beanManor = (TextView) itemView.findViewById(R.id.list_bean_manor);
+            beanWeight = (TextView) itemView.findViewById(R.id.bean_weight);
             itemBeanLayout = (LinearLayout) itemView.findViewById(R.id.item_bean_layout);
         }
     }

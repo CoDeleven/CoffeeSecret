@@ -16,7 +16,7 @@
     <string name="level">等级</string>
     <string name="water_content">含水量</string>
     <string name="handler">处理方式</string>
-    <string name="supplier">厂家</string>
+    <string name="supplier">供应商</string>
     <string name="price">价格</string>
     <string name="weight">库存量</string>
     <string name="buy_date">购买日期</string>
@@ -27,10 +27,10 @@
     <string name="bakeDate">烘焙日期:%1$#12s</string>
     <string name="cookedWeight">熟豆重量:%1$#12s</string>
     <string name="rawWeight">生豆重量:%1$#12s</string>
-    <string name="devTime">发展时间:%1$#12s</string>
-    <string name="endTemp">结束温度:%1$#12s</string>
-    <string name="devRate">发展率:%1$#12s</string>
-    <string name="startTemp">入豆温度:%1$#12s</string>
+    <string name="devTime">发展时间:</string>
+    <string name="endTemp">结束温度:</string>
+    <string name="devRate">发展率:</string>
+    <string name="startTemp">入豆温度:</string>
     <string name="envTime">环境温度:%1$#12s</string>
     <string name="treatment">处理:%1$#12s</string>
     <string name="details">详情</string>
@@ -59,11 +59,11 @@
     <string name="new_cupping_title">添加杯测</string>
     <!-- 温度图表详情数据-->
     <string name="reportTime">时间</string>
-    <string name="reportInwindTemp">进风温</string>
+    <string name="reportEnvTime">环境温度</string>
     <string name="reportBeanTemp">豆温</string>
+    <string name="reportInwindTemp">进风温</string>
     <string name="reportOutwindtemp">出风温</string>
     <string name="reportUpTemp">豆子升温</string>
-    <string name="reportEnvTime">环境温</string>
     <string name="curve">烘焙曲线</string>
     <string name="save">保存</string>
 
@@ -84,5 +84,9 @@
     <string name="scorched">自焙烫伤</string>
     <string name="tipped">胚芽烫伤</string>
     <string name="faced">豆表烫伤</string>
+    <string name="max_score">评分最高</string>
+    <string name="min_score">评分最低</string>
+    <string name="early_cupping">最早的杯测</string>
+    <string name="later_cupping">最晚的杯测</string>
 
 </resources>

@@ -22,7 +22,7 @@ import android.widget.TextView;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BeanInfo;
 import com.dhy.coffeesecret.pojo.DialogBeanInfo;
-import com.dhy.coffeesecret.ui.container.LinesSelectedActivity;
+import com.dhy.coffeesecret.ui.cup.LinesSelectedActivity;
 import com.dhy.coffeesecret.ui.device.DialogBeanSelectedActivity;
 import com.dhy.coffeesecret.ui.mine.HistoryLineActivity;
 import com.dhy.coffeesecret.utils.SettingTool;
