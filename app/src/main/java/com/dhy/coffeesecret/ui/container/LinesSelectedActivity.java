@@ -107,4 +107,8 @@ public class LinesSelectedActivity extends AppCompatActivity implements View.OnC
         tx.commit();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 }

@@ -91,6 +91,7 @@ public class EditBeanActivity extends AppCompatActivity {
     private String[] handlerArray;
     private String currentLevel;
     private String currentHandler;
+    private String drawPath;
     private Context mContext;
 
     private static final String TAG = "EditBeanActivity";
@@ -128,6 +129,8 @@ public class EditBeanActivity extends AppCompatActivity {
     }
 
     private void init() {
+
+        Log.i(TAG, "init: " + R.drawable.ic_container_add_bean);
 
         BeanInfo beanInfo = (BeanInfo) getIntent().getSerializableExtra("beanInfo");
 
@@ -272,7 +275,9 @@ public class EditBeanActivity extends AppCompatActivity {
     private void saveBeanInfo() {
 
         BeanInfo beanInfo = new BeanInfo();
+        beanInfo.setDrawablePath(drawPath);
         beanInfo.setName(editName.getText().toString());
+        beanInfo.setContinent("");
         beanInfo.setCountry(editCountry.getText().toString());
         beanInfo.setArea(editArea.getText().toString());
         beanInfo.setManor(editManor.getText().toString());
@@ -290,14 +295,13 @@ public class EditBeanActivity extends AppCompatActivity {
         } else {
             beanInfo.setProcess(currentHandler);
         }
+//        Log.i(TAG, "saveBeanInfo: " + beanInfo.toString());
         updateBeanInfo(beanInfo);
-        Log.i(TAG, "saveBeanInfo: " + beanInfo.toString());
     }
 
     private void updateBeanInfo(final BeanInfo beanInfo) {
-        Gson gson = new Gson();
 
-        HttpUtils.enqueue(URLs.UPDATE_BEAN_INFO, gson.toJson(beanInfo), new Callback() {
+        HttpUtils.enqueue(URLs.UPDATE_BEAN_INFO, beanInfo, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 mHandler.sendEmptyMessage(TOAST_2);
@@ -403,14 +407,15 @@ public class EditBeanActivity extends AppCompatActivity {
                     break;
                 case BEAN_ICON:
                     if (species.toLowerCase().contains("a")) {
-                        activity.editIcon.setImageResource(R.drawable.ic_container_aa);
+                        drawPath = R.drawable.ic_container_aa + "";
                     } else if (species.toLowerCase().contains("c")) {
-                        activity.editIcon.setImageResource(R.drawable.ic_container_ac);
+                        drawPath = R.drawable.ic_container_ac + "";
                     } else if (species.toLowerCase().contains("e")) {
-                        activity.editIcon.setImageResource(R.drawable.ic_container_ae);
+                        drawPath = R.drawable.ic_container_ae + "";
                     } else {
-                        activity.editIcon.setImageResource(R.drawable.ic_container_al);
+                        drawPath = R.drawable.ic_container_al + "";
                     }
+                    activity.editIcon.setImageResource(Integer.parseInt(drawPath));
                     break;
                 case TOAST_1:
                     T.showShort(mContext, "保存成功");

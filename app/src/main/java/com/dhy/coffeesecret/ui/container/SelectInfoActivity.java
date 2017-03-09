@@ -247,7 +247,6 @@ public class SelectInfoActivity extends AppCompatActivity implements OnQuickSide
 
         for (String s : infos) {
             String letter = Utils.getFirstPinYinLetter(s).substring(0, 1);
-            Log.i(TAG, "getLetters: " + letter);
             if (!letters.containsKey(letter)) {
                 letters.put(letter, i);
             }

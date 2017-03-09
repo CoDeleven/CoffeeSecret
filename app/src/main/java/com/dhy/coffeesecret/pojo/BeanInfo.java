@@ -41,7 +41,7 @@ public class BeanInfo implements Serializable {
 	private String continent;
 
 	// 不需要持久化
-//	private List<BakeReport> bakeReports;
+	private List<BakeReport> bakeReports;
 
 	// 是否有烘焙报告
 	private boolean hasBakeReports;

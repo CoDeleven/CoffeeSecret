@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -64,9 +65,14 @@ public class BeanListAdapter extends RecyclerView.Adapter<BeanListAdapter.BeanLi
     @Override
     public void onBindViewHolder(final BeanListViewHolder holder, int position) {
 
-        holder.beanArea.setText(coffeeBeanInfoList.get(position).getArea());
-        holder.beanManor.setText(coffeeBeanInfoList.get(position).getManor());
-        holder.beanWeight.setText(coffeeBeanInfoList.get(position).getStockWeight() + SettingTool.getConfig(context).getWeightUnit());
+        BeanInfo beaninfo = coffeeBeanInfoList.get(position);
+        if (beaninfo.getDrawablePath().equals("")) {
+            beaninfo.setDrawablePath("2130837661");
+        }
+        holder.beanIcon.setImageResource(Integer.parseInt(beaninfo.getDrawablePath()));
+        holder.beanArea.setText(beaninfo.getArea());
+        holder.beanManor.setText(beaninfo.getManor());
+        holder.beanWeight.setText(beaninfo.getStockWeight() + SettingTool.getConfig(context).getWeightUnit());
         holder.itemBeanLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -88,6 +94,7 @@ public class BeanListAdapter extends RecyclerView.Adapter<BeanListAdapter.BeanLi
 
     class BeanListViewHolder extends RecyclerView.ViewHolder {
 
+        private ImageView beanIcon = null;
         private TextView beanArea = null;
         private TextView beanManor = null;
         private TextView beanWeight = null;
@@ -95,6 +102,8 @@ public class BeanListAdapter extends RecyclerView.Adapter<BeanListAdapter.BeanLi
 
         BeanListViewHolder(View itemView) {
             super(itemView);
+
+            beanIcon = (ImageView) itemView.findViewById(R.id.list_bean_icon);
             beanArea = (TextView) itemView.findViewById(R.id.list_bean_produceArea);
             beanManor = (TextView) itemView.findViewById(R.id.list_bean_manor);
             beanWeight = (TextView) itemView.findViewById(R.id.bean_weight);

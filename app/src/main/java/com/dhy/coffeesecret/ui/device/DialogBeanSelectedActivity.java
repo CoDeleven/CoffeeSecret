@@ -55,7 +55,7 @@ public class DialogBeanSelectedActivity extends AppCompatActivity {
                 if (convertView == null) {
                     convertView = LayoutInflater.from(DialogBeanSelectedActivity.this).inflate(R.layout.item_bean_list, parent, false);
                     holder = new ViewHolder();
-                    holder.imageView = (ImageView) convertView.findViewById(R.id.imageView);
+                    holder.imageView = (ImageView) convertView.findViewById(R.id.list_bean_icon);
                     holder.textView = (TextView) convertView.findViewById(R.id.bean_weight);
                     convertView.setTag(holder);
                 } else {

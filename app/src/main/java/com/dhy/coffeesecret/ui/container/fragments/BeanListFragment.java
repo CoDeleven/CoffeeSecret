@@ -423,16 +423,16 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
                     initScreenPopupWindow();
                     break;
                 case TOAST_1:
-                    T.showShort(context, "refresh start");
+                    T.showShort(activity.getActivity(), "refresh start");
                     break;
                 case TOAST_2:
-                    T.showShort(context, "BeanInfo start load");
+                    T.showShort(activity.getActivity(), "BeanInfo start load");
                     break;
                 case TOAST_3:
-                    T.showShort(context, "refresh finish");
+                    T.showShort(activity.getActivity(), "refresh finish");
                     break;
                 default:
-                    T.showShort(context, "you send a wrong message");
+                    T.showShort(activity.getActivity(), "you send a wrong message");
                     break;
             }
         }
