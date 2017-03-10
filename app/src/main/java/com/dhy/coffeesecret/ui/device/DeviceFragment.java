@@ -76,6 +76,7 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
     private boolean isStart = false;
     private float envTemp;
     private ArrayList<Float> referTempratures;
+    private static String lastAddress = null;
     private ServiceConnection conn = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
@@ -85,11 +86,11 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
             mBluetoothOperator.setDeviceChangedListener(DeviceFragment.this);
 
             // 获取上一次连接的蓝牙设备地址
-            String address = SettingTool.getConfig(getContext()).getAddress();
-            // 如果不为空，则尝试直接连接该蓝牙
-            if (!"".equals(address)) {
-                mBluetoothOperator.connect(address);
-            }
+            lastAddress = SettingTool.getConfig(getContext()).getAddress();
+            /*// 如果不为空，则尝试直接连接该蓝牙
+            if (!"".equals(lastAddress)) {
+                mBluetoothOperator.connect(lastAddress);
+            }*/
         }
 
         @Override
@@ -387,7 +388,9 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
 
     @Override
     public void notifyNewDevice(BluetoothDevice device, int rssi) {
-
+        if(lastAddress.equals(device.getAddress())){
+            mBluetoothOperator.connect(device);
+        }
     }
 
     @Override

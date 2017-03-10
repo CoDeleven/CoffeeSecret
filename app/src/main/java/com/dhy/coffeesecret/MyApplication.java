@@ -3,6 +3,7 @@ package com.dhy.coffeesecret;
 import android.app.Application;
 import android.util.Log;
 
+import com.bugtags.library.Bugtags;
 import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.pojo.BakeReportProxy;
 import com.dhy.coffeesecret.pojo.BeanInfo;
@@ -35,6 +36,13 @@ public class MyApplication extends Application {
 
     public MyApplication() {
         super();
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        //在这里初始化
+        Bugtags.start("e71c5cd04eea2bf6fd7e179915935981", this, Bugtags.BTGInvocationEventBubble);
     }
 
     public <T> T getObjectById(String id, Class<T> clazz) {

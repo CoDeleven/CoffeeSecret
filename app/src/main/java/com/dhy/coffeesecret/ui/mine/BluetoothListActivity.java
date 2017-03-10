@@ -46,18 +46,20 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
     private Handler progressViewHandler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
-            switch (msg.what) {
-                case DEVICE_CONNECTING:
-                    progressCircle.setVisibility(View.VISIBLE);
-                    tick.setVisibility(View.GONE);
-                    break;
-                case DEVICE_CONNECT_FAILED:
-                    progressCircle.setVisibility(View.GONE);
-                    tick.setVisibility(View.GONE);
-                    break;
-                case DEVICE_CONNECTED:
-                    progressCircle.setVisibility(View.GONE);
-                    tick.setVisibility(View.VISIBLE);
+            if(tick != null && progressCircle != null){
+                switch (msg.what) {
+                    case DEVICE_CONNECTING:
+                        progressCircle.setVisibility(View.VISIBLE);
+                        tick.setVisibility(View.GONE);
+                        break;
+                    case DEVICE_CONNECT_FAILED:
+                        progressCircle.setVisibility(View.GONE);
+                        tick.setVisibility(View.GONE);
+                        break;
+                    case DEVICE_CONNECTED:
+                        progressCircle.setVisibility(View.GONE);
+                        tick.setVisibility(View.VISIBLE);
+                }
             }
             return false;
         }
