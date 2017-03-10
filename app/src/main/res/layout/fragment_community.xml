@@ -1,14 +1,91 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:context="com.dhy.coffeesecret.ui.community.CommunityFragment">
+    android:orientation="vertical"
+    android:background="@android:color/white"
+    tools:context=".ui.cup.CupFragment">
 
-    <!-- TODO: Update blank fragment layout -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="豆圈"
+            android:textColor="@color/white"
+            android:textSize="@dimen/actionbar_title_font_size" />
+
+    </RelativeLayout>
+
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="我是圈子" />
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:padding="16dp"
+        android:text="应用" />
 
-</FrameLayout>
+    <View style="@style/HorizontalLine" />
+
+    <LinearLayout
+        android:paddingTop="16dp"
+        android:paddingBottom="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:weightSum="4"
+        android:orientation="horizontal">
+        <ImageView
+            android:layout_weight="1"
+            android:id="@+id/iv_business"
+            android:src="@drawable/ic_business"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" />
+        <ImageView
+            android:layout_weight="1"
+            android:id="@+id/iv_com"
+            android:src="@drawable/ic_comm"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" />
+        <ImageView
+            android:layout_weight="1"
+            android:id="@+id/iv_live"
+            android:src="@drawable/ic_live"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:weightSum="4"
+        android:orientation="horizontal">
+        <TextView
+            android:text="商家"
+            android:gravity="center"
+            android:textSize="@dimen/font_size_primary"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:text="互动交流"
+            android:gravity="center"
+            android:textSize="@dimen/font_size_primary"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:text="直播"
+            android:gravity="center"
+            android:textSize="@dimen/font_size_primary"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+
+</LinearLayout>
