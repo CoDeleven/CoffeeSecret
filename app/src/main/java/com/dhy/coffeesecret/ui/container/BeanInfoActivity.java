@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BeanInfo;
+import com.dhy.coffeesecret.ui.mine.HistoryLineActivity;
 import com.dhy.coffeesecret.utils.T;
 import com.dhy.coffeesecret.utils.UIUtils;
 import com.dhy.coffeesecret.utils.UnitConvert;
@@ -108,7 +109,7 @@ public class BeanInfoActivity extends AppCompatActivity {
         btnCurve.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(BeanInfoActivity.this, LinesSelectedActivity.class);
+                Intent intent = new Intent(BeanInfoActivity.this, HistoryLineActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
             }

@@ -415,6 +415,7 @@ public class BluetoothService extends Service {
                 mWriter.setValue(Utils.hexStringToBytes(READ_TEMP_COMMAND));
                 do {
                     state = mBluetoothGatt.writeCharacteristic(mWriter);
+                    Log.e(TAG, "更新");
                 } while (!state);
             }
 

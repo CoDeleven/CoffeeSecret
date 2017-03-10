@@ -256,7 +256,7 @@ public class BakeDialog extends DialogFragment {
                 break;
             case R.id.id_bake_dialog_refer_collection:
                 //TODO 完成收藏参考曲线
-                intent = new Intent(getContext(), HistoryLineActivity.class);
+                intent = new Intent(getContext(), LinesSelectedActivity.class);
                 startActivityForResult(intent, GET_COLLECTION);
         }
     }
