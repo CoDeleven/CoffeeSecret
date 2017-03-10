@@ -24,8 +24,7 @@ import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.pojo.BeanInfo;
 import com.dhy.coffeesecret.pojo.DialogBeanInfo;
 import com.dhy.coffeesecret.ui.cup.LinesSelectedActivity;
-import com.dhy.coffeesecret.ui.device.DialogBeanSelectedActivity;
-import com.dhy.coffeesecret.ui.mine.HistoryLineActivity;
+import com.dhy.coffeesecret.ui.device.DialogBeanSelected;
 import com.dhy.coffeesecret.utils.SettingTool;
 
 import java.util.ArrayList;
@@ -212,7 +211,7 @@ public class BakeDialog extends DialogFragment {
                     @Override
                     public void onClick(View v) {
                         curItem = position;
-                        Intent intent = new Intent(mContext, DialogBeanSelectedActivity.class);
+                        Intent intent = new Intent(mContext, DialogBeanSelected.class);
                         startActivityForResult(intent, 7);
                     }
                 });
