@@ -8,12 +8,12 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -23,15 +23,13 @@ import com.dhy.coffeesecret.pojo.UniversalConfiguration;
 import com.dhy.coffeesecret.utils.SettingTool;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.HashSet;
 
 import biz.kasual.materialnumberpicker.MaterialNumberPicker;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class SettingsActivity extends AppCompatActivity{
+public class SettingsActivity extends AppCompatActivity {
 
     private static final String TAG = "SettingsActivity";
     @Bind(R.id.check_quick_start)
@@ -72,9 +70,16 @@ public class SettingsActivity extends AppCompatActivity{
     RelativeLayout heatingLine;
     @Bind(R.id.activity_settings)
     LinearLayout activitySettings;
+    @Bind(R.id.btn_back)
+    ImageView btnBack;
+    @Bind(R.id.title_text)
+    TextView titleText;
+    @Bind(R.id.line_color)
+    RelativeLayout lineColor;
 
     private Context mContext;
     private UniversalConfiguration config;
+
     @Override
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +93,8 @@ public class SettingsActivity extends AppCompatActivity{
     }
 
     private void init() {
+        titleText.setText("通用设置");
+
         config = SettingTool.getConfig(this);
         checkQuickStart.setChecked(config.isQuickStart());
         checkConfirmAgain.setChecked(config.isDoubleClick());
@@ -198,10 +205,10 @@ public class SettingsActivity extends AppCompatActivity{
                                     int maxLeftY = 0;
                                     switch (whichItem) {
                                         case "℃":
-                                            maxLeftY = (int)((config.getMaxLeftY() - 32) / 1.8);
+                                            maxLeftY = (int) ((config.getMaxLeftY() - 32) / 1.8);
                                             break;
                                         case "℉":
-                                            maxLeftY = (int)(config.getMaxLeftY() * 1.8 + 32);
+                                            maxLeftY = (int) (config.getMaxLeftY() * 1.8 + 32);
                                             break;
                                     }
                                     textTemperatureShaft.setText("最高" + maxLeftY
@@ -264,22 +271,22 @@ public class SettingsActivity extends AppCompatActivity{
                 int max;
                 switch (viewId) {
                     case R.id.time_shaft:
-                        max = numberTen.getValue()*10 + numberSingle.getValue();
+                        max = numberTen.getValue() * 10 + numberSingle.getValue();
                         textTimeShaft.setText("最长" + max + "分钟");
                         config.setMaxX(max);
                         break;
                     case R.id.temperature_shaft:
-                        max = numberHundred.getValue() * 100 + numberTen.getValue()*10 + numberSingle.getValue();
+                        max = numberHundred.getValue() * 100 + numberTen.getValue() * 10 + numberSingle.getValue();
                         textTemperatureShaft.setText("最高" + max + textTemperatureUnit.getText());
                         config.setMaxLeftY(max);
                         break;
                     case R.id.temperature_line:
-                        max = numberTen.getValue()*10 + numberSingle.getValue();
+                        max = numberTen.getValue() * 10 + numberSingle.getValue();
                         textTemperatureLine.setText("每秒的平均数为: " + max);
                         config.setTempratureSmooth(max);
                         break;
                     case R.id.heating_line:
-                        max = numberTen.getValue()*10 + numberSingle.getValue();
+                        max = numberTen.getValue() * 10 + numberSingle.getValue();
                         textHeatingLine.setText("每秒的平均数为: " + max);
                         config.setTempratureAccSmooth(max);
                         break;

@@ -10,6 +10,7 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -29,11 +30,14 @@ import com.dhy.coffeesecret.services.BluetoothService;
 import com.dhy.coffeesecret.ui.device.fragments.BakeDialog;
 import com.dhy.coffeesecret.ui.mine.BluetoothListActivity;
 import com.dhy.coffeesecret.utils.FragmentTool;
+import com.dhy.coffeesecret.utils.SettingTool;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -75,10 +79,17 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
     private ServiceConnection conn = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            Log.d("codelevex", "获取BluetoothService");
+            // 获取蓝牙服务
             mBluetoothOperator = (BluetoothService.BluetoothOperator) service;
             mBluetoothOperator.setDataChangedListener(DeviceFragment.this);
             mBluetoothOperator.setDeviceChangedListener(DeviceFragment.this);
+
+            // 获取上一次连接的蓝牙设备地址
+            String address = SettingTool.getConfig(getContext()).getAddress();
+            // 如果不为空，则尝试直接连接该蓝牙
+            if (!"".equals(address)) {
+                mBluetoothOperator.connect(address);
+            }
         }
 
         @Override
@@ -107,26 +118,77 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
     private Handler mShowHandler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
-            final AlertDialog.Builder dialog =
+            final AlertDialog.Builder dialogBuilder =
                     new AlertDialog.Builder(getContext());
-            dialog.setTitle("");
-            dialog.setMessage("当前尚未连接蓝牙设备，请确认");
-            dialog.setCancelable(false);
-            dialog.setPositiveButton("去设置", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    Intent intent = new Intent(getContext(), BluetoothListActivity.class);
-                    startActivity(intent);
-                    dialog.dismiss();
-                }
-            });
-            dialog.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            });
-            dialog.show();
+            final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+            switch (msg.what) {
+                case 0:
+                    dialogBuilder.setTitle("");
+                    dialogBuilder.setMessage("当前尚未连接蓝牙设备，请确认");
+                    dialogBuilder.setCancelable(false);
+                    dialogBuilder.setPositiveButton("去设置", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent intent = new Intent(getContext(), BluetoothListActivity.class);
+                            startActivity(intent);
+                            dialog.dismiss();
+                        }
+                    });
+                    dialogBuilder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    dialogBuilder.show();
+                    break;
+                case 1:
+                    dialogBuilder.setMessage("当前尚未添加豆种");
+                    dialogBuilder.setPositiveButton("去添加", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            showDialogFragment();
+                            dialog.dismiss();
+                        }
+                    });
+                    dialogBuilder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    dialogBuilder.show();
+                    break;
+                case 2:
+                    new Timer().schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            progressDialog.dismiss();
+                            dialogBuilder.setMessage("重连失败，请检查蓝牙设备");
+                            dialogBuilder.setPositiveButton("手动连接", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // TODO 去连接界面
+                                    dialog.dismiss();
+                                }
+                            });
+                            dialogBuilder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                            Looper.prepare();
+                            dialogBuilder.show();
+                        }
+                    }, 5000);
+                    mBluetoothOperator.reConnect();
+                    progressDialog.setMessage("正在尝试重连...请稍后...");
+                    progressDialog.show();
+                    break;
+                case 3:
+
+            }
             return false;
         }
     });
@@ -137,8 +199,8 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
             Temprature temprature = (Temprature) bundle.getSerializable("temprature");
             beanTemp.setText(String.format("%1$.2f", temprature.getBeanTemp()));
             // 随时保存开始烘焙的温度
-            beginTemp = temprature.getBeanTemp();
-            envTemp = temprature.getEnvTemp();
+            beginTemp = (temprature.getBeanTemp() * 100) / 100.f;
+            envTemp = (temprature.getEnvTemp() * 100) / 100.f;
             inwindTemp.setText(String.format("%1$.2f", temprature.getInwindTemp()));
             outwindTemp.setText(String.format("%1$.2f", temprature.getOutwindTemp()));
             accBeanTemp.setText(String.format("%1$.2f", temprature.getAccBeanTemp()));
@@ -158,6 +220,7 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
             Intent intent = new Intent(getContext().getApplicationContext(), BluetoothService.class);
             getContext().getApplicationContext().bindService(intent, conn, Context.BIND_AUTO_CREATE);
         }
+
     }
 
     @Override
@@ -174,20 +237,21 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
     @Override
     public void onStart() {
         super.onStart();
+        // 默认每次重启不准备
         hasPrepared = false;
-
+        // 清空上一次的beanInfo
         if (dialogBeanInfos != null) {
             dialogBeanInfos.clear();
         }
+        // 根据是否准备，更换按钮事件
         switchStatus();
+        // 如果连接
         if (mBluetoothOperator != null && mBluetoothOperator.isConnected()) {
+            // 更改已连接的视图
             mTextHandler.sendEmptyMessage(0);
-            if (!BluetoothService.READABLE) {
-                mBluetoothOperator.setDataChangedListener(DeviceFragment.this);
-                mBluetoothOperator.setDeviceChangedListener(DeviceFragment.this);
-                BluetoothService.READABLE = true;
-                mBluetoothOperator.read();
-            }
+            // 重新设置回调接口到本对象
+            mBluetoothOperator.setDataChangedListener(DeviceFragment.this);
+            mBluetoothOperator.setDeviceChangedListener(DeviceFragment.this);
         } else {
             mTextHandler.sendEmptyMessage(1);
         }
@@ -234,11 +298,12 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
             mPrepareBake.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(!mBluetoothOperator.isConnected()){
+                    if (!mBluetoothOperator.isConnected()) {
                         mShowHandler.sendEmptyMessage(0);
                         return;
                     }
-                    if(!(dialogBeanInfos.size() > 0)){
+                    if (!(dialogBeanInfos.size() > 0)) {
+                        mShowHandler.sendEmptyMessage(1);
                         return;
                     }
                     Intent intent = new Intent(getContext(), BakeActivity.class);
@@ -251,10 +316,8 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
                     if (referTempratures != null) {
                         intent.putExtra(BakeActivity.ENABLE_REFERLINE, referTempratures);
                     }
-                    mShowHandler.sendEmptyMessage(1);
                     startActivity(intent);
                     mBluetoothOperator.setDataChangedListener(null);
-                    Log.e("codelevex", "卧槽，开始烘焙");
                 }
             });
         } else {
@@ -313,11 +376,12 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
     }
 
     @Override
-    public void notifyDeviceConnectStatus(boolean isConnected) {
+    public void notifyDeviceConnectStatus(boolean isConnected, BluetoothDevice device) {
         if (isConnected) {
             mTextHandler.sendEmptyMessage(0);
         } else {
             mTextHandler.sendEmptyMessage(1);
+            mShowHandler.sendEmptyMessage(2);
         }
     }
 

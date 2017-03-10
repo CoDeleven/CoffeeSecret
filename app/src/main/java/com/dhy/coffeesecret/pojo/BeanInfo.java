@@ -188,7 +188,7 @@ public class BeanInfo implements Serializable {
 	}
 
 	public String getDrawablePath() {
-		return drawablePath;
+		return drawablePath == null ? "" : drawablePath;
 	}
 
 	public void setDrawablePath(String drawablePath) {

@@ -39,7 +39,6 @@ public class QuickEventActivity extends AppCompatActivity {
     @Bind(R.id.activity_quick_event)
     RelativeLayout activityQuickEvent;
 
-
     private Context mContext;
     private QuickEventAdapter quickEventAdapter;
     private UniversalConfiguration mConfig;
@@ -78,6 +77,8 @@ public class QuickEventActivity extends AppCompatActivity {
             public void onDeleteClicked(int position) {
                 quickEvents.remove(position);
                 quickEventAdapter.notifyDataSetChanged();
+                mConfig.setQuickEvents(new Gson().toJson(quickEvents));
+                SettingTool.saveConfig(mConfig);
             }
         });
 
