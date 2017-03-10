@@ -74,7 +74,6 @@ public class BluetoothListAdapter extends RecyclerView.Adapter<BluetoothListAdap
             @Override
             public void onClick(View v) {
                 onItemClickListener.onItemClick(device, holder.layout);
-                Log.e("codelevex", "已点击");
             }
         });
     }

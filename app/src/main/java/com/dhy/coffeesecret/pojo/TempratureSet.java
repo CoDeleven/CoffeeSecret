@@ -1,5 +1,6 @@
 package com.dhy.coffeesecret.pojo;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,7 +10,7 @@ import java.util.Map;
  * Created by CoDeleven on 17-3-8.
  */
 
-public class TempratureSet {
+public class TempratureSet implements Serializable{
     private List<Float> beanTemps = new ArrayList<>();
     private List<Float> inwindTemps = new ArrayList<>();
     private List<Float> outwindTemps = new ArrayList<>();

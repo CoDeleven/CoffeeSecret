@@ -149,6 +149,9 @@ public class MyApplication extends Application {
                 objs.putAll(maps);
 
                 Gson gson = new Gson();
+                if(cacheUtils == null){
+                    cacheUtils = CacheUtils.getCacheUtils(getApplicationContext());
+                }
                 for (String key : maps.keySet()) {
                     cacheUtils.saveObject(key, gson.toJson(maps.get(key)), clazz);
                 }

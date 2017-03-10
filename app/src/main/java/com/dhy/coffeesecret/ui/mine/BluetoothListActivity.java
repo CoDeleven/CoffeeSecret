@@ -125,23 +125,23 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
             // 获取helper实例
             mBluetoothOperator = BluetoothService.BLUETOOTH_OPERATOR;
         }
-        if (mBluetoothOperator.isEnable()) {
-            switchButton.setChecked(true);
-            mBluetoothOperator.startScanDevice();
-            if (curDevice == null) {
-                curDevice = mBluetoothOperator.getBluetoothDevice();
-                if(curDevice != null){
-                    adapter.lastConnectedAddress = curDevice.getAddress();
-                    adapter.addDevice(curDevice);
-                }
-            }
-
-        }
 
         // 设置发现新设备进行回调的对象
         mBluetoothOperator.setDeviceChangedListener(this);
         // 设置视图更改器，用于当蓝牙连接成功时，设置勾给相应的条目
         mBluetoothOperator.setViewControllerListener(this);
+
+        if (mBluetoothOperator.isEnable()) {
+            switchButton.setChecked(true);
+            mBluetoothOperator.startScanDevice();
+            curDevice = mBluetoothOperator.getBluetoothDevice();
+            if (curDevice != null) {
+                adapter.lastConnectedAddress = curDevice.getAddress();
+                adapter.addDevice(curDevice);
+            }
+
+        }
+
 
     }
 
@@ -194,10 +194,15 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
 
     @Override
     public void onItemClick(BluetoothDevice device, View view) {
+        BluetoothDevice hasConnectedDevice = mBluetoothOperator.getBluetoothDevice();
+        if(hasConnectedDevice != null && device != null && device.getAddress().equals(hasConnectedDevice.getAddress())){
+            return;
+        }
         // 如果之前存在一个设备在连接,设置上一个视图隐藏
         if (progressCircle != null && progressCircle.isShown()) {
             progressCircle.setVisibility(View.GONE);
         }
+
         // 更新progressCircle和tick两个view的引用
         progressCircle = (ProgressBar) view.findViewById(R.id.circle_progress);
         // progressCircle.setVisibility(View.VISIBLE);
@@ -217,6 +222,8 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
         adapter.clearDevices();
         mBluetoothOperator.stopScanDevice();
         progressViewHandler = null;
+        // 重置当前设备
+        curDevice = null;
     }
 
 }

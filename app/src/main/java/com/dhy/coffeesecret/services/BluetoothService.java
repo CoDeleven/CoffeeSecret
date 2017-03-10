@@ -101,11 +101,6 @@ public class BluetoothService extends Service {
             BluetoothGattDescriptor descriptor = mReader.getDescriptor(WRITE_DESCRIPTOR);
 
             descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
-            try {
-                Thread.currentThread().sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
             mBluetoothGatt.writeDescriptor(descriptor);
         }
 
@@ -415,7 +410,6 @@ public class BluetoothService extends Service {
                 mWriter.setValue(Utils.hexStringToBytes(READ_TEMP_COMMAND));
                 do {
                     state = mBluetoothGatt.writeCharacteristic(mWriter);
-                    Log.e(TAG, "更新");
                 } while (!state);
             }
 

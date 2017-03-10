@@ -275,7 +275,7 @@ public class BaseChart4Coffee extends LineChart {
      */
     public void addNewDatas(List<Entry> beanDatas, int lineIndex) {
         ((LineDataSet) lines.get(lineIndex)).setValues(beanDatas);
-
+        // TODO 这里获取的数据也均需要求平均值
         mHandler.sendEmptyMessage(0);
     }
 
