@@ -16,15 +16,21 @@ import com.andexert.expandablelayout.library.ExpandableLayoutListView;
 import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BakeReport;
+import com.dhy.coffeesecret.pojo.BakeReportProxy;
 import com.dhy.coffeesecret.pojo.BeanInfoSimple;
 import com.dhy.coffeesecret.ui.cup.LinesSelectedActivity;
-import com.dhy.coffeesecret.ui.cup.NewCuppingActivity;
-import com.dhy.coffeesecret.ui.device.BakeActivity;
 import com.dhy.coffeesecret.ui.device.ReportActivity;
+import com.dhy.coffeesecret.views.BaseChart4Coffee;
 
 import java.util.List;
 
 import static com.dhy.coffeesecret.ui.cup.NewCuppingActivity.SELECT_LINE;
+import static com.dhy.coffeesecret.views.BaseChart4Coffee.ACCBEANLINE;
+import static com.dhy.coffeesecret.views.BaseChart4Coffee.ACCINWINDLINE;
+import static com.dhy.coffeesecret.views.BaseChart4Coffee.ACCOUTWINDLINE;
+import static com.dhy.coffeesecret.views.BaseChart4Coffee.BEANLINE;
+import static com.dhy.coffeesecret.views.BaseChart4Coffee.INWINDLINE;
+import static com.dhy.coffeesecret.views.BaseChart4Coffee.OUTWINDLINE;
 
 public class BakeInfoFragment extends Fragment implements View.OnClickListener {
 
@@ -37,7 +43,7 @@ public class BakeInfoFragment extends Fragment implements View.OnClickListener {
     private TextView mEndTemp;
     private TextView mDevRate;
     private TextView mEnvTime;
-
+    private BaseChart4Coffee mChart;
     private View mView;
     private ExpandableLayoutListView mListView;
     private Button mButtonBake;
@@ -50,7 +56,7 @@ public class BakeInfoFragment extends Fragment implements View.OnClickListener {
 
     }
 
-    public static BakeInfoFragment newInstance(BakeReport report,boolean isNewCupping) {
+    public static BakeInfoFragment newInstance(BakeReport report, boolean isNewCupping) {
         BakeInfoFragment fragment = new BakeInfoFragment();
         Bundle args = new Bundle();
         args.putSerializable(TARGET, report);
@@ -76,8 +82,8 @@ public class BakeInfoFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (SELECT_LINE == requestCode ) {
-            if(RESULT_CODE_ADD == resultCode){
+        if (SELECT_LINE == requestCode) {
+            if (RESULT_CODE_ADD == resultCode) {
                 mBakeReport = (BakeReport) data.getSerializableExtra("report");
                 mOnBakeInfoLoadedListener.onLoaded(mBakeReport);
                 updateUI();
@@ -104,6 +110,9 @@ public class BakeInfoFragment extends Fragment implements View.OnClickListener {
         mEndTemp = (TextView) mView.findViewById(R.id.end_temp);
         mStartTemp = (TextView) mView.findViewById(R.id.start_temp);
         mEnvTime = (TextView) mView.findViewById(R.id.env_time);
+        mChart = (BaseChart4Coffee) mView.findViewById(R.id.chart);
+        mChart.initLine();
+
         mListView = (ExpandableLayoutListView) mView.findViewById(R.id.beanInfo);
         mAdapter = new BaseAdapter() {
             List<BeanInfoSimple> beanInfoSimples;
@@ -166,13 +175,25 @@ public class BakeInfoFragment extends Fragment implements View.OnClickListener {
         updateUI();
     }
 
-    public void updateUI(){
-        if(mBakeReport != null && mDevTime != null){
+    private void addNewDatas(BakeReportProxy proxy, int index) {
+        mChart.addNewDatas(proxy.getLineDataSetByIndex(index).getValues(), index);
+    }
+
+    public void updateUI() {
+        if (mBakeReport != null && mDevTime != null) {
             mDevTime.setText(mBakeReport.getDevelopmentTime());
             mDevRate.setText(mBakeReport.getDevelopmentRate());
             mEndTemp.setText(mBakeReport.getEndTemperature());
             mStartTemp.setText(mBakeReport.getStartTemperature());
             mEnvTime.setText(mBakeReport.getAmbientTemperature());
+
+            BakeReportProxy proxy = new BakeReportProxy(mBakeReport);
+
+            int[] temp = {BEANLINE, ACCBEANLINE, INWINDLINE, OUTWINDLINE, ACCINWINDLINE, ACCOUTWINDLINE};
+            for (int i : temp) {
+                addNewDatas(proxy, i);
+            }
+
             mAdapter.notifyDataSetChanged();
         }
     }
@@ -183,11 +204,11 @@ public class BakeInfoFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        if(isNewCupping){
+        if (isNewCupping) {
             Intent intent = new Intent(getActivity(), LinesSelectedActivity.class);
             startActivityForResult(intent, SELECT_LINE);
-        }else {
-            ((MyApplication)(getActivity().getApplication())).setBakeReport(mBakeReport);
+        } else {
+            ((MyApplication) (getActivity().getApplication())).setBakeReport(mBakeReport);
             Intent intent = new Intent(getActivity(), ReportActivity.class);
             startActivity(intent);
         }

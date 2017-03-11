@@ -13,6 +13,9 @@ public class Event implements Serializable {
     public static final int DRY = 1, FIRST_BURST = 2, SECOND_BURST = 3, END = 4, FIRE_WIND = 7, OTHER = 9;
     private String description = "";
     private int curStatus;
+    public Event(){
+
+    }
     public Event(int eventId){
         this.curStatus = eventId;
     }
@@ -30,5 +33,9 @@ public class Event implements Serializable {
 
     public int getCurStatus(){
         return curStatus;
+    }
+
+    public void setCurStatus(int curStatus){
+        this.curStatus = curStatus;
     }
 }

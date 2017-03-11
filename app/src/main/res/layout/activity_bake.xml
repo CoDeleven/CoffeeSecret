@@ -41,12 +41,27 @@
                 android:layout_below="@id/id_baking_beanTitle"
                 android:text="371℃"/>
 
-            <TextView
-                android:id="@+id/id_baking_accBeantemp"
-                style="@style/bakingAccTemp"
+            <LinearLayout
+                android:layout_centerHorizontal="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_below="@id/id_baking_beanTemp"
-                android:drawableLeft="@drawable/ic_bake_baking_up"
-                android:text="0.1℃/s"/>
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/ic_baking_accBeanImg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/ic_bake_acc_invariant_small"/>
+
+                <TextView
+                    android:id="@+id/id_baking_accBeantemp"
+                    style="@style/bakingAccTemp"
+                    android:text="0.1℃/s"/>
+
+            </LinearLayout>
         </RelativeLayout>
 
         <RelativeLayout
@@ -73,12 +88,26 @@
                 android:layout_below="@id/id_baking_inwindTitle"
                 android:text="371℃"/>
 
-            <TextView
-                android:id="@+id/id_baking_accInwindTemp"
-                style="@style/bakingAccTemp"
+            <LinearLayout
+                android:layout_centerHorizontal="true"
                 android:layout_below="@id/id_baking_inwindTemp"
-                android:drawableLeft="@drawable/ic_bake_baking_up"
-                android:text="0.1℃/s"/>
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/ic_baking_accInwindImg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/ic_bake_acc_invariant_small"/>
+
+                <TextView
+                    android:id="@+id/id_baking_accInwindTemp"
+                    style="@style/bakingAccTemp"
+                    android:text="0.1℃/s"/>
+            </LinearLayout>
         </RelativeLayout>
 
         <RelativeLayout
@@ -105,12 +134,27 @@
                 android:layout_below="@id/id_baking_outwindTitle"
                 android:text="371℃"/>
 
-            <TextView
-                android:id="@+id/id_baking_accOutwindTemp"
-                style="@style/bakingAccTemp"
+            <LinearLayout
+                android:layout_centerHorizontal="true"
                 android:layout_below="@id/id_baking_outwindTemp"
-                android:drawableLeft="@drawable/ic_bake_baking_up"
-                android:text="0.1℃/s"/>
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/ic_baking_accOutwindImg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/ic_bake_acc_invariant_small"/>
+
+                <TextView
+                    style="@style/bakingAccTemp"
+                    android:id="@+id/id_baking_accOutwindTemp"
+                    android:text="0.1℃/s"/>
+
+            </LinearLayout>
         </RelativeLayout>
     </LinearLayout>
 
@@ -188,9 +232,9 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:layout_marginTop="32.0625dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginTop="32.0625dp">
 
         <Button
             android:id="@+id/id_baking_dry"

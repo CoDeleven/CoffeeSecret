@@ -3,16 +3,19 @@ package com.dhy.coffeesecret;
 import android.app.Application;
 import android.util.Log;
 
+import com.bugtags.library.Bugtags;
 import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.pojo.BakeReportProxy;
 import com.dhy.coffeesecret.pojo.BeanInfo;
 import com.dhy.coffeesecret.pojo.CuppingInfo;
 import com.dhy.coffeesecret.utils.CacheUtils;
 import com.dhy.coffeesecret.utils.HttpParser;
+import com.dhy.coffeesecret.utils.HttpUtils;
 import com.dhy.coffeesecret.utils.URLs;
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,6 +36,13 @@ public class MyApplication extends Application {
 
     public MyApplication() {
         super();
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        //在这里初始化
+        Bugtags.start("e71c5cd04eea2bf6fd7e179915935981", this, Bugtags.BTGInvocationEventBubble);
     }
 
     public <T> T getObjectById(String id, Class<T> clazz) {
@@ -67,7 +77,8 @@ public class MyApplication extends Application {
      * @return
      */
     public Map<String, ? extends BakeReport> getBakeReports() {
-        if (beanInfos.isEmpty() || objs.isEmpty()) {
+        if (bakeReports.isEmpty() || objs.isEmpty()) {
+            url = URLs.GET_ALL_BAKE_REPORT;
             initMap(BakeReport.class);
         }
         for (String key : objs.keySet()) {
@@ -84,6 +95,10 @@ public class MyApplication extends Application {
      * @return
      */
     public Map<String, ? extends BeanInfo> getBeanInfos() {
+        if (beanInfos.isEmpty() || objs.isEmpty()) {
+            url = URLs.GET_ALL_BEAN_INFO;
+            initMap(BeanInfo.class);
+        }
         for (String key : objs.keySet()) {
             if (key.contains(CacheUtils.BEAN_INFO_PREFIX)) {
                 beanInfos.put(key, (BeanInfo) objs.get(key));
@@ -98,6 +113,10 @@ public class MyApplication extends Application {
      * @return
      */
     public Map<String, ? extends CuppingInfo> getCupInfos() {
+        if (cupInfos.isEmpty() || objs.isEmpty()) {
+            url = URLs.GET_ALL_CUPPING;
+            initMap(CuppingInfo.class);
+        }
         for (String key : objs.keySet()) {
             if (key.contains(CacheUtils.CUP_INFO_PREFEX)) {
                 cupInfos.put(key, (CuppingInfo) objs.get(key));
@@ -114,9 +133,12 @@ public class MyApplication extends Application {
             cacheUtils = CacheUtils.getCacheUtils(this);
         }
         objs.putAll(cacheUtils.getListObjectFromCache(clazz));
+        if(objs.size() <= 0){
+            initMapFromServer(clazz);
+        }
     }
 
-    private void initMapFromServer(final Class clazz) {
+    public void initMapFromServer(final Class clazz) {
 
         //启动一个新线程将数据存储到本地
         Thread thread = new Thread(new Runnable() {
@@ -128,11 +150,16 @@ public class MyApplication extends Application {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
+                if(temp == null){
+                    return;
+                }
                 Map<String, Object> maps = HttpParser.getObjects(temp, clazz);
                 objs.putAll(maps);
 
                 Gson gson = new Gson();
+                if(cacheUtils == null){
+                    cacheUtils = CacheUtils.getCacheUtils(getApplicationContext());
+                }
                 for (String key : maps.keySet()) {
                     cacheUtils.saveObject(key, gson.toJson(maps.get(key)), clazz);
                 }
@@ -176,5 +203,9 @@ public class MyApplication extends Application {
 
     public void setBakeReport(BakeReportProxy bakeReport) {
         this.BAKE_REPORT = bakeReport;
+    }
+
+    public static void setUrl(String temp){
+        url = temp;
     }
 }

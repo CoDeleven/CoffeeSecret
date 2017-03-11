@@ -56,6 +56,7 @@ public class SettingTool {
         mConfig.setAccInwindColor(sharedPreferences.getInt("accInwindColor", Color.parseColor("#00FFFF")));
         mConfig.setAccOutwindColor(sharedPreferences.getInt("accOutwindColor", Color.parseColor("#FF00FF")));
         mConfig.setQuickEvents(sharedPreferences.getString("quickEvent", TestData.quickEvents));
+        mConfig.setAddress(sharedPreferences.getString("address", ""));
     }
 
     public static void saveConfig(UniversalConfiguration config) {
@@ -93,6 +94,12 @@ public class SettingTool {
         editor.putInt("checkOutwindTemp", config.getCheckOutwindTemp());
         editor.putInt("checkEvnTemp", config.getCheckEvnTemp());
 
+        SharedPreferencesCompat.apply(editor);
+    }
+
+    public static void saveAddress(String address){
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("address", address);
         SharedPreferencesCompat.apply(editor);
     }
 

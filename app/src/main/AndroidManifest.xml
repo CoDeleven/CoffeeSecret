@@ -30,10 +30,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.container.BeanInfoActivity" />
-        <activity android:name=".ui.container.LinesSelectedActivity" />
+        <activity android:name=".ui.mine.HistoryLineActivity" />
         <activity android:name=".ui.cup.NewCuppingActivity" />
         <activity android:name=".ui.cup.LinesSelectedActivity" />
-        <activity android:name=".ui.device.DialogBeanSelectedActivity" />
+        <activity android:name=".ui.device.DialogBeanSelected"/>
         <activity android:name=".ui.mine.BluetoothListActivity" />
         <activity android:name=".ui.device.BakeActivity" />
         <activity android:name=".ui.device.ReportActivity" />
@@ -51,9 +51,8 @@
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".ui.mine.HistoryLineActivity" />
-        <activity android:name=".ui.device.TestActivity">
-        </activity>
+        <activity android:name=".ui.device.TestActivity"></activity>
+        <activity android:name=".ui.community.CommActivity"></activity>
     </application>
 
 </manifest>

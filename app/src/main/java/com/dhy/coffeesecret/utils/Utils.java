@@ -86,5 +86,22 @@ public class Utils {
         }
         return false;
     }
+    public static String getTimeWithFormat(float time){
+        int minutes = (int) (time / 60);
+        int seconds = (int) (time % 60);
+        return String.format("%1$02d", minutes) + ":" + String.format("%1$02d", seconds);
+    }
 
+    public static String convertUnitChineses2Eng(String unitZh){
+        if("克".equals(unitZh)){
+            return "g";
+        }
+        if("千克".equals(unitZh)){
+            return "kg";
+        }
+        if("磅".equals(unitZh)){
+            return "lb";
+        }
+        return "";
+    }
 }

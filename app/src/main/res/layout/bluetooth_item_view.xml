@@ -5,7 +5,7 @@
                 android:paddingRight="29.8125dp"
                 android:paddingBottom="20dp"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:layout_height="wrap_content">
 
     <!--<ImageView
         android:layout_weight="1"

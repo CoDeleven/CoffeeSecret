@@ -24,10 +24,13 @@ import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.pojo.BakeReportBeanFactory;
 import com.dhy.coffeesecret.pojo.BakeReportProxy;
 import com.dhy.coffeesecret.pojo.BeanInfoSimple;
+import com.dhy.coffeesecret.utils.SettingTool;
 import com.dhy.coffeesecret.utils.UnitConvert;
+import com.dhy.coffeesecret.utils.Utils;
 import com.dhy.coffeesecret.views.BaseChart4Coffee;
 import com.dhy.coffeesecret.views.ReportMarker;
 import com.dhy.coffeesecret.views.ScrollViewContainer;
+import com.github.mikephil.charting.data.Entry;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,6 +74,9 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
     TextView score;
     @Bind(R.id.id_report_home)
     TextView home;
+    @Bind(R.id.id_report_total_weight)
+    TextView totalWeight;
+    private String unit;
     private TableLayout tableLayout;
     private List<BeanInfoSimple> beanInfos = new ArrayList<>();
     private LinearLayout beanContainer;
@@ -93,6 +99,7 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
 
     private void initParam() {
         proxy = ((MyApplication)getApplication()).getBakeReport();
+        unit = Utils.convertUnitChineses2Eng(SettingTool.getConfig(this).getWeightUnit());
         mChart.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -112,10 +119,6 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
         mChart.setMarker(new ReportMarker(this, R.layout.report_marker));
         mChart.initLine();
 
-        /*for (ILineDataSet lineDataSet : proxy.getLineData().getDataSets()) {
-            LineDataSet lineData = (LineDataSet) lineDataSet;
-            mChart.addNewDatas(lineData.getValues(), getIndexByLabels(lineData.getLabel()));
-        }*/
         mChart.addNewDatas(proxy.getLineDataSetByIndex(BEANLINE).getValues(), BEANLINE);
         mChart.addNewDatas(proxy.getLineDataSetByIndex(INWINDLINE).getValues(), INWINDLINE);
         mChart.addNewDatas(proxy.getLineDataSetByIndex(OUTWINDLINE).getValues(), OUTWINDLINE);
@@ -133,8 +136,9 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
         date.setText("烘焙日期：" + proxy.getBakeDate());
         device.setText("设备：" + proxy.getDevice());
 
-
         score.setText(proxy.getBakeDegree());
+
+        totalWeight.setText("熟豆重量：" + proxy.getBakeReport().getCookedBeanWeight() + unit);
 
         tableLayout = (TableLayout) findViewById(R.id.id_report_table);
         beanContainer = (LinearLayout) findViewById(R.id.id_bean_container);
@@ -169,7 +173,7 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
     private PopupWindow getPopupwindow() {
         if (popupWindow == null) {
             final View view = getLayoutInflater().inflate(R.layout.bake_lines_operator, null, false);
-            popupWindow = new PopupWindow(view, UnitConvert.dp2px(getResources(), 86), UnitConvert.dp2px(getResources(), 145), true);
+            popupWindow = new PopupWindow(view, UnitConvert.dp2px(getResources(), 86), UnitConvert.dp2px(getResources(), 150), true);
             popupWindow.setAnimationStyle(R.style.PopupWindowAnimation);
             view.setOnTouchListener(new View.OnTouchListener() {
                 @Override
@@ -227,16 +231,28 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
     }
 
     private void init() {
-        for (int i = 0; i < 40; ++i) {
+        List<Entry> beanTemps = proxy.getLineDataSetByIndex(BEANLINE).getValues();
+        List<Entry> inwindTemps = proxy.getLineDataSetByIndex(INWINDLINE).getValues();
+        List<Entry> outwindTemps = proxy.getLineDataSetByIndex(OUTWINDLINE).getValues();
+        List<Entry> accBeanTemps = proxy.getLineDataSetByIndex(ACCBEANLINE).getValues();
+        List<Float> timex = proxy.getTimex();
+        for (int i = 0; i < beanTemps.size(); i += 30) {
             TableRow tableRow = new TableRow(this);
             tableRow.setPadding(10, 10, 10, 10);
             TableLayout.LayoutParams p = new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT);
             tableRow.setLayoutParams(p);
+            String[] content = new String[5];
+            content[0] = Utils.getTimeWithFormat(timex.get(i));
+            content[1] = beanTemps.get(i).getY() + "";
+            content[2] = inwindTemps.get(i).getY() + "";
+            content[3] = outwindTemps.get(i).getY() + "";
+            content[4] = accBeanTemps.get(i).getY() + "";
+
             for (int j = 0; j < 5; ++j) {
                 TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1);
                 TextView textView = new TextView(this);
                 textView.setGravity(Gravity.CENTER);
-                textView.setText("ggggg");
+                textView.setText(content[j]);
                 tableRow.addView(textView, lp);
             }
             tableRow.setGravity(Gravity.CENTER);
@@ -311,6 +327,10 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
             beanArea.setText("地区：" + beanInfo.getArea());
             beanArea.setLayoutParams(temp);
 
+            TextView beanRawWeight = new TextView(this);
+            beanRawWeight.setText("生豆重量：" + beanInfo.getUsage() + unit);
+            beanRawWeight.setLayoutParams(temp);
+
             content[0].addView(beanName);
             content[0].addView(beanSpecies);
             content[0].addView(beanCountry);
@@ -321,7 +341,7 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
             content[1].addView(beanHandler);
             content[1].addView(beanWaterContent);
             content[1].addView(beanManor);
-
+            content[1].addView(beanRawWeight);
 
             // 设置外linearlayout
             LayoutParams lp = new LayoutParams(MATCH_PARENT, MATCH_PARENT);

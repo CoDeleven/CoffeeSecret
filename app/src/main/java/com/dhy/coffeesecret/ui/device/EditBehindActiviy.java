@@ -5,8 +5,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,12 +15,14 @@ import android.widget.TextView;
 import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BakeReport;
-import com.dhy.coffeesecret.pojo.BakeReportBeanFactory;
 import com.dhy.coffeesecret.pojo.BakeReportProxy;
+import com.dhy.coffeesecret.ui.device.adapter.EditEventListAdapter;
 import com.dhy.coffeesecret.utils.HttpUtils;
+import com.dhy.coffeesecret.utils.SettingTool;
 import com.dhy.coffeesecret.utils.URLs;
+import com.dhy.coffeesecret.utils.Utils;
 import com.dhy.coffeesecret.views.CircleSeekBar;
-import com.dhy.coffeesecret.views.WheelView;
+import com.dhy.coffeesecret.views.DividerDecoration;
 import com.github.mikephil.charting.data.Entry;
 
 import java.io.IOException;
@@ -35,10 +37,8 @@ public class EditBehindActiviy extends AppCompatActivity implements CircleSeekBa
 
     @Bind(R.id.id_bake_degree)
     CircleSeekBar mSeekBar;
-    @Bind(R.id.id_bake_behind_wheelView)
-    WheelView wheelView;
-    @Bind(R.id.id_bake_behind_event)
-    EditText editText;
+    @Bind(R.id.id_edit_list)
+    RecyclerView recyclerView;
     @Bind(R.id.id_bake_behind_save)
     Button save;
     @Bind(R.id.id_bake_behind_cookedWeight)
@@ -48,6 +48,7 @@ public class EditBehindActiviy extends AppCompatActivity implements CircleSeekBa
     private float mCurValue;
     private List<String> content = new ArrayList<>();
     private List<Entry> entries = new ArrayList<>();
+    private String unit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,40 +57,17 @@ public class EditBehindActiviy extends AppCompatActivity implements CircleSeekBa
         setContentView(R.layout.activity_edit_behind_activiy);
         ButterKnife.bind(this);
         mSeekBar.setOnSeekBarChangeListener(this);
-        wheelView.setOffset(1);
         init();
-        editText.setText(entries.get(0).getEvent().getDescription());
-        wheelView.setItems(content);
-
-        editText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                int temp = wheelView.getSeletedIndex();
-                entries.get(temp).getEvent().setDescription(s.toString());
-            }
-        });
-        wheelView.setOnWheelViewListener(new WheelView.OnWheelViewListener() {
-            @Override
-            public void onSelected(final int selectedIndex, String item) {
-                String eventDescriptor = entries.get(selectedIndex - 1).getEvent().getDescription();
-                editText.setText(eventDescriptor);
-            }
-        });
-
+        unit = Utils.convertUnitChineses2Eng(SettingTool.getConfig(this).getWeightUnit());
+        cookedWeight.setHint("请填写熟豆重量，此处单位为" + unit);
+        LinearLayoutManager manager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(manager);
+        recyclerView.setAdapter(new EditEventListAdapter(this, entries));
+        recyclerView.addItemDecoration(new DividerDecoration(this));
     }
 
     private void init() {
-        entries = ((MyApplication)getApplication()).getBakeReport().getEntriesWithEvents();
+        entries = ((MyApplication) getApplication()).getBakeReport().getEntriesWithEvents();
         for (Entry entry : entries) {
             int time = (int) entry.getX();
             int minutes = time / 60;
@@ -100,7 +78,7 @@ public class EditBehindActiviy extends AppCompatActivity implements CircleSeekBa
 
     @OnClick(R.id.id_bake_behind_save)
     protected void onSave() {
-        BakeReportProxy proxy = BakeReportBeanFactory.getInstance();
+        BakeReportProxy proxy = ((MyApplication) getApplication()).getBakeReport();
         proxy.setCookedBeanWeight(Float.parseFloat(cookedWeight.getText().toString()));
         proxy.setBakeDegree(mCurValue);
         Intent other = new Intent(this, ReportActivity.class);
@@ -115,6 +93,9 @@ public class EditBehindActiviy extends AppCompatActivity implements CircleSeekBa
             public void run() {
                 try {
                     HttpUtils.execute(URLs.ADD_BAKE_REPORT, proxy);
+                    // 先如此使用着,id这个问题需要得到解决
+                    ((MyApplication) getApplication()).setUrl(URLs.GET_ALL_BAKE_REPORT);
+                    ((MyApplication) getApplication()).initMapFromServer(BakeReport.class);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

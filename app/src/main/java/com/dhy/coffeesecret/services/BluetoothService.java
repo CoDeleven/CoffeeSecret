@@ -37,7 +37,8 @@ public class BluetoothService extends Service {
     public static String READ_TEMP_COMMAND = "524541440a";
     public static volatile boolean READABLE = false;
     public static BluetoothService.BluetoothOperator BLUETOOTH_OPERATOR;
-    // private static String result = new String();
+    private static ReadTasker mRunThread;
+    private final int sleepTime = 1000;
     private BluetoothManager mBluetoothManager;
     private BluetoothAdapter mBluetoothAdapter;
     private BluetoothGatt mBluetoothGatt;
@@ -48,107 +49,12 @@ public class BluetoothService extends Service {
     private DataChangedListener dataChangedListener;
     private DeviceChangedListener deviceChangedListener;
     private ViewControllerListener viewControllerListener;
-    /*private DataReader readData1 = new DataReader() {
-        @Override
-        public void setWriteCommand() {
-            boolean state = false;
-            mWriter.setValue(Utils.hexStringToBytes(READ_TEMP_COMMAND));
-            do {
-                state = mBluetoothGatt.writeCharacteristic(mWriter);
-            } while (!state);
-        }
-
-        @Override
-        public boolean readData(String str) {
-            // result.set(result.get() == null ? "" :result.get() + str);
-            result += str;
-            if (str.endsWith("0a")) {
-                result += "2c";
-                dataReader = channelListener2;
-                channelListener2.setWriteCommand();
-            }
-            return false;
-        }
-    };
-    private DataReader channelListener2 = new DataReader() {
-        @Override
-        public void setWriteCommand() {
-            boolean state = false;
-            mWriter.setValue(Utils.hexStringToBytes(SECOND_CHANNEL));
-            do {
-                state = mBluetoothGatt.writeCharacteristic(mWriter);
-            } while (!state);
-        }
-
-        @Override
-        public boolean readData(String str) {
-            if (str.endsWith("0a")) {
-                dataReader = readData2;
-                dataReader.setWriteCommand();
-            }
-            return false;
-        }
-    };
-    private DataReader channelListener1 = new DataReader() {
-        @Override
-        public void setWriteCommand() {
-            boolean state = false;
-            if(!"".equals(result)){
-                result = "";
-            }
-            mWriter.setValue(Utils.hexStringToBytes(FIRST_CHANNEL));
-            do {
-                state = mBluetoothGatt.writeCharacteristic(mWriter);
-            } while (!state);
-        }
-
-        @Override
-        public boolean readData(String str) {
-            if (str.endsWith("0a")) {
-                // 设置回正常读取
-                dataReader = readData1;
-                // 启动温度读取器
-                dataReader.setWriteCommand();
-            }
-            return false;
-        }
-    };
-    private DataReader readData2 = new DataReader() {
-        @Override
-        public void setWriteCommand() {
-            boolean state = false;
-            mWriter.setValue(Utils.hexStringToBytes(READ_TEMP_COMMAND));
-            do {
-                state = mBluetoothGatt.writeCharacteristic(mWriter);
-            } while (!state);
-        }
-
-        @Override
-        public synchronized boolean readData(String str) {
-            // result.set(result.get() + str);
-            synchronized (result){
-                result += str;
-                if (str.endsWith("0a")) {
-                    dataReader = channelListener1;
-                    if(dataChangedListener != null){
-                        dataChangedListener.notifyDataChanged(Temprature.parseHex2Temprature(Utils.hexString2String(result)));
-                        result = "";
-                    }
-                    return true;
-                }
-                return false;
-            }
-        }
-    };*/
-    private static ReadTasker mRunThread;
-
-
-    // private DataReader dataReader = channelListener1;
-
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            viewControllerListener.handleViewBeforeStartRead();
+            if (viewControllerListener != null) {
+                viewControllerListener.handleViewBeforeStartRead();
+            }
         }
     };
 
@@ -170,7 +76,6 @@ public class BluetoothService extends Service {
             // 将bytes数组转换成16进制存储起来
             String hexData = null;
             hexData = Utils.bytesToHexString(characteristic.getValue());
-
             // 如果读到最后一行数据，返回true，并设置处理结束
             if (mRunThread.readData(hexData)) {
                 mRunThread.setHandling(false);
@@ -179,10 +84,9 @@ public class BluetoothService extends Service {
 
         @Override
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
-            Log.e("codelevex", "获取单片机服务");
+            Log.e(TAG, "发现服务");
 
             BluetoothGattService service = gatt.getService(PRIMARY_SERVICE);
-
             // 获取写特性
             mWriter = service.getCharacteristic(TAG_WRITE);
             // 获取读特性
@@ -197,13 +101,12 @@ public class BluetoothService extends Service {
             BluetoothGattDescriptor descriptor = mReader.getDescriptor(WRITE_DESCRIPTOR);
 
             descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
-
-            Log.d(TAG, mBluetoothGatt.writeDescriptor(descriptor) + "状态");
+            mBluetoothGatt.writeDescriptor(descriptor);
         }
 
         @Override
         public void onDescriptorWrite(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
-            Log.d(TAG, "descriptor写入成功");
+            Log.e(TAG, "descriptor写入成功");
 
             mHandler.sendMessage(new Message());
 
@@ -212,28 +115,25 @@ public class BluetoothService extends Service {
 
         @Override
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
-            Log.e("codelevex", "status:" + status + "->" + newState);
-            if (newState == BluetoothProfile.STATE_CONNECTED) {
-                if (mRunThread != null) {
-                    mRunThread.setReadable(false);
-                    mRunThread.interrupt();
-                    mRunThread.setDataChangedListener(null);
-                    mRunThread = null;
-                }
-                mConnectionState = STATE_CONNECTED;
-                mBluetoothGatt.discoverServices();
-                deviceChangedListener.notifyDeviceConnectStatus(true);
-            } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
-                mConnectionState = STATE_DISCONNECTED;
-                disconnect();
-                deviceChangedListener.notifyDeviceConnectStatus(false);
-            }
-        }
+            if (gatt.getDevice().getAddress().equals(mCurDevice.getAddress())) {
+                Log.e("codelevex", gatt.getDevice().hashCode() + ":" + status + "->" + newState + ", " + mCurDevice.hashCode());
+                if (newState == BluetoothProfile.STATE_CONNECTED) {
+                    if (mRunThread != null) {
+                        mRunThread.setReadable(false);
+                        mRunThread.interrupt();
+                        mRunThread.setDataChangedListener(null);
+                        mRunThread = null;
+                    }
+                    mConnectionState = STATE_CONNECTED;
+                    mBluetoothGatt.discoverServices();
 
-        @Override
-        public void onReadRemoteRssi(BluetoothGatt gatt, int rssi, int status) {
-            super.onReadRemoteRssi(gatt, rssi, status);
-            Log.e(TAG, "信号强度：" + rssi);
+                    deviceChangedListener.notifyDeviceConnectStatus(true, gatt.getDevice());
+                } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
+                    mConnectionState = STATE_DISCONNECTED;
+                    disconnect();
+                    deviceChangedListener.notifyDeviceConnectStatus(false, gatt.getDevice());
+                }
+            }
         }
     };
 
@@ -284,11 +184,12 @@ public class BluetoothService extends Service {
 
         // 直接连接设备
         mBluetoothGatt = device.connectGatt(this, false, mGattCallback);
-        Log.d("codelevex", "Trying to create a new connection.");
+        Log.e("codelevex", "Trying to create a new connection.");
         mCurDevice = device;
         mConnectionState = STATE_CONNECTING;
         return true;
     }
+
 
     public void disconnect() {
         if (mBluetoothAdapter == null || mBluetoothGatt == null) {
@@ -332,9 +233,10 @@ public class BluetoothService extends Service {
     }
 
     public interface DeviceChangedListener {
-        void notifyDeviceConnectStatus(boolean isConnected);
+        void notifyDeviceConnectStatus(boolean isConnected, BluetoothDevice device);
 
         void notifyNewDevice(BluetoothDevice device, int rssi);
+
     }
 
     protected abstract class DataReader {
@@ -366,6 +268,9 @@ public class BluetoothService extends Service {
 
         public void setDataChangedListener(DataChangedListener dataChangedListener) {
             BluetoothService.this.dataChangedListener = dataChangedListener;
+            if (mRunThread != null) {
+                mRunThread.setDataChangedListener(dataChangedListener);
+            }
         }
 
         public void setDeviceChangedListener(DeviceChangedListener deviceChangedListener) {
@@ -380,8 +285,16 @@ public class BluetoothService extends Service {
             startRead();
         }
 
+        public void stopRead() {
+            disconnect();
+        }
+
         public String getCurDeviceName() {
             return mCurDevice.getName();
+        }
+
+        public BluetoothDevice getBluetoothDevice() {
+            return mCurDevice;
         }
 
         public boolean isEnable() {
@@ -389,26 +302,27 @@ public class BluetoothService extends Service {
         }
 
         public void enable() {
-            /*if(mBluetoothAdapter == null){
-                initialize();
-            }*/
             mBluetoothAdapter.enable();
         }
 
         public void disableBluetooth() {
-            if (mBluetoothGatt == null) {
-                return;
+            if (mRunThread != null) {
+                mRunThread.clearData();
             }
             Log.w(TAG, "关闭蓝牙");
             mCurDevice = null;
-            mBluetoothGatt.close();
-            mBluetoothGatt = null;
+            if (mBluetoothGatt != null) {
+                mBluetoothGatt.close();
+            }
+
             READABLE = false;
-            mBluetoothAdapter.disable();
+            if (mBluetoothAdapter.isEnabled()) {
+                mBluetoothAdapter.disable();
+            }
         }
 
         public void startScanDevice() {
-            mBluetoothAdapter.startLeScan(mScanCallback);
+            Log.e(TAG, "扫描成功：？" + mBluetoothAdapter.startLeScan(mScanCallback));
         }
 
         public void stopScanDevice() {
@@ -418,57 +332,31 @@ public class BluetoothService extends Service {
         public boolean connect(BluetoothDevice device) {
             return BluetoothService.this.connect(device);
         }
+
+        public boolean connect(String address) {
+            BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
+            if (device != null) {
+                mCurDevice = device;
+                return BluetoothService.this.connect(device);
+            } else {
+                return false;
+            }
+        }
+
+        public boolean reConnect() {
+            BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(mCurDevice.getAddress());
+            if (device == null) {
+                return false;
+            } else {
+                return connect(device);
+            }
+        }
     }
 
     class ReadTasker extends Thread {
         private String result = "";
-        private DataReader readData1 = new DataReader() {
-            @Override
-            public void setWriteCommand() {
-                boolean state = false;
-                mWriter.setValue(Utils.hexStringToBytes(READ_TEMP_COMMAND));
-                do {
-                    state = mBluetoothGatt.writeCharacteristic(mWriter);
-                } while (!state);
-            }
-
-            @Override
-            public boolean readData(String str) {
-                // result.set(result.get() == null ? "" :result.get() + str);
-                result += str;
-                if (str.endsWith("0a")) {
-                    result += "2c";
-                    dataReader = channelListener2;
-                    channelListener2.setWriteCommand();
-                }
-                return false;
-            }
-        };
-        private DataReader channelListener1 = new DataReader() {
-            @Override
-            public void setWriteCommand() {
-                boolean state = false;
-                if (!"".equals(result)) {
-                    result = "";
-                }
-                mWriter.setValue(Utils.hexStringToBytes(FIRST_CHANNEL));
-                do {
-                    state = mBluetoothGatt.writeCharacteristic(mWriter);
-                } while (!state);
-            }
-
-            @Override
-            public boolean readData(String str) {
-                if (str.endsWith("0a")) {
-                    // 设置回正常读取
-                    dataReader = readData1;
-                    // 启动温度读取器
-                    dataReader.setWriteCommand();
-                }
-                return false;
-            }
-        };
         private DataChangedListener dataChangedListener;
+        private boolean readable = false;
         private DataReader readData2 = new DataReader() {
             @Override
             public void setWriteCommand() {
@@ -515,7 +403,52 @@ public class BluetoothService extends Service {
                 return false;
             }
         };
-        private boolean readable = false;
+        private DataReader readData1 = new DataReader() {
+            @Override
+            public void setWriteCommand() {
+                boolean state = false;
+                mWriter.setValue(Utils.hexStringToBytes(READ_TEMP_COMMAND));
+                do {
+                    state = mBluetoothGatt.writeCharacteristic(mWriter);
+                } while (!state);
+            }
+
+            @Override
+            public boolean readData(String str) {
+                // result.set(result.get() == null ? "" :result.get() + str);
+                result += str;
+                if (str.endsWith("0a")) {
+                    result += "2c";
+                    dataReader = channelListener2;
+                    channelListener2.setWriteCommand();
+                }
+                return false;
+            }
+        };
+        private DataReader channelListener1 = new DataReader() {
+            @Override
+            public void setWriteCommand() {
+                boolean state = false;
+                if (!"".equals(result)) {
+                    result = "";
+                }
+                mWriter.setValue(Utils.hexStringToBytes(FIRST_CHANNEL));
+                do {
+                    state = mBluetoothGatt.writeCharacteristic(mWriter);
+                } while (!state);
+            }
+
+            @Override
+            public boolean readData(String str) {
+                if (str.endsWith("0a")) {
+                    // 设置回正常读取
+                    dataReader = readData1;
+                    // 启动温度读取器
+                    dataReader.setWriteCommand();
+                }
+                return false;
+            }
+        };
         private DataReader dataReader = channelListener1;
 
         @Override
@@ -528,9 +461,8 @@ public class BluetoothService extends Service {
                 }
 
                 dataReader.setHandling(true);
-                Log.e(TAG, Thread.currentThread().toString() + "->当前");
                 try {
-                    Thread.currentThread().sleep(1000);
+                    Thread.currentThread().sleep(sleepTime);
                 } catch (InterruptedException e) {
                     Log.e("codelevex", "已经停止运行该线程");
                     return;
@@ -546,12 +478,18 @@ public class BluetoothService extends Service {
             this.readable = readable;
         }
 
-        public void setHandling(boolean isHandling){
+        public void setHandling(boolean isHandling) {
             dataReader.setHandling(isHandling);
         }
 
-        public boolean readData(String str){
+        public boolean readData(String str) {
             return dataReader.readData(str);
+        }
+
+        public void clearData() {
+            dataChangedListener = null;
+            readable = false;
+            dataReader = channelListener1;
         }
     }
 }
