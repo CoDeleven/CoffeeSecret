@@ -6,24 +6,20 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 
-import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.ui.container.adapters.LinesAdapter;
 import com.dhy.coffeesecret.ui.container.fragments.SearchFragment;
-import com.dhy.coffeesecret.ui.cup.fragment.BakeInfoFragment;
-import com.dhy.coffeesecret.ui.device.ReportActivity;
+import com.dhy.coffeesecret.utils.TestData;
 import com.dhy.coffeesecret.views.SearchEditText;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -65,7 +61,9 @@ public class LinesSelectedActivity extends AppCompatActivity implements View.OnC
     }
 
     private void init() {
-        Map<String, ? extends BakeReport> bakeReports = ((MyApplication) getApplication()).getBakeReports();
+        // TODO 校赛视频，暂时注释
+        // Map<String, ? extends BakeReport> bakeReports = ((MyApplication) getApplication()).getBakeReports();
+        Map<String, ? extends BakeReport> bakeReports = TestData.getBakeReports();
 
         bakeReportList.addAll(bakeReports.values());// FIXME: 2017/3/9
 

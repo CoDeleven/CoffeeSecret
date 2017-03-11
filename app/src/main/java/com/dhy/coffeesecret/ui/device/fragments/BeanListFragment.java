@@ -1,8 +1,7 @@
-package com.dhy.coffeesecret.ui.container.fragments;
+package com.dhy.coffeesecret.ui.device.fragments;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -28,7 +27,6 @@ import com.bigkoo.quicksidebar.QuickSideBarView;
 import com.bigkoo.quicksidebar.listener.OnQuickSideBarTouchListener;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BeanInfo;
-import com.dhy.coffeesecret.ui.container.BeanInfoActivity;
 import com.dhy.coffeesecret.ui.container.adapters.BeanListAdapter;
 import com.dhy.coffeesecret.ui.container.adapters.CountryListAdapter;
 import com.dhy.coffeesecret.ui.container.adapters.HandlerAdapter;
@@ -91,6 +89,7 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
     private int[] screenWeight = new int[2];
     private boolean isPopupWindowShowing = false;
     private Handler mHandler = new BeanListHandler(this);
+    private OnBeanSelectedLinstener onBeanSelectedLinstener;
 
     public BeanListFragment() {
         super();
@@ -123,10 +122,7 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
         beanListAdapter = new BeanListAdapter(context, coffeeBeanInfos, new BeanListAdapter.OnItemClickListener() {
             @Override
             public void onItemClicked(int position) {
-                Intent intent = new Intent(context, BeanInfoActivity.class);
-                intent.putExtra("beanInfo", coffeeBeanInfos.get(position));
-                startActivity(intent);
-                getActivity().overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
+                onBeanSelectedLinstener.onBeanSelected(coffeeBeanInfos.get(position));
             }
         });
 
@@ -469,7 +465,7 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
     private void startScreen() {
         ArrayList<BeanInfo> beanInfos = new ArrayList<>();
         beanInfos.addAll(coffeeBeanInfoTemp);
-        if (screenHandler.equals("全部")  || screenHandler.equals("")) {
+        if (screenHandler.equals("全部") || screenHandler.equals("")) {
             coffeeBeanInfos.clear();
             coffeeBeanInfos.addAll(coffeeBeanInfoTemp);
         } else if (!screenHandler.equals("")) {
@@ -564,5 +560,13 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
             }
         }
 
+    }
+
+    public void setOnBeanSelectedLinstener(OnBeanSelectedLinstener onBeanSelectedLinstener) {
+        this.onBeanSelectedLinstener = onBeanSelectedLinstener;
+    }
+
+    public interface OnBeanSelectedLinstener {
+        void onBeanSelected(BeanInfo beanInfo);
     }
 }

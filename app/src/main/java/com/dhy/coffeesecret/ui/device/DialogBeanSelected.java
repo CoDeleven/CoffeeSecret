@@ -1,106 +1,194 @@
 package com.dhy.coffeesecret.ui.device;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.LinearLayout;
 
+import com.astuetz.PagerSlidingTabStrip;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BeanInfo;
+import com.dhy.coffeesecret.ui.container.EditBeanActivity;
+import com.dhy.coffeesecret.ui.device.fragments.BeanListFragment;
+import com.dhy.coffeesecret.ui.device.fragments.SearchFragment;
+import com.dhy.coffeesecret.views.SearchEditText;
 
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-public class DialogBeanSelected extends AppCompatActivity {
-    private ListView mListView;
-    private List<BeanInfo> mBeanInfos;
+public class DialogBeanSelected extends AppCompatActivity implements BeanListFragment.OnBeanSelectedLinstener, SearchFragment.OnSearchCallBack {
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
+    private static final String TAG = "ContainerFragment";
+    private static final int ADD_BEAN = 111;
+    private final String[] TITLES = {"全部", "中美", "南美", "大洋", "亚洲", "非洲", "其它"};
+
+    private SearchEditText searchBeanET = null;
+    private LinearLayout btnAddBean = null;
+    private ViewPager containerPager = null;
+    private PagerSlidingTabStrip containerTabs = null;
+
+    private List<BeanListFragment> fragments = null;
+    private boolean isAddSearchFragment = false;
+    private SearchFragment searchFragment;
+
+    public DialogBeanSelected() {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dialog_bean_selected);
-        mListView = (ListView) findViewById(R.id.dialog_bean_selected);
-        initBeanInfos();
-        mListView.setAdapter(new BaseAdapter() {
-            @Override
-            public int getCount() {
-                return mBeanInfos.size();
-            }
 
-            @Override
-            public Object getItem(int position) {
-                return mBeanInfos.get(position);
-            }
+        searchBeanET = (SearchEditText) findViewById(R.id.search_bean);
+        btnAddBean = (LinearLayout) findViewById(R.id.btn_add_bean);
+        containerTabs = (PagerSlidingTabStrip) findViewById(R.id.container_tabs);
+        containerPager = (ViewPager) findViewById(R.id.container_pager);
+        initView();
 
-            @Override
-            public long getItemId(int position) {
-                return position;
-            }
+        initPagerData();
 
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-                ViewHolder holder;
-                if (convertView == null) {
-                    convertView = LayoutInflater.from(DialogBeanSelected.this).inflate(R.layout.item_bean_list, parent, false);
-                    holder = new ViewHolder();
-                    holder.imageView = (ImageView) convertView.findViewById(R.id.list_bean_icon);
-                    holder.textView = (TextView) convertView.findViewById(R.id.bean_weight);
-                    convertView.setTag(holder);
-                } else {
-                    holder = (ViewHolder) convertView.getTag();
-                }
-                holder.imageView.setImageResource(R.mipmap.ic_launcher);
-                holder.textView.setText("55");
-                return convertView;
-            }
-        });
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent();
-                intent.putExtra("beanInfo", mBeanInfos.get(position));
-                setResult(7, intent);
-                finish();
-            }
-        });
     }
 
-    private void initBeanInfos() {
-        if (mBeanInfos == null) {
-            mBeanInfos = new ArrayList<>();
+    public void initView() {
+        searchBeanET.setSearchBarListener(new SearchEditText.SearchBarListener() {
+            @Override
+            public void starSearchPage() {
+                FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
+                tx.setCustomAnimations(R.anim.in_from_right, R.anim.out_to_left);
+                if (searchFragment != null) {
+                    isAddSearchFragment = !searchFragment.isRemoved();
+                }
+                if (!isAddSearchFragment) {
+                    searchFragment = new SearchFragment();
+                    searchFragment.addOnSearchCallBack(DialogBeanSelected.this);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("beanList", (Serializable) fragments.get(0).getBeaninfoList());
+                    searchFragment.setArguments(bundle);
+                    tx.add(R.id.activity_dialog_bean_selected, searchFragment, "search_bean");
+                    isAddSearchFragment = true;
+                } else {
+                    tx.show(searchFragment);
+                }
+                tx.commit();
+            }
+        });
+
+        btnAddBean.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(DialogBeanSelected.this, EditBeanActivity.class);
+                startActivityForResult(intent, ADD_BEAN);
+                overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
+            }
+        });
+
+        containerPager.setOffscreenPageLimit(6);
+        containerPager.setAdapter(new DialogBeanSelected.MyPagerAdapter((this).getSupportFragmentManager()));
+        // Bind the tabs to the ViewPager
+        containerTabs.setTextColor(getResources().getColor(R.color.white));
+        containerTabs.setViewPager(containerPager);
+    }
+
+    private void initPagerData() {
+        fragments = new ArrayList<>();
+
+        for (String TITLE : TITLES) {
+            BeanListFragment fragment = new BeanListFragment();
+
+            fragment.setOnBeanSelectedLinstener(this);
+
+            fragment.setTitle(TITLE);
+            fragments.add(fragment);
         }
 
-        // 此处调用模型，获取正儿八经的数据
-
-        // 此处假数据
-        BeanInfo beanInfo = new BeanInfo();
-        beanInfo.setName("巴西黄波旁");
-        beanInfo.setSpecies("Bourbon");
-        beanInfo.setProcess("蜜处理");
-        beanInfo.setDate(new Date());
-        beanInfo.setManor("Cirlfda");
-        beanInfo.setStockWeight(20.0f);
-        beanInfo.setCountry("American");
-        beanInfo.setArea("Reald");
-
-        mBeanInfos.add(beanInfo);
     }
 
-    class ViewHolder {
-        ImageView imageView;
-        TextView textView;
+    public void onBackPressed() {
+        if (searchFragment != null) {
+            isAddSearchFragment = !searchFragment.isRemoved();
+        }
+        if (isAddSearchFragment) {
+            searchFragment.remove();
+            isAddSearchFragment = false;
+        }
+        finish();
+    }
+
+    public boolean isAddSearch() {
+        return isAddSearchFragment;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (resultCode) {
+            case Activity.RESULT_OK:
+                BeanInfo beanInfo = (BeanInfo) data.getSerializableExtra("new_bean_info");
+                for (int i = 0; i < TITLES.length; i++) {
+
+                    if (TITLES[i].equals(beanInfo.getContinent())) {
+                        fragments.get(i).setTitle(TITLES[i]);
+                    }
+                }
+                break;
+            case Activity.RESULT_CANCELED:
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public void onSearchCallBack(String info) {
+
+    }
+
+    @Override
+    public void onSearchCallBack(BeanInfo info) {
+        Intent intent = new Intent();
+        intent.putExtra("beanInfo", info);
+        setResult(7, intent);
+        finish();
+    }
+
+    public class MyPagerAdapter extends FragmentPagerAdapter {
+
+
+        public MyPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return TITLES[position];
+        }
+
+        @Override
+        public int getCount() {
+            return TITLES.length;
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return fragments.get(position);
+        }
+
+    }
+
+    @Override
+    public void onBeanSelected(BeanInfo beanInfo) {
+        Intent intent = new Intent();
+        intent.putExtra("beanInfo", beanInfo);
+        setResult(7, intent);
+        finish();
     }
 }

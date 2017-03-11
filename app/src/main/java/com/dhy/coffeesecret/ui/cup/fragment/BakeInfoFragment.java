@@ -13,13 +13,13 @@ import android.widget.TextView;
 
 import com.andexert.expandablelayout.library.ExpandableLayoutItem;
 import com.andexert.expandablelayout.library.ExpandableLayoutListView;
-import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.pojo.BakeReportProxy;
 import com.dhy.coffeesecret.pojo.BeanInfoSimple;
 import com.dhy.coffeesecret.ui.cup.LinesSelectedActivity;
 import com.dhy.coffeesecret.ui.device.ReportActivity;
+import com.dhy.coffeesecret.utils.TestData;
 import com.dhy.coffeesecret.views.BaseChart4Coffee;
 
 import java.util.List;
@@ -208,7 +208,10 @@ public class BakeInfoFragment extends Fragment implements View.OnClickListener {
             Intent intent = new Intent(getActivity(), LinesSelectedActivity.class);
             startActivityForResult(intent, SELECT_LINE);
         } else {
-            ((MyApplication) (getActivity().getApplication())).setBakeReport(mBakeReport);
+            // TODO 校赛专用
+            // ((MyApplication) (getActivity().getApplication())).setBakeReport(mBakeReport);
+            TestData.setBakeReport(mBakeReport);
+
             Intent intent = new Intent(getActivity(), ReportActivity.class);
             startActivity(intent);
         }

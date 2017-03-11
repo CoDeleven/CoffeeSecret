@@ -39,31 +39,64 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.container.BeanInfoActivity" />
-        <activity android:name=".ui.mine.HistoryLineActivity" />
-        <activity android:name=".ui.cup.NewCuppingActivity" />
-        <activity android:name=".ui.cup.LinesSelectedActivity" />
-        <activity android:name=".ui.device.DialogBeanSelected"/>
-        <activity android:name=".ui.mine.BluetoothListActivity" />
+        <activity
+            android:name=".ui.container.BeanInfoActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ui.mine.HistoryLineActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ui.cup.NewCuppingActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ui.cup.LinesSelectedActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ui.device.DialogBeanSelected"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ui.mine.BluetoothListActivity"
+            android:screenOrientation="portrait"/>
         <activity android:name=".ui.device.BakeActivity" />
-        <activity android:name=".ui.device.ReportActivity" />
-        <activity android:name=".ui.device.EditBehindActiviy" />
-        <activity android:name=".ui.container.SelectInfoActivity" />
-        <activity android:name=".ui.mine.AboutUsActivity" />
-        <activity android:name=".ui.mine.SettingsActivity" />
-        <activity android:name=".ui.mine.QuickEventActivity" />
-        <activity android:name=".ui.container.EditBeanActivity" />
-        <activity android:name=".ui.mine.LinesColorActivity" />
-        <activity android:name=".ui.mine.CustomPackageActivity" />
-        <activity android:name=".ui.community.live.visitor.HWCameraStreamingActivity" />
+        <activity
+            android:name=".ui.device.ReportActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ui.device.EditBehindActiviy"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ui.container.SelectInfoActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ui.mine.AboutUsActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ui.mine.SettingsActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ui.mine.QuickEventActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ui.container.EditBeanActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ui.mine.LinesColorActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ui.mine.CustomPackageActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ui.community.live.visitor.HWCameraStreamingActivity"
+            android:screenOrientation="portrait"/>
 
         <service
             android:name=".services.BluetoothService"
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".ui.device.TestActivity"></activity>
-        <activity android:name=".ui.community.CommActivity"></activity>
+        <activity
+            android:name=".ui.community.CommActivity"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

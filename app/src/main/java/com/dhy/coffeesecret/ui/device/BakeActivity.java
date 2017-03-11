@@ -19,7 +19,6 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BakeReportProxy;
 import com.dhy.coffeesecret.pojo.BeanInfoSimple;
@@ -32,6 +31,7 @@ import com.dhy.coffeesecret.ui.device.fragments.FireWindDialog;
 import com.dhy.coffeesecret.ui.device.fragments.Other;
 import com.dhy.coffeesecret.utils.FragmentTool;
 import com.dhy.coffeesecret.utils.SettingTool;
+import com.dhy.coffeesecret.utils.TestData;
 import com.dhy.coffeesecret.utils.UnitConvert;
 import com.dhy.coffeesecret.views.BaseChart4Coffee;
 import com.dhy.coffeesecret.views.DevelopBar;
@@ -556,7 +556,8 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
 
         bakeReport.setAmbientTemperature(intent.getFloatExtra(ENV_TEMP, -1) + "");
 
-        ((MyApplication) getApplication()).setBakeReport(bakeReport);
+        // ((MyApplication) getApplication()).setBakeReport(bakeReport);
+        TestData.setBakeReport(bakeReport);
 
         return bakeReport;
     }

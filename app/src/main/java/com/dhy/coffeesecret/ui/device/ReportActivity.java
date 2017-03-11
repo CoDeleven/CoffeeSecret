@@ -18,13 +18,12 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BakeReport;
-import com.dhy.coffeesecret.pojo.BakeReportBeanFactory;
 import com.dhy.coffeesecret.pojo.BakeReportProxy;
 import com.dhy.coffeesecret.pojo.BeanInfoSimple;
 import com.dhy.coffeesecret.utils.SettingTool;
+import com.dhy.coffeesecret.utils.TestData;
 import com.dhy.coffeesecret.utils.UnitConvert;
 import com.dhy.coffeesecret.utils.Utils;
 import com.dhy.coffeesecret.views.BaseChart4Coffee;
@@ -98,7 +97,9 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
     }
 
     private void initParam() {
-        proxy = ((MyApplication)getApplication()).getBakeReport();
+        // proxy = ((MyApplication)getApplication()).getBakeReport();
+        proxy = TestData.getBakeReport();
+
         unit = Utils.convertUnitChineses2Eng(SettingTool.getConfig(this).getWeightUnit());
         mChart.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -166,7 +167,9 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        ((MyApplication)getApplication()).setBakeReport((BakeReport)null);
+        // TODO 校赛专用
+        // ((MyApplication)getApplication()).setBakeReport((BakeReport)null);
+        TestData.setBakeReport((BakeReport) null);
         finish();
     }
 

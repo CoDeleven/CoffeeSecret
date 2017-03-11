@@ -37,7 +37,8 @@ public class HWCameraStreamingActivity extends Activity implements StreamingStat
         IResolver r1 = AndroidDnsServer.defaultResolver();
         IResolver r2 = null;
         try {
-            r2 = new Resolver(InetAddress.getByName("119.29.29.29"));
+            // 119.29.29.29
+            r2 = new Resolver(InetAddress.getByName("192.168.191.1:8080"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }

@@ -10,14 +10,15 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 
-import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.ui.container.adapters.LinesAdapter;
 import com.dhy.coffeesecret.ui.container.fragments.SearchFragment;
 import com.dhy.coffeesecret.ui.device.ReportActivity;
+import com.dhy.coffeesecret.utils.TestData;
 import com.dhy.coffeesecret.views.SearchEditText;
 
 import java.util.ArrayList;
@@ -27,6 +28,7 @@ import java.util.Map;
 public class HistoryLineActivity extends AppCompatActivity implements View.OnClickListener, SearchEditText.SearchBarListener {
     public static String REFER_LINE = "refer_line";
     private ListView listView;
+    private ImageView back;
     private SearchEditText searchBar;
     private SearchFragment searchFragment = new SearchFragment();
     private Toolbar toolbar;
@@ -38,6 +40,13 @@ public class HistoryLineActivity extends AppCompatActivity implements View.OnCli
         super.onCreate(savedInstanceState);
         setContentView(R.layout.conta_lines);
         listView = (ListView) findViewById(R.id.id_lines_list);
+        back = (ImageView) findViewById(R.id.id_back);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         toolbar = (Toolbar) findViewById(R.id.toolbar_device_activtiy);
         init();
     }
@@ -55,7 +64,9 @@ public class HistoryLineActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void init() {
-        Map<String, ? extends BakeReport> bakeReports = ((MyApplication) getApplication()).getBakeReports();
+        // TODO 校赛视频，暂时注释
+        // Map<String, ? extends BakeReport> bakeReports = ((MyApplication) getApplication()).getBakeReports();
+        Map<String, ? extends BakeReport> bakeReports = TestData.getBakeReports();
 
         bakeReportList.addAll(bakeReports.values());
         Log.e("codelevex", bakeReports.size() + "");
@@ -68,7 +79,10 @@ public class HistoryLineActivity extends AppCompatActivity implements View.OnCli
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 BakeReport report = (BakeReport) adapterView.getItemAtPosition(i);
-                ((MyApplication)(getApplication())).setBakeReport(report);
+                // TODO 校赛专用
+                // ((MyApplication)(getApplication())).setBakeReport(report);
+                TestData.setBakeReport(report);
+
                 Intent intent = new Intent(HistoryLineActivity.this, ReportActivity.class);
                 startActivity(intent);
             }

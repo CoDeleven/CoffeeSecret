@@ -13,6 +13,7 @@
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize">
 
+
         <TextView
             android:id="@+id/id_toolbar_title"
             android:layout_width="wrap_content"
@@ -21,6 +22,16 @@
             android:text="@string/title_device_child_activity"
             android:textColor="#FFF"
             android:textSize="20sp"/>
+
+        <ImageView
+            android:id="@+id/id_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left|center_vertical"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_back"
+            android:textColor="#FFF"
+            android:textSize="17sp"/>
     </android.support.v7.widget.Toolbar>
 
     <ListView

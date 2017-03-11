@@ -1,11 +1,18 @@
 package com.dhy.coffeesecret.utils;
 
-import android.graphics.Color;
+import android.content.Context;
 
 import com.dhy.coffeesecret.R;
+import com.dhy.coffeesecret.pojo.BakeReport;
+import com.dhy.coffeesecret.pojo.BakeReportProxy;
+import com.google.gson.Gson;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * CoffeeSecret
@@ -13,6 +20,7 @@ import java.util.List;
  */
 
 public class TestData {
+    public static int count = 0;
     public static String[] beanList1 = {"All", "Asia", "Asia", "Africa", "Baby", "Central American", "Death", "Destroy"
             , "E", "Fate", "Great", "Grand", "Handsome", "I", "Joker", "Joker", "Joker", "Joker", "Joker", "Joker"
             , "Joker", "Joker", "Joker", "Joker", "Joker", "Joker", "Joker", "Joker", "Joker", "Joker", "Joker"
@@ -87,5 +95,40 @@ public class TestData {
         handlerList.add("其它");
 
         return handlerList;
+    }
+
+    /**
+     * 获取本地BakeReport
+     */
+    public static Map<String, BakeReport> getBakeReports() {
+        return new HashMap<>();
+    }
+
+    private static BakeReportProxy BAKE_REPORT;
+
+    public static void saveBakeReports(Context context, BakeReport bakeReport) {
+        bakeReport.setId(count);
+        File file = new File(context.getCacheDir(), count + ".json");
+        Gson gson = new Gson();
+        try {
+            FileWriter fileWriter = new FileWriter(file);
+            fileWriter.write(gson.toJson(bakeReport));
+            fileWriter.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public static void setBakeReport(BakeReport bakeReport) {
+        BAKE_REPORT = new BakeReportProxy(bakeReport);
+    }
+
+    public static BakeReportProxy getBakeReport() {
+        return BAKE_REPORT;
+    }
+
+    public static void setBakeReport(BakeReportProxy proxy) {
+        BAKE_REPORT = proxy;
     }
 }
