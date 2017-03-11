@@ -22,7 +22,6 @@ import java.io.IOException;
 public class CommunityFragment extends Fragment implements View.OnClickListener {
 
     private View mView;
-    private TextView titleText = null;
     private Intent intent;
 
     @Override
@@ -35,8 +34,6 @@ public class CommunityFragment extends Fragment implements View.OnClickListener 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        titleText = (TextView) mView.findViewById(R.id.title_text);
-        titleText.setText("豆圈");
 
         mView.findViewById(R.id.iv_business).setOnClickListener(this);
         mView.findViewById(R.id.iv_live).setOnClickListener(this);
@@ -49,14 +46,11 @@ public class CommunityFragment extends Fragment implements View.OnClickListener 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.iv_com:
-                intent = new Intent(getActivity(), CommActivity.class);
             case R.id.iv_customer:
                 intent = new Intent(getActivity(), MallActivity.class);
                 startActivity(intent);//TODO
                 break;
             case R.id.iv_business:
-                T.showShort(getActivity(), "这是个商铺"); //TODO
                 intent = new Intent(getActivity(), MallActivity.class);
                 startActivity(intent);//TODO
                 break;
