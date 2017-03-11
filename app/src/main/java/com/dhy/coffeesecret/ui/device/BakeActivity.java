@@ -550,7 +550,7 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
 
         bakeReport.setDevelopmentTime(developBar.getDevelopTime());
 
-        bakeReport.setDevelopmentRate(developBar.getDevelopRate());
+        bakeReport.setDevelopmentRate("发展率: " + developBar.getDevelopRate());
 
         bakeReport.setStartTemperature(startTemp + "");
 

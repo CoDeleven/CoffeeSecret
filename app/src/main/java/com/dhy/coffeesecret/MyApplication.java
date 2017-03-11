@@ -11,12 +11,10 @@ import com.dhy.coffeesecret.pojo.BeanInfo;
 import com.dhy.coffeesecret.pojo.CuppingInfo;
 import com.dhy.coffeesecret.utils.CacheUtils;
 import com.dhy.coffeesecret.utils.HttpParser;
-import com.dhy.coffeesecret.utils.HttpUtils;
 import com.dhy.coffeesecret.utils.URLs;
 import com.google.gson.Gson;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -62,7 +60,7 @@ public class MyApplication extends Application {
                 extraOptions(Bugtags.BTGConsoleLogCapacityKey, 500).                //设置 log 记录的行数，详见下文
                 build();
         //在这里初始化
-        Bugtags.start("e71c5cd04eea2bf6fd7e179915935981", this, Bugtags.BTGInvocationEventNone, options);
+        Bugtags.start("e71c5cd04eea2bf6fd7e179915935981", this, Bugtags.BTGInvocationEventBubble, options);
     }
 
     public <T> T getObjectById(String id, Class<T> clazz) {
