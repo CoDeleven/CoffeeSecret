@@ -149,7 +149,7 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
             int minutes = now / 60;
             int seconds = now % 60;
             untilTime.setText(String.format("%1$02d", minutes) + ":" + String.format("%1$02d", seconds));
-            if (!isOverBottom && seconds > 30) {
+            if (!isOverBottom && minutes > 1 && seconds > 30) {
                 isOverBottom = true;
             }
             developBar.setCurStatus(curStatus);

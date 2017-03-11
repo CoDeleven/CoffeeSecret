@@ -1,21 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="level">
-        <item>Activity</item>
-        <item>Border</item>
-        <item>Create</item>
-        <item>Death</item>
-        <item>Earth</item>
-        <item>Fate</item>
-        <item>Grand</item>
-        <item>Hibernate</item>
-        <item>Joker</item>
+        <item>AA</item>
+        <item>A</item>
+        <item>B</item>
+        <item>C</item>
+        <item>PB</item>
+        <item>Grade1</item>
+        <item>Grade2</item>
+        <item>Grade3</item>
+        <item>Grade4</item>
+        <item>Grade5</item>
+        <item>Grade6</item>
+        <item>SHB</item>
+        <item>GHB</item>
+        <item>HB</item>
     </string-array>
 
     <string-array name="handler">
         <item>日晒</item>
-        <item>风干</item>
-        <item>抽湿</item>
+        <item>水洗</item>
+        <item>蜜处理</item>
         <item>其它</item>
     </string-array>
 </resources>

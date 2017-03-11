@@ -294,7 +294,7 @@ public class BaseChart4Coffee extends LineChart {
      * @param entries 曲线数据
      */
     public void enableReferLine(List<Entry> entries) {
-        LineDataSet set = new LineDataSet(entries, "参考曲线");
+        LineDataSet set = new LineDataSet(entries, "");
         lines.put(BaseChart4Coffee.REFERLINE, set);
 
         set.setCircleColor(Color.parseColor("#6774a4"));

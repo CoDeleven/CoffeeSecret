@@ -10,7 +10,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
@@ -168,12 +167,33 @@ public class SelectInfoActivity extends AppCompatActivity implements OnQuickSide
                 Collections.addAll(dataList, TestData.beanList2);
                 break;
             case GET_SPECIES_LIST:
-                for (String country : TestData.beanList1) {
-                    Species species = new Species();
-                    species.setSpecies(country);
-                    species.setOneSpecies(country);
-
-                    speciesList.add(species);
+                for (String oneSpecies : TestData.beanList4) {
+                    switch (oneSpecies) {
+                        case "Arabica":
+                            for (String spec : TestData.beanList5) {
+                                Species species = new Species();
+                                species.setOneSpecies(oneSpecies);
+                                species.setSpecies(spec);
+                                speciesList.add(species);
+                            }
+                            break;
+                        case "Robusta":
+                            for (String spec : TestData.beanList6) {
+                                Species species = new Species();
+                                species.setOneSpecies(oneSpecies);
+                                species.setSpecies(spec);
+                                speciesList.add(species);
+                            }
+                            break;
+                        case "Liberica":
+                            for (String spec : TestData.beanList7) {
+                                Species species = new Species();
+                                species.setOneSpecies(oneSpecies);
+                                species.setSpecies(spec);
+                                speciesList.add(species);
+                            }
+                            break;
+                    }
                 }
                 break;
             default:

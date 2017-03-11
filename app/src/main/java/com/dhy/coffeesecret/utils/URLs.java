@@ -24,6 +24,9 @@ public final class URLs {
     private static final String DELETE_CUPPING = "/cupping/";
     private static final String DELETE = "/delete";
 
+    public static final String GET_LIVE_PUBLISH_PATH = URL_COMMON + "/live/brodcast";
+    public static final String GET_LIVE_PLAY_PATH = URL_COMMON + "/live/getAll";
+
     public static String getDeleteBeanInfo(long id) {
         return URL_COMMON + DELETE_BEAN_INFO + id + DELETE;
     }

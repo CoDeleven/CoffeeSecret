@@ -29,4 +29,6 @@
 
   # Qiniu live config
   -keep class com.qiniu.pili.droid.streaming.** { *; }
+  -keep class com.pili.pldroid.player.** { *; }
+  -keep class tv.danmaku.ijk.media.player.** {*;}
   # End quniu live

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <ImageView
+        android:id="@+id/live_snapshot"
+        android:layout_width="wrap_content"
+        android:layout_height="200dp"
+        android:scaleType="fitXY"
+        android:src="@mipmap/snapshot"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:layout_below="@id/live_snapshot">
+
+        <TextView
+            android:id="@+id/live_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="三哥正在直播"
+            android:textSize="20sp"
+            android:layout_marginLeft="20dp"
+            android:textColor="@color/colorPrimary"
+            android:background="@drawable/bg_round"/>
+
+        <TextView
+            android:id="@+id/live_watch_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:text="5人正在观看"
+            android:gravity="right"
+            android:textSize="20sp"
+            android:textColor="@color/colorPrimary"
+            android:background="@drawable/bg_round"/>
+    </LinearLayout>
+</RelativeLayout>

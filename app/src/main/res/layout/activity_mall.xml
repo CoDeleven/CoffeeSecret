@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    android:fitsSystemWindows="true"
+    tools:context="com.dhy.coffeesecret.ui.community.MallActivity">
+    <ImageView
+        android:src="@drawable/ic_business"
+        android:scaleX="1.0001"
+        android:onClick="back"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</RelativeLayout>

@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageView;
 
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.views.CameraPreviewFrameView;
@@ -31,14 +33,14 @@ public class HWCameraStreamingActivity extends Activity implements StreamingStat
     private MediaStreamingManager streamingManager;
     private StreamingProfile streamingProfile;
     private MicrophoneStreamingSetting mMicrophoneStreamingSetting;
+    private ImageView liveplayCloseIv;
 
     private static DnsManager getMyDnsManager() {
         IResolver r0 = new DnspodFree();
         IResolver r1 = AndroidDnsServer.defaultResolver();
         IResolver r2 = null;
         try {
-            // 119.29.29.29
-            r2 = new Resolver(InetAddress.getByName("192.168.191.1:8080"));
+            r2 = new Resolver(InetAddress.getByName("119.29.29.29"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -50,12 +52,25 @@ public class HWCameraStreamingActivity extends Activity implements StreamingStat
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_hwcamera_streaming);
+        liveplayCloseIv = (ImageView) findViewById(R.id.liveplay_close_iv);
+        liveplayCloseIv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                exit();
+            }
+        });
+
         AspectFrameLayout afl = (AspectFrameLayout) findViewById(R.id.cameraPreview_afl);
         afl.setShowMode(AspectFrameLayout.SHOW_MODE.REAL);
         CameraPreviewFrameView cameraPreviewFrameView =
                 (CameraPreviewFrameView) findViewById(R.id.cameraPreview_surfaceView);
         cameraPreviewFrameView.setListener(this);
-        String publishurl = "rtmp://pili-publish.cloudself.cn/coffeesecret/testliuliu?e=1489212392&token=P0ExRPaMk_HiTOfYundyC2kQv1B1Cu4TiRSJVBtF:he9cnaSyTXqjvk7ZQukYrDlDwcE=";
+
+        String publishurl = getIntent().getStringExtra("video_url");
+
+        if (publishurl == null) {
+            publishurl = "rtmp://pili-publish.cloudself.cn/coffeesecret/testliuliu?e=1489220116&token=P0ExRPaMk_HiTOfYundyC2kQv1B1Cu4TiRSJVBtF:IBG_Vrt8uNybXrfnnePZewYmR0o=";
+        }
         streamingProfile = new StreamingProfile();
 
         try {
@@ -90,6 +105,16 @@ public class HWCameraStreamingActivity extends Activity implements StreamingStat
 
     }
 
+    private void exit() {
+        HWCameraStreamingActivity.this.finish();
+        overridePendingTransition(R.anim.in_fade, R.anim.out_to_bottom);
+    }
+
+    @Override
+    public void onBackPressed() {
+        exit();
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -101,6 +126,12 @@ public class HWCameraStreamingActivity extends Activity implements StreamingStat
         super.onPause();
         // You must invoke pause here.
         streamingManager.pause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        streamingManager.destroy();
     }
 
     @Override

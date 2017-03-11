@@ -42,21 +42,21 @@
 
                     <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginTop="15dp">
+                        android:layout_height="match_parent">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="14dp"
+                            android:layout_marginTop="15dp"
                             android:text="@string/bean_name"
                             android:textColor="@color/color_gray_c9"
                             android:textSize="14.5sp" />
 
-                        <TextView
+                        <EditText
                             android:id="@+id/edit_name"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
                             android:layout_marginLeft="56dp"
                             android:text="巴西黄波旁"
                             android:textColor="@color/black"

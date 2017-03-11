@@ -38,7 +38,7 @@ public class HistoryLineActivity extends AppCompatActivity implements View.OnCli
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.conta_lines);
+        setContentView(R.layout.history_lines);
         listView = (ListView) findViewById(R.id.id_lines_list);
         back = (ImageView) findViewById(R.id.id_back);
         back.setOnClickListener(new View.OnClickListener() {
@@ -66,7 +66,7 @@ public class HistoryLineActivity extends AppCompatActivity implements View.OnCli
     private void init() {
         // TODO 校赛视频，暂时注释
         // Map<String, ? extends BakeReport> bakeReports = ((MyApplication) getApplication()).getBakeReports();
-        Map<String, ? extends BakeReport> bakeReports = TestData.getBakeReports();
+        Map<String, ? extends BakeReport> bakeReports = TestData.getBakeReports(this);
 
         bakeReportList.addAll(bakeReports.values());
         Log.e("codelevex", bakeReports.size() + "");

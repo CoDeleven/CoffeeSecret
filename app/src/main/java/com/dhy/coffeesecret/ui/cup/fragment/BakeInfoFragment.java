@@ -24,6 +24,8 @@ import com.dhy.coffeesecret.views.BaseChart4Coffee;
 
 import java.util.List;
 
+import static com.dhy.coffeesecret.ui.cup.NewCuppingActivity.EDIT_INFO;
+import static com.dhy.coffeesecret.ui.cup.NewCuppingActivity.NEW_CUPPING;
 import static com.dhy.coffeesecret.ui.cup.NewCuppingActivity.SELECT_LINE;
 import static com.dhy.coffeesecret.views.BaseChart4Coffee.ACCBEANLINE;
 import static com.dhy.coffeesecret.views.BaseChart4Coffee.ACCINWINDLINE;
@@ -104,7 +106,9 @@ public class BakeInfoFragment extends Fragment implements View.OnClickListener {
         super.onActivityCreated(savedInstanceState);
         mButtonBake = (Button) mView.findViewById(R.id.btn_bake);
         mButtonBake.setOnClickListener(this);
-
+        if(!isNewCupping && mBakeReport == null){
+            mButtonBake.setEnabled(false);
+        }
         mDevTime = (TextView) mView.findViewById(R.id.dev_time);
         mDevRate = (TextView) mView.findViewById(R.id.dev_rate);
         mEndTemp = (TextView) mView.findViewById(R.id.end_temp);
@@ -160,6 +164,7 @@ public class BakeInfoFragment extends Fragment implements View.OnClickListener {
                 TextView tv_area = (TextView) inflate.findViewById(R.id.tv_area);
                 TextView tv_level = (TextView) inflate.findViewById(R.id.tv_level);
                 TextView tv_process = (TextView) inflate.findViewById(R.id.tv_process);
+
                 tv_name.setText(simple.getBeanName());
                 tv_use.setText(simple.getUsage());
                 tv_country.setText(simple.getCountry());
@@ -168,6 +173,7 @@ public class BakeInfoFragment extends Fragment implements View.OnClickListener {
                 tv_area.setText(simple.getArea());
                 tv_level.setText(simple.getLevel());
                 tv_process.setText(simple.getProcess());
+
                 return inflate; //TODO 待优化
             }
         };
@@ -204,7 +210,7 @@ public class BakeInfoFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        if (isNewCupping) {
+        if (isNewCupping && !EDIT_INFO.equals(NEW_CUPPING)) {
             Intent intent = new Intent(getActivity(), LinesSelectedActivity.class);
             startActivityForResult(intent, SELECT_LINE);
         } else {

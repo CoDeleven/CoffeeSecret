@@ -57,7 +57,7 @@ public class LinesSelectedActivity extends AppCompatActivity implements View.OnC
     private void init() {
         // TODO 校赛视频，暂时注释
         // Map<String, ? extends BakeReport> bakeReports = ((MyApplication) getApplication()).getBakeReports();
-        Map<String, ? extends BakeReport> bakeReports = TestData.getBakeReports();
+        Map<String, ? extends BakeReport> bakeReports = TestData.getBakeReports(this);
 
         bakeReportList.addAll(bakeReports.values());
         Log.e("codelevex", bakeReports.size() + "");

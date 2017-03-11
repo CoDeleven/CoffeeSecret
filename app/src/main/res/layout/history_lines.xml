@@ -1,0 +1,43 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/id_lines_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                tools:context="com.dhy.coffeesecret.ui.mine.HistoryLineActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_device_activtiy"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize">
+
+
+        <TextView
+            android:id="@+id/id_toolbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:text="历史曲线"
+            android:textColor="#FFF"
+            android:textSize="20sp"/>
+
+        <ImageView
+            android:id="@+id/id_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left|center_vertical"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_back"
+            android:textColor="#FFF"
+            android:textSize="17sp"/>
+    </android.support.v7.widget.Toolbar>
+
+    <ListView
+        android:id="@+id/id_lines_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolbar_device_activtiy">
+    </ListView>
+</RelativeLayout>

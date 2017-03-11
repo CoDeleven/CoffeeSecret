@@ -323,7 +323,7 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
                     intent.putExtra(BakeActivity.RAW_BEAN_INFO, dialogBeanInfos.toArray());
                     intent.putExtra(BakeActivity.DEVICE_NAME, mBluetoothOperator.getCurDeviceName());
                     intent.putExtra(BakeActivity.START_TEMP, beginTemp);
-                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
                     intent.putExtra(BakeActivity.BAKE_DATE, format.format(new Date()));
                     intent.putExtra(BakeActivity.ENV_TEMP, envTemp);
                     if (referTempratures != null) {
