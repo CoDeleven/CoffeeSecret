@@ -299,7 +299,7 @@ public class EditBeanActivity extends AppCompatActivity {
 
     private void updateBeanInfo(final BeanInfo beanInfo) {
 
-        HttpUtils.enqueue(URLs.UPDATE_BEAN_INFO, beanInfo, new Callback() {
+        HttpUtils.enqueue(URLs.ADD_BEAN_INFO, beanInfo, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 mHandler.sendEmptyMessage(TOAST_2);
