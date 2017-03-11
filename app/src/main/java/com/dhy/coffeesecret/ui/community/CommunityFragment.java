@@ -39,8 +39,10 @@ public class CommunityFragment extends Fragment implements View.OnClickListener 
         titleText.setText("豆圈");
 
         mView.findViewById(R.id.iv_business).setOnClickListener(this);
-        mView.findViewById(R.id.iv_com).setOnClickListener(this);
         mView.findViewById(R.id.iv_live).setOnClickListener(this);
+        mView.findViewById(R.id.iv_watch).setOnClickListener(this);
+        mView.findViewById(R.id.iv_customer).setOnClickListener(this);
+        mView.findViewById(R.id.iv_bbs).setOnClickListener(this);
         mView.findViewById(R.id.iv_watch).setOnClickListener(this);
     }
 
@@ -49,10 +51,18 @@ public class CommunityFragment extends Fragment implements View.OnClickListener 
         switch (view.getId()) {
             case R.id.iv_com:
                 intent = new Intent(getActivity(), CommActivity.class);
+            case R.id.iv_customer:
+                intent = new Intent(getActivity(), MallActivity.class);
                 startActivity(intent);//TODO
                 break;
             case R.id.iv_business:
                 T.showShort(getActivity(), "这是个商铺"); //TODO
+                intent = new Intent(getActivity(), MallActivity.class);
+                startActivity(intent);//TODO
+                break;
+            case R.id.iv_bbs:
+                intent = new Intent(getActivity(), CommActivity.class);
+                startActivity(intent);//TODO
                 break;
             case R.id.iv_live:
                 new Thread(new Runnable() {

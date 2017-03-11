@@ -63,6 +63,9 @@
 
         <activity android:name=".ui.device.TestActivity" />
         <activity android:name=".ui.community.CommActivity" />
+        <activity android:name=".ui.device.TestActivity" />
+        <activity android:name=".ui.community.CommActivity" />
+        <activity android:name=".ui.community.MallActivity"></activity>
     </application>
 
 </manifest>
