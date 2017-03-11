@@ -19,6 +19,7 @@ import android.os.Message;
 import android.util.Log;
 
 import com.dhy.coffeesecret.pojo.Temprature;
+import com.dhy.coffeesecret.utils.T;
 import com.dhy.coffeesecret.utils.Utils;
 
 import java.util.UUID;

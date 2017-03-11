@@ -13,6 +13,7 @@ import com.dhy.coffeesecret.utils.CacheUtils;
 import com.dhy.coffeesecret.utils.HttpParser;
 import com.dhy.coffeesecret.utils.URLs;
 import com.google.gson.Gson;
+import com.qiniu.pili.droid.streaming.StreamingEnv;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -40,6 +41,11 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        //Bugtags初始化
+        Bugtags.start("e71c5cd04eea2bf6fd7e179915935981", this, Bugtags.BTGInvocationEventBubble);
+
+        //直播初始化
+        StreamingEnv.init(getApplicationContext());
         BugtagsOptions options = new BugtagsOptions.Builder().
                 trackingLocation(true).       //是否获取位置，默认 true
                 trackingCrashLog(true).       //是否收集闪退，默认 true
