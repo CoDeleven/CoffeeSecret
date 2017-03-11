@@ -79,7 +79,14 @@ public class EditBehindActiviy extends AppCompatActivity implements CircleSeekBa
     @OnClick(R.id.id_bake_behind_save)
     protected void onSave() {
         BakeReportProxy proxy = ((MyApplication) getApplication()).getBakeReport();
-        proxy.setCookedBeanWeight(Float.parseFloat(cookedWeight.getText().toString()));
+        String weight = cookedWeight.getText().toString();
+        if(!"".equals(weight)){
+            proxy.setCookedBeanWeight(Float.parseFloat(weight));
+        }else{
+            proxy.setCookedBeanWeight(0);
+        }
+
+
         proxy.setBakeDegree(mCurValue);
         Intent other = new Intent(this, ReportActivity.class);
         sendJsonData(proxy.getBakeReport());
