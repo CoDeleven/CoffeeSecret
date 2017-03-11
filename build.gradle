@@ -2,18 +2,22 @@
 
 buildscript {
     repositories {
+        maven {url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+        maven { url "https://jitpack.io" }
         jcenter()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.2.3'
+        classpath 'com.bugtags.library:bugtags-gradle:latest.integration'
 
     }
 }
 
 allprojects {
     repositories {
-        jcenter()
+        maven {url 'http://maven.aliyun.com/nexus/content/groups/public/'}
         maven { url "https://jitpack.io" }
+        jcenter()
     }
 }
 

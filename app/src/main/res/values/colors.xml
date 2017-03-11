@@ -17,6 +17,7 @@
     <color name="bg_progress_norml">#DBDDDC</color>
     <color name="danger">#c63a3b</color>
 
+    <color name="border_color">#9C9C9C</color>
     <color name="list_header">#EDEEE9</color>
     <color name="list_text_color">#676767</color>
     <color name="list_text_color_2">#7C7B7B</color>

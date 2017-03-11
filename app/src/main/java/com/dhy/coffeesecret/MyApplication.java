@@ -3,6 +3,7 @@ package com.dhy.coffeesecret;
 import android.app.Application;
 import android.util.Log;
 
+import com.bugtags.library.Bugtags;
 import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.pojo.BakeReportProxy;
 import com.dhy.coffeesecret.pojo.BeanInfo;
@@ -12,6 +13,7 @@ import com.dhy.coffeesecret.utils.HttpParser;
 import com.dhy.coffeesecret.utils.HttpUtils;
 import com.dhy.coffeesecret.utils.URLs;
 import com.google.gson.Gson;
+import com.qiniu.pili.droid.streaming.StreamingEnv;
 
 import java.io.IOException;
 import java.net.URL;
@@ -35,6 +37,16 @@ public class MyApplication extends Application {
 
     public MyApplication() {
         super();
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        //Bugtags初始化
+        Bugtags.start("e71c5cd04eea2bf6fd7e179915935981", this, Bugtags.BTGInvocationEventBubble);
+
+        //直播初始化
+        StreamingEnv.init(getApplicationContext());
     }
 
     public <T> T getObjectById(String id, Class<T> clazz) {
@@ -149,6 +161,9 @@ public class MyApplication extends Application {
                 objs.putAll(maps);
 
                 Gson gson = new Gson();
+                if(cacheUtils == null){
+                    cacheUtils = CacheUtils.getCacheUtils(getApplicationContext());
+                }
                 for (String key : maps.keySet()) {
                     cacheUtils.saveObject(key, gson.toJson(maps.get(key)), clazz);
                 }

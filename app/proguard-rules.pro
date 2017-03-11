@@ -15,3 +15,18 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+  # ProGuard configurations for Bugtags
+  -keepattributes LineNumberTable,SourceFile
+
+  -keep class com.bugtags.library.** {*;}
+  -dontwarn com.bugtags.library.**
+  -keep class io.bugtags.** {*;}
+  -dontwarn io.bugtags.**
+  -dontwarn org.apache.http.**
+  -dontwarn android.net.http.AndroidHttpClient
+
+  # End Bugtags
+
+  # Qiniu live config
+  -keep class com.qiniu.pili.droid.streaming.** { *; }
+  # End quniu live

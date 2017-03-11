@@ -20,11 +20,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.dhy.coffeesecret.R;
+import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.pojo.BeanInfo;
 import com.dhy.coffeesecret.pojo.DialogBeanInfo;
 import com.dhy.coffeesecret.ui.cup.LinesSelectedActivity;
-import com.dhy.coffeesecret.ui.device.DialogBeanSelectedActivity;
-import com.dhy.coffeesecret.ui.mine.HistoryLineActivity;
+import com.dhy.coffeesecret.ui.device.DialogBeanSelected;
 import com.dhy.coffeesecret.utils.SettingTool;
 
 import java.util.ArrayList;
@@ -195,8 +195,14 @@ public class BakeDialog extends DialogFragment {
                     @Override
                     public void onFocusChange(View v, boolean hasFocus) {
                         EditText editText = (EditText) v;
+                        String result = editText.getText().toString();
                         if (dialogBeanInfos.size() > 0 && !hasFocus && editText.getText().length() > 0) {
-                            dialogBeanInfos.get(position).setWeight(Float.parseFloat(editText.getText().toString()));
+                            for(int i = 0; i < result.length(); ++i){
+                                if(!Character.isDigit(result.charAt(i))){
+                                    return;
+                                }
+                            }
+                            dialogBeanInfos.get(position).setWeight(Float.parseFloat(result));
                         }
                     }
                 });
@@ -205,7 +211,7 @@ public class BakeDialog extends DialogFragment {
                     @Override
                     public void onClick(View v) {
                         curItem = position;
-                        Intent intent = new Intent(mContext, DialogBeanSelectedActivity.class);
+                        Intent intent = new Intent(mContext, DialogBeanSelected.class);
                         startActivityForResult(intent, 7);
                     }
                 });
@@ -236,11 +242,14 @@ public class BakeDialog extends DialogFragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (data != null) {
             BeanInfo beanInfo = (BeanInfo) data.getSerializableExtra("beanInfo");
+            BakeReport bakeReport = (BakeReport) data.getSerializableExtra("report");
             if (beanInfo != null) {
                 dialogBeanInfos.get(curItem).setBeanInfo(beanInfo);
             }
+            if(bakeReport != null){
+                referTempratures = (ArrayList)bakeReport.getTempratureSet().getBeanTemps();
+            }
             ((BaseAdapter) mListView.getAdapter()).notifyDataSetChanged();
-            referTempratures = (ArrayList<Float>) data.getSerializableExtra(HistoryLineActivity.REFER_LINE);
         }
     }
 

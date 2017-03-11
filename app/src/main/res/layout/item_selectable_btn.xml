@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="54.25dp"
+    android:layout_height="25.25dp">
+
+    <RadioButton
+        android:id="@+id/btn_handler"
+        android:layout_width="54.25dp"
+        android:layout_height="25.25dp"
+        android:layout_marginLeft="17dp"
+        android:layout_marginTop="17dp"
+        android:background="@drawable/btn_border_selector"
+        android:button="@null"
+        android:checked="true"
+        android:gravity="center"
+        android:text="@string/acidity"
+        android:textColor="@color/border_color"
+        android:textSize="13.75sp" />
+
+</LinearLayout>

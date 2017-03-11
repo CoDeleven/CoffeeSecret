@@ -275,7 +275,7 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
             int count = 0;
             for (float temprature : tempratures) {
                 entries.add(new Entry(count, temprature));
-                count += 5;
+                count += 1;
             }
             chart.enableReferLine(entries);
         }
