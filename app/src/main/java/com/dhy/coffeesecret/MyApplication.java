@@ -4,6 +4,7 @@ import android.app.Application;
 import android.util.Log;
 
 import com.bugtags.library.Bugtags;
+import com.bugtags.library.BugtagsOptions;
 import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.pojo.BakeReportProxy;
 import com.dhy.coffeesecret.pojo.BeanInfo;
@@ -41,8 +42,27 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        BugtagsOptions options = new BugtagsOptions.Builder().
+                trackingLocation(true).       //是否获取位置，默认 true
+                trackingCrashLog(true).       //是否收集闪退，默认 true
+                trackingConsoleLog(true).     //是否收集控制台日志，默认 true
+                trackingUserSteps(true).      //是否跟踪用户操作步骤，默认 true
+                crashWithScreenshot(true).    //收集闪退是否附带截图，默认 true
+                trackingAnr(true).              //收集 ANR，默认 false
+                trackingBackgroundCrash(true).  //收集 独立进程 crash，默认 false
+                versionName(BuildConfig.VERSION_NAME).         //自定义版本名称，默认 app versionName
+                versionCode(BuildConfig.VERSION_CODE).              //自定义版本号，默认 app versionCode
+                trackingNetworkURLFilter("(.*)").//自定义网络请求跟踪的 url 规则，默认 null
+                enableUserSignIn(true).            //是否允许显示用户登录按钮，默认 true
+                startAsync(false).    //设置 为 true 则 SDK 会在异步线程初始化，节
+                remoteConfigDataMode(Bugtags.BTGDataModeProduction).//设置远程省主线程时间，默认 false
+                startCallback(null).            //初始化成功回调，默认 null配置数据模式，默认Bugtags.BTGDataModeProduction 参见[文档](https://docs.bugtags.com/zh/remoteconfig/android/index.html)
+                remoteConfigCallback(null).//设置远程配置的回调函数，详见[文档](https://docs.bugtags.com/zh/remoteconfig/android/index.html)
+                enableCapturePlus(false).        //是否开启手动截屏监控，默认 false，参见[文档](https://docs.bugtags.com/zh/faq/android/capture-plus.html)
+                extraOptions(Bugtags.BTGConsoleLogCapacityKey, 500).                //设置 log 记录的行数，详见下文
+                build();
         //在这里初始化
-        Bugtags.start("e71c5cd04eea2bf6fd7e179915935981", this, Bugtags.BTGInvocationEventBubble);
+        Bugtags.start("e71c5cd04eea2bf6fd7e179915935981", this, Bugtags.BTGInvocationEventNone, options);
     }
 
     public <T> T getObjectById(String id, Class<T> clazz) {
