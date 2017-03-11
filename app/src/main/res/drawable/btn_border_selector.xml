@@ -1,0 +1,5 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/btn_border_selected" android:state_checked="true"/>
+    <item android:drawable="@drawable/btn_border_unselector" android:state_checked="false"/>
+    <item android:drawable="@drawable/btn_border_unselector"/>
+</selector>

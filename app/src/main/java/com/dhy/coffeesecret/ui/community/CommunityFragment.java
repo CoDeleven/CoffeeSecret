@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.dhy.coffeesecret.R;
+import com.dhy.coffeesecret.ui.community.live.visitor.HWCameraStreamingActivity;
 import com.dhy.coffeesecret.utils.T;
 import com.dhy.coffeesecret.utils.UIUtils;
 
@@ -34,16 +35,19 @@ public class CommunityFragment extends Fragment implements View.OnClickListener 
 
     @Override
     public void onClick(View view) {
+        Intent intent ;
         switch (view.getId()) {
             case R.id.iv_com:
-                Intent intent = new Intent(getActivity(),CommActivity.class);
+                intent = new Intent(getActivity(),CommActivity.class);
                 startActivity(intent);//TODO
                 break;
             case R.id.iv_business:
                 T.showShort(getActivity(),"这是个商铺"); //TODO
                 break;
             case R.id.iv_live:
-                T.showShort(getActivity(),"这是个直播"); //TODO
+                intent = new Intent(getActivity(), HWCameraStreamingActivity.class);
+                startActivity(intent);
+                getActivity().overridePendingTransition(R.anim.in_from_bottom, R.anim.out_fade);
                 break;
         }
     }

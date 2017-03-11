@@ -8,7 +8,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -19,6 +18,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -31,12 +31,14 @@ import com.dhy.coffeesecret.pojo.BeanInfo;
 import com.dhy.coffeesecret.ui.container.BeanInfoActivity;
 import com.dhy.coffeesecret.ui.container.adapters.BeanListAdapter;
 import com.dhy.coffeesecret.ui.container.adapters.CountryListAdapter;
+import com.dhy.coffeesecret.ui.container.adapters.HandlerAdapter;
 import com.dhy.coffeesecret.utils.HttpUtils;
 import com.dhy.coffeesecret.utils.T;
 import com.dhy.coffeesecret.utils.TestData;
 import com.dhy.coffeesecret.utils.URLs;
 import com.dhy.coffeesecret.utils.Utils;
 import com.dhy.coffeesecret.views.DividerDecoration;
+import com.edmodo.rangebar.RangeBar;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
@@ -48,7 +50,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 /**
@@ -66,6 +67,7 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
     private static final int TOAST_1 = 555;
     private static final int TOAST_2 = 666;
     private static final int TOAST_3 = 777;
+    private static final int START_SCREEN = 888;
     private HashMap<String, Integer> letters = new HashMap<>();
     private ArrayList<BeanInfo> coffeeBeanInfos;
     private ArrayList<BeanInfo> coffeeBeanInfoTemp;
@@ -82,6 +84,11 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
     private BeanListAdapter beanListAdapter;
     private Context context;
     private String title = "";
+    private int maxPrice = 2000;
+    private int maxWeight = 10;
+    private String screenHandler = "";
+    private int[] screenPrice = new int[2];
+    private int[] screenWeight = new int[2];
     private boolean isPopupWindowShowing = false;
     private Handler mHandler = new BeanListHandler(this);
 
@@ -182,6 +189,7 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
                 break;
             case "screen":
                 contentView = inflater.inflate(R.layout.ppw_conta_screen, null);
+                setScreenCondition(contentView);
                 mScreenPopupWindow = getPopupWindow(contentView);
                 break;
             default:
@@ -189,8 +197,9 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
         }
     }
 
+
     private PopupWindow getPopupWindow(View contentView) {
-        PopupWindow popupWindow = new PopupWindow(contentView, MATCH_PARENT, WRAP_CONTENT);
+        PopupWindow popupWindow = new PopupWindow(contentView, WRAP_CONTENT, WRAP_CONTENT);
         popupWindow.setOutsideTouchable(true);
         popupWindow.setFocusable(true);
         popupWindow.setBackgroundDrawable(new BitmapDrawable(getResources()));
@@ -234,10 +243,10 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
         try {
             beanInfoListJson = HttpUtils.getStringFromServer(URLs.GET_ALL_BEAN_INFO);
         } catch (IOException e) {
-            mHandler.sendEmptyMessage(888);
+            mHandler.sendEmptyMessage(TOAST_3);
         }
-//        String[] beanLists = null;
-//        beanInfoListJson = TestData.beaninfos;
+        String[] beanLists = null;
+        beanInfoListJson = TestData.beaninfos;
 
         ArrayList<BeanInfo> beanInfoss = gson.fromJson(beanInfoListJson, new TypeToken<ArrayList<BeanInfo>>() {
         }.getType());
@@ -247,6 +256,7 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
         } else {
             beanInfoss = sortByArea(beanInfoss);
             getLetters(beanInfoss);
+            coffeeBeanInfoTemp.clear();
             for (BeanInfo b : beanInfoss) {
                 if (b.getContinent().equals(title)) {
                     coffeeBeanInfoTemp.add(b);
@@ -267,8 +277,7 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
 
     private ArrayList<BeanInfo> sortByArea(ArrayList<BeanInfo> beanInfoss) {
 
-        for (int i = beanInfoss.size() - 1; i > 0; --i)
-        {
+        for (int i = beanInfoss.size() - 1; i > 0; --i) {
             for (int j = 0; j < i; ++j) {
 
                 if (beanInfoss.get(j).getArea() == null) {
@@ -300,7 +309,7 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
         int i = 0;
 
         for (BeanInfo b : beanInfoss) {
-            String letter = Utils.getFirstPinYinLetter(b.getArea()).substring(0,1);
+            String letter = Utils.getFirstPinYinLetter(b.getArea()).substring(0, 1);
 
             if (!letters.containsKey(letter)) {
                 letters.put(letter, i);
@@ -308,6 +317,67 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
             i++;
         }
 
+    }
+
+    private void setScreenCondition(View contentView) {
+        RecyclerView handlerList = (RecyclerView) contentView.findViewById(R.id.handler_recycler);
+        GridLayoutManager layoutManager = new GridLayoutManager(context, 3);
+        handlerList.setLayoutManager(layoutManager);
+        final ArrayList<String> handlers = TestData.getHandlerList();
+        HandlerAdapter adapter = new HandlerAdapter(context, handlers, new HandlerAdapter.OnItemSelectListener() {
+            @Override
+            public void onItemSelected(int position) {
+                screenHandler = handlers.get(position);
+            }
+        });
+        handlerList.setAdapter(adapter);
+        final TextView tvFirstPrice = (TextView) contentView.findViewById(R.id.tv_first_price);
+        final TextView tvSecondPrice = (TextView) contentView.findViewById(R.id.tv_second_price);
+        final TextView tvFirstWeight = (TextView) contentView.findViewById(R.id.tv_first_weight);
+        final TextView tvSecondWeight = (TextView) contentView.findViewById(R.id.tv_second_weight);
+        RangeBar rangePrice = (RangeBar) contentView.findViewById(R.id.range_price);
+        RangeBar rangeWeight = (RangeBar) contentView.findViewById(R.id.range_weight);
+
+        screenPrice[0] = 0;
+        screenPrice[1] = maxPrice - 1;
+        screenWeight[0] = 0;
+        screenWeight[1] = maxWeight - 1;
+        tvFirstPrice.setText(0 + "");
+        tvSecondPrice.setText("不限");
+        tvFirstWeight.setText(0 + "");
+        tvSecondWeight.setText("不限");
+        rangePrice.setTickCount(maxPrice);
+        rangeWeight.setTickCount(maxWeight);
+        rangePrice.setThumbIndices(0, maxPrice - 1);
+        rangeWeight.setThumbIndices(0, maxWeight - 1);
+        rangePrice.setOnRangeBarChangeListener(new RangeBar.OnRangeBarChangeListener() {
+            @Override
+            public void onIndexChangeListener(RangeBar rangeBar, int thumb1, int thumb2) {
+                tvFirstPrice.setText(thumb1 + "");
+                tvSecondPrice.setText(thumb2 + "");
+                screenPrice[0] = thumb1;
+                screenPrice[1] = thumb2;
+            }
+        });
+
+        rangeWeight.setOnRangeBarChangeListener(new RangeBar.OnRangeBarChangeListener() {
+            @Override
+            public void onIndexChangeListener(RangeBar rangeBar, int thumb1, int thumb2) {
+                tvFirstWeight.setText(thumb1 + "");
+                tvSecondWeight.setText(thumb2 + "");
+                screenWeight[0] = thumb1;
+                screenWeight[1] = thumb2;
+            }
+        });
+
+        Button btnConfirmCondition = (Button) contentView.findViewById(R.id.btn_confirm_condition);
+        btnConfirmCondition.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mHandler.sendEmptyMessage(START_SCREEN);
+                mScreenPopupWindow.dismiss();
+            }
+        });
     }
 
     private void setCountryList(View contentView) {
@@ -395,6 +465,51 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
         return this.coffeeBeanInfos;
     }
 
+    private void startScreen() {
+        ArrayList<BeanInfo> beanInfos = new ArrayList<>();
+        beanInfos.addAll(coffeeBeanInfoTemp);
+        if (screenHandler.equals("全部")  || screenHandler.equals("")) {
+            coffeeBeanInfos.clear();
+            coffeeBeanInfos.addAll(coffeeBeanInfoTemp);
+        } else if (!screenHandler.equals("")) {
+            coffeeBeanInfos.clear();
+            for (BeanInfo beanInfo : beanInfos) {
+                if (beanInfo.getProcess().equals(screenHandler)) {
+                    coffeeBeanInfos.add(beanInfo);
+                }
+            }
+        }
+        Log.i(TAG, "startScreen: infos1 = " + coffeeBeanInfos.size());
+        beanInfos.clear();
+        beanInfos.addAll(coffeeBeanInfos);
+        if ((screenPrice[0] > 0 || screenPrice[1] < maxPrice - 1)) {
+            coffeeBeanInfos.clear();
+            for (BeanInfo beanInfo : beanInfos) {
+                if (beanInfo.getPrice() >= screenPrice[0] && beanInfo.getPrice() < screenPrice[1]) {
+                    coffeeBeanInfos.add(beanInfo);
+                }
+            }
+        }
+        Log.i(TAG, "startScreen: infos2 = " + coffeeBeanInfos.size());
+        beanInfos.clear();
+        beanInfos.addAll(coffeeBeanInfos);
+        if (screenWeight[0] > 0 || screenWeight[1] < maxWeight - 1) {
+            coffeeBeanInfos.clear();
+            for (BeanInfo beanInfo : beanInfos) {
+                Log.i(TAG, "startScreen: weight = " + beanInfo.getStockWeight());
+                if (beanInfo.getPrice() > screenWeight[0] && beanInfo.getStockWeight() < screenWeight[1]) {
+                    coffeeBeanInfos.add(beanInfo);
+                }
+            }
+        }
+
+        beanListAdapter.notifyDataSetChanged();
+    }
+
+    private void screenByHandler() {
+
+    }
+
     private class BeanListHandler extends Handler {
 
         private final WeakReference<BeanListFragment> mActivity;
@@ -424,7 +539,7 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
                     break;
                 case NO_LOADING:
                     if (refreshBeanList != null && refreshBeanList.isRefreshing()) {
-                        refreshBeanList.setRefreshing(false);
+                        activity.refreshBeanList.setRefreshing(false);
                     }
                     break;
                 case INIT_POPUP_WINDOW:
@@ -440,9 +555,13 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
                 case TOAST_3:
                     T.showShort(activity.getActivity(), "网络连接失败");
                     break;
+                case START_SCREEN:
+                    activity.startScreen();
+                    break;
                 default:
                     break;
             }
         }
+
     }
 }

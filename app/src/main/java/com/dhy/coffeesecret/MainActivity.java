@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
@@ -16,6 +17,7 @@ import com.dhy.coffeesecret.ui.container.ContainerFragment;
 import com.dhy.coffeesecret.ui.cup.CupFragment;
 import com.dhy.coffeesecret.ui.device.DeviceFragment;
 import com.dhy.coffeesecret.ui.mine.MineFragment;
+import com.dhy.coffeesecret.utils.T;
 import com.dhy.coffeesecret.utils.UIUtils;
 
 public class MainActivity extends AppCompatActivity implements CupFragment.OnCupInteractionListener {
@@ -81,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements CupFragment.OnCup
         }
 
 
-        mViewPager.setCurrentItem(2);
+        mViewPager.setCurrentItem(0);
         // 设置tablayout固定
         mTabLayout.setTabMode(TabLayout.MODE_FIXED);
 
@@ -121,7 +123,23 @@ public class MainActivity extends AppCompatActivity implements CupFragment.OnCup
         if (containerFragment != null && containerFragment.isAddSearch()) {
             containerFragment.onBackPressed();
         } else {
-            super.onBackPressed();
+            exitApp();
+        }
+    }
+
+    // 上一次点击推退出的时间
+    private long exitTime = 0;
+
+    /**
+     * 双击退出事件
+     */
+    public void exitApp() {
+        if ((System.currentTimeMillis() - exitTime) > 2000) {
+            T.showShort(MainActivity.this, getResources().getString(R.string.exit_app));
+            exitTime = System.currentTimeMillis();
+        } else {
+            this.finish();
+            overridePendingTransition(R.anim.in_from_bottom, R.anim.out_to_top);
         }
     }
 }

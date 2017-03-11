@@ -5,10 +5,7 @@ import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
-import android.util.Log;
 
-import com.dhy.coffeesecret.R;
-import com.dhy.coffeesecret.pojo.Temprature;
 import com.dhy.coffeesecret.pojo.UniversalConfiguration;
 import com.dhy.coffeesecret.ui.device.formatter.XAxisFormatter4Time;
 import com.dhy.coffeesecret.utils.SettingTool;
@@ -55,9 +52,6 @@ public class BaseChart4Coffee extends LineChart {
             return false;
         }
     });
-    private int tempSmoothNumber = -1;
-    private int accTempSmoothNumber = -1;
-
 
     public BaseChart4Coffee(Context context) {
         this(context, null);
@@ -90,8 +84,7 @@ public class BaseChart4Coffee extends LineChart {
         setDragDecelerationFrictionCoef(0.9f);
         // 启用放大缩小
         setDragEnabled(true);
-        setScaleXEnabled(true);
-        setScaleYEnabled(false);
+        setScaleEnabled(true);
         setDrawGridBackground(false);
         setHighlightPerDragEnabled(true);
         setBackgroundColor(Color.WHITE);
@@ -141,9 +134,6 @@ public class BaseChart4Coffee extends LineChart {
         rightAxis.setAxisMinimum(0f);
         rightAxis.setDrawGridLines(false);
         rightAxis.unit = mConfig.getTempratureUnit();
-
-        tempSmoothNumber = mConfig.getTempratureSmooth();
-        accTempSmoothNumber = mConfig.getTempratureAccSmooth();
 
         // rightAxis.setDrawZeroLine(false);
         // rightAxis.setGranularityEnabled(false);
@@ -242,27 +232,6 @@ public class BaseChart4Coffee extends LineChart {
      */
     public void addOneDataToLine(Entry beanData, int lineIndex) {
         LineDataSet beanLine = (LineDataSet) lines.get(lineIndex);
-        int total = beanLine.getEntryCount();
-        float sum = beanData.getY();
-        int max = 1;
-        if (lineIndex % 2 != 0) {
-            if (accTempSmoothNumber > 0) {
-                max = total - accTempSmoothNumber > 0 ? accTempSmoothNumber : total;
-                for (int i = 0; i < max - 1; ++i) {
-                    Entry entry = beanLine.getEntryForIndex(total - i - 1);
-                    sum += entry.getY();
-                }
-            }
-        } else {
-            if (tempSmoothNumber > 0) {
-                max = total - tempSmoothNumber > 0 ? tempSmoothNumber : total;
-                for (int i = 0; i < max - 1; ++i) {
-                    float temp = beanLine.getEntryForIndex(total - i - 1).getY();
-                    sum += temp;
-                }
-            }
-        }
-        beanData.setY(sum / (max == 0 ? 1 : max));
         beanLine.addEntry(beanData);
         mHandler.sendMessage(new Message());
     }
@@ -274,8 +243,15 @@ public class BaseChart4Coffee extends LineChart {
      * @param lineIndex 曲线的编号
      */
     public void addNewDatas(List<Entry> beanDatas, int lineIndex) {
+     /*   ILineDataSet beanLine = new LineDataSet(beanDatas, labels.get(lineIndex));
+        lines.put(lineIndex, beanLine);
+        LineData lineData = getData();
+        if(lineData == null){
+            lineData = new LineData();
+        }*/
+
         ((LineDataSet) lines.get(lineIndex)).setValues(beanDatas);
-        // TODO 这里获取的数据也均需要求平均值
+
         mHandler.sendEmptyMessage(0);
     }
 
@@ -301,8 +277,10 @@ public class BaseChart4Coffee extends LineChart {
         lines.put(BaseChart4Coffee.REFERLINE, set);
 
         set.setCircleColor(Color.parseColor("#6774a4"));
+        // set.setCircleColorHole(Color.WHITE);
         set.setLineWidth(2f);
         set.setCircleRadius(4f);
+        // set.setCircleHoleRadius(2f);
         set.setFillAlpha(65);
         set.setFillColor(ColorTemplate.colorWithAlpha(Color.YELLOW, 200));
         set.setDrawCircleHole(false);

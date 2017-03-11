@@ -5,6 +5,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_device_child_activity">某曲线</string>
+    <string name="exit_app">再按一次退出</string>
 
     <!-- ReportInfoPagePart-->
     <string name="bean_name">豆名</string>

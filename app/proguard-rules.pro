@@ -26,3 +26,7 @@
   -dontwarn android.net.http.AndroidHttpClient
 
   # End Bugtags
+
+  # Qiniu live config
+  -keep class com.qiniu.pili.droid.streaming.** { *; }
+  # End quniu live
