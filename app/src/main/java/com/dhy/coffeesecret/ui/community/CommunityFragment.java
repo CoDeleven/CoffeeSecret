@@ -29,26 +29,35 @@ public class CommunityFragment extends Fragment implements View.OnClickListener 
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mView.findViewById(R.id.iv_business).setOnClickListener(this);
-        mView.findViewById(R.id.iv_com).setOnClickListener(this);
         mView.findViewById(R.id.iv_live).setOnClickListener(this);
+        mView.findViewById(R.id.iv_watch).setOnClickListener(this);
+        mView.findViewById(R.id.iv_customer).setOnClickListener(this);
+        mView.findViewById(R.id.iv_bbs).setOnClickListener(this);
     }
 
     @Override
     public void onClick(View view) {
         Intent intent;
         switch (view.getId()) {
-            case R.id.iv_com:
-                intent = new Intent(getActivity(),CommActivity.class);
+            case R.id.iv_customer:
+                intent = new Intent(getActivity(), MallActivity.class);
                 startActivity(intent);//TODO
                 break;
             case R.id.iv_business:
-                intent = new Intent(getActivity(),MallActivity.class);
+                intent = new Intent(getActivity(), MallActivity.class);
+                startActivity(intent);//TODO
+                break;
+            case R.id.iv_bbs:
+                intent = new Intent(getActivity(), CommActivity.class);
                 startActivity(intent);//TODO
                 break;
             case R.id.iv_live:
-                intent = new Intent(getActivity(), HWCameraStreamingActivity.class);
-                startActivity(intent);
-                getActivity().overridePendingTransition(R.anim.in_from_bottom, R.anim.out_fade);
+                intent = new Intent(getActivity(), MallActivity.class);
+                startActivity(intent);//TODO
+                break;
+            case R.id.iv_watch:
+                intent = new Intent(getActivity(), MallActivity.class);
+                startActivity(intent);//TODO
                 break;
         }
     }

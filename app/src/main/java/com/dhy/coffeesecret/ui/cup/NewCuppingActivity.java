@@ -190,7 +190,7 @@ public class NewCuppingActivity extends AppCompatActivity
     private void loadEditView() {
         viewType = EDIT_INFO;
         cuppingInfoFragment.setEditable(true);
-
+        mRadioGroup.check(R.id.rd_cup);
         mInputNameDialog = InputNameDialog.newInstance(mCuppingInfo.getName());
 
         mInputNameDialog.setOnConfirmClickListener(new InputNameDialog.OnConfirmListener() {
