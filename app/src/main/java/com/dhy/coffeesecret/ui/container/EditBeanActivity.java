@@ -132,11 +132,11 @@ public class EditBeanActivity extends AppCompatActivity {
         BeanInfo beanInfo = (BeanInfo) getIntent().getSerializableExtra("beanInfo");
 
         if (beanInfo == null) {
-            titleText.setText("添加豆种");
+            titleText.setText("添加豆子");
             beanInfo = new BeanInfo();
         } else {
             Log.i(TAG, "init: beanInfo" + beanInfo.toString());
-            titleText.setText("编辑豆种");
+            titleText.setText("编辑豆子");
         }
 
         editIcon.setImageResource(R.drawable.ic_container_add_bean);
@@ -271,10 +271,14 @@ public class EditBeanActivity extends AppCompatActivity {
 
     private void saveBeanInfo() {
         // TODO
+        if (editArea == null || editManor == null || editWeight.getText().toString().trim().equals("")) {
+            mHandler.sendEmptyMessage(TOAST_3);
+            return;
+        }
         BeanInfo beanInfo = new BeanInfo();
         beanInfo.setDrawablePath(drawPath);
         beanInfo.setName(editName.getText().toString());
-        beanInfo.setContinent("");
+        beanInfo.setContinent("亚洲");
         beanInfo.setCountry(editCountry.getText().toString());
         beanInfo.setArea(editArea.getText().toString());
         beanInfo.setManor(editManor.getText().toString());
@@ -363,6 +367,7 @@ public class EditBeanActivity extends AppCompatActivity {
     private static final int BEAN_ICON = 6789;
     private static final int TOAST_1 = 7890;
     private static final int TOAST_2 = 7899;
+    private static final int TOAST_3 = 7889;
     private EditBeanHandler mHandler = new EditBeanHandler(EditBeanActivity.this);
 
     class EditBeanHandler extends Handler {
@@ -405,14 +410,15 @@ public class EditBeanActivity extends AppCompatActivity {
                     break;
                 case BEAN_ICON:
                     if (species.toLowerCase().contains("a")) {
-                        activity.editIcon.setImageResource(R.drawable.ic_container_aa);
+                        drawPath = R.drawable.ic_container_aa + "";
                     } else if (species.toLowerCase().contains("c")) {
-                        activity.editIcon.setImageResource(R.drawable.ic_container_ac);
+                        drawPath = R.drawable.ic_container_aa + "";
                     } else if (species.toLowerCase().contains("e")) {
-                        activity.editIcon.setImageResource(R.drawable.ic_container_ae);
+                        drawPath = R.drawable.ic_container_aa + "";
                     } else {
-                        activity.editIcon.setImageResource(R.drawable.ic_container_al);
+                        drawPath = R.drawable.ic_container_aa + "";
                     }
+                    activity.editIcon.setImageResource(Integer.parseInt(drawPath));
                     break;
                 case TOAST_1:
                     T.showShort(mContext, "保存成功");

@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activity_live_play"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.community.live.player.LivePlayActivity">
+
+
+    <com.pili.pldroid.player.widget.PLVideoView
+        android:id="@+id/pl_video_view"
+        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <ProgressBar
+        android:id="@+id/loading_view"
+        android:layout_width="80dp"
+        android:layout_centerInParent="true"
+        android:layout_height="80dp" />
+
+    <LinearLayout
+        android:id="@+id/liveplay_topuser_ll"
+        style="@style/RealPlayTop"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:gravity="center_vertical">
+
+        <RelativeLayout
+            android:layout_width="170dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="12dp">
+
+            <LinearLayout
+                android:layout_width="120dp"
+                android:layout_height="35dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="36dp"
+                android:background="@mipmap/user_top_online"
+                android:backgroundTint="@color/colorPrimary"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/liveplay_zhibo_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:text="陈灏"
+                    android:textColor="@color/white"
+                    android:textSize="13sp" />
+
+            </LinearLayout>
+
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/user_icon_image"
+                app:riv_corner_radius="30dip"
+                app:riv_oval="true"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:contentDescription="@null"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/this_year_brave" />
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/alive_streamingStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="观看直播中"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="right|center_vertical">
+
+            <ImageView
+                android:id="@+id/liveplay_close_iv"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginRight="15dp"
+                android:src="@mipmap/btn_back" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/liveplay_foot_rl"
+        style="@style/RealPlayFoot"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:id="@+id/liveplay_allbt_rl"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/colorPrimary">
+
+            <LinearLayout
+                android:id="@+id/liveplay_message_iv"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@color/colorPrimary"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:contentDescription="@null"
+                    android:src="@mipmap/btn_chat" />
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/liveplay_swithch_iv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="35dp"
+                android:contentDescription="@null"
+                android:src="@mipmap/alive_switch" />
+
+            <ImageView
+                android:id="@+id/liveplay_manypage_iv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="20dp"
+                android:layout_toLeftOf="@id/liveplay_swithch_iv"
+                android:contentDescription="@null"
+                android:src="@mipmap/icon_switch" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+</RelativeLayout>

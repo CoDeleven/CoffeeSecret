@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_live_list"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.dhy.coffeesecret.ui.community.live.player.LiveListActivity">
+
+    <include
+        android:id="@+id/live_title_bar"
+        layout="@layout/normal_title_noback" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/live_list"
+        android:layout_below="@id/live_title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </android.support.v7.widget.RecyclerView>
+
+</RelativeLayout>
