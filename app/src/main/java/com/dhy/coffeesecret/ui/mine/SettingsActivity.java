@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.UniversalConfiguration;
 import com.dhy.coffeesecret.utils.SettingTool;
+import com.dhy.coffeesecret.utils.Utils;
 
 import java.lang.ref.WeakReference;
 
@@ -197,7 +198,7 @@ public class SettingsActivity extends AppCompatActivity {
                         switch (viewId) {
                             case R.id.weight_unit:
                                 textWeightUnit.setText(whichItem);
-                                config.setWeightUnit(whichItem);
+                                config.setWeightUnit(Utils.convertUnitChineses2Eng(whichItem));
                                 break;
                             case R.id.temperature_unit:
                                 textTemperatureUnit.setText(whichItem);

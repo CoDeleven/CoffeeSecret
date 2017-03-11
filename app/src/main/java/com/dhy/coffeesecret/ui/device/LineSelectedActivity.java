@@ -1,4 +1,4 @@
-package com.dhy.coffeesecret.ui.mine;
+package com.dhy.coffeesecret.ui.device;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,17 +10,12 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BakeReport;
-import com.dhy.coffeesecret.ui.container.adapters.LinesAdapter;
 import com.dhy.coffeesecret.ui.container.fragments.SearchFragment;
-import com.dhy.coffeesecret.ui.device.ReportActivity;
+import com.dhy.coffeesecret.ui.mine.HistoryLineActivity;
 import com.dhy.coffeesecret.ui.mine.adapter.HistoryLineAdapter;
 import com.dhy.coffeesecret.utils.TestData;
 import com.dhy.coffeesecret.views.DividerDecoration;
@@ -31,8 +26,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class HistoryLineActivity extends AppCompatActivity implements View.OnClickListener, SearchEditText.SearchBarListener {
-    public static String REFER_LINE = "refer_line";
+import static com.dhy.coffeesecret.ui.cup.fragment.BakeInfoFragment.RESULT_CODE_ADD;
+
+/**
+ * Created by CoDeleven on 17-3-12.
+ */
+
+public class LineSelectedActivity extends AppCompatActivity implements View.OnClickListener, SearchEditText.SearchBarListener {
     private RecyclerView listView;
     private ImageView back;
     private SearchEditText searchBar;
@@ -85,10 +85,12 @@ public class HistoryLineActivity extends AppCompatActivity implements View.OnCli
             public void onLineClicked(BakeReport bakeReport) {
                 // TODO 校赛专用
                 // ((MyApplication)(getApplication())).setBakeReport(report);
-                TestData.setBakeReport(bakeReport);
 
-                Intent intent = new Intent(HistoryLineActivity.this, ReportActivity.class);
-                startActivity(intent);
+                TestData.setBakeReport(bakeReport);
+                Intent intent = new Intent();
+                intent.putExtra("report",bakeReport);
+                setResult(RESULT_CODE_ADD,intent);
+                finish();
             }
         });
         listView.setAdapter(adapter);

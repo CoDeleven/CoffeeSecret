@@ -107,11 +107,13 @@ public class TestData {
         }
 
         File file = new File(context.getCacheDir(), "br_9.json");
-        try {
-            FileReader fileReader = new FileReader(file);
-            objs.put("br_9.json", gson.fromJson(fileReader, BakeReport.class));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+        if(file.exists()){
+            try {
+                FileReader fileReader = new FileReader(file);
+                objs.put("br_9.json", gson.fromJson(fileReader, BakeReport.class));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
         }
         return objs;
     }

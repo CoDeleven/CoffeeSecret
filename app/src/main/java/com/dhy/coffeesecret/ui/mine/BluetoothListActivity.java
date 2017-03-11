@@ -53,7 +53,7 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
                         tick.setVisibility(View.GONE);
                         break;
                     case DEVICE_CONNECT_FAILED:
-                        progressCircle.setVisibility(View.GONE);
+                        progressCircle.setVisibility(View.INVISIBLE);
                         tick.setVisibility(View.GONE);
                         break;
                     case DEVICE_CONNECTED:

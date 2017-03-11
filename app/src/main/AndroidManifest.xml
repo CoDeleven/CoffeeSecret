@@ -88,7 +88,12 @@
         <activity
             android:name=".ui.community.live.visitor.HWCameraStreamingActivity"
             android:screenOrientation="portrait"/>
-
+        <activity android:name=".ui.community.live.player.LivePlayActivity"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".ui.community.live.player.LiveListActivity"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".ui.device.LineSelectedActivity"
+                  android:screenOrientation="portrait"/>
         <service
             android:name=".services.BluetoothService"
             android:enabled="true"

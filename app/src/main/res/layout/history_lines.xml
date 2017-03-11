@@ -34,10 +34,10 @@
             android:textSize="17sp"/>
     </android.support.v7.widget.Toolbar>
 
-    <ListView
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/id_lines_list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_below="@id/toolbar_device_activtiy">
-    </ListView>
+    </android.support.v7.widget.RecyclerView>
 </RelativeLayout>
