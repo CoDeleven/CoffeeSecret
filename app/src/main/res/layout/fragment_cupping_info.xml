@@ -96,11 +96,11 @@
                     app:style="solid_line" />
 
                 <View
-                    android:layout_width="34dp"
-                    android:layout_height="5dp"
+                    android:layout_width="26dp"
+                    android:layout_height="4dp"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
+                    android:layout_marginLeft="9dp"
+                    android:layout_marginRight="9dp"
                     android:background="@drawable/bg_round_pricolor" />
 
                 <com.dinuscxj.progressbar.CircleProgressBar
@@ -123,19 +123,19 @@
                     android:orientation="vertical">
 
                     <View
-                        android:layout_width="34dp"
-                        android:layout_height="5dp"
+                        android:layout_width="26dp"
+                        android:layout_height="4dp"
                         android:layout_marginBottom="2dp"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"
+                        android:layout_marginLeft="9dp"
+                        android:layout_marginRight="9dp"
                         android:background="@drawable/bg_round_pricolor" />
 
                     <View
-                        android:layout_width="34dp"
-                        android:layout_height="5dp"
+                        android:layout_width="26dp"
+                        android:layout_height="4dp"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"
+                        android:layout_marginLeft="9dp"
+                        android:layout_marginRight="9dp"
                         android:layout_marginTop="2dp"
                         android:background="@drawable/bg_round_pricolor" />
                 </LinearLayout>

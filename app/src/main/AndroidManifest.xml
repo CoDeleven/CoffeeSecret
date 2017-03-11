@@ -51,8 +51,9 @@
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".ui.device.TestActivity"></activity>
-        <activity android:name=".ui.community.CommActivity"></activity>
+        <activity android:name=".ui.device.TestActivity" />
+        <activity android:name=".ui.community.CommActivity" />
+        <activity android:name=".ui.community.MallActivity"></activity>
     </application>
 
 </manifest>

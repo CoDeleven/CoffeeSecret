@@ -105,7 +105,6 @@ public class NewCuppingActivity extends AppCompatActivity
         if (SHOW_INFO.equals(viewType)) {
             mCuppingInfo = (CuppingInfo) intent.getSerializableExtra(TARGET);
             mBakeReport = mCuppingInfo.getBakeReport();
-            System.out.println("............"+mBakeReport);
             loadShowInfoView();
         } else if (NEW_CUPPING.equals(viewType)) {
             loadNewCuppingView();
@@ -114,6 +113,7 @@ public class NewCuppingActivity extends AppCompatActivity
         }
         initParam();
     }
+
     /****************************
      * 在添加杯测时加载添加对应的view
      */
@@ -168,6 +168,7 @@ public class NewCuppingActivity extends AppCompatActivity
 
         if (cuppingInfoFragment != null) {
             cuppingInfoFragment.setEditable(false);
+            cuppingInfoFragment.updateProgressBar((int)mCuppingInfo.getFeel(),(int)mCuppingInfo.getFlaw());
         }
         viewType = SHOW_INFO;
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -223,7 +224,7 @@ public class NewCuppingActivity extends AppCompatActivity
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == 4 && (EDIT_INFO.equals(viewType)||NEW_CUPPING.equals(viewType))) {
+        if (keyCode == 4 && (EDIT_INFO.equals(viewType) || NEW_CUPPING.equals(viewType))) {
             showDialog();
         }
         return super.onKeyDown(keyCode, event);
@@ -240,7 +241,7 @@ public class NewCuppingActivity extends AppCompatActivity
             cuppingInfoFragment = CuppingInfoFragment.newInstance(flawScores, feelScores);
         }
 
-        bakeInfoFragment = BakeInfoFragment.newInstance(mBakeReport,NEW_CUPPING.equals(viewType));
+        bakeInfoFragment = BakeInfoFragment.newInstance(mBakeReport, NEW_CUPPING.equals(viewType));
 
         bakeInfoFragment.setOnBakeInfoLoadedListener(new BakeInfoFragment.OnBakeInfoLoadedListener() {
             @Override
@@ -312,8 +313,9 @@ public class NewCuppingActivity extends AppCompatActivity
     public void onSave() {
 
         final Map<String, Float> data = cuppingInfoFragment.getData();
-
         map2Bean(data, mCuppingInfo);
+
+        cuppingInfoFragment.updateProgressBar((int)mCuppingInfo.getFeel(),(int)mCuppingInfo.getFlaw());
         if (NEW_CUPPING.equals(viewType) || isNew) {
             mCuppingInfo.setBakeReport(mBakeReport);
             if (mCuppingInfo.getName() == null) {
@@ -333,13 +335,7 @@ public class NewCuppingActivity extends AppCompatActivity
 
                             @Override
                             public void onResponse(Call call, final Response response) throws IOException {
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        T.showShort(NewCuppingActivity.this, response.message());
-                                    }
-                                });
-
+                                System.out.println(response.body().string());
                                 mHandler.sendEmptyMessage(SUCCESS);
                                 // TODO: 2017/3/4 返回主键 并设置主键
                                 //mCuppingInfo.setId();

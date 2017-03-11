@@ -50,8 +50,8 @@ public class CuppingInfoFragment extends Fragment implements InputDialogFragment
     private static final String[] FLAW_TITLES = {"发展不充分", "过度发展", "烤焙味", "自焙烫伤", "胚芽烫伤", "豆表烫伤"};
     private static final int[] FLAW_ICONS = {ic_underdev, ic_overdev, ic_baked, ic_scorched, ic_tipped, ic_faced};
 
-    private static final int FEEL_SCORE_MAX = 100;
-    private static final int FLAW_SCORE_MAX = 100;
+    private static final int FEEL_SCORE_MAX = 80;
+    private static final int FLAW_SCORE_MAX = 30;
 
     private static final String FLAW_SCORES_ARRAY = "flawScores";
     private static final String FEEL_SCORES_ARRAY = "feelScores";
@@ -132,6 +132,7 @@ public class CuppingInfoFragment extends Fragment implements InputDialogFragment
             }
         });
         setEditable(mEditable);
+        updateProgressBar(feelScores, flawScores);
         super.onActivityCreated(savedInstanceState);
     }
 
@@ -163,10 +164,22 @@ public class CuppingInfoFragment extends Fragment implements InputDialogFragment
      * @param flawScore 瑕疵分
      */
     public void updateProgressBar(final int feelScore, final int flawScore) {
-
         feelProgressBar.setProgress(feelScore);
         flawProgressBar.setProgress(flawScore);
         finalProgressBar.setProgress(feelScore - flawScore);
+    }
+
+    public void updateProgressBar(final float[] feelScores, final float[] flawScores) {
+        float feelScore = 0;
+        float flawScore = 0;
+        for (float score : feelScores) {
+            feelScore += score;
+        }
+
+        for (float score : flawScores) {
+            flawScore += score;
+        }
+        updateProgressBar((int)feelScore, (int)flawScore);
     }
 
     public Map<String, Float> getData() {

@@ -128,7 +128,7 @@ public class CuppingInfo implements Serializable {
     }
 
     public float getFlaw() {
-        flaw = underdevelopment + overdevelopment + baked + tipped + faced;
+        flaw = underdevelopment + overdevelopment + baked + tipped + faced+ scorched;
         return flaw;
     }
 
