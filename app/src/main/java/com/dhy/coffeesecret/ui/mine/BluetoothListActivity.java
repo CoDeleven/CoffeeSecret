@@ -141,10 +141,7 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
                 adapter.lastConnectedAddress = curDevice.getAddress();
                 adapter.addDevice(curDevice);
             }
-
         }
-
-
     }
 
     @Override

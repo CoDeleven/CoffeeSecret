@@ -43,7 +43,7 @@ public class BluetoothListAdapter extends RecyclerView.Adapter<BluetoothListAdap
 
     @Override
     public BluetoothViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new BluetoothViewHolder(layoutInflater.inflate(R.layout.conta_lines_item_part, parent, false));
+        return new BluetoothViewHolder(layoutInflater.inflate(R.layout.bluetooth_item_view, parent, false));
 
     }
 
@@ -94,6 +94,7 @@ public class BluetoothListAdapter extends RecyclerView.Adapter<BluetoothListAdap
 
     public void addDevice(BluetoothDevice device) {
         devices.add(device);
+        notifyDataSetChanged();
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {

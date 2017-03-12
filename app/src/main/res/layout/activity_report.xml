@@ -100,6 +100,11 @@
                             android:layout_marginTop="10dp"
                             android:gravity="center">
 
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:src="@drawable/ic_report_bakedegree"/>
                             <TextView
                                 android:id="@+id/id_score"
                                 android:layout_width="wrap_content"
@@ -107,11 +112,6 @@
                                 android:layout_centerInParent="true"
                                 android:text="45"/>
 
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_centerInParent="true"
-                                android:src="@drawable/ic_report_bakedegree"/>
                         </RelativeLayout>
                     </LinearLayout>
 

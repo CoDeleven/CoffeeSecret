@@ -7,9 +7,13 @@ import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.dhy.coffeesecret.R;
@@ -42,10 +46,14 @@ public class EditBehindActiviy extends AppCompatActivity implements CircleSeekBa
     EditText cookedWeight;
     @Bind(R.id.id_score)
     TextView score;
+    @Bind(R.id.id_editor_scroll)
+    ScrollView scrollView;
     private float mCurValue;
     private List<String> content = new ArrayList<>();
     private List<Entry> entries = new ArrayList<>();
     private String unit;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +82,20 @@ public class EditBehindActiviy extends AppCompatActivity implements CircleSeekBa
             int seconds = time % 60;
             content.add(String.format("%1$02d", minutes) + ":" + String.format("%1$02d", seconds));
         }
+
+        mSeekBar.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    scrollView.requestDisallowInterceptTouchEvent(false);
+                    ((ViewGroup)scrollView.getChildAt(0)).requestDisallowInterceptTouchEvent(false);
+                } else {
+                    scrollView.requestDisallowInterceptTouchEvent(true);
+                    ((ViewGroup)scrollView.getChildAt(0)).requestDisallowInterceptTouchEvent(true);
+                }
+                return false;
+            }
+        });
     }
 
     @OnClick(R.id.id_bake_behind_save)
