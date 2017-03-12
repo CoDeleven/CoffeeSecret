@@ -40,6 +40,7 @@ public class HttpUtils {
     public static Request getRequest(String url, Object obj) {
         String json = mGson.toJson(obj);
         RequestBody body = RequestBody.create(TYPE, json);
+        System.out.println(json); //TODO
         Request request = new Request.Builder().url(url).post(body).build();
         return request;
     }

@@ -51,7 +51,7 @@ public class CommunityFragment extends Fragment implements View.OnClickListener 
                 startActivity(intent);//TODO
                 break;
             case R.id.iv_business:
-                intent = new Intent(getActivity(), MallActivity.class);
+                intent = new Intent(getActivity(), SellActivity.class);
                 startActivity(intent);//TODO
                 break;
             case R.id.iv_bbs:

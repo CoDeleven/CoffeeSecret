@@ -24,6 +24,9 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="28dp"
             android:contentDescription="@null"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
+            android:paddingLeft="20dp"
             android:src="@drawable/ic_container_add_plus"/>
 
     </RelativeLayout>

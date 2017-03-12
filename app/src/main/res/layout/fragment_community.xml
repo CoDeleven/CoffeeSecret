@@ -161,7 +161,7 @@
             android:paddingTop="9dp"
             android:textColor="#372E29"
             android:textSize="@dimen/font_size_primary"
-            android:text="咖啡集市" />
+            android:text="咖啡秀秀" />
 
         <LinearLayout
             android:layout_width="match_parent"
