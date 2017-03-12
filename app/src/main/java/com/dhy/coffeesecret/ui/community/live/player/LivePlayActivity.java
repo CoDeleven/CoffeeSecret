@@ -3,6 +3,7 @@ package com.dhy.coffeesecret.ui.community.live.player;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.dhy.coffeesecret.R;
@@ -17,6 +18,7 @@ public class LivePlayActivity extends AppCompatActivity implements
 
 
     private PLVideoView mVideoView;
+    private ImageView liveplayCloseIv;
     private String url;
 
     @Override
@@ -25,6 +27,14 @@ public class LivePlayActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_live_play);
 
         mVideoView = (PLVideoView) findViewById(R.id.pl_video_view);
+        liveplayCloseIv = (ImageView) findViewById(R.id.liveplay_close_iv);
+
+        liveplayCloseIv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                exit();
+            }
+        });
 
         MediaController mMediaController = new MediaController(this);
 
@@ -85,5 +95,10 @@ public class LivePlayActivity extends AppCompatActivity implements
     protected void onStop() {
         super.onStop();
         mVideoView.stopPlayback();
+    }
+
+    private void exit() {
+        this.finish();
+        overridePendingTransition(R.anim.in_fade, R.anim.out_to_bottom);
     }
 }

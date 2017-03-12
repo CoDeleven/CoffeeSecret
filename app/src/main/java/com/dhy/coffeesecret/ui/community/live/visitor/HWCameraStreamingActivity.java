@@ -88,7 +88,7 @@ public class HWCameraStreamingActivity extends Activity implements StreamingStat
 //                .setEncodingOrientation(StreamingProfile.ENCODING_ORIENTATION.PORT)
                     .setSendingBufferProfile(new StreamingProfile.SendingBufferProfile(0.2f, 0.8f, 3.0f, 20 * 1000));
             CameraStreamingSetting setting = new CameraStreamingSetting();
-            setting.setCameraId(Camera.CameraInfo.CAMERA_FACING_BACK)
+            setting.setCameraId(Camera.CameraInfo.CAMERA_FACING_FRONT)
                     .setContinuousFocusModeEnabled(true)
                     .setCameraPrvSizeLevel(CameraStreamingSetting.PREVIEW_SIZE_LEVEL.MEDIUM)
                     .setCameraPrvSizeRatio(CameraStreamingSetting.PREVIEW_SIZE_RATIO.RATIO_16_9);
