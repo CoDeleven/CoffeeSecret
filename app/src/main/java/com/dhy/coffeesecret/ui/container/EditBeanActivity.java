@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -24,7 +23,6 @@ import com.dhy.coffeesecret.utils.HttpUtils;
 import com.dhy.coffeesecret.utils.SettingTool;
 import com.dhy.coffeesecret.utils.T;
 import com.dhy.coffeesecret.utils.URLs;
-import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -51,7 +49,7 @@ public class EditBeanActivity extends AppCompatActivity {
     @Bind(R.id.edit_icon)
     ImageView editIcon;
     @Bind(R.id.edit_name)
-    TextView editName;
+    EditText editName;
     @Bind(R.id.edit_country)
     TextView editCountry;
     @Bind(R.id.edit_layout_country)
@@ -132,14 +130,17 @@ public class EditBeanActivity extends AppCompatActivity {
         BeanInfo beanInfo = (BeanInfo) getIntent().getSerializableExtra("beanInfo");
 
         if (beanInfo == null) {
-            titleText.setText("添加豆种");
+            titleText.setText("添加豆子");
             beanInfo = new BeanInfo();
         } else {
             Log.i(TAG, "init: beanInfo" + beanInfo.toString());
-            titleText.setText("编辑豆种");
+            titleText.setText("编辑豆子");
         }
 
-        editIcon.setImageResource(R.drawable.ic_container_add_bean);
+        if (beanInfo.getDrawablePath() == null || beanInfo.getDrawablePath().trim().equals("")) {
+            beanInfo.setDrawablePath(R.drawable.ic_container_add_bean + "");
+        }
+        editIcon.setImageResource(Integer.parseInt(beanInfo.getDrawablePath()));
         editName.setText(beanInfo.getName());
         editCountry.setText(beanInfo.getCountry());
         editArea.setText(beanInfo.getArea());
@@ -271,10 +272,14 @@ public class EditBeanActivity extends AppCompatActivity {
 
     private void saveBeanInfo() {
         // TODO
+        if (editArea == null || editManor == null || editWeight.getText().toString().trim().equals("")) {
+            mHandler.sendEmptyMessage(TOAST_3);
+            return;
+        }
         BeanInfo beanInfo = new BeanInfo();
         beanInfo.setDrawablePath(drawPath);
         beanInfo.setName(editName.getText().toString());
-        beanInfo.setContinent("");
+        beanInfo.setContinent("亚洲"); // TODO
         beanInfo.setCountry(editCountry.getText().toString());
         beanInfo.setArea(editArea.getText().toString());
         beanInfo.setManor(editManor.getText().toString());
@@ -363,6 +368,7 @@ public class EditBeanActivity extends AppCompatActivity {
     private static final int BEAN_ICON = 6789;
     private static final int TOAST_1 = 7890;
     private static final int TOAST_2 = 7899;
+    private static final int TOAST_3 = 7889;
     private EditBeanHandler mHandler = new EditBeanHandler(EditBeanActivity.this);
 
     class EditBeanHandler extends Handler {
@@ -392,27 +398,22 @@ public class EditBeanActivity extends AppCompatActivity {
                     break;
                 case SPECIES:
                     activity.editSpecies.setText((String) msg.obj);
-                    mHandler.sendEmptyMessage(BEAN_NAME);
-                    mHandler.sendEmptyMessage(BEAN_ICON);
                     break;
                 case BEAN_NAME:
                     country = activity.editCountry.getText().toString();
                     species = activity.editSpecies.getText().toString();
-                    if (!TextUtils.isEmpty(country.trim()) &&
-                            !TextUtils.isEmpty(species.trim())) {
-                        activity.editName.setText(country + species);
-                    }
                     break;
                 case BEAN_ICON:
                     if (species.toLowerCase().contains("a")) {
-                        activity.editIcon.setImageResource(R.drawable.ic_container_aa);
+                        drawPath = R.drawable.ic_container_aa + "";
                     } else if (species.toLowerCase().contains("c")) {
-                        activity.editIcon.setImageResource(R.drawable.ic_container_ac);
+                        drawPath = R.drawable.ic_container_ac + "";
                     } else if (species.toLowerCase().contains("e")) {
-                        activity.editIcon.setImageResource(R.drawable.ic_container_ae);
+                        drawPath = R.drawable.ic_container_ae + "";
                     } else {
-                        activity.editIcon.setImageResource(R.drawable.ic_container_al);
+                        drawPath = R.drawable.ic_container_al + "";
                     }
+                    activity.editIcon.setImageResource(Integer.parseInt(drawPath));
                     break;
                 case TOAST_1:
                     T.showShort(mContext, "保存成功");

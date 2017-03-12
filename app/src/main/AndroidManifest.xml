@@ -53,6 +53,8 @@
         <activity android:name=".ui.mine.LinesColorActivity" />
         <activity android:name=".ui.mine.CustomPackageActivity" />
         <activity android:name=".ui.community.live.visitor.HWCameraStreamingActivity" />
+        <activity android:name=".ui.community.live.player.LivePlayActivity" />
+        <activity android:name=".ui.community.live.player.LiveListActivity" />
 
         <service
             android:name=".services.BluetoothService"
