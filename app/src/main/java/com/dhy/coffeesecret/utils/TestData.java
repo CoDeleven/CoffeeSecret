@@ -8,11 +8,9 @@ import com.dhy.coffeesecret.pojo.BakeReportProxy;
 import com.google.gson.Gson;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -135,6 +133,8 @@ public class TestData {
                 FileReader fileReader = new FileReader(file);
                 objs.put("br_9.json", gson.fromJson(fileReader, BakeReport.class));
             } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
