@@ -21,7 +21,9 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.dhy.coffeesecret.R;
+import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.pojo.CuppingInfo;
+import com.dhy.coffeesecret.pojo.TempratureSet;
 import com.dhy.coffeesecret.ui.cup.adapter.CuppingListAdapter;
 import com.dhy.coffeesecret.ui.cup.comparator.BaseComparator;
 import com.dhy.coffeesecret.ui.cup.comparator.DateComparator;
@@ -29,6 +31,7 @@ import com.dhy.coffeesecret.ui.cup.comparator.OrderBy;
 import com.dhy.coffeesecret.ui.cup.comparator.ScoreComparator;
 import com.dhy.coffeesecret.utils.HttpUtils;
 import com.dhy.coffeesecret.utils.T;
+import com.dhy.coffeesecret.utils.TestData;
 import com.dhy.coffeesecret.utils.URLs;
 import com.dhy.coffeesecret.views.DividerDecoration;
 import com.google.gson.Gson;
@@ -42,6 +45,7 @@ import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
@@ -292,55 +296,30 @@ public class CupFragment extends Fragment {
             @Override
             public void run() {
                 try {
-                    String str = HttpUtils.getStringFromServer(URLs.GET_ALL_CUPPING);
+//                    String str = HttpUtils.getStringFromServer(URLs.GET_ALL_CUPPING);
+//                    System.out.println(str);
+                    String str = TestData.cuppingInfos;
                     Type type = new TypeToken<ArrayList<CuppingInfo>>() {
                     }.getType();
                     Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
                     List<CuppingInfo> newInfos = gson.fromJson(str, type);
+                    System.out.println(newInfos);
+
+                    Map<String, BakeReport> bakeReports = TestData.getBakeReports(getActivity());
+                    String next = bakeReports.keySet().iterator().next();
+                    for (CuppingInfo newInfo : newInfos) {
+                        BakeReport report = bakeReports.get(next);
+                        newInfo.setBakeReport(report);
+                    }
+
                     cuppingInfos.clear();
                     cuppingInfos.addAll(newInfos);
                     mHandler.sendEmptyMessage(LOADING_SUCCESS);
-                } catch (IOException e) {
+                } catch (Exception e) {
                     mHandler.sendEmptyMessage(LOADING_ERROR);
                 }
             }
         }.start();
-    }
-
-    //        for (int i = 0; i < 20; i++) {
-//            CuppingInfo cuppingInfo = new CuppingInfo();
-//            cuppingInfo.setId(i);
-//            cuppingInfo.setName("mxf---" + i);
-//            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-//            try {
-//                Date date = format.parse("2011-2-" + i / 5 + 1);
-//                cuppingInfo.setDate(date);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//            addData(cuppingInfo);
-//            cuppingInfo.setBakeReport(new BakeReport());
-//            cuppingInfos.add(cuppingInfo);
-//        }
-    // TODO: 2017/2/26
-    void addData(CuppingInfo cuppingInfo) {
-
-        cuppingInfo.setAcidity(8);
-        cuppingInfo.setAfterTaste(8);
-        cuppingInfo.setBalance(8);
-        cuppingInfo.setDryAndFragrant(8);
-        cuppingInfo.setFlavor(8);
-        cuppingInfo.setTaste(8);
-        cuppingInfo.setBalance(2);
-        cuppingInfo.setSweetness(5);
-        cuppingInfo.setOverall(9);
-
-        cuppingInfo.setBaked(7);
-        cuppingInfo.setFaced(4);
-        cuppingInfo.setScorched(3);
-        cuppingInfo.setUnderdevelopment(2);
-        cuppingInfo.setTipped(9);
-        cuppingInfo.setOverdevelopment(6);
     }
 
     public interface OnCupInteractionListener {

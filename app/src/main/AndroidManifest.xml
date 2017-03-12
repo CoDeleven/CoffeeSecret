@@ -10,7 +10,6 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -41,7 +40,7 @@
         <activity android:name=".ui.mine.HistoryLineActivity" />
         <activity android:name=".ui.cup.NewCuppingActivity" />
         <activity android:name=".ui.cup.LinesSelectedActivity" />
-        <activity android:name=".ui.device.DialogBeanSelected"/>
+        <activity android:name=".ui.device.DialogBeanSelected" />
         <activity android:name=".ui.mine.BluetoothListActivity" />
         <activity android:name=".ui.device.BakeActivity" />
         <activity android:name=".ui.device.ReportActivity" />
@@ -62,7 +61,8 @@
 
         <activity android:name=".ui.device.TestActivity" />
         <activity android:name=".ui.community.CommActivity" />
-        <activity android:name=".ui.community.MallActivity"></activity>
+        <activity android:name=".ui.community.MallActivity" />
+        <activity android:name=".ui.community.SellActivity"></activity>
     </application>
 
 </manifest>
