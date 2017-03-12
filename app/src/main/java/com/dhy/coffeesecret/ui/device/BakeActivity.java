@@ -279,7 +279,6 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
             }
             chart.enableReferLine(entries);
         }
-
         init();
     }
 

@@ -4,9 +4,11 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dhy.coffeesecret.R;
+import com.dhy.coffeesecret.utils.SPPrivateUtils;
 import com.pili.pldroid.player.PLMediaPlayer;
 import com.pili.pldroid.player.widget.PLVideoView;
 
@@ -19,6 +21,7 @@ public class LivePlayActivity extends AppCompatActivity implements
 
     private PLVideoView mVideoView;
     private ImageView liveplayCloseIv;
+    private TextView liveName;
     private String url;
 
     @Override
@@ -28,6 +31,9 @@ public class LivePlayActivity extends AppCompatActivity implements
 
         mVideoView = (PLVideoView) findViewById(R.id.pl_video_view);
         liveplayCloseIv = (ImageView) findViewById(R.id.liveplay_close_iv);
+        liveName = (TextView) findViewById(R.id.liveplay_zhibo_count);
+
+        liveName.setText(SPPrivateUtils.getString(LivePlayActivity.this, "liveName", "叶枫"));
 
         liveplayCloseIv.setOnClickListener(new View.OnClickListener() {
             @Override
