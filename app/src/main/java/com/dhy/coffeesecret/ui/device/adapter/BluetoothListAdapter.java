@@ -53,7 +53,7 @@ public class BluetoothListAdapter extends RecyclerView.Adapter<BluetoothListAdap
         /*
             因ListActivity重新生成，所以判断上一次因连接成功关闭activity时，所设置地址是否和本次地址一致，true则直接默认该设备tick可见
           */
-        if (device.getAddress() == lastConnectedAddress) {
+        if (device.getAddress().equals(lastConnectedAddress)) {
             // 默认设置tick可见
             holder.tick.setVisibility(View.VISIBLE);
             // 重置该属性,防止重复连接时出现勾圈同存情况

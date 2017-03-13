@@ -130,8 +130,6 @@ public class TestData {
                 objs.put("br_9.json", gson.fromJson(fileReader, BakeReport.class));
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
             }
         }
         return objs;

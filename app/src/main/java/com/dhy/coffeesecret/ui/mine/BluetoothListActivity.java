@@ -165,15 +165,26 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
     }
 
     @Override
-    public void notifyNewDevice(BluetoothDevice device, int rssi) {
+    public void notifyNewDevice(final BluetoothDevice device, int rssi) {
         Log.e("codelevex", "发现新设备：" + device.getAddress());
         // 如果可连接设备里包含里新设备，则只更新rssi,而不添加至adapter
         if (!canConnectDeviceMap.containsKey(device.getAddress())) {
-            adapter.addDevice(device);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    adapter.addDevice(device);
+                }
+            });
             canConnectDeviceMap.put(device.getAddress(), device);
         }
-        // 每次发现新设备刷新列表
-        refreshListView();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                // 每次发现新设备刷新列表
+                refreshListView();
+            }
+        });
+
 
         // 通过设备地址，更新对应设备的rssi
         adapter.setRssi(device.getAddress(), rssi);

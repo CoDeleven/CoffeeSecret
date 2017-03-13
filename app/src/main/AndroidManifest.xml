@@ -109,6 +109,8 @@
         <activity android:name=".ui.community.SellActivity"/>
         <activity android:name=".LauncherActivity">
         </activity>
+        <activity android:name=".TestActivity">
+        </activity>
     </application>
 
 </manifest>

@@ -14,7 +14,7 @@ public class LauncherActivity extends AppCompatActivity {
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        new Thread(new Runnable() {
+/*        new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
@@ -25,7 +25,7 @@ public class LauncherActivity extends AppCompatActivity {
 
                 LauncherActivity.this.finish();
             }
-        }).start();
+        }).start();*/
     }
 
     public void back(View view) {
