@@ -14,4 +14,5 @@ public class Global {
 
 
     public static final String LINES_COLOR_PACKAGE = "LINES_COLOR_PACKAGE";
+    public static final String IS_FIRST_TIME = "IS_FIRST_TIME";
 }
