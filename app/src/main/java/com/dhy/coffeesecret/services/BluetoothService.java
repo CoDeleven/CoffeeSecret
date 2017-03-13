@@ -24,6 +24,7 @@ import com.dhy.coffeesecret.utils.Utils;
 import java.util.UUID;
 
 public class BluetoothService extends Service {
+
     public static final UUID PRIMARY_SERVICE = UUID.fromString("000018f0-0000-1000-8000-00805f9b34fb");
     public static final UUID TAG_WRITE = UUID.fromString("00002af1-0000-1000-8000-00805f9b34fb");
     public static final UUID TAG_READ = UUID.fromString("00002af0-0000-1000-8000-00805f9b34fb");
