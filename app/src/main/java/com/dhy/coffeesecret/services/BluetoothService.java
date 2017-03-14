@@ -157,6 +157,9 @@ public class BluetoothService extends Service {
             Log.e(TAG, "无法获取BluetoothAdapter");
             return false;
         }
+        if(!mBluetoothAdapter.isEnabled()){
+            mBluetoothAdapter.enable();
+        }
 
         return true;
     }
@@ -455,7 +458,6 @@ public class BluetoothService extends Service {
         @Override
         public void run() {
             while (readable) {
-
                 dataReader.setWriteCommand();
                 // 等待dataRead返回数据
                 while (dataReader.isHandling()) {

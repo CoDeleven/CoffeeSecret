@@ -221,18 +221,9 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
         super.onCreate(savedInstanceState);
         lastAddress = SettingTool.getConfig(getContext()).getAddress();
         // 获取上一次连接的蓝牙设备地址
-        if (mBluetoothOperator == null) {
+        if (BluetoothService.BLUETOOTH_OPERATOR == null) {
             Intent intent = new Intent(getContext().getApplicationContext(), BluetoothService.class);
             getContext().getApplicationContext().bindService(intent, conn, Context.BIND_AUTO_CREATE);
-        }
-        if("".equals(lastAddress)){
-            new AlertDialog.Builder(getContext()).setTitle("首次连接").setMessage("请选择蓝牙设备：").setPositiveButton("去设置", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    Intent intent = new Intent(getContext(), BluetoothListActivity.class);
-                    startActivity(intent);
-                }
-            }).show();
         }
     }
 
@@ -259,7 +250,8 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
         // 根据是否准备，更换按钮事件
         switchStatus();
         // 如果连接
-        if (mBluetoothOperator != null && mBluetoothOperator.isConnected()) {
+        if (BluetoothService.BLUETOOTH_OPERATOR != null && BluetoothService.BLUETOOTH_OPERATOR.isConnected()) {
+            mBluetoothOperator = BluetoothService.BLUETOOTH_OPERATOR;
             // 更改已连接的视图
             mTextHandler.sendEmptyMessage(0);
             // 重新设置回调接口到本对象

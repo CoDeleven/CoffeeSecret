@@ -7,9 +7,8 @@
     android:layout_height="match_parent"
     tools:context="com.dhy.coffeesecret.LauncherActivity">
     <ImageView
-        android:src="@drawable/ic_start"
+        android:src="@mipmap/launch_frame"
         android:scaleType="fitXY"
-        android:onClick="back"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 </RelativeLayout>

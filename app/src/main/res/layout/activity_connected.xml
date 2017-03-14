@@ -1,17 +1,18 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-              android:orientation="vertical"
-             tools:context="com.dhy.coffeesecret.ConnectedFragment">
-
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_connected"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.dhy.coffeesecret.ConnectedActivity">
     <RelativeLayout
         android:gravity="center"
         android:background="@color/colorPrimary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <ImageView
-            android:padding="20dp"
             android:src="@drawable/ic_first_connected"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
@@ -38,6 +39,7 @@
             android:textColor="#7f7f7f"
             android:text="当你打开这个程序时，自动同步数据"/>
         <Button
+            android:id="@+id/id_first_confirm"
             android:layout_marginTop="30dp"
             android:layout_gravity="center_horizontal"
             android:layout_width="wrap_content"

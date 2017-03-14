@@ -1,6 +1,7 @@
 package com.dhy.coffeesecret;
 
 import android.app.Application;
+import android.content.Intent;
 import android.util.Log;
 
 import com.bugtags.library.Bugtags;
@@ -9,6 +10,7 @@ import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.pojo.BakeReportProxy;
 import com.dhy.coffeesecret.pojo.BeanInfo;
 import com.dhy.coffeesecret.pojo.CuppingInfo;
+import com.dhy.coffeesecret.services.BluetoothService;
 import com.dhy.coffeesecret.utils.CacheUtils;
 import com.dhy.coffeesecret.utils.HttpParser;
 import com.dhy.coffeesecret.utils.URLs;
@@ -228,5 +230,12 @@ public class MyApplication extends Application {
 
     public static void setUrl(String temp){
         url = temp;
+    }
+
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+        Intent intent = new Intent(this, BluetoothService.class);
+        stopService(intent);
     }
 }
