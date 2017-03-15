@@ -64,7 +64,8 @@
         <activity android:name=".ui.device.TestActivity" />
         <activity android:name=".ui.community.CommActivity" />
         <activity android:name=".ui.community.MallActivity" />
-        <activity android:name=".ui.community.SellActivity"></activity>
+        <activity android:name=".ui.community.SellActivity" />
+        <activity android:name=".ui.mine.QRCodeActivity"></activity>
     </application>
 
 </manifest>
