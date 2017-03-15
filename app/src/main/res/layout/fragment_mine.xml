@@ -23,7 +23,7 @@
             android:background="@drawable/image_selector"
             android:contentDescription="@null"
             android:scaleType="centerInside"
-            android:src="@drawable/qr_code" />
+            android:src="@drawable/ic_scan" />
 
     </RelativeLayout>
 
