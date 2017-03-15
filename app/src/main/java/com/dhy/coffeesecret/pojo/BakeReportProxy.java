@@ -41,7 +41,7 @@ public class BakeReportProxy {
     }
 
     public float getEnvTemp() {
-        return Float.parseFloat(bakeReport.getEndTemperature());
+        return Float.parseFloat(bakeReport.getAmbientTemperature());
     }
 
     public float getStartTemp() {
