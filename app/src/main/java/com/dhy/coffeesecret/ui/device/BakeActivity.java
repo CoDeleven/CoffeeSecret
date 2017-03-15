@@ -131,7 +131,7 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
 
             if (curStatus == DevelopBar.FIRST_BURST) {
                 developTime.setText(developBar.getDevelopTime());
-                developRate.setText(developBar.getDevelopRate());
+                developRate.setText("发展率：" + developBar.getDevelopRate());
             }
             Temprature temprature = new Temprature();
             temprature.setAccBeanTemp(accBean);
@@ -549,7 +549,7 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
 
         bakeReport.setDevelopmentTime(developBar.getDevelopTime());
 
-        bakeReport.setDevelopmentRate("发展率: " + developBar.getDevelopRate());
+        bakeReport.setDevelopmentRate(developBar.getDevelopRate());
 
         bakeReport.setStartTemperature(startTemp + "");
 

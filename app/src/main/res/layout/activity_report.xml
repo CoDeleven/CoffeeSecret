@@ -31,17 +31,17 @@
             android:layout_gravity="left|center_vertical"
             android:background="@android:color/transparent"
             android:drawableLeft="@drawable/ic_back"
-            android:drawablePadding="2dp"
             android:gravity="center_vertical"
             android:textColor="#FFF"
             android:textSize="17sp"/>
         <ImageView
+            android:id="@+id/id_barcode"
             android:layout_gravity="right|center_vertical"
-            android:gravity="center"
-            android:src="@drawable/qr_code"
+            android:gravity="center_vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/id_report_barcode"/>
+            android:layout_marginRight="20dp"
+            android:src="@drawable/qr_code"/>
 
     </android.support.v7.widget.Toolbar>
 
