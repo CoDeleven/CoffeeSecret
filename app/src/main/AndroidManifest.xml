@@ -124,6 +124,7 @@
         </activity>
         <activity android:name=".ConnectedActivity">
         </activity>
+        <activity android:name=".ui.mine.QRCodeActivity"/>
     </application>
 
 </manifest>

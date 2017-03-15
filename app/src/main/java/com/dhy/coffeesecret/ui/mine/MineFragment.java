@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -51,6 +52,8 @@ public class MineFragment extends Fragment {
     RoundedImageView mineHeadImg;
     @Bind(R.id.mine_nick_name)
     TextView mineNickName;
+    @Bind(R.id.mine_qr_code)
+    ImageView qrCode;
 
     private Context mContext;
 
@@ -60,7 +63,6 @@ public class MineFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_mine, container, false);
         mContext = getActivity();
-
         ButterKnife.bind(this, view);
         return view;
     }
@@ -78,7 +80,7 @@ public class MineFragment extends Fragment {
         ButterKnife.unbind(this);
     }
 
-    @OnClick({R.id.attention_layout, R.id.fans_layout, R.id.collection_layout, R.id.mine_my_privacy, R.id.mine_history_line, R.id.mine_settings, R.id.mine_my_device, R.id.mine_about_us})
+    @OnClick({R.id.attention_layout, R.id.fans_layout, R.id.collection_layout, R.id.mine_my_privacy, R.id.mine_history_line, R.id.mine_settings, R.id.mine_my_device, R.id.mine_about_us,R.id.mine_qr_code})
     public void onClick(View view) {
         Intent intent;
         switch (view.getId()) {
@@ -104,6 +106,9 @@ public class MineFragment extends Fragment {
                 intent = new Intent(mContext, AboutUsActivity.class);
                 startActivity(intent);
                 break;
+            case R.id.mine_qr_code:
+                intent = new Intent(mContext,QRCodeActivity.class);
+                startActivity(intent);
         }
         getActivity().overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
     }
