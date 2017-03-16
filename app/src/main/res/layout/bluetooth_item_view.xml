@@ -26,28 +26,34 @@
         android:drawablePadding="30dp"
         />
     <RelativeLayout
+        android:layout_gravity="center_vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <ProgressBar
-            android:layout_alignParentRight="true"
-            android:layout_gravity="right|center_vertical"
-            android:id="@+id/circle_progress"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:visibility="gone"/>
-        <ImageView
-            android:layout_alignParentRight="true"
-            android:src="@drawable/ic_seleted_tick"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/id_bluetooth_list_right"
-            android:layout_gravity="right|center_vertical"
-            android:visibility="gone"/>
-        <TextView
-            android:id="@+id/id_device_rssi"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
 
-        </TextView>
+            <ProgressBar
+                android:layout_alignParentRight="true"
+                android:layout_gravity="right|center_vertical"
+                android:id="@+id/circle_progress"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:visibility="invisible"/>
+            <ImageView
+                android:layout_alignParentRight="true"
+                android:src="@drawable/ic_seleted_tick"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/id_bluetooth_list_right"
+                android:layout_gravity="right|center_vertical"
+                android:visibility="gone"/>
+<!--            <ImageView
+                android:paddingRight="20dp"
+                android:src="@drawable/ic_bluetooth_stronger_0"
+                android:layout_gravity="right|center_vertical"
+                android:layout_toLeftOf="@id/circle_progress"
+                android:id="@+id/id_device_rssi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+            </ImageView>-->
+
     </RelativeLayout>
 </LinearLayout>

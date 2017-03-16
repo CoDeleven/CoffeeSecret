@@ -1,6 +1,5 @@
 package com.dhy.coffeesecret.ui.container;
 
-import android.app.Application;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,18 +12,15 @@ import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
-import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.ui.container.adapters.LinesAdapter;
 import com.dhy.coffeesecret.ui.container.fragments.SearchFragment;
 import com.dhy.coffeesecret.ui.device.ReportActivity;
+import com.dhy.coffeesecret.utils.TestData;
 import com.dhy.coffeesecret.views.SearchEditText;
 
-import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -59,7 +55,9 @@ public class LinesSelectedActivity extends AppCompatActivity implements View.OnC
     }
 
     private void init() {
-        Map<String, ? extends BakeReport> bakeReports = ((MyApplication) getApplication()).getBakeReports();
+        // TODO 校赛视频，暂时注释
+        // Map<String, ? extends BakeReport> bakeReports = ((MyApplication) getApplication()).getBakeReports();
+        Map<String, ? extends BakeReport> bakeReports = TestData.getBakeReports(this);
 
         bakeReportList.addAll(bakeReports.values());
         Log.e("codelevex", bakeReports.size() + "");
@@ -72,7 +70,10 @@ public class LinesSelectedActivity extends AppCompatActivity implements View.OnC
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 BakeReport report = (BakeReport) adapterView.getItemAtPosition(i);
-                ((MyApplication)(getApplication())).setBakeReport(report);
+                // TODO 校赛专用
+                // ((MyApplication)(getApplication())).setBakeReport(report);
+                TestData.setBakeReport(report);
+
                 Intent intent = new Intent(LinesSelectedActivity.this, ReportActivity.class);
                 startActivity(intent);
             }

@@ -3,6 +3,8 @@ package com.dhy.coffeesecret.utils;
 
 import net.sourceforge.pinyin4j.PinyinHelper;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
@@ -103,5 +105,37 @@ public class Utils {
             return "lb";
         }
         return "";
+    }
+
+    public static long date2IdWithoutTimestamp(String date){
+        SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
+        long result = -1;
+        try{
+            result = format1.parse(date).getTime();
+        }catch(Exception e){
+
+        }
+        return result;
+    }
+
+    public static String dateWidthoutTimestamp(String date){
+        SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            return format1.format(format1.parse(date));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static long date2IdWithTimestamp(String date){
+        SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd HH:ss");
+        long result = -1;
+        try{
+            result = format1.parse(date).getTime();
+        }catch(Exception e){
+
+        }
+        return result;
     }
 }

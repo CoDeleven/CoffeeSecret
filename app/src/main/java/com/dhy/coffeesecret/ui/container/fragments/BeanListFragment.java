@@ -1,6 +1,7 @@
 package com.dhy.coffeesecret.ui.container.fragments;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
@@ -125,7 +126,7 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
             public void onItemClicked(int position) {
                 Intent intent = new Intent(context, BeanInfoActivity.class);
                 intent.putExtra("beanInfo", coffeeBeanInfos.get(position));
-                startActivity(intent);
+                startActivityForResult(intent, position);
                 getActivity().overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
             }
         });
@@ -251,6 +252,7 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
         ArrayList<BeanInfo> beanInfoss = gson.fromJson(beanInfoListJson, new TypeToken<ArrayList<BeanInfo>>() {
         }.getType());
         Log.i(TAG, "getBeanInfos: " + beanInfoss);
+
         if (beanInfoss == null) {
             mHandler.sendEmptyMessage(TOAST_3);
         } else {
@@ -485,7 +487,7 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
         if ((screenPrice[0] > 0 || screenPrice[1] < maxPrice - 1)) {
             coffeeBeanInfos.clear();
             for (BeanInfo beanInfo : beanInfos) {
-                if (beanInfo.getPrice() >= screenPrice[0] && beanInfo.getPrice() < screenPrice[1]) {
+                if (beanInfo.getPrice() >= screenPrice[0] && beanInfo.getPrice() <= screenPrice[1]) {
                     coffeeBeanInfos.add(beanInfo);
                 }
             }
@@ -497,7 +499,7 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
             coffeeBeanInfos.clear();
             for (BeanInfo beanInfo : beanInfos) {
                 Log.i(TAG, "startScreen: weight = " + beanInfo.getStockWeight());
-                if (beanInfo.getPrice() > screenWeight[0] && beanInfo.getStockWeight() < screenWeight[1]) {
+                if (beanInfo.getStockWeight() >= screenWeight[0] && beanInfo.getStockWeight() <= screenWeight[1]) {
                     coffeeBeanInfos.add(beanInfo);
                 }
             }
@@ -506,8 +508,14 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
         beanListAdapter.notifyDataSetChanged();
     }
 
-    private void screenByHandler() {
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
+        if (resultCode == Activity.RESULT_OK) {
+            coffeeBeanInfoTemp.set(requestCode, (BeanInfo) data.getSerializableExtra("new_bean_info"));
+            coffeeBeanInfos.set(requestCode, (BeanInfo) data.getSerializableExtra("new_bean_info"));
+        }
     }
 
     private class BeanListHandler extends Handler {

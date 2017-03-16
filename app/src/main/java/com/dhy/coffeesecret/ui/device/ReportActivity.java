@@ -1,5 +1,6 @@
 package com.dhy.coffeesecret.ui.device;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +12,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.ScrollView;
@@ -18,13 +20,14 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BakeReport;
-import com.dhy.coffeesecret.pojo.BakeReportBeanFactory;
 import com.dhy.coffeesecret.pojo.BakeReportProxy;
 import com.dhy.coffeesecret.pojo.BeanInfoSimple;
+import com.dhy.coffeesecret.ui.device.fragments.SharedFragment;
+import com.dhy.coffeesecret.utils.FragmentTool;
 import com.dhy.coffeesecret.utils.SettingTool;
+import com.dhy.coffeesecret.utils.TestData;
 import com.dhy.coffeesecret.utils.UnitConvert;
 import com.dhy.coffeesecret.utils.Utils;
 import com.dhy.coffeesecret.views.BaseChart4Coffee;
@@ -37,6 +40,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 import static android.widget.LinearLayout.LayoutParams;
 import static android.widget.LinearLayout.LayoutParams.MATCH_PARENT;
@@ -76,6 +80,8 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
     TextView home;
     @Bind(R.id.id_report_total_weight)
     TextView totalWeight;
+    @Bind(R.id.id_barcode)
+    ImageView barcode;
     private String unit;
     private TableLayout tableLayout;
     private List<BeanInfoSimple> beanInfos = new ArrayList<>();
@@ -83,6 +89,12 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
     private List<LinearLayout> beanContent;
     private PopupWindow popupWindow;
     private BakeReportProxy proxy;
+
+    // 校园专用单一豆名
+    String _bean_;
+    String _species_;
+    String _bakeDegree_;
+    String _developRate_;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -98,7 +110,9 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
     }
 
     private void initParam() {
-        proxy = ((MyApplication)getApplication()).getBakeReport();
+        // proxy = ((MyApplication)getApplication()).getBakeReport();
+        proxy = TestData.getBakeReport();
+
         unit = Utils.convertUnitChineses2Eng(SettingTool.getConfig(this).getWeightUnit());
         mChart.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -138,6 +152,10 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
 
         score.setText(proxy.getBakeDegree());
 
+        // 校园专用
+        _bakeDegree_ = proxy.getBakeDegree();
+        _developRate_ = proxy.getDevelopRate();
+
         totalWeight.setText("熟豆重量：" + proxy.getBakeReport().getCookedBeanWeight() + unit);
 
         tableLayout = (TableLayout) findViewById(R.id.id_report_table);
@@ -166,7 +184,9 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        ((MyApplication)getApplication()).setBakeReport((BakeReport)null);
+        // TODO 校赛专用
+        // ((MyApplication)getApplication()).setBakeReport((BakeReport)null);
+        TestData.setBakeReport((BakeReport) null);
         finish();
     }
 
@@ -196,6 +216,19 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
         }
         return popupWindow;
 
+    }
+
+    @OnClick(R.id.id_barcode)
+    public void onBarcodeClick(){
+        Bundle bundle = new Bundle();
+        SharedFragment shared = new SharedFragment();
+        bundle.putString(SharedFragment.BEAN_NAME, _bean_);
+        bundle.putString(SharedFragment.SPECIES, _species_);
+        bundle.putString(SharedFragment.BAKE_DEGREE, _bakeDegree_);
+        bundle.putString(SharedFragment.DEVELOP_RATE, _developRate_);
+
+        shared.setArguments(bundle);
+        FragmentTool.getFragmentToolInstance(this).showDialogFragmen("dialogFragment", shared);
     }
 
     @Override
@@ -286,6 +319,10 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
             TextView beanName = new TextView(this);
             beanName.setText("名称：" + beanInfo.getBeanName());
             beanName.setLayoutParams(temp);
+
+            // 校园专用
+            _bean_ = beanInfo.getBeanName();
+            _species_ = beanInfo.getSpecies();
 
             // 设置海拔
             TextView beanAltitude = new TextView(this);

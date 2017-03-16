@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.ui.community.live.player.adapter.LiveListAdapter;
 import com.dhy.coffeesecret.utils.HttpUtils;
+import com.dhy.coffeesecret.utils.SPPrivateUtils;
 import com.dhy.coffeesecret.utils.URLs;
 
 import java.io.IOException;
@@ -49,18 +50,21 @@ public class LiveListActivity extends AppCompatActivity {
         LinearLayoutManager manager = new LinearLayoutManager(LiveListActivity.this);
         manager.setOrientation(LinearLayoutManager.VERTICAL);
 
-        ArrayList<String> list = new ArrayList<String>();
-        list.add("陈灏正在直播");
+        final ArrayList<String> list = new ArrayList<String>();
+        list.add("叶老板正在直播");
+        list.add("磊少正在直播");
+        list.add("杨大咖正在直播");
 
         liveListAdapter = new LiveListAdapter(context, list, new LiveListAdapter.OnLiveClickListener() {
             @Override
-            public void onLiveClickListener(int position) {
+            public void onLiveClickListener(final int position) {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
                         try {
                             String playUrl = HttpUtils.getStringFromServer(URLs.GET_LIVE_PLAY_PATH);
                             Intent intent = new Intent(context, LivePlayActivity.class);
+                            SPPrivateUtils.put(context, "liveName", list.get(position));
                             intent.putExtra("play_url", playUrl);
                             startActivity(intent);
                             overridePendingTransition(R.anim.in_from_bottom, R.anim.out_fade);

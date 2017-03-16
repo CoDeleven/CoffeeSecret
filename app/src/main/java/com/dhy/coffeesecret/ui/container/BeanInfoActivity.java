@@ -94,7 +94,7 @@ public class BeanInfoActivity extends AppCompatActivity {
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                BeanInfoActivity.this.onBackPressed();
+                exit();
             }
         });
         btnEdit.setOnClickListener(new View.OnClickListener() {
@@ -133,30 +133,41 @@ public class BeanInfoActivity extends AppCompatActivity {
         infoWeight.setText(beanInfo.getStockWeight() + "g");
         infoBuyDate.setText(String.format("%1$tY-%1$tm-%1$te", beanInfo.getDate()));
     }
-
+    private BeanInfo newBeanInfo;
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (resultCode) {
             case RESULT_OK:
-                BeanInfo beanInfo = (BeanInfo) data.getSerializableExtra("new_bean_info");
-                infoArea.setText(beanInfo.getArea());
-                infoManor.setText(beanInfo.getManor());
-                infoAltitude.setText(beanInfo.getAltitude());
-                infoSpecies.setText(beanInfo.getSpecies());
-                infoLevel.setText(beanInfo.getLevel());
-                infoWaterContent.setText(beanInfo.getWaterContent() * 100 + "%");
-                infoHandler.setText(beanInfo.getProcess());
-                infoSupplier.setText(beanInfo.getSupplier());
-                infoPrice.setText("" + beanInfo.getPrice());
-                infoWeight.setText(beanInfo.getStockWeight() + "g");
-                infoBuyDate.setText(String.format("%1$tY-%1$tm-%1$te", beanInfo.getDate()));
+                newBeanInfo = (BeanInfo) data.getSerializableExtra("new_bean_info");
+                infoArea.setText(newBeanInfo.getArea());
+                infoManor.setText(newBeanInfo.getManor());
+                infoAltitude.setText(newBeanInfo.getAltitude());
+                infoSpecies.setText(newBeanInfo.getSpecies());
+                infoLevel.setText(newBeanInfo.getLevel());
+                infoWaterContent.setText(newBeanInfo.getWaterContent() * 100 + "%");
+                infoHandler.setText(newBeanInfo.getProcess());
+                infoSupplier.setText(newBeanInfo.getSupplier());
+                infoPrice.setText("" + newBeanInfo.getPrice());
+                infoWeight.setText(newBeanInfo.getStockWeight() + "g");
+                infoBuyDate.setText(String.format("%1$tY-%1$tm-%1$te", newBeanInfo.getDate()));
                 break;
         }
     }
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        exit();
+    }
+
+    private void exit() {
+        if (newBeanInfo == null) {
+            setResult(RESULT_CANCELED);
+        } else {
+            Intent intent = new Intent();
+            intent.putExtra("new_bean_info", newBeanInfo);
+            setResult(RESULT_OK, intent);
+        }
+        this.finish();
         overridePendingTransition(R.anim.in_from_left, R.anim.out_to_right);
     }
 }

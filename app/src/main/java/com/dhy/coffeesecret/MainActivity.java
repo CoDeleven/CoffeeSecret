@@ -1,5 +1,6 @@
 package com.dhy.coffeesecret;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -83,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements CupFragment.OnCup
         }
 
 
-        mViewPager.setCurrentItem(0);
+        mViewPager.setCurrentItem(2);
         // 设置tablayout固定
         mTabLayout.setTabMode(TabLayout.MODE_FIXED);
 

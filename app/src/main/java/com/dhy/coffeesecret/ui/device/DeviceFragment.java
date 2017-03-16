@@ -1,5 +1,6 @@
 package com.dhy.coffeesecret.ui.device;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothDevice;
 import android.content.ComponentName;
@@ -31,6 +32,7 @@ import com.dhy.coffeesecret.ui.device.fragments.BakeDialog;
 import com.dhy.coffeesecret.ui.mine.BluetoothListActivity;
 import com.dhy.coffeesecret.utils.FragmentTool;
 import com.dhy.coffeesecret.utils.SettingTool;
+import com.dhy.coffeesecret.utils.T;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -85,12 +87,12 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
             mBluetoothOperator.setDataChangedListener(DeviceFragment.this);
             mBluetoothOperator.setDeviceChangedListener(DeviceFragment.this);
 
-            // 获取上一次连接的蓝牙设备地址
-            lastAddress = SettingTool.getConfig(getContext()).getAddress();
-            /*// 如果不为空，则尝试直接连接该蓝牙
+
+            // 如果不为空，则尝试直接连接该蓝牙
             if (!"".equals(lastAddress)) {
-                mBluetoothOperator.connect(lastAddress);
-            }*/
+                T.showShort(getContext(), "正在搜索上一次设备:" + lastAddress + "...");
+                mBluetoothOperator.startScanDevice();
+            }
         }
 
         @Override
@@ -217,11 +219,12 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (mBluetoothOperator == null) {
+        lastAddress = SettingTool.getConfig(getContext()).getAddress();
+        // 获取上一次连接的蓝牙设备地址
+        if (BluetoothService.BLUETOOTH_OPERATOR == null) {
             Intent intent = new Intent(getContext().getApplicationContext(), BluetoothService.class);
             getContext().getApplicationContext().bindService(intent, conn, Context.BIND_AUTO_CREATE);
         }
-
     }
 
     @Override
@@ -247,7 +250,8 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
         // 根据是否准备，更换按钮事件
         switchStatus();
         // 如果连接
-        if (mBluetoothOperator != null && mBluetoothOperator.isConnected()) {
+        if (BluetoothService.BLUETOOTH_OPERATOR != null && BluetoothService.BLUETOOTH_OPERATOR.isConnected()) {
+            mBluetoothOperator = BluetoothService.BLUETOOTH_OPERATOR;
             // 更改已连接的视图
             mTextHandler.sendEmptyMessage(0);
             // 重新设置回调接口到本对象
@@ -311,7 +315,7 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
                     intent.putExtra(BakeActivity.RAW_BEAN_INFO, dialogBeanInfos.toArray());
                     intent.putExtra(BakeActivity.DEVICE_NAME, mBluetoothOperator.getCurDeviceName());
                     intent.putExtra(BakeActivity.START_TEMP, beginTemp);
-                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
                     intent.putExtra(BakeActivity.BAKE_DATE, format.format(new Date()));
                     intent.putExtra(BakeActivity.ENV_TEMP, envTemp);
                     if (referTempratures != null) {
@@ -389,7 +393,9 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
     @Override
     public void notifyNewDevice(BluetoothDevice device, int rssi) {
         if(lastAddress.equals(device.getAddress())){
+            T.showShort(getContext(), "正在尝试自动连接...");
             mBluetoothOperator.connect(device);
+            mBluetoothOperator.stopScanDevice();
         }
     }
 

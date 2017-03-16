@@ -40,6 +40,16 @@ public class LiveListAdapter extends RecyclerView.Adapter<LiveListAdapter.LiveLi
     @Override
     public void onBindViewHolder(final LiveListViewHolder holder, int position) {
         holder.liveName.setText(liveList.get(position));
+        if (position == 0) {
+            holder.live_watch_number.setText(1882+"人正在直播");
+            holder.liveSnapshot.setImageResource(R.mipmap.coffee_shot);
+        } else if (position == 1){
+            holder.live_watch_number.setText(231+"人正在直播");
+            holder.liveSnapshot.setImageResource(R.mipmap.hourbon);
+        } else if (position == 2) {
+            holder.live_watch_number.setText(573+"人正在直播");
+            holder.liveSnapshot.setImageResource(R.mipmap.lv_bg);
+        }
         holder.liveSnapshot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -56,11 +66,13 @@ public class LiveListAdapter extends RecyclerView.Adapter<LiveListAdapter.LiveLi
     class LiveListViewHolder extends RecyclerView.ViewHolder {
         private ImageView liveSnapshot;
         private TextView liveName;
+        private TextView live_watch_number;
 
         public LiveListViewHolder(View itemView) {
             super(itemView);
             liveSnapshot = (ImageView) itemView.findViewById(R.id.live_snapshot);
             liveName = (TextView) itemView.findViewById(R.id.live_name);
+            live_watch_number = (TextView) itemView.findViewById(R.id.live_watch_number);
         }
     }
 

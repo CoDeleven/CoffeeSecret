@@ -19,5 +19,7 @@
     <dimen name="def_wheel_width">32dp</dimen>
     <dimen name="def_shadow_radius">2dp</dimen>
     <dimen name="def_shadow_offset">2dp</dimen>
-
+    <dimen name="LoadingDots_dots_size_default">12dp</dimen>
+    <dimen name="LoadingDots_dots_space_default">2dp</dimen>
+    <dimen name="LoadingDots_jump_height_default">12dp</dimen>
 </resources>

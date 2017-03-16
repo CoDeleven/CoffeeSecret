@@ -112,7 +112,6 @@ public class LegendRenderer extends Renderer {
                         ));
                     }
 
-                    // if (bds.getLabel() != null && !"".equals(bds.getLabel())) {
                         // add the legend description label
                         computedEntries.add(new LegendEntry(
                                 dataSet.getLabel(),
@@ -122,7 +121,6 @@ public class LegendRenderer extends Renderer {
                                 null,
                                 ColorTemplate.COLOR_NONE
                         ));
-                    // }
 
                 } else if (dataSet instanceof IPieDataSet) {
 
@@ -352,7 +350,7 @@ public class LegendRenderer extends Renderer {
 
                     boolean isStacked = e.label == null; // grouped forms have null labels
 
-                    if (drawingForm) {
+                    if (drawingForm && !"".equals(e.label)) {
                         if (direction == Legend.LegendDirection.RIGHT_TO_LEFT)
                             posX -= formSize;
 
@@ -362,7 +360,7 @@ public class LegendRenderer extends Renderer {
                             posX += formSize;
                     }
 
-                    if (!isStacked) {
+                    if (!isStacked  && !"".equals(e.label)) {
                         if (drawingForm)
                             posX += direction == Legend.LegendDirection.RIGHT_TO_LEFT ? -formToTextSpace :
                                     formToTextSpace;
@@ -557,6 +555,8 @@ public class LegendRenderer extends Renderer {
      * @param label the label to draw
      */
     protected void drawLabel(Canvas c, float x, float y, String label) {
-        c.drawText(label, x, y, mLegendLabelPaint);
+        if(!"".equals(label)){
+            c.drawText(label, x, y, mLegendLabelPaint);
+        }
     }
 }

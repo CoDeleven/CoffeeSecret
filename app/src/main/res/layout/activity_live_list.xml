@@ -8,7 +8,7 @@
 
     <include
         android:id="@+id/live_title_bar"
-        layout="@layout/normal_title_noback" />
+        layout="@layout/title_bar_back" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/live_list"

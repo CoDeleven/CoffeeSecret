@@ -23,8 +23,8 @@ import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.pojo.BeanInfo;
 import com.dhy.coffeesecret.pojo.DialogBeanInfo;
-import com.dhy.coffeesecret.ui.cup.LinesSelectedActivity;
 import com.dhy.coffeesecret.ui.device.DialogBeanSelected;
+import com.dhy.coffeesecret.ui.device.LineSelectedActivity;
 import com.dhy.coffeesecret.utils.SettingTool;
 
 import java.util.ArrayList;
@@ -95,13 +95,13 @@ public class BakeDialog extends DialogFragment {
         unit = SettingTool.getConfig(getContext()).getWeightUnit();
         //默认5,根据单位乘1000或者500
         float defaultWeight = -1;
-        if (unit.equals("克")) {
+        if (unit.equals("g")) {
             unit = "g";
             defaultWeight = 500;
-        } else if (unit.equals("千克")) {
+        } else if (unit.equals("kg")) {
             unit = "kg";
             defaultWeight = 0.5f;
-        } else if (unit.equals("磅")) {
+        } else if (unit.equals("bl")) {
             unit = "lb";
             defaultWeight = 5 * 1.1f;
         }
@@ -259,13 +259,13 @@ public class BakeDialog extends DialogFragment {
         switch (view.getId()) {
             case R.id.id_bake_dialog_refer_history:
                 //TODO 完成历史参考曲线
-                intent = new Intent(getContext(), LinesSelectedActivity.class);
+                intent = new Intent(getContext(), LineSelectedActivity.class);
                 startActivityForResult(intent, GET_HISTORY);
 
                 break;
             case R.id.id_bake_dialog_refer_collection:
                 //TODO 完成收藏参考曲线
-                intent = new Intent(getContext(), LinesSelectedActivity.class);
+                intent = new Intent(getContext(), LineSelectedActivity.class);
                 startActivityForResult(intent, GET_COLLECTION);
         }
     }

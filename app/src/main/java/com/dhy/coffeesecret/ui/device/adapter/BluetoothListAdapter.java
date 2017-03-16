@@ -27,7 +27,7 @@ public class BluetoothListAdapter extends RecyclerView.Adapter<BluetoothListAdap
     private Context context;
     private LayoutInflater layoutInflater;
     private List<BluetoothDevice> devices = new ArrayList<>();
-    private Map<String, TextView> rssiTextView = new HashMap<>();
+    private Map<String, ImageView> rssiTextView = new HashMap<>();
     private Map<String, Integer> rssiMac = new HashMap<>();
     private OnItemClickListener onItemClickListener;
 
@@ -53,7 +53,7 @@ public class BluetoothListAdapter extends RecyclerView.Adapter<BluetoothListAdap
         /*
             因ListActivity重新生成，所以判断上一次因连接成功关闭activity时，所设置地址是否和本次地址一致，true则直接默认该设备tick可见
           */
-        if (device.getAddress() == lastConnectedAddress) {
+        if (device.getAddress().equals(lastConnectedAddress)) {
             // 默认设置tick可见
             holder.tick.setVisibility(View.VISIBLE);
             // 重置该属性,防止重复连接时出现勾圈同存情况
@@ -67,9 +67,19 @@ public class BluetoothListAdapter extends RecyclerView.Adapter<BluetoothListAdap
         // 从map中获取rssi的值
         Integer rssiValue = rssiMac.get(device.getAddress());
         // 如果rssiValue不为空，则重新设置rssi的文本
-        if (rssiValue != null) {
-            holder.rssi.setText(rssiValue + "");
-        }
+/*        if (rssiValue != null) {
+            if(rssiValue < 0 && rssiValue >= -60){
+                holder.rssi.setImageResource(R.drawable.ic_bluetooth_stronger_4);
+            }else if(rssiValue < -60 && rssiValue >= -70){
+                holder.rssi.setImageResource(R.drawable.ic_bluetooth_stronger_3);
+            }else if(rssiValue < -70 && rssiValue >= -80){
+                holder.rssi.setImageResource(R.drawable.ic_bluetooth_stronger_2);
+            }else if(rssiValue < -80 && rssiValue >= -90){
+                holder.rssi.setImageResource(R.drawable.ic_bluetooth_stronger_1);
+            }else{
+                holder.rssi.setImageResource(R.drawable.ic_bluetooth_stronger_0);
+            }
+        }*/
         holder.layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -84,6 +94,7 @@ public class BluetoothListAdapter extends RecyclerView.Adapter<BluetoothListAdap
 
     public void addDevice(BluetoothDevice device) {
         devices.add(device);
+        notifyDataSetChanged();
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
@@ -100,7 +111,7 @@ public class BluetoothListAdapter extends RecyclerView.Adapter<BluetoothListAdap
     }
 
     class BluetoothViewHolder extends RecyclerView.ViewHolder {
-        private TextView rssi;
+        private ImageView rssi;
         private TextView machine;
         private View layout;
         private ProgressBar progressCircle;
@@ -110,7 +121,7 @@ public class BluetoothListAdapter extends RecyclerView.Adapter<BluetoothListAdap
             super(itemView);
             this.layout = itemView;
             machine = (TextView) itemView.findViewById(R.id.text_name);
-            rssi = (TextView) itemView.findViewById(R.id.id_device_rssi);
+            // rssi = (ImageView) itemView.findViewById(R.id.id_device_rssi);
             progressCircle = (ProgressBar) itemView.findViewById(R.id.circle_progress);
             tick = (ImageView) itemView.findViewById(R.id.id_bluetooth_list_right);
         }

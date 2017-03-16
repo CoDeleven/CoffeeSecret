@@ -17,6 +17,7 @@
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize">
 
+
         <TextView
             android:id="@+id/id_toolbar_title"
             android:layout_width="wrap_content"

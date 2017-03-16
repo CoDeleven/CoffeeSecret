@@ -330,6 +330,7 @@ public class NewCuppingActivity extends AppCompatActivity
                             @Override
                             public void onFailure(Call call, IOException e) {
                                 mHandler.sendEmptyMessage(ERROR);
+                                loadShowViewInMain();
                                 e.printStackTrace();
                             }
 
@@ -359,6 +360,7 @@ public class NewCuppingActivity extends AppCompatActivity
                         @Override
                         public void onFailure(Call call, IOException e) {
                             mHandler.sendEmptyMessage(ERROR);
+                            loadShowViewInMain();
                         }
 
                         @Override
@@ -381,6 +383,7 @@ public class NewCuppingActivity extends AppCompatActivity
         HttpUtils.enqueue(url, mCuppingInfo, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
+                finish();
                 mHandler.sendEmptyMessage(ERROR);
             }
 
