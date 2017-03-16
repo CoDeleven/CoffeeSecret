@@ -17,14 +17,6 @@ import com.dhy.coffeesecret.utils.T;
 
 import biz.kasual.materialnumberpicker.MaterialNumberPicker;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link OnItemValueChangeListener} interface
- * to handle interaction events.
- * Use the {@link ItemInputFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class ItemInputFragment extends Fragment implements NumberPicker.OnValueChangeListener {
 
     private static final String ARG_POSITION = "position";
@@ -37,10 +29,10 @@ public class ItemInputFragment extends Fragment implements NumberPicker.OnValueC
 
     private TextView mTitleView;
 
-    private MaterialNumberPicker mPickerFir;
+    //    private MaterialNumberPicker mPickerFir;
     private MaterialNumberPicker mPickerSec;
     private MaterialNumberPicker mPickerThr;
-    private MaterialNumberPicker mPickerFou;
+//    private MaterialNumberPicker mPickerFou;
 
     private View mContentView;
 
@@ -76,39 +68,34 @@ public class ItemInputFragment extends Fragment implements NumberPicker.OnValueC
 
     private void initView() {
         mTitleView = (TextView) mContentView.findViewById(R.id.title_text);
-        mPickerFir = (MaterialNumberPicker) mContentView.findViewById(R.id.np_fir);
+        mTitleView.setText(mTitle);
+
         mPickerSec = (MaterialNumberPicker) mContentView.findViewById(R.id.np_sec);
         mPickerThr = (MaterialNumberPicker) mContentView.findViewById(R.id.np_thr);
-        mPickerFou = (MaterialNumberPicker) mContentView.findViewById(R.id.np_fou);
-        Float aFloat = Float.valueOf(mValue);
-        int i = (int) (aFloat * 100);
-        mTitleView.setText(mTitle);
-        mPickerFou.setValue(i % 10);
-        mPickerThr.setValue((i / 10) % 10);
-        mPickerSec.setValue((i / 100) % 10);
-        mPickerFir.setValue(i / 1000);
-
         if (mPosition > 7) {
             lockPicker();
         }
 
-        mPickerFir.setOnValueChangedListener(this);
+        mPickerSec.setFormatter(new Formatter(1));
+        mPickerThr.setFormatter(new Formatter(2));
+
+        Float aFloat = Float.valueOf(mValue);
+        int i = (int) (aFloat * 100);
+        mPickerSec.setValue(i / 100);
+        mPickerThr.setValue((i % 100) / 25);
         mPickerSec.setOnValueChangedListener(this);
         mPickerThr.setOnValueChangedListener(this);
-        mPickerFou.setOnValueChangedListener(this);
     }
 
     public void lockPicker() {
         mPickerSec.setMaxValue(5);
-        mPickerFir.setEnabled(false);
-        mPickerFou.setEnabled(false);
-        mPickerThr.setEnabled(false);
-        mPickerFou.setValue(0);
-        mPickerThr.setValue(0);
-        mPickerFir.setValue(0);
-        mPickerFou.setTextColor(Color.GRAY);
-        mPickerThr.setTextColor(Color.GRAY);
-        mPickerFir.setTextColor(Color.GRAY);
+        mPickerSec.setMinValue(0);
+        mPickerSec.setTextSize(120);
+//        mPickerThr.setEnabled(false);
+        mPickerThr.setVisibility(View.GONE);
+        mContentView.findViewById(R.id.tv).setVisibility(View.GONE);
+//        mPickerThr.setValue(0);
+//        mPickerThr.setTextColor(Color.GRAY);
     }
 
 
@@ -148,37 +135,40 @@ public class ItemInputFragment extends Fragment implements NumberPicker.OnValueC
 
     @Override
     public void onValueChange(NumberPicker numberPicker, int i, int i1) {
-
-        int val0 = mPickerFir.getValue();
         int val1 = mPickerSec.getValue();
         int val2 = mPickerThr.getValue();
-        int val3 = mPickerFou.getValue();
         float value;
-        if(val0 == 1){
-            mPickerSec.setValue(0);
+        if (val1 == 10) {
             mPickerThr.setValue(0);
-            mPickerFou.setValue(0);
-            T.showShort(getActivity(),"分数上限为10分");
-            value = 10.00f;
-        }else {
-            value = val0 * 10 + val1 + val2 * 0.1f + val3 * 0.01f;
+            value = 10;
+        } else {
+            value = val1 + val2 * 0.25f;
+        }
+        mListener.onItemValueChange(mPosition, value);
+    }
+
+    private class Formatter implements NumberPicker.Formatter {
+
+        private int position;
+
+        Formatter(int position) {
+            this.position = position;
         }
 
-        if (mListener != null) {
-            mListener.onItemValueChange(mPosition, value);
+        @Override
+        public String format(int i) {
+            if (i == 11) i = 5; // FIXME: 2017/3/16  这里有个11不知道哪里出来的
+
+            switch (position) {
+                case 1:
+                    return i / 10 + " " + i % 10;
+                case 2:
+                    return i * 25 / 10 + " " + i * 25 % 10;
+            }
+            return "error";
         }
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnItemValueChangeListener {
         void onItemValueChange(int position, float value);
     }

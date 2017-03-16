@@ -155,7 +155,7 @@ public class InputDialogFragment extends DialogFragment
             mContentView = inflater.inflate(R.layout.fragment_input, container, false);
         }
         getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getDialog().setCanceledOnTouchOutside(false);
+//        getDialog().setCanceledOnTouchOutside(false);
         return mContentView;
     }
 
@@ -163,19 +163,9 @@ public class InputDialogFragment extends DialogFragment
     public void onActivityCreated(Bundle savedInstanceState) {
 
         mViewPager = (ViewPager) mContentView.findViewById(R.id.vp);
-        mButton = (Button) mContentView.findViewById(R.id.btn_confirm);
-
         mAdapter = new ItemPageAdapter(getChildFragmentManager());
         mViewPager.setAdapter(mAdapter);
         mViewPager.setCurrentItem(currentItem);
-
-        mButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dismissAllowingStateLoss();
-            }
-        });
-
         if (isSlidable) {
             mLeftButton = (ImageButton) mContentView.findViewById(R.id.ib_left);
             mRightButton = (ImageButton) mContentView.findViewById(R.id.ib_right);
