@@ -23,23 +23,19 @@ import android.widget.TextView;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.pojo.CuppingInfo;
-import com.dhy.coffeesecret.pojo.TempratureSet;
 import com.dhy.coffeesecret.ui.cup.adapter.CuppingListAdapter;
 import com.dhy.coffeesecret.ui.cup.comparator.BaseComparator;
 import com.dhy.coffeesecret.ui.cup.comparator.DateComparator;
 import com.dhy.coffeesecret.ui.cup.comparator.OrderBy;
 import com.dhy.coffeesecret.ui.cup.comparator.ScoreComparator;
-import com.dhy.coffeesecret.utils.HttpUtils;
 import com.dhy.coffeesecret.utils.T;
 import com.dhy.coffeesecret.utils.TestData;
-import com.dhy.coffeesecret.utils.URLs;
 import com.dhy.coffeesecret.views.DividerDecoration;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
-import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Type;
 import java.util.Collections;
@@ -90,6 +86,10 @@ public class CupFragment extends Fragment {
     private BaseComparator currentComparator;
     private StickyRecyclerHeadersDecoration decor;
     private boolean hasDecor = true;
+    private ScoreComparator scoreAscComparator;
+    private ScoreComparator scoreDescComparator;
+    private DateComparator dateAscComparator;
+    private DateComparator dateDescComparator;
 
 
     public CupFragment() {
@@ -206,47 +206,53 @@ public class CupFragment extends Fragment {
         switch (id) {
             case R.id.tv_max:
                 mSortText.setText(SORT_ORDER[0]);
-                Collections.sort(cuppingInfos, new ScoreComparator(OrderBy.ASC));
-                currentComparator = new ScoreComparator(OrderBy.ASC);
-                mRecyclerView.removeItemDecoration(decor);
-                if (hasDecor) {
-                    mRecyclerView.removeItemDecoration(decor);
-                    hasDecor = false;
+                if (scoreAscComparator == null) {
+                    scoreAscComparator = new ScoreComparator(OrderBy.ASC);
                 }
+                currentComparator = scoreAscComparator;
+                toggleDecor(false);
                 break;
             case R.id.tv_min:
-                Collections.sort(cuppingInfos, new ScoreComparator());
-                currentComparator = new ScoreComparator();
                 mSortText.setText(SORT_ORDER[1]);
-                if (hasDecor) {
-                    mRecyclerView.removeItemDecoration(decor);
-                    hasDecor = false;
+                if (scoreDescComparator == null) {
+                    scoreDescComparator = new ScoreComparator();
                 }
+                currentComparator = scoreDescComparator;
+                toggleDecor(false);
                 break;
             case R.id.tv_early:
-                Collections.sort(cuppingInfos, new DateComparator(OrderBy.ASC));
-                currentComparator = new DateComparator(OrderBy.ASC);
                 mSortText.setText(SORT_ORDER[2]);
-                if (!hasDecor) {
-                    mRecyclerView.addItemDecoration(decor);
-                    hasDecor = true;
+                if (dateAscComparator == null) {
+                    dateAscComparator = new DateComparator(OrderBy.ASC);
                 }
+                currentComparator = dateAscComparator;
+                toggleDecor(true);
                 break;
             case R.id.tv_later:
-                Collections.sort(cuppingInfos, new DateComparator());
-                currentComparator = new DateComparator();
                 mSortText.setText(SORT_ORDER[3]);
-                if (!hasDecor) {
-                    mRecyclerView.addItemDecoration(decor);
-                    hasDecor = true;
+                if (dateDescComparator == null) {
+                    dateDescComparator = new DateComparator();
                 }
+                currentComparator = dateDescComparator;
+                toggleDecor(true);
                 break;
             default:
                 break;
         }
+        Collections.sort(cuppingInfos, currentComparator);
         mAdapter.notifyDataSetChanged();
         mSortWindow.dismiss();
         isShow = false;
+    }
+
+    private void toggleDecor(boolean show) {
+        if (show && !hasDecor) {
+            mRecyclerView.addItemDecoration(decor);
+            hasDecor = true;
+        }else if(!show && hasDecor){
+            mRecyclerView.removeItemDecoration(decor);
+            hasDecor = false;
+        }
     }
 
     public PopupWindow getPopupWindow(View content) {
