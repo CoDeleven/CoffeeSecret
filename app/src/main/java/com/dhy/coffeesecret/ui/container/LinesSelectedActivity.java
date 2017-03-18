@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
+import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.ui.container.adapters.LinesAdapter;
@@ -56,11 +57,10 @@ public class LinesSelectedActivity extends AppCompatActivity implements View.OnC
 
     private void init() {
         // TODO 校赛视频，暂时注释
-        // Map<String, ? extends BakeReport> bakeReports = ((MyApplication) getApplication()).getBakeReports();
-        Map<String, ? extends BakeReport> bakeReports = TestData.getBakeReports(this);
+        Map<String, ? extends BakeReport> bakeReports = ((MyApplication) getApplication()).getBakeReports();
+        // Map<String, ? extends BakeReport> bakeReports = TestData.getBakeReports(this);
 
         bakeReportList.addAll(bakeReports.values());
-        Log.e("codelevex", bakeReports.size() + "");
 
         listView.setAdapter(new LinesAdapter(bakeReportList, this));
         View searchBarLayout = View.inflate(this, R.layout.conta_lines_searchbar_part, null);

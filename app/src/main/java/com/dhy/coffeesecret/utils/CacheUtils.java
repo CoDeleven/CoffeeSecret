@@ -58,21 +58,34 @@ public class CacheUtils {
         }
     }
 
+    /**
+     * 获取所有该类型的文件
+     * @param clazz 该类型的class
+     * @param <T> 参数类型，一般是BakeReport、BeanInfo或者CuppingInfo
+     * @return 返回该类型的所有对象
+     */
     public <T> Map<String, T> getListObjectFromCache(final Class<? extends T> clazz) {
+        // 获取该类型文件的前缀
         final String prefix = getFileParent(clazz);
+        // 查找目录，根据prefix获取files
         File[] files = context.getCacheDir().listFiles(new FilenameFilter() {
             @Override
             public boolean accept(File dir, String name) {
                 return name.contains(prefix);
             }
         });
+
         Map<String, T> objs = new HashMap<>();
         Gson gson = new Gson();
 
+        // 满足要求的文件
         for (int i = 0; i < files.length; ++i) {
             try {
+                // 通过文件获取gson
                 T temp = gson.fromJson(new InputStreamReader(new FileInputStream(files[i])), clazz);
+                // 获取文件id
                 String id = files[i].getName().substring(prefix.length());
+                // 放入以前缀+id命名的文件
                 objs.put(prefix + id, temp);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
