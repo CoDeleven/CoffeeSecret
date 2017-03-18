@@ -579,7 +579,6 @@ public class CircleSeekBar extends View {
     }
 
     public void resetStatus() {
-        Log.e("codelevex", "被重置啦");
         mCurAngle = 0;
         mWheelCurY = mFirstCurY;
         mWheelCurX = mFirstCurX;

@@ -2,6 +2,9 @@ package com.dhy.coffeesecret.pojo;
 
 import android.util.Log;
 
+import com.bumptech.glide.util.Util;
+import com.dhy.coffeesecret.utils.Utils;
+
 import java.io.Serializable;
 import java.text.DecimalFormat;
 
@@ -40,9 +43,9 @@ public class Temprature implements Serializable {
         temp.setEnvTemp(Float.parseFloat(subStr[0]));
 
         if (lastTemprature != null) {
-            temp.setAccBeanTemp(get2Precision(beanTemp - lastTemprature.getBeanTemp()));
-            temp.setAccInwindTemp(get2Precision(inwindTemp - lastTemprature.getInwindTemp()));
-            temp.setAccOutwindTemp(get2Precision(outwindTemp - lastTemprature.getOutwindTemp()));
+            temp.setAccBeanTemp(Utils.get2PrecisionFloat(beanTemp - lastTemprature.getBeanTemp()));
+            temp.setAccInwindTemp(Utils.get2PrecisionFloat(inwindTemp - lastTemprature.getInwindTemp()));
+            temp.setAccOutwindTemp(Utils.get2PrecisionFloat(outwindTemp - lastTemprature.getOutwindTemp()));
         }
         lastTemprature = temp;
         return temp;
@@ -104,7 +107,4 @@ public class Temprature implements Serializable {
         this.envTemp = envTemp;
     }
 
-    private static float get2Precision(float val){
-        return (float)(Math.round(val * 6000) / 100.0);
-    }
 }

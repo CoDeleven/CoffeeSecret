@@ -13,6 +13,7 @@ import com.dhy.coffeesecret.pojo.CuppingInfo;
 import com.dhy.coffeesecret.services.BluetoothService;
 import com.dhy.coffeesecret.utils.CacheUtils;
 import com.dhy.coffeesecret.utils.HttpParser;
+import com.dhy.coffeesecret.utils.SettingTool;
 import com.dhy.coffeesecret.utils.URLs;
 import com.google.gson.Gson;
 import com.qiniu.pili.droid.streaming.StreamingEnv;
@@ -45,6 +46,8 @@ public class MyApplication extends Application {
         super.onCreate();
         //直播初始化
         StreamingEnv.init(getApplicationContext());
+        // 初始化设置
+        SettingTool.init(this);
         BugtagsOptions options = new BugtagsOptions.Builder().
                 trackingLocation(true).       //是否获取位置，默认 true
                 trackingCrashLog(true).       //是否收集闪退，默认 true
@@ -238,4 +241,5 @@ public class MyApplication extends Application {
         Intent intent = new Intent(this, BluetoothService.class);
         stopService(intent);
     }
+
 }

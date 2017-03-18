@@ -128,11 +128,13 @@
                         android:background="#C7C7C7"></View>
 
                     <LinearLayout
+
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
 
                         <TextView
+                            android:id="@+id/id_report_species"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="left"
@@ -142,14 +144,33 @@
                             android:textColor="#000"
                             android:textSize="13.5sp"/>
 
-                        <TextView
-                            android:id="@+id/id_report_total_weight"
-                            android:layout_width="wrap_content"
+<!--                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="left"
-                            android:paddingLeft="7.874dp"
-                            android:layout_marginBottom="7.874dp"
-                            android:text="熟豆重量："/>
+                            android:orientation="horizontal">
+                            <TextView
+                                android:textSize="15sp"
+                                android:paddingLeft="8dp"
+                                android:layout_weight="1"
+                                android:id="@+id/id_report_total_weight"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="left"
+                                android:layout_marginBottom="7.874dp"
+                                android:text="熟豆重量："/>
+
+                            <TextView
+                                android:textSize="15sp"
+                                android:paddingRight="16dp"
+                                android:layout_weight="1"
+                                android:id="@+id/id_report_dry_rate"
+                                android:layout_width="wrap_content"
+                                android:layout_gravity="left"
+                                android:gravity="left"
+                                android:layout_marginBottom="7.874dp"
+                                android:text="脱水率："
+                                android:layout_height="wrap_content"/>
+                        </LinearLayout>-->
 
                         <LinearLayout
                             android:id="@+id/id_bean_container"

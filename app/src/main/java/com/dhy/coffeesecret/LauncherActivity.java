@@ -19,15 +19,14 @@ public class LauncherActivity extends AppCompatActivity {
         @Override
         public boolean handleMessage(Message msg) {
             Intent intent;
-            intent = new Intent(LauncherActivity.this, MainActivity.class); // TODO: 2017/3/16  
 
-          /*  if (SPPrivateUtils.getBoolean(LauncherActivity.this, Global.IS_FIRST_TIME, true)) {
+            if (SPPrivateUtils.getBoolean(LauncherActivity.this, Global.IS_FIRST_TIME, true)) {
                 intent = new Intent(LauncherActivity.this, GuidanceActivity.class);
             } else if("".equals(SPPrivateUtils.getString(LauncherActivity.this, "address", ""))){
                 intent = new Intent(LauncherActivity.this, FirstConnectedActivity.class);
             }else{
                 intent = new Intent(LauncherActivity.this, MainActivity.class);
-            }*/
+            }
 
             startActivity(intent);
             overridePendingTransition(R.anim.in_fade, R.anim.out_fade);

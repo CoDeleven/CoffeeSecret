@@ -50,7 +50,7 @@
             android:layout_centerVertical="true"
             android:layout_toStartOf="@+id/btn_choose_bean"
             android:scaleType="centerCrop"
-            android:src="@color/simo_cyan100"
+            android:src="@color/default_0"
             app:riv_corner_radius="30dp"
             app:riv_oval="true" />
 
@@ -98,7 +98,7 @@
             android:layout_centerVertical="true"
             android:layout_toStartOf="@+id/btn_choose_in_wind"
             android:scaleType="centerCrop"
-            android:src="@color/simo_cyan100"
+            android:src="@color/default_1"
             app:riv_corner_radius="30dp"
             app:riv_oval="true" />
 
@@ -146,7 +146,7 @@
             android:layout_centerVertical="true"
             android:layout_toStartOf="@+id/btn_choose_out_wind"
             android:scaleType="centerCrop"
-            android:src="@color/simo_cyan100"
+            android:src="@color/default_2"
             app:riv_corner_radius="30dp"
             app:riv_oval="true" />
 
@@ -194,7 +194,7 @@
             android:layout_centerVertical="true"
             android:layout_toStartOf="@+id/btn_choose_acc_bean"
             android:scaleType="centerCrop"
-            android:src="@color/simo_cyan100"
+            android:src="@color/default_3"
             app:riv_corner_radius="30dp"
             app:riv_oval="true" />
 
@@ -242,7 +242,7 @@
             android:layout_centerVertical="true"
             android:layout_toStartOf="@+id/btn_choose_acc_in_wind"
             android:scaleType="centerCrop"
-            android:src="@color/simo_cyan100"
+            android:src="@color/default_4"
             app:riv_corner_radius="30dp"
             app:riv_oval="true" />
 
@@ -290,7 +290,7 @@
             android:layout_centerVertical="true"
             android:layout_toStartOf="@+id/btn_choose_acc_out_wind"
             android:scaleType="centerCrop"
-            android:src="@color/simo_cyan100"
+            android:src="@color/default_5"
             app:riv_corner_radius="30dp"
             app:riv_oval="true" />
 
@@ -338,7 +338,7 @@
             android:layout_centerVertical="true"
             android:layout_toStartOf="@+id/btn_choose_env"
             android:scaleType="centerCrop"
-            android:src="@color/simo_cyan100"
+            android:src="@color/default_6"
             app:riv_corner_radius="30dp"
             app:riv_oval="true" />
 
