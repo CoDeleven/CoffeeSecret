@@ -11,7 +11,7 @@ import android.widget.Toast;
  */
 public class T {
 
-    public static boolean isShow = false; // 是否需要显示
+    public static boolean isShow = true; // 是否需要显示
     private static Toast mToast;
     private static Handler mHandler = new Handler();
     private static Runnable runnable = new Runnable() {

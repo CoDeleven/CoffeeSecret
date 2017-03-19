@@ -28,8 +28,10 @@ import com.dhy.coffeesecret.ui.cup.comparator.BaseComparator;
 import com.dhy.coffeesecret.ui.cup.comparator.DateComparator;
 import com.dhy.coffeesecret.ui.cup.comparator.OrderBy;
 import com.dhy.coffeesecret.ui.cup.comparator.ScoreComparator;
+import com.dhy.coffeesecret.utils.HttpUtils;
 import com.dhy.coffeesecret.utils.T;
 import com.dhy.coffeesecret.utils.TestData;
+import com.dhy.coffeesecret.utils.URLs;
 import com.dhy.coffeesecret.views.DividerDecoration;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -302,22 +304,20 @@ public class CupFragment extends Fragment {
             @Override
             public void run() {
                 try {
-//                    String str = HttpUtils.getStringFromServer(URLs.GET_ALL_CUPPING);
-//                    System.out.println(str);
-                    String str = TestData.cuppingInfos;
-                    Type type = new TypeToken<ArrayList<CuppingInfo>>() {
-                    }.getType();
+                    String str = HttpUtils.getStringFromServer(URLs.GET_ALL_CUPPING);
+//                  System.out.println(str);
+//                  String str = TestData.cuppingInfos;
+
+                    Type type = new TypeToken<ArrayList<CuppingInfo>>() {}.getType();
                     Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
                     List<CuppingInfo> newInfos = gson.fromJson(str, type);
-                    System.out.println(newInfos);
 
-                    Map<String, BakeReport> bakeReports = TestData.getBakeReports(getActivity());
-                    String next = bakeReports.keySet().iterator().next();
-                    for (CuppingInfo newInfo : newInfos) {
-                        BakeReport report = bakeReports.get(next);
-                        newInfo.setBakeReport(report);
-                    }
-
+//                    Map<String, BakeReport> bakeReports = TestData.getBakeReports(getActivity());
+//                    String next = bakeReports.keySet().iterator().next();
+//                    for (CuppingInfo newInfo : newInfos) {
+//                        BakeReport report = bakeReports.get(next);
+//                        newInfo.setBakeReport(report);
+//                    }
                     cuppingInfos.clear();
                     cuppingInfos.addAll(newInfos);
                     mHandler.sendEmptyMessage(LOADING_SUCCESS);
