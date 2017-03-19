@@ -36,7 +36,7 @@ public class LinesColorActivity extends AppCompatActivity {
     TextView titleText;
     @Bind(R.id.color_packages)
     RecyclerView colorPackages;
-
+    public static List<String> names = new ArrayList<>();
     private Context context;
     private List<LinesColor> linesColorList;
     private LinesColorAdapter linesColorAdapter;
@@ -98,33 +98,33 @@ public class LinesColorActivity extends AppCompatActivity {
 
         LinesColor linesColor = new LinesColor();
         linesColor.setPackageName("海洋");
-        linesColor.setBeanColor("#FFFFFF");
-        linesColor.setInwindColor("#F0F0F0");
-        linesColor.setOutwindColor("#F0F0F0");
-        linesColor.setAccBeanColor("#FFFFF0");
-        linesColor.setAccInwindColor("#00FFFF");
-        linesColor.setAccOutwindColor("#0000FF");
-        linesColor.setEnvColor("#000000");
+        linesColor.setBeanColor("#654321");
+        linesColor.setInwindColor("#123465");
+        linesColor.setOutwindColor("#132456");
+        linesColor.setAccBeanColor("#643215");
+        linesColor.setAccInwindColor("#456897");
+        linesColor.setAccOutwindColor("#756195");
+        linesColor.setEnvColor("#157623");
 
         LinesColor linesColor2 = new LinesColor();
         linesColor2.setPackageName("夕阳");
-        linesColor2.setBeanColor("#000000");
-        linesColor2.setInwindColor("#FFFF00");
-        linesColor2.setOutwindColor("#FFF0F0");
-        linesColor2.setAccBeanColor("#FFFFF0");
-        linesColor2.setAccInwindColor("#00FFFF");
-        linesColor2.setAccOutwindColor("#0000FF");
-        linesColor2.setEnvColor("#FFFFFF");
+        linesColor2.setBeanColor("#156477");
+        linesColor2.setInwindColor("#429753");
+        linesColor2.setOutwindColor("#456789");
+        linesColor2.setAccBeanColor("#987654");
+        linesColor2.setAccInwindColor("#753951");
+        linesColor2.setAccOutwindColor("#159951");
+        linesColor2.setEnvColor("#753357");
 
         LinesColor linesColor3 = new LinesColor();
         linesColor3.setPackageName("大地");
         linesColor3.setBeanColor("#FFFFFF");
-        linesColor3.setInwindColor("#FF00FF");
-        linesColor3.setOutwindColor("#FFF0F0");
-        linesColor3.setAccBeanColor("#00FF00");
-        linesColor3.setAccInwindColor("#00FFFF");
-        linesColor3.setAccOutwindColor("#0000FF");
-        linesColor3.setEnvColor("#000000");
+        linesColor3.setInwindColor("#456852");
+        linesColor3.setOutwindColor("#951753");
+        linesColor3.setAccBeanColor("#753159");
+        linesColor3.setAccInwindColor("#632145");
+        linesColor3.setAccOutwindColor("#758964");
+        linesColor3.setEnvColor("#103254");
 
         linesColorList.add(linesColor);
         linesColorList.add(linesColor2);
@@ -135,6 +135,9 @@ public class LinesColorActivity extends AppCompatActivity {
 
         linesColorList = gson.fromJson(listJson, new TypeToken<ArrayList<LinesColor>>() {
         }.getType());
+        for(LinesColor temp: linesColorList){
+            names.add(temp.getPackageName());
+        }
     }
 
     @Override
@@ -145,6 +148,9 @@ public class LinesColorActivity extends AppCompatActivity {
                 LinesColor linesColor = (LinesColor) data.getSerializableExtra("linesColor");
                 Log.i(TAG, "onActivityResult: " + linesColor);
                 linesColorList.add(linesColor);
+
+                names.add(linesColor.getPackageName());
+
                 linesColorAdapter.notifyDataSetChanged();
                 SPPrivateUtils.put(context, Global.LINES_COLOR_PACKAGE, new Gson().toJson(linesColorList));
                 break;

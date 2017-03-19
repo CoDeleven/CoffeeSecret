@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +27,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-
+import static com.dhy.coffeesecret.views.BaseChart4Coffee.*;
 /**
  * CoffeeSecret
  * Created by Simo on 2017/3/3.
@@ -79,7 +80,9 @@ public class LinesColorAdapter extends FootViewAdapter {
                 Message msg = new Message();
                 msg.what = SHOW_DIALOG;
                 msg.arg1 = lcHolder.getAdapterPosition();
-                mHandler.sendEmptyMessage(SHOW_DIALOG);
+                Log.e("LinesColorAdapter", "position:" + lcHolder.getAdapterPosition());
+                // mHandler.sendMessage(SHOW_DIALOG);
+                mHandler.sendMessage(msg);
             }
         });
 
@@ -116,12 +119,20 @@ public class LinesColorAdapter extends FootViewAdapter {
         @Override
         public void handleMessage(final Message msg) {
             super.handleMessage(msg);
+            final LinesColor linesColor = linesColorList.get(msg.arg1);
             switch (msg.what) {
                 case SHOW_DIALOG:
                     View view = mLayoutInflater.inflate(R.layout.dialog_lines_preview, null);
                     BaseChart4Coffee previewChart = (BaseChart4Coffee) view.findViewById(R.id.preview_chart);
                     Button btnUseDialog = (Button) view.findViewById(R.id.btn_use_dialog);
                     previewChart.initLine();
+                    previewChart.changeColorByIndex(linesColor.getBeanColor(), BEANLINE);
+                    previewChart.changeColorByIndex(linesColor.getAccBeanColor(), ACCBEANLINE);
+                    previewChart.changeColorByIndex(linesColor.getInwindColor(), INWINDLINE);
+                    previewChart.changeColorByIndex(linesColor.getOutwindColor(), OUTWINDLINE);
+                    previewChart.changeColorByIndex(linesColor.getAccInwindColor(), ACCINWINDLINE);
+                    previewChart.changeColorByIndex(linesColor.getAccOutwindColor(), ACCOUTWINDLINE);
+
                     previewChart.addNewDatas(initVirtualData(1), 0);
                     previewChart.addNewDatas(initVirtualData(3), 1);
                     previewChart.addNewDatas(initVirtualData(5), 2);
@@ -129,7 +140,7 @@ public class LinesColorAdapter extends FootViewAdapter {
                     previewChart.addNewDatas(initVirtualData(9), 4);
                     previewChart.addNewDatas(initVirtualData(11), 5);
                     final AlertDialog dialog = new AlertDialog.Builder(context)
-                            .setTitle(linesColorList.get(msg.arg1).getPackageName())
+                            .setTitle(linesColor.getPackageName())
                             .setView(view)
                             .create();
                     btnUseDialog.setOnClickListener(new View.OnClickListener() {
@@ -145,7 +156,6 @@ public class LinesColorAdapter extends FootViewAdapter {
                     dialog.show();
                     break;
                 case CHANGE_CHECKED:
-                    LinesColor linesColor = linesColorList.get(msg.arg1);
                     config.setColorPackageName(linesColor.getPackageName());
                     config.setBeanColor(Color.parseColor(linesColor.getBeanColor()));
                     config.setInwindColor(Color.parseColor(linesColor.getInwindColor()));

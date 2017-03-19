@@ -1,30 +1,24 @@
 package com.dhy.coffeesecret.ui.device.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.dhy.coffeesecret.R;
-import com.dhy.coffeesecret.ui.device.BakeActivity;
 import com.dhy.coffeesecret.utils.UnitConvert;
 import com.dhy.coffeesecret.views.CircleSeekBar;
 import com.github.mikephil.charting.data.Event;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 import butterknife.OnTouch;
 
@@ -32,15 +26,12 @@ import butterknife.OnTouch;
  * Created by CoDeleven on 17-2-23.
  */
 
-public class FireWindDialog extends DialogFragment implements CircleSeekBar.OnSeekBarChangeListener{
+public class FireWindDialog extends DialogFragment implements CircleSeekBar.OnSeekBarChangeListener {
     @Bind(R.id.id_baking_circle1)
     CircleSeekBar circle1;
     @Bind(R.id.id_baking_circle2)
     CircleSeekBar circle2;
-    private boolean isGroup = false;
     CircleSeekBar curCircle;
-    @Bind(R.id.id_baking_group)
-    CheckBox mGroup;
     @Bind(R.id.id_baking_circle1_text)
     TextView text1;
     @Bind(R.id.id_baking_circle2_text)
@@ -49,10 +40,15 @@ public class FireWindDialog extends DialogFragment implements CircleSeekBar.OnSe
     Button mConfirm;
     @Bind(R.id.id_baking_cancel)
     Button mCancel;
+    // 按客户的需求，需要默认isGroup为true
+    private boolean isGroup = true;
     private String fireValue;
     private String windValue;
     private OnFireWindAddListener onFireWindAddListener;
 
+    /**
+     * 更新数值视图
+     */
     private Handler mHandler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
@@ -81,42 +77,44 @@ public class FireWindDialog extends DialogFragment implements CircleSeekBar.OnSe
         return view;
     }
 
+    /**
+     * 当触摸圆圈1时触发的条件
+     *
+     * @return
+     */
     @OnTouch(R.id.id_baking_circle1)
-    public boolean onCircle1Touch(){
+    public boolean onCircle1Touch() {
+        // 如果没有进行组合，则重置另外一个圈
         if (!isGroup) {
             if (curCircle == circle2) {
                 resetSeekbar(circle2);
             }
         }
+        // 设置当前curCircle
         curCircle = circle1;
         return false;
     }
 
+    /**
+     * 当触摸圆圈2时触发的条件
+     *
+     * @return
+     */
     @OnTouch(R.id.id_baking_circle2)
-    public boolean onCircle2Touch(){
+    public boolean onCircle2Touch() {
+        // 如果没有进行组合，则重置另外一个圈
         if (!isGroup) {
             if (curCircle == circle1) {
                 resetSeekbar(circle1);
             }
         }
+        // 设置当前curCircle
         curCircle = circle2;
         return false;
     }
 
-    @OnCheckedChanged(R.id.id_baking_group)
-    public void checkedChange(boolean isChecked){
-        isGroup = isChecked;
-        if (!isChecked) {
-            if (curCircle == circle1) {
-                resetSeekbar(circle2);
-            } else {
-                resetSeekbar(circle1);
-            }
-        }
-    }
-
     @OnClick(R.id.id_baking_confirm)
-    public void onConfirm(){
+    public void onConfirm() {
         windValue = text1.getText().toString();
         fireValue = text2.getText().toString();
 
@@ -124,7 +122,7 @@ public class FireWindDialog extends DialogFragment implements CircleSeekBar.OnSe
     }
 
     @OnClick(R.id.id_baking_cancel)
-    public void onCancel(){
+    public void onCancel() {
         dismiss();
     }
 
@@ -133,16 +131,23 @@ public class FireWindDialog extends DialogFragment implements CircleSeekBar.OnSe
         super.onResume();
         getDialog().getWindow().setLayout(UnitConvert.dp2px(getResources(), 400), UnitConvert.dp2px(getResources(), 250));
     }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
     }
+
     @Override
     public void onChanged(CircleSeekBar seekbar, int curValue) {
         updateText(seekbar, curValue);
     }
 
+    /**
+     * 重置circle seekbar
+     *
+     * @param seekBar
+     */
     private void resetSeekbar(CircleSeekBar seekBar) {
         if (seekBar == circle1) {
             circle1.resetStatus();
@@ -153,6 +158,12 @@ public class FireWindDialog extends DialogFragment implements CircleSeekBar.OnSe
         }
     }
 
+    /**
+     * 更新视图
+     *
+     * @param seekBar
+     * @param curValue
+     */
     private void updateText(CircleSeekBar seekBar, int curValue) {
         Message msg = new Message();
         Bundle bundle = new Bundle();
@@ -166,35 +177,29 @@ public class FireWindDialog extends DialogFragment implements CircleSeekBar.OnSe
         mHandler.sendMessage(msg);
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(!"".equals(fireValue) && !"".equals(windValue)){
-            data.putExtra("fireValue", fireValue);
-            data.putExtra("windValue", windValue);
-        }
-    }
-
-    public void setOnFireWindAddListener(OnFireWindAddListener onFireWindAddListener){
+    public void setOnFireWindAddListener(OnFireWindAddListener onFireWindAddListener) {
         this.onFireWindAddListener = onFireWindAddListener;
     }
 
-    public interface OnFireWindAddListener{
-        void onFireWindChanged(Event event);
-    }
-
+    /**
+     * 对图标上产生事件按钮
+     */
     @OnClick(R.id.id_baking_confirm)
-    void generateEvent(){
+    void generateEvent() {
         Event event = new Event(Event.FIRE_WIND);
-        if(isGroup){
+        if (isGroup) {
             event.setDescription("FireValue:" + fireValue + ", WindValue:" + windValue);
-        }else{
-            if(curCircle == circle1){
+        } else {
+            if (curCircle == circle1) {
                 event.setDescription("WindValue:" + windValue);
-            }else{
+            } else {
                 event.setDescription("FireValue:" + fireValue);
             }
         }
         onFireWindAddListener.onFireWindChanged(event);
+    }
+
+    public interface OnFireWindAddListener {
+        void onFireWindChanged(Event event);
     }
 }

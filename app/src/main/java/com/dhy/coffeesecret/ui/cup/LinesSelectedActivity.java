@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.ui.container.adapters.LinesAdapter;
@@ -68,8 +69,8 @@ public class LinesSelectedActivity extends AppCompatActivity implements View.OnC
 
     private void init() {
         // TODO 校赛视频，暂时注释
-        // Map<String, ? extends BakeReport> bakeReports = ((MyApplication) getApplication()).getBakeReports();
-        Map<String, ? extends BakeReport> bakeReports = TestData.getBakeReports(this);
+        Map<String, ? extends BakeReport> bakeReports = ((MyApplication) getApplication()).getBakeReports();
+        // Map<String, ? extends BakeReport> bakeReports = TestData.getBakeReports(this);
 
         bakeReportList.addAll(bakeReports.values()); // FIXME: 2017/3/9
         listView.setAdapter(new LinesAdapter(bakeReportList, this));

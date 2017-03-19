@@ -1,6 +1,5 @@
 package com.dhy.coffeesecret.ui.device;
 
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothDevice;
 import android.content.ComponentName;
@@ -33,6 +32,7 @@ import com.dhy.coffeesecret.ui.mine.BluetoothListActivity;
 import com.dhy.coffeesecret.utils.FragmentTool;
 import com.dhy.coffeesecret.utils.SettingTool;
 import com.dhy.coffeesecret.utils.T;
+import com.dhy.coffeesecret.utils.Utils;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -45,6 +45,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class DeviceFragment extends Fragment implements BluetoothService.DeviceChangedListener, BluetoothService.DataChangedListener {
+    private static String lastAddress = null;
     @Bind(R.id.id_device_prepare_bake)
     Button mPrepareBake;
     boolean hasPrepared = false;
@@ -78,7 +79,6 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
     private boolean isStart = false;
     private float envTemp;
     private ArrayList<Float> referTempratures;
-    private static String lastAddress = null;
     private ServiceConnection conn = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
@@ -202,8 +202,8 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
             Temprature temprature = (Temprature) bundle.getSerializable("temprature");
             beanTemp.setText(String.format("%1$.2f", temprature.getBeanTemp()));
             // 随时保存开始烘焙的温度
-            beginTemp = (temprature.getBeanTemp() * 100) / 100.f;
-            envTemp = (temprature.getEnvTemp() * 100) / 100.f;
+            beginTemp = Utils.get2PrecisionFloat(temprature.getBeanTemp());
+            envTemp = Utils.get2PrecisionFloat(temprature.getEnvTemp());
             inwindTemp.setText(String.format("%1$.2f", temprature.getInwindTemp()));
             outwindTemp.setText(String.format("%1$.2f", temprature.getOutwindTemp()));
             accBeanTemp.setText(String.format("%1$.2f", temprature.getAccBeanTemp()));
@@ -243,10 +243,13 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
         super.onStart();
         // 默认每次重启不准备
         hasPrepared = false;
+
         // 清空上一次的beanInfo
         if (dialogBeanInfos != null) {
             dialogBeanInfos.clear();
         }
+        // 每次回到主界面清楚DialogBeanInfo的static属性
+        DialogBeanInfo.totalWegith = 0;
         // 根据是否准备，更换按钮事件
         switchStatus();
         // 如果连接
@@ -392,7 +395,7 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
 
     @Override
     public void notifyNewDevice(BluetoothDevice device, int rssi) {
-        if(lastAddress.equals(device.getAddress())){
+        if (lastAddress.equals(device.getAddress())) {
             T.showShort(getContext(), "正在尝试自动连接...");
             mBluetoothOperator.connect(device);
             mBluetoothOperator.stopScanDevice();

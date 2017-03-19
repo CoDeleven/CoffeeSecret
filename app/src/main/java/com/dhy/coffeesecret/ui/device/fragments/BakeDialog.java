@@ -26,6 +26,7 @@ import com.dhy.coffeesecret.pojo.DialogBeanInfo;
 import com.dhy.coffeesecret.ui.device.DialogBeanSelected;
 import com.dhy.coffeesecret.ui.device.LineSelectedActivity;
 import com.dhy.coffeesecret.utils.SettingTool;
+import com.dhy.coffeesecret.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,6 +94,7 @@ public class BakeDialog extends DialogFragment {
         DialogBeanInfo dialogBeanInfo = new DialogBeanInfo();
         dialogBeanInfo.setBeanInfo(beanInfo);
         unit = SettingTool.getConfig(getContext()).getWeightUnit();
+        unit = Utils.convertUnitChineses2Eng(unit);
         //默认5,根据单位乘1000或者500
         float defaultWeight = -1;
         if (unit.equals("g")) {

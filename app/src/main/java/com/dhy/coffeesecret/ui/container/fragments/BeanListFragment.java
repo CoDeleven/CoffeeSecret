@@ -29,6 +29,7 @@ import com.bigkoo.quicksidebar.QuickSideBarView;
 import com.bigkoo.quicksidebar.listener.OnQuickSideBarTouchListener;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BeanInfo;
+import com.dhy.coffeesecret.pojo.Global;
 import com.dhy.coffeesecret.ui.container.BeanInfoActivity;
 import com.dhy.coffeesecret.ui.container.adapters.BeanListAdapter;
 import com.dhy.coffeesecret.ui.container.adapters.CountryListAdapter;
@@ -50,6 +51,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
@@ -217,27 +225,27 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
 
         Log.i(TAG, "------------------开始加载豆种信息------------------");
         mHandler.sendEmptyMessage(LOADING);
+/*
+       FormBody body = new FormBody.Builder()
+               .add("username", "Simo")
+               .add("action", "getBeanList")
+               .build();
+       Request request = new Request.Builder()
+                .url(Global.DOMAIN + Global.ENTRANCE_1)
+               .url("http://httpbin.org/post")
+               .post(body)
+               .build();
+       new OkHttpClient().newCall(request).enqueue(new Callback() {
+           @Override
+           public void onFailure(Call call, IOException e) {
+               mHandler.sendEmptyMessage(TOAST_1);
+           }
 
-//        FormBody body = new FormBody.Builder()
-//                .add("username", "Simo")
-//                .add("action", "getBeanList")
-//                .build();
-//        Request request = new Request.Builder()
-////                .url(Global.DOMAIN + Global.ENTRANCE_1)
-//                .url("http://httpbin.org/post")
-//                .post(body)
-//                .build();
-//        new OkHttpClient().newCall(request).enqueue(new Callback() {
-//            @Override
-//            public void onFailure(Call call, IOException e) {
-//                mHandler.sendEmptyMessage(TOAST_1);
-//            }
-//
-//            @Override
-//            public void onResponse(Call call, Response response) throws IOException {
-//
-//            }
-//        });
+           @Override
+           public void onResponse(Call call, Response response) throws IOException {
+
+           }
+       });*/
 
         Gson gson = new Gson();
         String beanInfoListJson = "";
@@ -247,7 +255,7 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
             mHandler.sendEmptyMessage(TOAST_3);
         }
         String[] beanLists = null;
-        beanInfoListJson = TestData.beaninfos;
+        // beanInfoListJson = TestData.beaninfos;
 
         ArrayList<BeanInfo> beanInfoss = gson.fromJson(beanInfoListJson, new TypeToken<ArrayList<BeanInfo>>() {
         }.getType());

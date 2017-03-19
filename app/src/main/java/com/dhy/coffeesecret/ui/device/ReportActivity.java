@@ -1,6 +1,5 @@
 package com.dhy.coffeesecret.ui.device;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -24,6 +23,7 @@ import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.pojo.BakeReportProxy;
 import com.dhy.coffeesecret.pojo.BeanInfoSimple;
+import com.dhy.coffeesecret.pojo.DialogBeanInfo;
 import com.dhy.coffeesecret.ui.device.fragments.SharedFragment;
 import com.dhy.coffeesecret.utils.FragmentTool;
 import com.dhy.coffeesecret.utils.SettingTool;
@@ -78,10 +78,16 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
     TextView score;
     @Bind(R.id.id_report_home)
     TextView home;
-    @Bind(R.id.id_report_total_weight)
-    TextView totalWeight;
     @Bind(R.id.id_barcode)
     ImageView barcode;
+    @Bind(R.id.id_report_species)
+    TextView species;
+
+    // 校园专用单一豆名
+    String _bean_;
+    String _species_;
+    String _bakeDegree_;
+    String _developRate_;
     private String unit;
     private TableLayout tableLayout;
     private List<BeanInfoSimple> beanInfos = new ArrayList<>();
@@ -89,12 +95,6 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
     private List<LinearLayout> beanContent;
     private PopupWindow popupWindow;
     private BakeReportProxy proxy;
-
-    // 校园专用单一豆名
-    String _bean_;
-    String _species_;
-    String _bakeDegree_;
-    String _developRate_;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -106,7 +106,6 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
         setSupportActionBar(toolbar);
         initParam();
         init();
-
     }
 
     private void initParam() {
@@ -141,22 +140,22 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
         mChart.addNewDatas(proxy.getLineDataSetByIndex(ACCOUTWINDLINE).getValues(), ACCOUTWINDLINE);
 
 
-        envTemp.setText("环境温度:" + proxy.getEnvTemp());
-        startTemp.setText("入豆温度:" + proxy.getStartTemp());
-        endTemp.setText("结束温度:" + proxy.getEndTemp());
-        developTime.setText("发展时间:" + proxy.getDevelopTime());
-        developRate.setText(proxy.getDevelopRate());
+        envTemp.setText("环境温度：" + proxy.getEnvTemp());
+        startTemp.setText("入豆温度：" + proxy.getStartTemp());
+        endTemp.setText("结束温度：" + proxy.getEndTemp());
+        developTime.setText("发展时间：" + proxy.getDevelopTime());
+        developRate.setText("发展率：" + proxy.getDevelopRate());
         beanInfos = proxy.getBeanInfos();
         date.setText("烘焙日期：" + proxy.getBakeDate());
         device.setText("设备：" + proxy.getDevice());
-
+        // dryRate.setText("脱水率：" + DialogBeanInfo.totalWegith);
         score.setText(proxy.getBakeDegree());
 
         // 校园专用
         _bakeDegree_ = proxy.getBakeDegree();
         _developRate_ = proxy.getDevelopRate();
 
-        totalWeight.setText("熟豆重量：" + proxy.getBakeReport().getCookedBeanWeight() + unit);
+        species.setText("品种 （" + "熟豆重量：" + proxy.getBakeReport().getCookedBeanWeight() + unit + "，" + "脱水率：" + DialogBeanInfo.totalWegith + "）");
 
         tableLayout = (TableLayout) findViewById(R.id.id_report_table);
         beanContainer = (LinearLayout) findViewById(R.id.id_bean_container);
@@ -219,7 +218,7 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
     }
 
     @OnClick(R.id.id_barcode)
-    public void onBarcodeClick(){
+    public void onBarcodeClick() {
         Bundle bundle = new Bundle();
         SharedFragment shared = new SharedFragment();
         bundle.putString(SharedFragment.BEAN_NAME, _bean_);

@@ -310,4 +310,12 @@
     <color name="simo_bluegrey700">#455a64</color>
     <color name="simo_bluegrey800">#37474f</color>
     <color name="simo_bluegrey900">#263238</color>
+
+    <color name="default_0">#1abc9c</color>
+    <color name="default_1">#2c3e50</color>
+    <color name="default_2">#3498db</color>
+    <color name="default_3">#c0392b</color>
+    <color name="default_4">#f1c40f</color>
+    <color name="default_5">#e67e22</color>
+    <color name="default_6">#e74c3c</color>
 </resources>

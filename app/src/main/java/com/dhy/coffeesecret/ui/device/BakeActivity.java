@@ -33,6 +33,7 @@ import com.dhy.coffeesecret.utils.FragmentTool;
 import com.dhy.coffeesecret.utils.SettingTool;
 import com.dhy.coffeesecret.utils.TestData;
 import com.dhy.coffeesecret.utils.UnitConvert;
+import com.dhy.coffeesecret.utils.Utils;
 import com.dhy.coffeesecret.views.BaseChart4Coffee;
 import com.dhy.coffeesecret.views.DevelopBar;
 import com.github.mikephil.charting.data.Entry;
@@ -213,17 +214,6 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
             curStatus = AFTER160;
         }
 
-/*        if (curEvent != null) {
-            curBeanEntry.setEvent(curEvent);
-            eventRecords.add(curBeanEntry);
-
-            if (!isEnd && dialog != null) {
-                isEnd = true;
-                endTemp = beanTemp;
-            }
-            curEvent = null;
-        }*/
-
         set.addBeanTemp(beanTemp);
         set.addInwindTemp(inwindTemp);
         set.addOutwindTemp(outwindTemp);
@@ -258,6 +248,8 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // 设置该界面在前台是不允许黑屏
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         // 设置横屏和隐藏状态栏
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
@@ -265,7 +257,7 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
         ButterKnife.bind(this);
 
         chart.initLine();
-        // chart.changeColorByIndex("#000000", BaseChart4Coffee.BEANLINE);
+
         mConfig = SettingTool.getConfig(this);
         enableDoubleConfirm = mConfig.isDoubleClick();
 
@@ -469,8 +461,7 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
 
                 updateCurBeanEntryEvent(new Event(Event.END, "结束"));
                 BakeReportProxy imm = generateReport();
-                // imm.setEntriesWithEvents(eventRecords);
-                imm.setEndTemp(curBeanEntry.getY());
+                imm.setEndTemp(Utils.get2PrecisionFloat(curBeanEntry.getY()));
                 Intent intent = new Intent(BakeActivity.this, EditBehindActiviy.class);
                 // 停止读取
                 BluetoothService.READABLE = false;

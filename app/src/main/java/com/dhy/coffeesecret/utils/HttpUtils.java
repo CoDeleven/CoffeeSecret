@@ -27,7 +27,7 @@ public class HttpUtils {
     private static final long TIMEOUT = 4;
     private static final String CHARSET_NAME = "UTF-8";
 
-    private static final MediaType TYPE = MediaType.parse("application/json; charset=utf-8");
+    public static final MediaType TYPE = MediaType.parse("application/json; charset=utf-8");
 
     static {
         mOkHttpClient = new OkHttpClient.Builder()

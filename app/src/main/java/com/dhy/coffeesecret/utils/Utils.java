@@ -138,4 +138,8 @@ public class Utils {
         }
         return result;
     }
+
+    public static float get2PrecisionFloat(float val){
+        return (val * 100) / 100f;
+    }
 }

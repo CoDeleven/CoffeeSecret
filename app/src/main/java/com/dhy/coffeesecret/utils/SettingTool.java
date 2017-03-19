@@ -29,10 +29,18 @@ public class SettingTool {
         return mConfig;
     }
 
+    public static boolean isInitSetting(){
+        return mConfig != null;
+    }
+
+    public static void init(Context context){
+        setupConfig(context);
+    }
+
     private static void setupConfig(Context context) {
         sharedPreferences = context.getSharedPreferences("secret", Context.MODE_PRIVATE);
         mConfig = new UniversalConfiguration();
-        mConfig.setWeightUnit(sharedPreferences.getString("weightUnit", "kg"));
+        mConfig.setWeightUnit(sharedPreferences.getString("weightUnit", "千克"));
         mConfig.setTempratureUnit(sharedPreferences.getString("tempratureUnit", "℃"));
         mConfig.setReferDegree(sharedPreferences.getString("referDegree", "Agtron"));
         mConfig.setQuickStart(sharedPreferences.getBoolean("quickStart", false));

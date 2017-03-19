@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.ui.container.fragments.SearchFragment;
@@ -71,8 +72,8 @@ public class LineSelectedActivity extends AppCompatActivity implements View.OnCl
 
     private void init() {
         // TODO 校赛视频，暂时注释
-        // Map<String, ? extends BakeReport> bakeReports = ((MyApplication) getApplication()).getBakeReports();
-        Map<String, ? extends BakeReport> bakeReports = TestData.getBakeReports(this);
+        Map<String, ? extends BakeReport> bakeReports = ((MyApplication) getApplication()).getBakeReports();
+        // Map<String, ? extends BakeReport> bakeReports = TestData.getBakeReports(this);
 
         bakeReportList.addAll(bakeReports.values());
         Log.e("codelevex", bakeReports.size() + "");
@@ -84,9 +85,9 @@ public class LineSelectedActivity extends AppCompatActivity implements View.OnCl
             @Override
             public void onLineClicked(BakeReport bakeReport) {
                 // TODO 校赛专用
-                // ((MyApplication)(getApplication())).setBakeReport(report);
+                ((MyApplication)(getApplication())).setBakeReport(bakeReport);
 
-                TestData.setBakeReport(bakeReport);
+                // TestData.setBakeReport(bakeReport);
                 Intent intent = new Intent();
                 intent.putExtra("report",bakeReport);
                 setResult(RESULT_CODE_ADD,intent);
