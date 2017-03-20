@@ -360,13 +360,12 @@ public class CupFragment extends Fragment {
                     }
                     break;
                 case LOADING_SUCCESS:
-                    T.showShort(mContext, "success");
                     Collections.sort(cuppingInfos, currentComparator);
                     mAdapter.notifyDataSetChanged();
                     sendEmptyMessage(NO_LOADING);
                     break;
                 case LOADING_ERROR:
-                    T.showShort(mContext, "error");
+                    T.showShort(mContext, "网络连接失败");
                     sendEmptyMessage(NO_LOADING);
                     break;
             }

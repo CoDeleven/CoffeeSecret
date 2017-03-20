@@ -91,6 +91,7 @@ public class EditBeanActivity extends AppCompatActivity {
     private String currentHandler;
     private String drawPath;
     private Context mContext;
+    private int id; //bean的id 如果新添加的豆子 id = 0 否则等于原本的id
 
     private static final String TAG = "EditBeanActivity";
 
@@ -128,7 +129,6 @@ public class EditBeanActivity extends AppCompatActivity {
 
     private void init() {
         BeanInfo beanInfo = (BeanInfo) getIntent().getSerializableExtra("beanInfo");
-
         if (beanInfo == null) {
             titleText.setText("添加豆子");
             beanInfo = new BeanInfo();
@@ -137,9 +137,11 @@ public class EditBeanActivity extends AppCompatActivity {
             titleText.setText("编辑豆子");
         }
 
+
         if (beanInfo.getDrawablePath() == null || beanInfo.getDrawablePath().trim().equals("")) {
             beanInfo.setDrawablePath(R.drawable.ic_container_add_bean + "");
         }
+        id = beanInfo.getId();
         editIcon.setImageResource(Integer.parseInt(beanInfo.getDrawablePath()));
         editName.setText(beanInfo.getName());
         editCountry.setText(beanInfo.getCountry());
@@ -277,6 +279,7 @@ public class EditBeanActivity extends AppCompatActivity {
             return;
         }
         BeanInfo beanInfo = new BeanInfo();
+        beanInfo.setId(id);
         beanInfo.setDrawablePath(drawPath);
         beanInfo.setName(editName.getText().toString());
         beanInfo.setContinent("亚洲"); // TODO
