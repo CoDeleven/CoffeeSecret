@@ -83,7 +83,7 @@ public class EditBeanActivity extends AppCompatActivity {
     @Bind(R.id.edit_weight_unit)
     TextView editWeightUnit;
     private TimePickerView pvTime;
-
+    public static final int ADD_STATUS = 0, MODIFY_STATUS = 1;
     // 格式化器
     private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
     // 等级
@@ -96,6 +96,9 @@ public class EditBeanActivity extends AppCompatActivity {
     private String currentHandler;
     // 当前的图片
     private String drawPath;
+    // 当前的状态
+    private int mCurStatus;
+
     private Context mContext;
 
     private static final String TAG = "EditBeanActivity";
@@ -143,14 +146,18 @@ public class EditBeanActivity extends AppCompatActivity {
      * 初始化
      */
     private void init() {
+        // 豆子信息
         BeanInfo beanInfo = (BeanInfo) getIntent().getSerializableExtra("beanInfo");
 
+        // 如果当前豆子信息为空，那么是添加豆子，如果豆子信息不为空，那么是编辑豆子
         if (beanInfo == null) {
             titleText.setText("添加豆子");
             beanInfo = new BeanInfo();
+            mCurStatus = ADD_STATUS;
         } else {
             Log.i(TAG, "init: beanInfo" + beanInfo.toString());
             titleText.setText("编辑豆子");
+            mCurStatus = MODIFY_STATUS;
         }
 
         if (beanInfo.getDrawablePath() == null || beanInfo.getDrawablePath().trim().equals("")) {
@@ -164,7 +171,7 @@ public class EditBeanActivity extends AppCompatActivity {
         editAltitude.setText(beanInfo.getAltitude());
         editSpecies.setText(beanInfo.getSpecies());
         editLevel.setSelection(getLevelSelection(beanInfo.getLevel()), true);
-        editWaterContent.setText(beanInfo.getWaterContent() * 100 + "");
+        editWaterContent.setText(beanInfo.getWaterContent() + "");
         editHandler.setSelection(getHandlerSelection(beanInfo.getProcess()), true);
         editAnotherHandler.setEnabled(false);
         editSupplier.setText(beanInfo.getSupplier());
@@ -204,6 +211,11 @@ public class EditBeanActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * 格式化日期
+     * @param date 日期
+     * @return
+     */
     private String formatDate(Date date) {
         if (date == null) {
             return format.format(new Date());
@@ -211,6 +223,11 @@ public class EditBeanActivity extends AppCompatActivity {
         return format.format(date);
     }
 
+    /**
+     * 解析日期
+     * @param dateString yyyy-MM-dd HH:ss
+     * @return
+     */
     private Date parseDate(String dateString) {
         try {
             return format.parse(dateString);
