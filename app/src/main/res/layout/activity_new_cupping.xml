@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
         android:fitsSystemWindows="true"
-        android:orientation="horizontal"></LinearLayout>
+        android:orientation="horizontal" />
 
     <RadioGroup
         android:id="@+id/tabs"

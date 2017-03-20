@@ -23,7 +23,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
+import com.dhy.coffeesecret.pojo.BakeReportProxy;
+import com.dhy.coffeesecret.pojo.BeanInfoSimple;
 import com.dhy.coffeesecret.pojo.DialogBeanInfo;
 import com.dhy.coffeesecret.pojo.Temprature;
 import com.dhy.coffeesecret.services.BluetoothService;
@@ -49,7 +52,8 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
     @Bind(R.id.id_device_prepare_bake)
     Button mPrepareBake;
     boolean hasPrepared = false;
-    List<DialogBeanInfo> dialogBeanInfos;
+    // List<DialogBeanInfo> dialogBeanInfos;
+    List<BeanInfoSimple> beanInfos;
     @Bind(R.id.title_text)
     TextView titleText;
     @Bind(R.id.bluetooth_status)
@@ -74,6 +78,8 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
     ImageView accInwindView;
     @Bind(R.id.id_bake_accOutwindView)
     ImageView accOutwindView;
+    @Bind(R.id.id_rerange_bean)
+    Button rerangeBean;
     private BluetoothService.BluetoothOperator mBluetoothOperator;
     private float beginTemp;
     private boolean isStart = false;
@@ -245,8 +251,8 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
         hasPrepared = false;
 
         // 清空上一次的beanInfo
-        if (dialogBeanInfos != null) {
-            dialogBeanInfos.clear();
+        if (beanInfos != null) {
+            beanInfos.clear();
         }
         // 每次回到主界面清楚DialogBeanInfo的static属性
         DialogBeanInfo.totalWegith = 0;
@@ -271,8 +277,8 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
         final BakeDialog dialogFragment = new BakeDialog();
         dialogFragment.setBeanInfosListener(new BakeDialog.OnBeaninfosConfirmListener() {
             @Override
-            public void setBeanInfos(List<DialogBeanInfo> beanInfos) {
-                dialogBeanInfos = beanInfos;
+            public void setBeanInfos(List<BeanInfoSimple> beanInfos) {
+                DeviceFragment.this.beanInfos = beanInfos;
                 hasPrepared = true;
                 mPrepareBake.setText("开始烘焙");
                 switchStatus();
@@ -303,6 +309,7 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
     private void switchStatus() {
         if (hasPrepared) {
             mPrepareBake.setText("开始烘焙");
+            rerangeBean.setVisibility(View.VISIBLE);
             mPrepareBake.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -310,25 +317,31 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
                         mShowHandler.sendEmptyMessage(0);
                         return;
                     }
-                    if (!(dialogBeanInfos.size() > 0)) {
+                    if (!(beanInfos.size() > 0)) {
                         mShowHandler.sendEmptyMessage(1);
                         return;
                     }
+                    BakeReportProxy proxy = new BakeReportProxy();
+                    ((MyApplication)getContext().getApplicationContext()).setBakeReport(proxy);
+
                     Intent intent = new Intent(getContext(), BakeActivity.class);
-                    intent.putExtra(BakeActivity.RAW_BEAN_INFO, dialogBeanInfos.toArray());
+                    proxy.setBeanInfoSimples(beanInfos);
+                    // 以下内容的设置拖迟到烘焙中
+                    // intent.putExtra(BakeActivity.RAW_BEAN_INFO, beanInfos.toArray());
                     intent.putExtra(BakeActivity.DEVICE_NAME, mBluetoothOperator.getCurDeviceName());
-                    intent.putExtra(BakeActivity.START_TEMP, beginTemp);
-                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-                    intent.putExtra(BakeActivity.BAKE_DATE, format.format(new Date()));
-                    intent.putExtra(BakeActivity.ENV_TEMP, envTemp);
+                    // intent.putExtra(BakeActivity.START_TEMP, beginTemp);
+
+                    // intent.putExtra(BakeActivity.ENV_TEMP, envTemp);
                     if (referTempratures != null) {
                         intent.putExtra(BakeActivity.ENABLE_REFERLINE, referTempratures);
                     }
+                    rerangeBean.setVisibility(View.INVISIBLE);
                     startActivity(intent);
                     mBluetoothOperator.setDataChangedListener(null);
                 }
             });
         } else {
+            rerangeBean.setVisibility(View.INVISIBLE);
             mPrepareBake.setText("准备烘焙");
             mPrepareBake.setOnClickListener(new View.OnClickListener() {
                 @Override

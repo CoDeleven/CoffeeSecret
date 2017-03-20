@@ -46,7 +46,7 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
     private Handler progressViewHandler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
-            if(tick != null && progressCircle != null){
+            if (tick != null && progressCircle != null) {
                 switch (msg.what) {
                     case DEVICE_CONNECTING:
                         progressCircle.setVisibility(View.VISIBLE);
@@ -89,6 +89,7 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
                 }
             }).start();
         } else {
+            mBluetoothOperator.stopScanDevice();
             // 关闭蓝牙后清空adapter内的设备
             adapter.clearDevices();
             // 清空可连接设备
@@ -100,7 +101,8 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
 
             // 请求关闭蓝牙设备
             mBluetoothOperator.disableBluetooth();
-
+            // 关闭蓝牙设备后清空已连接的设备状态
+            hasConnected = null;
             refreshListView();
         }
     }
@@ -149,6 +151,7 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
         if (isConnected) {
             // 设置已连接设备
             adapter.lastConnectedAddress = device.getAddress();
+            hasConnected = device;
             // 设置已经连接状态
             progressViewHandler.sendEmptyMessage(DEVICE_CONNECTED);
             // 保存连接设备地址到配置文件,方便启动时读取并直接连接
@@ -160,6 +163,7 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
             adapter.lastConnectedAddress = null;
             // 设置连接失败状态
             progressViewHandler.sendEmptyMessage(DEVICE_CONNECT_FAILED);
+            hasConnected = null;
         }
 
     }
@@ -185,7 +189,6 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
             }
         });
 
-
         // 通过设备地址，更新对应设备的rssi
         adapter.setRssi(device.getAddress(), rssi);
     }
@@ -205,7 +208,7 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
     @Override
     public void onItemClick(BluetoothDevice device, View view) {
         BluetoothDevice hasConnectedDevice = mBluetoothOperator.getBluetoothDevice();
-        if(hasConnectedDevice != null && device != null && device.getAddress().equals(hasConnectedDevice.getAddress())){
+        if (hasConnectedDevice != null && device != null && device.getAddress().equals(hasConnectedDevice.getAddress())) {
             return;
         }
         // 如果之前存在一个设备在连接,设置上一个视图隐藏

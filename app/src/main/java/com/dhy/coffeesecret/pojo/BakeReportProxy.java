@@ -198,6 +198,11 @@ public class BakeReportProxy {
         this.bakeReport = bakeReport;
     }
 
+    public void setBakeReport(BakeReport bakeReport, boolean toDesired){
+        this.bakeReport = bakeReport;
+        deseriData();
+    }
+
     public List<Float> getTimex(){
         return bakeReport.getTempratureSet().getTimex();
     }

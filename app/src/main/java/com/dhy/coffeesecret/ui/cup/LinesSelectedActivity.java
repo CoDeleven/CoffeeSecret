@@ -7,10 +7,12 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
@@ -24,7 +26,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static android.view.WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION;
+import static android.view.WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
 import static com.dhy.coffeesecret.ui.cup.fragment.BakeInfoFragment.RESULT_CODE_ADD;
+import static com.dhy.coffeesecret.ui.cup.fragment.BakeInfoFragment.RESULT_CODE_EXIT;
 import static com.dhy.coffeesecret.ui.cup.fragment.BakeInfoFragment.RESULT_CODE_NONE;
 
 public class LinesSelectedActivity extends AppCompatActivity implements View.OnClickListener, SearchEditText.SearchBarListener {
@@ -46,11 +51,12 @@ public class LinesSelectedActivity extends AppCompatActivity implements View.OnC
         toolbar = (Toolbar) findViewById(R.id.toolbar_device_activtiy);
         backButton = (ImageView) findViewById(R.id.iv_back);
         init();
+        getWindow().addFlags(FLAG_TRANSLUCENT_STATUS);
+        getWindow().addFlags(FLAG_TRANSLUCENT_NAVIGATION);
     }
 
     @Override
     public void onBackPressed() {
-        // super.onBackPressed();
         if (searchFragment != null && !searchFragment.isHidden()) {
             FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
             tx.hide(searchFragment);
@@ -64,10 +70,8 @@ public class LinesSelectedActivity extends AppCompatActivity implements View.OnC
     private void init() {
         // TODO 校赛视频，暂时注释
         Map<String, ? extends BakeReport> bakeReports = ((MyApplication) getApplication()).getBakeReports();
-        // Map<String, ? extends BakeReport> bakeReports = TestData.getBakeReports(this);
 
-        bakeReportList.addAll(bakeReports.values());// FIXME: 2017/3/9
-
+        bakeReportList.addAll(bakeReports.values()); // FIXME: 2017/3/9
         listView.setAdapter(new LinesAdapter(bakeReportList, this));
         View searchBarLayout = View.inflate(this, R.layout.conta_lines_searchbar_part, null);
         listView.addHeaderView(searchBarLayout);
@@ -86,19 +90,29 @@ public class LinesSelectedActivity extends AppCompatActivity implements View.OnC
         searchBar = (SearchEditText) searchBarLayout.findViewById(R.id.lines_selected_srh);
         searchBar.setSearchBarListener(this);
         ImageButton imgBtn = (ImageButton) searchBarLayout.findViewById(R.id.lines_selected_del);
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                setResult(RESULT_CODE_NONE);
-                finish();
-            }
-        });
+        backButton.setOnClickListener(this);
         imgBtn.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View view) {
-        searchBar.setText("");
+        switch (view.getId()){
+            case R.id.lines_selected_del:
+                searchBar.setText("");
+                break;
+            case R.id.iv_back:
+                setResult(RESULT_CODE_EXIT);
+                finish();
+                overridePendingTransition(R.anim.in_fade,R.anim.out_to_right);
+                break;
+        }
+
+
+    }
+    public void back(View view) {
+        setResult(RESULT_CODE_NONE);
+        finish();
+        overridePendingTransition(R.anim.in_from_right,R.anim.out_to_left);
     }
 
     @Override
@@ -117,5 +131,4 @@ public class LinesSelectedActivity extends AppCompatActivity implements View.OnC
         }
         tx.commit();
     }
-
 }

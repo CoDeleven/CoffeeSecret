@@ -19,6 +19,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BakeReportProxy;
 import com.dhy.coffeesecret.pojo.BeanInfoSimple;
@@ -31,7 +32,6 @@ import com.dhy.coffeesecret.ui.device.fragments.FireWindDialog;
 import com.dhy.coffeesecret.ui.device.fragments.Other;
 import com.dhy.coffeesecret.utils.FragmentTool;
 import com.dhy.coffeesecret.utils.SettingTool;
-import com.dhy.coffeesecret.utils.TestData;
 import com.dhy.coffeesecret.utils.UnitConvert;
 import com.dhy.coffeesecret.utils.Utils;
 import com.dhy.coffeesecret.views.BaseChart4Coffee;
@@ -40,12 +40,14 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.Event;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 import static com.dhy.coffeesecret.views.DevelopBar.AFTER160;
 import static com.dhy.coffeesecret.views.DevelopBar.RAWBEAN;
@@ -57,6 +59,7 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
     public static final String BAKE_DATE = "com.dhy.coffeesercret.ui.device.BakeActivity.BAKE_DATE";
     public static final String ENV_TEMP = "com.dhy.coffeesercret.ui.device.BakeActivity.ENV_TEMP";
     public static final String ENABLE_REFERLINE = "com.dhy.coffeesercret.ui.device.BakeActivity.REFER_LINE";
+    private static Thread timer = null;
     @Bind(R.id.id_baking_chart)
     BaseChart4Coffee chart;
     @Bind(R.id.id_baking_lineOperator)
@@ -87,6 +90,8 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
     TextView developTime;
     @Bind(R.id.id_baking_developbar)
     DevelopBar developBar;
+    @Bind(R.id.id_baking_start)
+    Button mStart;
     private PopupWindow popupWindow;
     private BluetoothService.BluetoothOperator mBluetoothOperator;
     private float lastTime = 0;
@@ -95,16 +100,16 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
     private TextView[] outwindTemps = new TextView[2];
     private List<Entry> eventRecords = new ArrayList<>();
     private float endTemp;
+    private float startTemp;
     private Event curEvent;
     private boolean enableDoubleConfirm;
     private boolean isDoubleClick;
     private View curStatusView;
     private UniversalConfiguration mConfig;
-    private Long startTime;
+    private long startTime;
     private boolean isOverBottom = false;
     private int curStatus = RAWBEAN;
     private boolean isReading = false;
-    private Thread timer = null;
     private FragmentTool fragmentTool;
     private ProgressDialog dialog;
     private boolean isEnd = false;
@@ -149,10 +154,11 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
             int now = ((int) (System.currentTimeMillis() - startTime) / 1000);
             int minutes = now / 60;
             int seconds = now % 60;
-            untilTime.setText(String.format("%1$02d", minutes) + ":" + String.format("%1$02d", seconds));
+            untilTime.setText(Utils.getTimeWithFormat(now));
             if (!isOverBottom && minutes > 1 && seconds > 30) {
                 isOverBottom = true;
             }
+            Log.e("codelevex", "g");
             developBar.setCurStatus(curStatus);
             return false;
         }
@@ -199,6 +205,7 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
     @Override
     public void notifyDataChanged(Temprature temprature) {
         float beanTemp = temprature.getBeanTemp();
+        startTemp = beanTemp;
         float inwindTemp = temprature.getInwindTemp();
         float outwindTemp = temprature.getOutwindTemp();
         float accBeanTemp = temprature.getAccBeanTemp();
@@ -274,6 +281,16 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
         init();
     }
 
+
+    private void showButton(){
+        mDry.setVisibility(View.VISIBLE);
+        mEnd.setVisibility(View.VISIBLE);
+        mFireWind.setVisibility(View.VISIBLE);
+        mFirstBurst.setVisibility(View.VISIBLE);
+        mSecondBurst.setVisibility(View.VISIBLE);
+        mOther.setVisibility(View.VISIBLE);
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -283,22 +300,24 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
         }
         mBluetoothOperator.setDataChangedListener(this);
         startTime = System.currentTimeMillis();
-        isReading = true;
-        timer = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (isReading) {
-                    mTimer.sendMessage(new Message());
-                    try {
-                        Thread.currentThread().sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+        if (timer == null) {
+            isReading = true;
+            timer = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    while (isReading) {
+                        mTimer.sendEmptyMessage(0);
+                        try {
+                            Thread.currentThread().sleep(1000);
+                        } catch (InterruptedException e) {
+                            Log.e("BakeActivity", "已经中断");
+                            break;
+                        }
                     }
                 }
-            }
-        });
-        timer.start();
-
+            });
+            timer.start();
+        }
     }
 
     /**
@@ -308,7 +327,6 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
         lineOperator.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e("codelevex", "被点击了");
                 getPopupwindow().showAsDropDown(v);
             }
         });
@@ -418,6 +436,22 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
         }
     }
 
+    /**
+     * 开始烘焙按钮按下之后需要执行的操作
+     */
+    @OnClick(R.id.id_baking_start)
+    public void onBakeStart() {
+        // TODO 3-20日，在开始烘焙按钮按下后的操作在这里执行
+        showButton();
+        startTime = System.currentTimeMillis();
+        chart.clear();
+        mStart.setVisibility(View.GONE);
+        BakeReportProxy bakeReport = ((MyApplication) getApplication()).getBakeReport();
+        bakeReport.setStartTemperature(startTemp + "");
+        bakeReport.setDate(Utils.data2Timestamp(new Date()));
+        bakeReport.setAmbientTemperature(Temprature.getEnvTemp() + "");
+    }
+
     private void addEvent(View v) {
         int id = v.getId();
         boolean status = false;
@@ -501,7 +535,9 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putLong("startTime", startTime);
+        if(outState != null){
+            outState.putLong("startTime", startTime);
+        }
     }
 
     @Override
@@ -514,40 +550,23 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
     protected void onDestroy() {
         super.onDestroy();
         isReading = false;
+        timer.interrupt();
+        timer = null;
     }
 
     private BakeReportProxy generateReport() {
         Intent intent = getIntent();
         String deviceName = intent.getStringExtra(DEVICE_NAME);
-        Object[] objs = (Object[]) intent.getSerializableExtra(RAW_BEAN_INFO);
-        List<BeanInfoSimple> beanInfos = new ArrayList<>();
 
-        for (Object obj : objs) {
-            DialogBeanInfo beanInfo = (DialogBeanInfo) obj;
-            beanInfos.add(new BeanInfoSimple(beanInfo.getBeanInfo(), beanInfo.getWeight() + ""));
-        }
-        float startTemp = intent.getFloatExtra(START_TEMP, -1);
-
-        BakeReportProxy bakeReport = new BakeReportProxy();
+        BakeReportProxy bakeReport = ((MyApplication) getApplication()).getBakeReport();
 
         bakeReport.setTempratureSet(set);
 
-        bakeReport.setDate(intent.getStringExtra(BAKE_DATE));
-
         bakeReport.setDevice(deviceName);
-
-        bakeReport.setBeanInfoSimples(beanInfos);
 
         bakeReport.setDevelopmentTime(developBar.getDevelopTime());
 
         bakeReport.setDevelopmentRate(developBar.getDevelopRate());
-
-        bakeReport.setStartTemperature(startTemp + "");
-
-        bakeReport.setAmbientTemperature(intent.getFloatExtra(ENV_TEMP, -1) + "");
-
-        // ((MyApplication) getApplication()).setBakeReport(bakeReport);
-        TestData.setBakeReport(bakeReport);
 
         return bakeReport;
     }

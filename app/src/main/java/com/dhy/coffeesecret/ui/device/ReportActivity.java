@@ -19,6 +19,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.pojo.BakeReportProxy;
@@ -27,7 +28,6 @@ import com.dhy.coffeesecret.pojo.DialogBeanInfo;
 import com.dhy.coffeesecret.ui.device.fragments.SharedFragment;
 import com.dhy.coffeesecret.utils.FragmentTool;
 import com.dhy.coffeesecret.utils.SettingTool;
-import com.dhy.coffeesecret.utils.TestData;
 import com.dhy.coffeesecret.utils.UnitConvert;
 import com.dhy.coffeesecret.utils.Utils;
 import com.dhy.coffeesecret.views.BaseChart4Coffee;
@@ -88,7 +88,8 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
     String _species_;
     String _bakeDegree_;
     String _developRate_;
-    private String unit;
+    private String weightUnit;
+    private String tempratureUnit;
     private TableLayout tableLayout;
     private List<BeanInfoSimple> beanInfos = new ArrayList<>();
     private LinearLayout beanContainer;
@@ -109,10 +110,10 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
     }
 
     private void initParam() {
-        // proxy = ((MyApplication)getApplication()).getBakeReport();
-        proxy = TestData.getBakeReport();
+        proxy = ((MyApplication)getApplication()).getBakeReport();
 
-        unit = Utils.convertUnitChineses2Eng(SettingTool.getConfig(this).getWeightUnit());
+        weightUnit = Utils.convertUnitChineses2Eng(SettingTool.getConfig(this).getWeightUnit());
+        tempratureUnit = SettingTool.getConfig(this).getTempratureUnit();
         mChart.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -140,22 +141,21 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
         mChart.addNewDatas(proxy.getLineDataSetByIndex(ACCOUTWINDLINE).getValues(), ACCOUTWINDLINE);
 
 
-        envTemp.setText("环境温度：" + proxy.getEnvTemp());
-        startTemp.setText("入豆温度：" + proxy.getStartTemp());
-        endTemp.setText("结束温度：" + proxy.getEndTemp());
+        envTemp.setText("环境温度：" + proxy.getEnvTemp() + tempratureUnit);
+        startTemp.setText("入豆温度：" + proxy.getStartTemp() + tempratureUnit);
+        endTemp.setText("结束温度：" + proxy.getEndTemp() + tempratureUnit);
         developTime.setText("发展时间：" + proxy.getDevelopTime());
-        developRate.setText("发展率：" + proxy.getDevelopRate());
+        developRate.setText("发展率：" + proxy.getDevelopRate() + "%");
         beanInfos = proxy.getBeanInfos();
         date.setText("烘焙日期：" + proxy.getBakeDate());
         device.setText("设备：" + proxy.getDevice());
-        // dryRate.setText("脱水率：" + DialogBeanInfo.totalWegith);
         score.setText(proxy.getBakeDegree());
 
         // 校园专用
         _bakeDegree_ = proxy.getBakeDegree();
         _developRate_ = proxy.getDevelopRate();
 
-        species.setText("品种 （" + "熟豆重量：" + proxy.getBakeReport().getCookedBeanWeight() + unit + "，" + "脱水率：" + DialogBeanInfo.totalWegith + "）");
+        species.setText("品种 （" + "熟豆重量：" + proxy.getBakeReport().getCookedBeanWeight() + weightUnit + "，" + "脱水率：" + DialogBeanInfo.totalWegith + "）");
 
         tableLayout = (TableLayout) findViewById(R.id.id_report_table);
         beanContainer = (LinearLayout) findViewById(R.id.id_bean_container);
@@ -184,8 +184,8 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
     public void onBackPressed() {
         super.onBackPressed();
         // TODO 校赛专用
-        // ((MyApplication)getApplication()).setBakeReport((BakeReport)null);
-        TestData.setBakeReport((BakeReport) null);
+        ((MyApplication)getApplication()).setBakeReport((BakeReport)null);
+        // TestData.setBakeReport((BakeReport) null);
         finish();
     }
 
@@ -364,7 +364,7 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
             beanArea.setLayoutParams(temp);
 
             TextView beanRawWeight = new TextView(this);
-            beanRawWeight.setText("生豆重量：" + beanInfo.getUsage() + unit);
+            beanRawWeight.setText("生豆重量：" + beanInfo.getUsage() + weightUnit);
             beanRawWeight.setLayoutParams(temp);
 
             content[0].addView(beanName);

@@ -281,7 +281,15 @@
 
             </LinearLayout>
         </RelativeLayout>
-
+        <Button
+            android:layout_marginTop="10dp"
+            android:layout_below="@id/device_bake_circle2"
+            android:layout_alignParentRight="true"
+            android:id="@+id/id_rerange_bean"
+            android:text="修改信息"
+            android:visibility="invisible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
         <!-- 第三个圈，出风温-->
         <RelativeLayout
             android:id="@+id/device_bake_circle3"
@@ -385,7 +393,10 @@
                 </LinearLayout>
 
             </LinearLayout>
+
+
         </RelativeLayout>
+
 
 
         <Button
@@ -393,8 +404,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/device_bake_circle3"
-            android:layout_marginTop="15dp"
             android:background="@drawable/bg_round_pricolor"
+            android:layout_marginTop="15dp"
             android:text="准备烘焙"
             android:textColor="#FFF" />
     </RelativeLayout>

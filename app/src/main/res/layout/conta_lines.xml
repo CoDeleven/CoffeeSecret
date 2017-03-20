@@ -22,7 +22,6 @@
             android:text="@string/title_device_child_activity"
             android:textColor="#FFF"
             android:textSize="20sp"/>
-
         <ImageView
             android:id="@+id/id_back"
             android:layout_width="wrap_content"

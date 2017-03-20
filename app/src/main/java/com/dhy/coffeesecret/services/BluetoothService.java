@@ -118,7 +118,7 @@ public class BluetoothService extends Service {
         @Override
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
             if (gatt.getDevice().getAddress().equals(mCurDevice.getAddress())) {
-                Log.e("codelevex", gatt.getDevice().hashCode() + ":" + status + "->" + newState + ", " + mCurDevice.hashCode());
+                Log.e("BluetoothService", gatt.getDevice().hashCode() + ":" + status + "->" + newState + ", " + mCurDevice.hashCode());
                 if (newState == BluetoothProfile.STATE_CONNECTED) {
                     if (mRunThread != null) {
                         mRunThread.setReadable(false);
@@ -128,7 +128,7 @@ public class BluetoothService extends Service {
                     }
                     mConnectionState = STATE_CONNECTED;
                     mBluetoothGatt.discoverServices();
-
+                    mCurDevice = gatt.getDevice();
                     deviceChangedListener.notifyDeviceConnectStatus(true, gatt.getDevice());
                 } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                     mConnectionState = STATE_DISCONNECTED;
@@ -311,6 +311,10 @@ public class BluetoothService extends Service {
         }
 
         public void disableBluetooth() {
+            stopScanDevice();
+            // 关闭蓝牙时清空当前连接设备
+            mCurDevice = null;
+
             if (mRunThread != null) {
                 mRunThread.clearData();
             }
@@ -324,6 +328,7 @@ public class BluetoothService extends Service {
             if (mBluetoothAdapter.isEnabled()) {
                 mBluetoothAdapter.disable();
             }
+            mConnectionState = STATE_DISCONNECTED;
         }
 
         public void startScanDevice() {

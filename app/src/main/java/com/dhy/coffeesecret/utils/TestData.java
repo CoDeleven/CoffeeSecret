@@ -118,9 +118,9 @@ public class TestData {
         return handlerList;
     }
 
-    /**
+ /*   *//**
      * 获取本地BakeReport
-     */
+     *//*
     public static Map<String, BakeReport> getBakeReports(Context context) {
         if (objs == null) {
             objs = new HashMap<>();
@@ -170,5 +170,5 @@ public class TestData {
 
     public static void setBakeReport(BakeReportProxy proxy) {
         BAKE_REPORT = proxy;
-    }
+    }*/
 }

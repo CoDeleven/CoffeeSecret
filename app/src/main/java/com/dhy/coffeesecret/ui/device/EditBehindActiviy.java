@@ -16,17 +16,21 @@ import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.pojo.BakeReportProxy;
 import com.dhy.coffeesecret.ui.device.adapter.EditEventListAdapter;
+import com.dhy.coffeesecret.utils.HttpUtils;
 import com.dhy.coffeesecret.utils.SettingTool;
 import com.dhy.coffeesecret.utils.TestData;
+import com.dhy.coffeesecret.utils.URLs;
 import com.dhy.coffeesecret.utils.Utils;
 import com.dhy.coffeesecret.views.CircleSeekBar;
 import com.dhy.coffeesecret.views.DividerDecoration;
 import com.github.mikephil.charting.data.Entry;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,8 +77,8 @@ public class EditBehindActiviy extends AppCompatActivity implements CircleSeekBa
 
     private void init() {
         // TODO 校赛专用
-        // entries = ((MyApplication) getApplication()).getBakeReport().getEntriesWithEvents();
-        entries = TestData.getBakeReport().getEntriesWithEvents();
+        entries = ((MyApplication) getApplication()).getBakeReport().getEntriesWithEvents();
+        // entries = TestData.getBakeReport().getEntriesWithEvents();
 
         for (Entry entry : entries) {
             int time = (int) entry.getX();
@@ -101,11 +105,11 @@ public class EditBehindActiviy extends AppCompatActivity implements CircleSeekBa
     @OnClick(R.id.id_bake_behind_save)
     protected void onSave() {
         // TODO 校赛专用
-        // BakeReportProxy proxy = ((MyApplication) getApplication()).getBakeReport();
-        BakeReportProxy proxy = TestData.getBakeReport();
+        BakeReportProxy proxy = ((MyApplication) getApplication()).getBakeReport();
+        // BakeReportProxy proxy = TestData.getBakeReport();
 
         String weight = cookedWeight.getText().toString();
-        if(!"".equals(weight)){
+        if(!"".equals(weight) && weight != null){
             proxy.setCookedBeanWeight(Float.parseFloat(weight));
         }else{
             proxy.setCookedBeanWeight(0);
@@ -121,7 +125,7 @@ public class EditBehindActiviy extends AppCompatActivity implements CircleSeekBa
 
     private void sendJsonData(final BakeReport proxy) {
         //TODO 校赛视频注释
-/*        new Thread(new Runnable() {
+        new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
@@ -133,8 +137,7 @@ public class EditBehindActiviy extends AppCompatActivity implements CircleSeekBa
                     e.printStackTrace();
                 }
             }
-        }).start();*/
-        TestData.saveBakeReports(this, proxy);
+        }).start();
     }
 
     @Override

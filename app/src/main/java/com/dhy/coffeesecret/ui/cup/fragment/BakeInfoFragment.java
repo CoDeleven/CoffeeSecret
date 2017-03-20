@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.andexert.expandablelayout.library.ExpandableLayoutItem;
 import com.andexert.expandablelayout.library.ExpandableLayoutListView;
+import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.pojo.BakeReportProxy;
@@ -39,6 +40,7 @@ public class BakeInfoFragment extends Fragment implements View.OnClickListener {
     public final static String TARGET = "target";
     public final static int RESULT_CODE_ADD = 0x123;
     public final static int RESULT_CODE_NONE = 0x0;
+    public final static int RESULT_CODE_EXIT = 0x999;
 
     private TextView mDevTime;
     private TextView mStartTemp;
@@ -89,6 +91,9 @@ public class BakeInfoFragment extends Fragment implements View.OnClickListener {
                 mBakeReport = (BakeReport) data.getSerializableExtra("report");
                 mOnBakeInfoLoadedListener.onLoaded(mBakeReport);
                 updateUI();
+            }else if(RESULT_CODE_EXIT == resultCode){
+                getActivity().finish();
+                getActivity().overridePendingTransition(R.anim.in_fade,R.anim.out_to_right);
             }
         }
 
@@ -215,8 +220,7 @@ public class BakeInfoFragment extends Fragment implements View.OnClickListener {
             startActivityForResult(intent, SELECT_LINE);
         } else {
             // TODO 校赛专用
-            // ((MyApplication) (getActivity().getApplication())).setBakeReport(mBakeReport);
-            TestData.setBakeReport(mBakeReport);
+            ((MyApplication) (getActivity().getApplication())).setBakeReport(mBakeReport);
 
             Intent intent = new Intent(getActivity(), ReportActivity.class);
             startActivity(intent);

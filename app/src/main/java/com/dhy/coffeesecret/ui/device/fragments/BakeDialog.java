@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.pojo.BeanInfo;
+import com.dhy.coffeesecret.pojo.BeanInfoSimple;
 import com.dhy.coffeesecret.pojo.DialogBeanInfo;
 import com.dhy.coffeesecret.ui.device.DialogBeanSelected;
 import com.dhy.coffeesecret.ui.device.LineSelectedActivity;
@@ -42,7 +43,8 @@ import butterknife.OnClick;
 public class BakeDialog extends DialogFragment {
     public static final int GET_HISTORY = 1;
     public static final int GET_COLLECTION = 2;
-    private static List<DialogBeanInfo> dialogBeanInfos;
+    // private static List<DialogBeanInfo> dialogBeanInfos;
+    private static List<BeanInfoSimple> beanInfos;
     private static int curItem;
     @Bind(R.id.id_bake_dialog_refer_collection)
     ImageView referCollection;
@@ -66,7 +68,7 @@ public class BakeDialog extends DialogFragment {
     private String unit;
 
     public BakeDialog() {
-        dialogBeanInfos = new ArrayList<>();
+        beanInfos = new ArrayList<>();
     }
 
 
@@ -89,10 +91,8 @@ public class BakeDialog extends DialogFragment {
     }
 
     private void initDefaultItem() {
-        BeanInfo beanInfo = new BeanInfo();
-        beanInfo.setName("样品豆");
-        DialogBeanInfo dialogBeanInfo = new DialogBeanInfo();
-        dialogBeanInfo.setBeanInfo(beanInfo);
+        BeanInfoSimple testBean = new BeanInfoSimple();
+        testBean.setBeanName("样品豆");
         unit = SettingTool.getConfig(getContext()).getWeightUnit();
         unit = Utils.convertUnitChineses2Eng(unit);
         //默认5,根据单位乘1000或者500
@@ -107,8 +107,8 @@ public class BakeDialog extends DialogFragment {
             unit = "lb";
             defaultWeight = 5 * 1.1f;
         }
-        dialogBeanInfo.setWeight(defaultWeight);
-        dialogBeanInfos.add(dialogBeanInfo);
+        testBean.setUsage("" + defaultWeight);
+        beanInfos.add(testBean);
     }
 
     private void initConfirmCancel() {
@@ -122,7 +122,7 @@ public class BakeDialog extends DialogFragment {
             @Override
             public void onClick(View v) {
                 //处理确定情况
-                beaninfosConfirmListener.setBeanInfos(dialogBeanInfos);
+                beaninfosConfirmListener.setBeanInfos(beanInfos);
                 beaninfosConfirmListener.setTempratures(referTempratures);
                 dismiss();
             }
@@ -147,26 +147,24 @@ public class BakeDialog extends DialogFragment {
         mAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogBeanInfo dialogBeanInfo = new DialogBeanInfo();
-                BeanInfo beanInfo = new BeanInfo();
-                beanInfo.setName("样品豆");
-                dialogBeanInfo.setBeanInfo(beanInfo);
+                BeanInfoSimple simpleBean = new BeanInfoSimple();
+                simpleBean.setBeanName("样品豆");
 
-                dialogBeanInfos.add(dialogBeanInfo);
+                beanInfos.add(simpleBean);
                 ((BaseAdapter) mListView.getAdapter()).notifyDataSetChanged();
-                mListView.setSelection(dialogBeanInfos.size() - 1);
+                mListView.setSelection(beanInfos.size() - 1);
             }
         });
 
         mListView.setAdapter(new BaseAdapter() {
             @Override
             public int getCount() {
-                return dialogBeanInfos.size();
+                return beanInfos.size();
             }
 
             @Override
             public Object getItem(int position) {
-                return dialogBeanInfos.get(position);
+                return beanInfos.get(position);
             }
 
             @Override
@@ -190,21 +188,21 @@ public class BakeDialog extends DialogFragment {
                     holder = (ViewHolder) convertView.getTag();
                 }
 
-                holder.beanName.setText(dialogBeanInfos.get(position).getBeanInfo().getName());
-                holder.beanWeight.setText(dialogBeanInfos.get(position).getWeight() + "");
+                holder.beanName.setText(beanInfos.get(position).getBeanName());
+                holder.beanWeight.setText(beanInfos.get(position).getUsage());
 
                 holder.beanWeight.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                     @Override
                     public void onFocusChange(View v, boolean hasFocus) {
                         EditText editText = (EditText) v;
                         String result = editText.getText().toString();
-                        if (dialogBeanInfos.size() > 0 && !hasFocus && editText.getText().length() > 0) {
+                        if (beanInfos.size() > 0 && !hasFocus && editText.getText().length() > 0) {
                             for(int i = 0; i < result.length(); ++i){
                                 if(!Character.isDigit(result.charAt(i))){
                                     return;
                                 }
                             }
-                            dialogBeanInfos.get(position).setWeight(Float.parseFloat(result));
+                            beanInfos.get(position).setUsage("" + Float.parseFloat(result));
                         }
                     }
                 });
@@ -223,7 +221,7 @@ public class BakeDialog extends DialogFragment {
                     public void onClick(View v) {
                         curItem = position;
                         Log.e("codelevex", "position:" + position);
-                        dialogBeanInfos.remove(curItem);
+                        beanInfos.remove(curItem);
                         notifyDataSetChanged();
                     }
                 });
@@ -246,7 +244,16 @@ public class BakeDialog extends DialogFragment {
             BeanInfo beanInfo = (BeanInfo) data.getSerializableExtra("beanInfo");
             BakeReport bakeReport = (BakeReport) data.getSerializableExtra("report");
             if (beanInfo != null) {
-                dialogBeanInfos.get(curItem).setBeanInfo(beanInfo);
+                BeanInfoSimple simple = beanInfos.get(curItem);
+                simple.setBeanName(beanInfo.getName());
+                simple.setAltitude(beanInfo.getAltitude());
+                simple.setArea(beanInfo.getArea());
+                simple.setCountry(beanInfo.getCountry());
+                simple.setLevel(beanInfo.getLevel());
+                simple.setManor(beanInfo.getManor());
+                simple.setProcess(beanInfo.getProcess());
+                simple.setWaterContent(beanInfo.getWaterContent() + "");
+                simple.setSpecies(beanInfo.getSpecies());
             }
             if(bakeReport != null){
                 referTempratures = (ArrayList)bakeReport.getTempratureSet().getBeanTemps();
@@ -273,7 +280,7 @@ public class BakeDialog extends DialogFragment {
     }
 
     public interface OnBeaninfosConfirmListener {
-        void setBeanInfos(List<DialogBeanInfo> beanInfos);
+        void setBeanInfos(List<BeanInfoSimple> beanInfos);
 
         void setTempratures(ArrayList<Float> tempratures);
     }

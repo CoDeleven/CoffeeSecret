@@ -4,15 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal">
-
     <com.andexert.expandablelayout.library.ExpandableLayoutItem
         android:id="@+id/eli"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingLeft="10dp"
-        expandable:el_contentLayout="@layout/expande_content"
-        expandable:el_headerLayout="@layout/expande_header">
-
+        expandable:contentLayout="@layout/expande_content"
+        expandable:headerLayout="@layout/expande_header">
     </com.andexert.expandablelayout.library.ExpandableLayoutItem>
 </LinearLayout>
 

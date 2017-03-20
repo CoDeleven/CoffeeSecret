@@ -5,6 +5,7 @@ import net.sourceforge.pinyin4j.PinyinHelper;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -118,6 +119,11 @@ public class Utils {
         return result;
     }
 
+    public static String data2Timestamp(Date time){
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        return format.format(time);
+    }
+
     public static String dateWidthoutTimestamp(String date){
         SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
         try {
@@ -140,6 +146,6 @@ public class Utils {
     }
 
     public static float get2PrecisionFloat(float val){
-        return (val * 100) / 100f;
+        return ((int)(val * 100)) / 100f;
     }
 }

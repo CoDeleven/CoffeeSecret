@@ -84,11 +84,17 @@ public class EditBeanActivity extends AppCompatActivity {
     TextView editWeightUnit;
     private TimePickerView pvTime;
 
+    // 格式化器
     private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
+    // 等级
     private String[] levelArray;
+    // 处理方式
     private String[] handlerArray;
+    // 当前选择等级
     private String currentLevel;
+    // 当前选择处理方式
     private String currentHandler;
+    // 当前的图片
     private String drawPath;
     private Context mContext;
 
@@ -108,10 +114,17 @@ public class EditBeanActivity extends AppCompatActivity {
         init();
     }
 
+    /**
+     * 初始化参数
+     */
     private void initParams() {
+        // 获取等级列表
         levelArray = getResources().getStringArray(R.array.level);
+        // 获取处理列表
         handlerArray = getResources().getStringArray(R.array.handler);
+        // 默认当前选择是第一个
         currentLevel = levelArray[0];
+        // 默认当前选择是第一个
         currentHandler = handlerArray[0];
 
         pvTime = new TimePickerView(this, TimePickerView.Type.YEAR_MONTH_DAY);
@@ -126,6 +139,9 @@ public class EditBeanActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * 初始化
+     */
     private void init() {
         BeanInfo beanInfo = (BeanInfo) getIntent().getSerializableExtra("beanInfo");
 
