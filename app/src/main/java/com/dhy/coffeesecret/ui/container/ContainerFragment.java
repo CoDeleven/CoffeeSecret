@@ -10,7 +10,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +21,6 @@ import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BeanInfo;
 import com.dhy.coffeesecret.ui.container.fragments.BeanListFragment;
 import com.dhy.coffeesecret.ui.container.fragments.SearchFragment;
-import com.dhy.coffeesecret.utils.UIUtils;
 import com.dhy.coffeesecret.views.SearchEditText;
 
 import java.io.Serializable;
@@ -43,6 +41,8 @@ public class ContainerFragment extends Fragment {
 
     private List<BeanListFragment> fragments = null;
     private Context context;
+    private boolean isAddSearchFragment = false;
+    private SearchFragment searchFragment;
 
     public ContainerFragment() {
     }
@@ -71,14 +71,11 @@ public class ContainerFragment extends Fragment {
         initView();
     }
 
-    private boolean isAddSearchFragment = false;
-    private SearchFragment searchFragment;
-
     public void initView() {
         searchBeanET.setSearchBarListener(new SearchEditText.SearchBarListener() {
             @Override
             public void starSearchPage() {
-                FragmentTransaction tx = ((MainActivity)context).getSupportFragmentManager().beginTransaction();
+                FragmentTransaction tx = ((MainActivity) context).getSupportFragmentManager().beginTransaction();
                 tx.setCustomAnimations(R.anim.in_from_right, R.anim.out_to_left);
                 if (searchFragment != null) {
                     isAddSearchFragment = !searchFragment.isRemoved();
@@ -124,30 +121,6 @@ public class ContainerFragment extends Fragment {
 
     }
 
-    public class MyPagerAdapter extends FragmentPagerAdapter {
-
-
-        public MyPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return TITLES[position];
-        }
-
-        @Override
-        public int getCount() {
-            return TITLES.length;
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return fragments.get(position);
-        }
-
-    }
-
     public void onBackPressed() {
         if (searchFragment != null) {
             isAddSearchFragment = !searchFragment.isRemoved();
@@ -180,5 +153,29 @@ public class ContainerFragment extends Fragment {
             default:
                 break;
         }
+    }
+
+    public class MyPagerAdapter extends FragmentPagerAdapter {
+
+
+        public MyPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return TITLES[position];
+        }
+
+        @Override
+        public int getCount() {
+            return TITLES.length;
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return fragments.get(position);
+        }
+
     }
 }

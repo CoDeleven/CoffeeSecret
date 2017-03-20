@@ -41,11 +41,12 @@ public class QRCodeActivity extends AppCompatActivity implements QRCodeView.Dele
     @Override
     public void onScanQRCodeSuccess(String result) {
         Intent intent = new Intent(this, ReportActivity.class);
-        Map<String, BakeReport> bakeReports = TestData.getBakeReports(this);
+        // TODO 需要跳转
+/*        Map<String, BakeReport> bakeReports = TestData.getBakeReports(this);
         // 根据id获取bakereport
         BakeReportProxy proxy = new BakeReportProxy(bakeReports.get(TestData.RAW_ID[7] + ""));
         // 设置bakereport
-        TestData.setBakeReport(proxy);
+        TestData.setBakeReport(proxy);*/
 
         startActivity(intent);
     }

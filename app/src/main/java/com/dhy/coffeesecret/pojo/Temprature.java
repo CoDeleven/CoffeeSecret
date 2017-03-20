@@ -20,7 +20,7 @@ public class Temprature implements Serializable {
     private float accBeanTemp;
     private float accInwindTemp;
     private float accOutwindTemp;
-    private float envTemp;
+    private static float envTemp;
     public Temprature() {
 
     }
@@ -99,7 +99,7 @@ public class Temprature implements Serializable {
         this.accOutwindTemp = accOutwindTemp;
     }
 
-    public float getEnvTemp() {
+    public static float getEnvTemp() {
         return envTemp;
     }
 

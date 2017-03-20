@@ -239,6 +239,7 @@
         <Button
             android:id="@+id/id_baking_dry"
             style="@style/bakingOperator"
+            android:visibility="gone"
             android:text="脱水"/>
 
         <Button
@@ -246,6 +247,8 @@
             style="@style/bakingOperator"
             android:layout_below="@id/id_baking_dry"
             android:layout_marginTop="13dp"
+            android:visibility="gone"
+
             android:text="一爆"/>
 
         <Button
@@ -253,6 +256,8 @@
             style="@style/bakingOperator"
             android:layout_below="@id/id_baking_firstBurst"
             android:layout_marginTop="13dp"
+            android:visibility="gone"
+
             android:text="二爆"/>
 
         <Button
@@ -260,6 +265,8 @@
             style="@style/bakingOperator"
             android:layout_below="@id/id_baking_secondBurst"
             android:layout_marginTop="13dp"
+            android:visibility="gone"
+
             android:text="出豆"/>
 
         <Button
@@ -267,6 +274,8 @@
             style="@style/bakingOperator"
             android:layout_below="@+id/id_baking_end"
             android:layout_marginTop="59.625dp"
+            android:visibility="gone"
+
             android:text="风门火力"/>
 
         <Button
@@ -274,6 +283,13 @@
             style="@style/bakingOperator"
             android:layout_below="@+id/id_baking_wind_fire"
             android:layout_marginTop="13dp"
+            android:visibility="gone"
+
             android:text="快捷标注"/>
+
+        <Button
+            android:id="@+id/id_baking_start"
+            style="@style/bakingOperator"
+            android:text="开始"/>
     </RelativeLayout>
 </LinearLayout>

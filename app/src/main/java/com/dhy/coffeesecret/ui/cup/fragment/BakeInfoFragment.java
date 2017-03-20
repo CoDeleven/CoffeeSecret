@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.andexert.expandablelayout.library.ExpandableLayoutItem;
 import com.andexert.expandablelayout.library.ExpandableLayoutListView;
+import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.pojo.BakeReportProxy;
@@ -219,8 +220,7 @@ public class BakeInfoFragment extends Fragment implements View.OnClickListener {
             startActivityForResult(intent, SELECT_LINE);
         } else {
             // TODO 校赛专用
-            // ((MyApplication) (getActivity().getApplication())).setBakeReport(mBakeReport);
-            TestData.setBakeReport(mBakeReport);
+            ((MyApplication) (getActivity().getApplication())).setBakeReport(mBakeReport);
 
             Intent intent = new Intent(getActivity(), ReportActivity.class);
             startActivity(intent);

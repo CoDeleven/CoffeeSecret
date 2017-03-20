@@ -32,7 +32,7 @@ public class BaseChart4Coffee extends LineChart {
 
     public final static int BEANLINE = 0, ACCBEANLINE = 1, INWINDLINE = 2, ACCINWINDLINE = 3, OUTWINDLINE = 4, ACCOUTWINDLINE = 5, REFERLINE = 6;
     private static Map<Integer, String> labels = new HashMap<>();
-
+    private List<Entry> referEntries;
     static {
         labels.put(BEANLINE, "豆温");
         labels.put(ACCBEANLINE, "豆升温");
@@ -294,6 +294,7 @@ public class BaseChart4Coffee extends LineChart {
      * @param entries 曲线数据
      */
     public void enableReferLine(List<Entry> entries) {
+        this.referEntries = entries;
         LineDataSet set = new LineDataSet(entries, "");
         lines.put(BaseChart4Coffee.REFERLINE, set);
 
@@ -312,7 +313,7 @@ public class BaseChart4Coffee extends LineChart {
         set.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
         set.setColor(Color.BLACK);
 
-        setData(new LineData(new ArrayList<ILineDataSet>(lines.values())));
+        setData(new LineData(new ArrayList<>(lines.values())));
     }
 
     /**
@@ -324,6 +325,15 @@ public class BaseChart4Coffee extends LineChart {
     public void changeColorByIndex(String color, int index) {
         ((LineDataSet) lines.get(index)).setColor(Color.parseColor(color));
         notifyDataSetChanged();
+    }
+
+    @Override
+    public void clear(){
+        super.clear();
+        initLine();
+        if(referEntries != null && referEntries.size() > 0){
+            enableReferLine(referEntries);
+        }
     }
 
 }

@@ -34,10 +34,16 @@
             android:textSize="17sp"/>
     </android.support.v7.widget.Toolbar>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/id_lines_list"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/id_swipeRefresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/toolbar_device_activtiy">
-    </android.support.v7.widget.RecyclerView>
+        android:layout_below="@id/toolbar_device_activtiy"
+        android:layout_height="match_parent">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/id_lines_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+        </android.support.v7.widget.RecyclerView>
+    </android.support.v4.widget.SwipeRefreshLayout>
 </RelativeLayout>

@@ -58,7 +58,6 @@ public class LinesSelectedActivity extends AppCompatActivity implements View.OnC
     private void init() {
         // TODO 校赛视频，暂时注释
         Map<String, ? extends BakeReport> bakeReports = ((MyApplication) getApplication()).getBakeReports();
-        // Map<String, ? extends BakeReport> bakeReports = TestData.getBakeReports(this);
 
         bakeReportList.addAll(bakeReports.values());
 
@@ -71,8 +70,7 @@ public class LinesSelectedActivity extends AppCompatActivity implements View.OnC
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 BakeReport report = (BakeReport) adapterView.getItemAtPosition(i);
                 // TODO 校赛专用
-                // ((MyApplication)(getApplication())).setBakeReport(report);
-                TestData.setBakeReport(report);
+                ((MyApplication)(getApplication())).setBakeReport(report);
 
                 Intent intent = new Intent(LinesSelectedActivity.this, ReportActivity.class);
                 startActivity(intent);
