@@ -6,6 +6,7 @@ package com.dhy.coffeesecret.utils;
 public final class URLs {
 //    private static final String URL_COMMON = "http://182.254.137.212:8080/CoffeeSecret";
 //    private static final String URL_COMMON = "http://192.168.191.1:8080/CoffeeSecret";
+//    private static final String URL_COMMON = "http://10.151.29.58:8080/CoffeeSecret";
     private static final String URL_COMMON = "http://139.196.90.97:1234/CoffeeSecret";
 
     public static final String ADD_CUPPING = URL_COMMON + "/cupping/add";

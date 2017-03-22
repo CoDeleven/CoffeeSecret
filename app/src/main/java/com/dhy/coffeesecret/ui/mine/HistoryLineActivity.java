@@ -39,6 +39,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class HistoryLineActivity extends AppCompatActivity implements View.OnClickListener, SearchEditText.SearchBarListener,LinesSelectorHandler.Handling {
+
     public static String REFER_LINE = "refer_line";
     @Bind(R.id.id_lines_list)
     RecyclerView listView;

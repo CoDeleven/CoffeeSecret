@@ -203,14 +203,9 @@ public class BeanInfo implements Serializable {
 		this.continent = continent;
 	}
 
-	public boolean isHasBakeReports() {
-		return hasBakeReports;
+	public boolean hasBakeReports() {
+		return bakeReports != null && bakeReports.size() > 0;
 	}
-
-	public void setHasBakeReports(boolean hasBakeReports) {
-		this.hasBakeReports = hasBakeReports;
-	}
-
 
 	@Override
 	public String toString() {

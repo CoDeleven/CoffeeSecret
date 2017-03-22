@@ -72,9 +72,7 @@ public class BeanInfoActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         UIUtils.steepToolBar(this);
-
         beanInfo = (BeanInfo) getIntent().getSerializableExtra("beanInfo");
-
         init();
     }
 
@@ -106,6 +104,8 @@ public class BeanInfoActivity extends AppCompatActivity {
                 overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
             }
         });
+
+
         btnCurve.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -132,8 +132,10 @@ public class BeanInfoActivity extends AppCompatActivity {
         infoPrice.setText("" + beanInfo.getPrice());
         infoWeight.setText(beanInfo.getStockWeight() + "g");
         infoBuyDate.setText(String.format("%1$tY-%1$tm-%1$te", beanInfo.getDate()));
+        btnCurve.setEnabled(beanInfo.hasBakeReports());
     }
     private BeanInfo newBeanInfo;
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (resultCode) {
@@ -150,6 +152,7 @@ public class BeanInfoActivity extends AppCompatActivity {
                 infoPrice.setText("" + newBeanInfo.getPrice());
                 infoWeight.setText(newBeanInfo.getStockWeight() + "g");
                 infoBuyDate.setText(String.format("%1$tY-%1$tm-%1$te", newBeanInfo.getDate()));
+                btnCurve.setEnabled(newBeanInfo.hasBakeReports());
                 break;
         }
     }

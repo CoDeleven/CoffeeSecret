@@ -22,7 +22,8 @@ import okhttp3.Response;
 public class HttpUtils {
 
     private static final OkHttpClient mOkHttpClient;
-    private static final Gson mGson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+    private static final Gson mGson = new GsonBuilder()
+            .setDateFormat("yyyy-MM-dd").setExclusionStrategies().create();
 
     private static final long TIMEOUT = 4;
     private static final String CHARSET_NAME = "UTF-8";
@@ -40,7 +41,6 @@ public class HttpUtils {
     public static Request getRequest(String url, Object obj) {
         String json = mGson.toJson(obj);
         RequestBody body = RequestBody.create(TYPE, json);
-        System.out.println(json); //TODO
         Request request = new Request.Builder().url(url).post(body).build();
         return request;
     }

@@ -41,10 +41,12 @@ public class BakeReport implements Serializable {
 //	@JsonIgnore
     private CuppingInfo cuppingInfo;
 
-    // 用于测试单个豆种
-    {
-        beanInfoSimples.add(new BeanInfoSimple());
-    }
+    private Long beanId;
+
+//     用于测试单个豆种
+//    {
+//        beanInfoSimples.add(new BeanInfoSimple());
+//    }
 
     public int getId() {
         return id;
@@ -166,6 +168,14 @@ public class BakeReport implements Serializable {
     // 用于测试
     public void setSingleBeanName(String beanName) {
         beanInfoSimples.get(0).setBeanName(beanName);
+    }
+
+    public Long getBeanId() {
+        return beanId;
+    }
+
+    public void setBeanId(Long beanId) {
+        this.beanId = beanId;
     }
 
     public static class EntryTemp implements Serializable {

@@ -27,7 +27,7 @@ import java.util.List;
 
 public class DialogBeanSelected extends AppCompatActivity implements BeanListFragment.OnBeanSelectedLinstener, SearchFragment.OnSearchCallBack {
 
-    private static final String TAG = "ContainerFragment";
+    private static final String TAG = "DialogBeanSelected";
     private static final int ADD_BEAN = 111;
     private final String[] TITLES = {"全部", "中美", "南美", "大洋", "亚洲", "非洲", "其它"};
 
