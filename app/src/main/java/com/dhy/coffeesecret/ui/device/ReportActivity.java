@@ -1,5 +1,6 @@
 package com.dhy.coffeesecret.ui.device;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -78,8 +79,11 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
     TextView score;
     @Bind(R.id.id_report_home)
     TextView home;
-    @Bind(R.id.id_barcode)
+    @Bind(R.id.id_share)
     ImageView barcode;
+    @Bind(R.id.id_edit)
+    ImageView more;
+
     @Bind(R.id.id_report_species)
     TextView species;
 
@@ -96,7 +100,7 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
     private List<LinearLayout> beanContent;
     private PopupWindow popupWindow;
     private BakeReportProxy proxy;
-
+    private static ReportActivity REPORT_ACTIVITY;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,6 +111,7 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
         setSupportActionBar(toolbar);
         initParam();
         init();
+        REPORT_ACTIVITY = this;
     }
 
     private void initParam() {
@@ -217,7 +222,7 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
 
     }
 
-    @OnClick(R.id.id_barcode)
+    @OnClick(R.id.id_share)
     public void onBarcodeClick() {
         Bundle bundle = new Bundle();
         SharedFragment shared = new SharedFragment();
@@ -229,6 +234,12 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
         shared.setArguments(bundle);
         FragmentTool.getFragmentToolInstance(this).showDialogFragmen("dialogFragment", shared);
     }
+    @OnClick(R.id.id_edit)
+    public void onMoreClick(){
+        Intent intent = new Intent(this, EditBehindActiviy.class);
+        startActivity(intent);
+    }
+
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, final boolean isChecked) {
@@ -391,5 +402,8 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
             linearLayouts.add(outter);
         }
         return linearLayouts;
+    }
+    public static ReportActivity getInstance(){
+        return REPORT_ACTIVITY;
     }
 }

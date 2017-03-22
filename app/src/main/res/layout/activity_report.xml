@@ -34,14 +34,29 @@
             android:gravity="center_vertical"
             android:textColor="#FFF"
             android:textSize="17sp"/>
-        <ImageView
-            android:id="@+id/id_barcode"
-            android:layout_gravity="right|center_vertical"
-            android:gravity="center_vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="20dp"
-            android:src="@drawable/qr_code"/>
+
+            <RelativeLayout
+                android:layout_gravity="right|center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                >
+
+
+                <ImageView
+                    android:id="@+id/id_share"
+                    android:layout_marginRight="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_share"/>
+                <ImageView
+                    android:id="@+id/id_edit"
+                    android:layout_toRightOf="@id/id_share"
+                    android:layout_marginRight="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:src="@drawable/ic_edit"/>
+            </RelativeLayout>
 
     </android.support.v7.widget.Toolbar>
 
@@ -112,6 +127,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_centerInParent="true"
                                 android:src="@drawable/ic_report_bakedegree"/>
+
                             <TextView
                                 android:id="@+id/id_score"
                                 android:layout_width="wrap_content"
@@ -144,33 +160,33 @@
                             android:textColor="#000"
                             android:textSize="13.5sp"/>
 
-<!--                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-                            <TextView
-                                android:textSize="15sp"
-                                android:paddingLeft="8dp"
-                                android:layout_weight="1"
-                                android:id="@+id/id_report_total_weight"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="left"
-                                android:layout_marginBottom="7.874dp"
-                                android:text="熟豆重量："/>
+                        <!--                        <LinearLayout
+                                                    android:layout_width="match_parent"
+                                                    android:layout_height="wrap_content"
+                                                    android:orientation="horizontal">
+                                                    <TextView
+                                                        android:textSize="15sp"
+                                                        android:paddingLeft="8dp"
+                                                        android:layout_weight="1"
+                                                        android:id="@+id/id_report_total_weight"
+                                                        android:layout_width="wrap_content"
+                                                        android:layout_height="wrap_content"
+                                                        android:layout_gravity="left"
+                                                        android:layout_marginBottom="7.874dp"
+                                                        android:text="熟豆重量："/>
 
-                            <TextView
-                                android:textSize="15sp"
-                                android:paddingRight="16dp"
-                                android:layout_weight="1"
-                                android:id="@+id/id_report_dry_rate"
-                                android:layout_width="wrap_content"
-                                android:layout_gravity="left"
-                                android:gravity="left"
-                                android:layout_marginBottom="7.874dp"
-                                android:text="脱水率："
-                                android:layout_height="wrap_content"/>
-                        </LinearLayout>-->
+                                                    <TextView
+                                                        android:textSize="15sp"
+                                                        android:paddingRight="16dp"
+                                                        android:layout_weight="1"
+                                                        android:id="@+id/id_report_dry_rate"
+                                                        android:layout_width="wrap_content"
+                                                        android:layout_gravity="left"
+                                                        android:gravity="left"
+                                                        android:layout_marginBottom="7.874dp"
+                                                        android:text="脱水率："
+                                                        android:layout_height="wrap_content"/>
+                                                </LinearLayout>-->
 
                         <LinearLayout
                             android:id="@+id/id_bean_container"

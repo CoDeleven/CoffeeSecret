@@ -42,6 +42,9 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 import static android.widget.LinearLayout.HORIZONTAL;
 import static android.widget.LinearLayout.LayoutParams.MATCH_PARENT;
@@ -63,7 +66,8 @@ public class EditBehindActiviy extends AppCompatActivity implements CircleSeekBa
     ScrollView scrollView;
     @Bind(R.id.id_event_container)
     LinearLayout eventContainer;
-
+    @Bind(R.id.id_report_delete)
+    Button reportDelete;
     @Bind(R.id.id_bean_container)
     LinearLayout beanContainer;
 
@@ -73,7 +77,7 @@ public class EditBehindActiviy extends AppCompatActivity implements CircleSeekBa
     private List<BeanInfoSimple> beanInfoSimples = new ArrayList<>();
     private BeanInfoSimple curBeanInfoSimple;
     private Button curBeanButton;
-
+    private BakeReportProxy proxy;
     private String unit;
     private Dialog dialog;
     private Handler mHandler = new Handler(new Handler.Callback() {
@@ -99,27 +103,40 @@ public class EditBehindActiviy extends AppCompatActivity implements CircleSeekBa
         init();
         unit = SettingTool.getConfig(this).getWeightUnit();
         cookedWeight.setHint("请填写熟豆重量，此处单位为" + unit);
-        /*LinearLayoutManager manager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(manager);
-        recyclerView.setAdapter(new EditEventListAdapter(this, entries));
-        recyclerView.addItemDecoration(new DividerDecoration(this));*/
+
         generateItem();
         generateBean();
+
+        int status = getIntent().getIntExtra("status", -1);
+        if (status != BakeActivity.I_AM_BAKEACTIVITY) {
+            reportDelete.setVisibility(View.VISIBLE);
+            cookedWeight.setText(proxy.getBakeReport().getCookedBeanWeight());
+            mSeekBar.setCurProcess((int) Float.parseFloat(proxy.getBakeDegree()));
+            reportDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    HttpUtils.enqueue(URLs.getDeleteBakeReport(proxy.getBakeReport().getId()), null, new Callback() {
+                        @Override
+                        public void onFailure(Call call, IOException e) {
+
+                        }
+
+                        @Override
+                        public void onResponse(Call call, Response response) throws IOException {
+                            ReportActivity.getInstance().finish();
+                            finish();
+                        }
+                    });
+                }
+            });
+        }
     }
 
     private void init() {
-        BakeReportProxy proxy = ((MyApplication) getApplication()).getBakeReport();
+        proxy = ((MyApplication) getApplication()).getBakeReport();
         entries = proxy.getEntriesWithEvents();
         beanInfoSimples = proxy.getBeanInfos();
-        // entries = TestData.getBakeReport().getEntriesWithEvents();
 
-/*        for (Entry entry : entries) {
-            int time = (int) entry.getX();
-            Utils.getTimeWithFormat(time);
-            int minutes = time / 60;
-            int seconds = time % 60;
-            content.add(String.format("%1$02d", minutes) + ":" + String.format("%1$02d", seconds));
-        }*/
 
         mSeekBar.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -138,7 +155,6 @@ public class EditBehindActiviy extends AppCompatActivity implements CircleSeekBa
 
     @OnClick(R.id.id_bake_behind_save)
     protected void onSave() {
-        BakeReportProxy proxy = ((MyApplication) getApplication()).getBakeReport();
 
         String weight = cookedWeight.getText().toString();
         if (!"".equals(weight) && weight != null) {
@@ -146,7 +162,9 @@ public class EditBehindActiviy extends AppCompatActivity implements CircleSeekBa
         } else {
             proxy.setCookedBeanWeight(0);
         }
-
+        if (proxy.getBeanInfos().size() != 1) {
+            proxy.setSingleBeanId(-1);
+        }
 
         proxy.setBakeDegree(mCurValue);
         Intent other = new Intent(this, ReportActivity.class);
@@ -273,7 +291,7 @@ public class EditBehindActiviy extends AppCompatActivity implements CircleSeekBa
             linearLayout.setPadding(0, dp2px(this, 5), 0, dp2px(this, 5));
 
             TextView index = new TextView(this);
-            index.setText(beanCount + "");
+            index.setText(beanCount++ + "");
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT);
             params.gravity = Gravity.CENTER_VERTICAL;
             params.rightMargin = dp2px(this, 12);

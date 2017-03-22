@@ -36,7 +36,7 @@ import com.dhy.coffeesecret.views.BaseChart4Coffee;
 import com.dhy.coffeesecret.views.DevelopBar;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.Event;
-import static com.dhy.coffeesecret.MyApplication.*;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -47,13 +47,20 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.dhy.coffeesecret.views.BaseChart4Coffee.*;
+import static com.dhy.coffeesecret.MyApplication.tempratureUnit;
+import static com.dhy.coffeesecret.views.BaseChart4Coffee.ACCBEANLINE;
+import static com.dhy.coffeesecret.views.BaseChart4Coffee.ACCINWINDLINE;
+import static com.dhy.coffeesecret.views.BaseChart4Coffee.ACCOUTWINDLINE;
+import static com.dhy.coffeesecret.views.BaseChart4Coffee.BEANLINE;
+import static com.dhy.coffeesecret.views.BaseChart4Coffee.INWINDLINE;
+import static com.dhy.coffeesecret.views.BaseChart4Coffee.OUTWINDLINE;
 import static com.dhy.coffeesecret.views.DevelopBar.AFTER160;
 import static com.dhy.coffeesecret.views.DevelopBar.RAWBEAN;
 
 public class BakeActivity extends AppCompatActivity implements BluetoothService.DataChangedListener, View.OnClickListener, CompoundButton.OnCheckedChangeListener, Other.OnOtherAddListener, FireWindDialog.OnFireWindAddListener {
     public static final String DEVICE_NAME = "com.dhy.coffeesercret.ui.device.BakeActivity.DEVICE_NAME";
     public static final String ENABLE_REFERLINE = "com.dhy.coffeesercret.ui.device.BakeActivity.REFER_LINE";
+    public static final int I_AM_BAKEACTIVITY = 123;
     private static final int[] LINE_INDEX = {BEANLINE, INWINDLINE, OUTWINDLINE, ACCBEANLINE, ACCINWINDLINE, ACCOUTWINDLINE};
     private static Thread timer = null;
     @Bind(R.id.id_baking_chart)
@@ -210,7 +217,7 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
         lastTime = (System.currentTimeMillis() - startTime) / 1000.0f;
         lastTime = ((int) (lastTime * 100)) / 100.0f;
 
-        curBeanEntry = new Entry(lastTime, tempratures[0]);
+        curBeanEntry = new Entry(lastTime, Utils.getCrspTempratureValue(tempratures[0] + ""));
 
         if (tempratures[0] > 160 && isOverBottom && curStatus != DevelopBar.FIRST_BURST) {
             curStatus = AFTER160;
@@ -491,7 +498,10 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
                 Intent intent = new Intent(BakeActivity.this, EditBehindActiviy.class);
                 // 停止读取
                 BluetoothService.READABLE = false;
+                // 发送一个bundle来标识是否来自bakeactivity的请求
+                intent.putExtra("status", I_AM_BAKEACTIVITY);
                 startActivity(intent);
+
                 finish();
                 status = true;
 

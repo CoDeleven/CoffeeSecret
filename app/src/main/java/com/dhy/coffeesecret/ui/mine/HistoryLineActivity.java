@@ -86,6 +86,12 @@ public class HistoryLineActivity extends AppCompatActivity implements View.OnCli
         }
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mHandler.sendEmptyMessage(GET_LINES_INFOS);
+    }
+
     private void init() {
         Map<String, ? extends BakeReport> bakeReports = ((MyApplication) getApplication()).getBakeReports();
 
@@ -109,7 +115,6 @@ public class HistoryLineActivity extends AppCompatActivity implements View.OnCli
 
         mHandler = new LinesSelectorHandler(this, mRefreshLayout, mAdapter);
         mHandler.setHandling(this);
-        mHandler.sendEmptyMessage(GET_LINES_INFOS);
         mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
