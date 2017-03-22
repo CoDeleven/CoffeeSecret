@@ -40,11 +40,8 @@ public class BakeReport implements Serializable {
     //不需要持久化
 //	@JsonIgnore
     private CuppingInfo cuppingInfo;
-
-    // 用于测试单个豆种
-    {
-        beanInfoSimples.add(new BeanInfoSimple());
-    }
+    //当烘焙报告中只有一种豆子的话 烘焙报告上添加 bean的ID
+    private long beanId = -1;
 
     public int getId() {
         return id;
@@ -168,19 +165,8 @@ public class BakeReport implements Serializable {
         beanInfoSimples.get(0).setBeanName(beanName);
     }
 
-    public static class EntryTemp implements Serializable {
-        float y;
-        String event;
-        int curStatus;
-
-        public EntryTemp() {
-
-        }
-
-        public EntryTemp(float y, String event, int curStatus) {
-            this.y = y;
-            this.event = event;
-            this.curStatus = curStatus;
-        }
+    public void setBeanId(long id){
+        this.beanId = id;
     }
+
 }

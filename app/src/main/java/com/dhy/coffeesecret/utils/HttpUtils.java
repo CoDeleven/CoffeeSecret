@@ -1,5 +1,7 @@
 package com.dhy.coffeesecret.utils;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -20,7 +22,7 @@ import okhttp3.Response;
 
 
 public class HttpUtils {
-
+    private static final String TAG = "HTTPUtils";
     private static final OkHttpClient mOkHttpClient;
     private static final Gson mGson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 
@@ -40,7 +42,7 @@ public class HttpUtils {
     public static Request getRequest(String url, Object obj) {
         String json = mGson.toJson(obj);
         RequestBody body = RequestBody.create(TYPE, json);
-        System.out.println(json); //TODO
+        Log.e(TAG, json); //TODO
         Request request = new Request.Builder().url(url).post(body).build();
         return request;
     }

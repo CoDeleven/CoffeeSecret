@@ -206,4 +206,8 @@ public class BakeReportProxy {
     public List<Float> getTimex(){
         return bakeReport.getTempratureSet().getTimex();
     }
+
+    public void setSingleBeanId(long id){
+        bakeReport.setBeanId(id);
+    }
 }

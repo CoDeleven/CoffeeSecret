@@ -1,11 +1,13 @@
 package com.dhy.coffeesecret.pojo;
 
+import java.io.Serializable;
+
 /**
  * CoffeeSecret
  * Created by Simo on 2017/2/23.
  */
 
-public class Species {
+public class Species implements Serializable{
     // 咖啡小类
     private String species;
     // 咖啡大类

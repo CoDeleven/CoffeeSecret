@@ -22,8 +22,6 @@ import android.widget.Toast;
 import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BakeReportProxy;
-import com.dhy.coffeesecret.pojo.BeanInfoSimple;
-import com.dhy.coffeesecret.pojo.DialogBeanInfo;
 import com.dhy.coffeesecret.pojo.Temprature;
 import com.dhy.coffeesecret.pojo.TempratureSet;
 import com.dhy.coffeesecret.pojo.UniversalConfiguration;
@@ -38,7 +36,7 @@ import com.dhy.coffeesecret.views.BaseChart4Coffee;
 import com.dhy.coffeesecret.views.DevelopBar;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.Event;
-
+import static com.dhy.coffeesecret.MyApplication.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -49,16 +47,14 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.dhy.coffeesecret.views.BaseChart4Coffee.*;
 import static com.dhy.coffeesecret.views.DevelopBar.AFTER160;
 import static com.dhy.coffeesecret.views.DevelopBar.RAWBEAN;
 
 public class BakeActivity extends AppCompatActivity implements BluetoothService.DataChangedListener, View.OnClickListener, CompoundButton.OnCheckedChangeListener, Other.OnOtherAddListener, FireWindDialog.OnFireWindAddListener {
-    public static final String RAW_BEAN_INFO = "com.dhy.coffeesercret.ui.device.BakeActivity.RAW_BEAN_INFO";
     public static final String DEVICE_NAME = "com.dhy.coffeesercret.ui.device.BakeActivity.DEVICE_NAME";
-    public static final String START_TEMP = "com.dhy.coffeesercret.ui.device.BakeActivity.START_TIME";
-    public static final String BAKE_DATE = "com.dhy.coffeesercret.ui.device.BakeActivity.BAKE_DATE";
-    public static final String ENV_TEMP = "com.dhy.coffeesercret.ui.device.BakeActivity.ENV_TEMP";
     public static final String ENABLE_REFERLINE = "com.dhy.coffeesercret.ui.device.BakeActivity.REFER_LINE";
+    private static final int[] LINE_INDEX = {BEANLINE, INWINDLINE, OUTWINDLINE, ACCBEANLINE, ACCINWINDLINE, ACCOUTWINDLINE};
     private static Thread timer = null;
     @Bind(R.id.id_baking_chart)
     BaseChart4Coffee chart;
@@ -126,18 +122,19 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
             float accBean = bundle.getFloat("accBean");
             float accInwind = bundle.getFloat("accInwind");
             float accOutwind = bundle.getFloat("accOutwind");
-            beanTemps[0].setText(String.format("%1$.2f", bundle.getFloat("bean")) + "℃");
-            beanTemps[1].setText(String.format("%1$.2f", accBean) + "℃/m");
+            // 所有用户可见性数值均进行转换
+            beanTemps[0].setText(Utils.getCrspTempratureValue(bundle.getFloat("bean") + "") + tempratureUnit);
+            beanTemps[1].setText(Utils.getCrspTempratureValue(accBean + "") + tempratureUnit + "/m");
 
-            inwindTemps[0].setText(String.format("%1$.2f", bundle.getFloat("inwind")) + "℃");
-            inwindTemps[1].setText(String.format("%1$.2f", accInwind) + "℃/m");
+            inwindTemps[0].setText(Utils.getCrspTempratureValue(bundle.getFloat("inwind") + "") + tempratureUnit);
+            inwindTemps[1].setText(Utils.getCrspTempratureValue(accInwind + "") + tempratureUnit + "/m");
 
-            outwindTemps[0].setText(String.format("%1$.2f", bundle.getFloat("outwind")) + "℃");
-            outwindTemps[1].setText(String.format("%1$.2f", accOutwind) + "℃/m");
+            outwindTemps[0].setText(Utils.getCrspTempratureValue(bundle.getFloat("outwind") + "") + tempratureUnit);
+            outwindTemps[1].setText(Utils.getCrspTempratureValue(accOutwind + "") + tempratureUnit + "/m");
 
             if (curStatus == DevelopBar.FIRST_BURST) {
                 developTime.setText(developBar.getDevelopTime());
-                developRate.setText("发展率：" + developBar.getDevelopRate());
+                developRate.setText("发展率：" + developBar.getDevelopRate() + "%");
             }
             Temprature temprature = new Temprature();
             temprature.setAccBeanTemp(accBean);
@@ -158,7 +155,6 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
             if (!isOverBottom && minutes > 1 && seconds > 30) {
                 isOverBottom = true;
             }
-            Log.e("codelevex", "g");
             developBar.setCurStatus(curStatus);
             return false;
         }
@@ -176,22 +172,22 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
         int curIndex = 0;
         switch (id) {
             case R.id.id_baking_line_bean:
-                curIndex = BaseChart4Coffee.BEANLINE;
+                curIndex = BEANLINE;
                 break;
             case R.id.id_baking_line_inwind:
-                curIndex = BaseChart4Coffee.INWINDLINE;
+                curIndex = INWINDLINE;
                 break;
             case R.id.id_baking_line_outwind:
-                curIndex = BaseChart4Coffee.OUTWINDLINE;
+                curIndex = OUTWINDLINE;
                 break;
             case R.id.id_baking_line_accBean:
-                curIndex = BaseChart4Coffee.ACCBEANLINE;
+                curIndex = ACCBEANLINE;
                 break;
             case R.id.id_baking_line_accInwind:
-                curIndex = BaseChart4Coffee.ACCINWINDLINE;
+                curIndex = ACCINWINDLINE;
                 break;
             case R.id.id_baking_line_accOutwind:
-                curIndex = BaseChart4Coffee.ACCOUTWINDLINE;
+                curIndex = ACCOUTWINDLINE;
                 break;
         }
         if (isChecked) {
@@ -204,47 +200,43 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
 
     @Override
     public void notifyDataChanged(Temprature temprature) {
-        float beanTemp = temprature.getBeanTemp();
-        startTemp = beanTemp;
-        float inwindTemp = temprature.getInwindTemp();
-        float outwindTemp = temprature.getOutwindTemp();
-        float accBeanTemp = temprature.getAccBeanTemp();
-        float accInwindTemp = temprature.getAccInwindTemp();
-        float accOutwindTemp = temprature.getAccOutwindTemp();
+        // 温度数组: 0->豆温，1->进风温, 2->出风温, 3->加速豆温, 4->加速进风温, 5->加速出风温
+        float[] tempratures = {temprature.getBeanTemp(), temprature.getInwindTemp(),
+                temprature.getOutwindTemp(), temprature.getAccBeanTemp(), temprature.getAccInwindTemp(),
+                temprature.getAccOutwindTemp()};
+
+        startTemp = tempratures[0];
 
         lastTime = (System.currentTimeMillis() - startTime) / 1000.0f;
         lastTime = ((int) (lastTime * 100)) / 100.0f;
 
-        curBeanEntry = new Entry(lastTime, beanTemp);
+        curBeanEntry = new Entry(lastTime, tempratures[0]);
 
-        if (beanTemp > 160 && isOverBottom && curStatus != DevelopBar.FIRST_BURST) {
+        if (tempratures[0] > 160 && isOverBottom && curStatus != DevelopBar.FIRST_BURST) {
             curStatus = AFTER160;
         }
 
-        set.addBeanTemp(beanTemp);
-        set.addInwindTemp(inwindTemp);
-        set.addOutwindTemp(outwindTemp);
-        set.addAccBeanTemp(accBeanTemp);
-        set.addAccInwindTemp(accInwindTemp);
-        set.addAccOutwindTemp(accOutwindTemp);
+        set.addBeanTemp(tempratures[0]);
+        set.addInwindTemp(tempratures[1]);
+        set.addOutwindTemp(tempratures[2]);
+        set.addAccBeanTemp(tempratures[3]);
+        set.addAccInwindTemp(tempratures[4]);
+        set.addAccOutwindTemp(tempratures[5]);
         set.addTimex(lastTime);
 
-        chart.addOneDataToLine(curBeanEntry, BaseChart4Coffee.BEANLINE);
-        chart.addOneDataToLine(new Entry(lastTime, inwindTemp), BaseChart4Coffee.INWINDLINE);
-        chart.addOneDataToLine(new Entry(lastTime, outwindTemp), BaseChart4Coffee.OUTWINDLINE);
-        chart.addOneDataToLine(new Entry(lastTime, accBeanTemp), BaseChart4Coffee.ACCBEANLINE);
-        chart.addOneDataToLine(new Entry(lastTime, accInwindTemp), BaseChart4Coffee.ACCINWINDLINE);
-        chart.addOneDataToLine(new Entry(lastTime, accOutwindTemp), BaseChart4Coffee.ACCOUTWINDLINE);
-
+        chart.addOneDataToLine(curBeanEntry, BEANLINE);
+        for (int i = 1; i < 6; ++i) {
+            chart.addOneDataToLine(new Entry(lastTime, Utils.getCrspTempratureValue(tempratures[i] + "")), LINE_INDEX[i]);
+        }
 
         Message msg = new Message();
         Bundle bundle = new Bundle();
-        bundle.putFloat("bean", beanTemp);
-        bundle.putFloat("inwind", inwindTemp);
-        bundle.putFloat("outwind", outwindTemp);
-        bundle.putFloat("accBean", accBeanTemp);
-        bundle.putFloat("accInwind", accInwindTemp);
-        bundle.putFloat("accOutwind", accOutwindTemp);
+        bundle.putFloat("bean", tempratures[0]);
+        bundle.putFloat("inwind", tempratures[1]);
+        bundle.putFloat("outwind", tempratures[2]);
+        bundle.putFloat("accBean", tempratures[3]);
+        bundle.putFloat("accInwind", tempratures[4]);
+        bundle.putFloat("accOutwind", tempratures[5]);
         msg.setData(bundle);
 
         mHandler.sendMessage(msg);
@@ -282,7 +274,7 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
     }
 
 
-    private void showButton(){
+    private void showButton() {
         mDry.setVisibility(View.VISIBLE);
         mEnd.setVisibility(View.VISIBLE);
         mFireWind.setVisibility(View.VISIBLE);
@@ -535,7 +527,7 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if(outState != null){
+        if (outState != null) {
             outState.putLong("startTime", startTime);
         }
     }

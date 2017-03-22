@@ -7,7 +7,7 @@ import java.util.List;
 
 public class BeanInfo implements Serializable {
 
-	private int id;
+	private int id = -1;
 	// 咖啡名称
 	private String name;
 	// 咖啡庄园

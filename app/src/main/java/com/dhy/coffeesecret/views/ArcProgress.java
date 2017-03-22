@@ -22,7 +22,6 @@ public class ArcProgress extends View {
     private Paint arcPaint = new Paint();
     private Paint textPaint = new Paint();
     private float strokeWidth;
-    private String suffix;
     private float width;
     private float height;
     private float mFisrtArcRadius;
@@ -65,7 +64,6 @@ public class ArcProgress extends View {
 
         // 参数初始化
         TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.ArcProgress);
-        suffix = typedArray.getString(R.styleable.ArcProgress_suffix);
         mFisrtArcRadius = typedArray.getDimension(R.styleable.ArcProgress_firstCircleRadius, 0);
         mSecondArcRadius = typedArray.getDimension(R.styleable.ArcProgress_secondCircleRadius, 0);
         mRotateAngle = typedArray.getFloat(R.styleable.ArcProgress_rotateAngle, 0);
@@ -129,5 +127,6 @@ public class ArcProgress extends View {
         canvas.drawOval(new RectF(mFisrtArcRadius + mSecondArcRadius, mFisrtArcRadius + mSecondArcRadius, width - mFisrtArcRadius - mSecondArcRadius, height - mFisrtArcRadius - mSecondArcRadius), arcPaint);
         invalidate();
     }
+
 
 }

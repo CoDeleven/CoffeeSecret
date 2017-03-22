@@ -34,9 +34,9 @@
             android:layout_gravity="center_vertical"
             android:hint="投入重量"
             android:inputType="numberDecimal"
-            android:maxWidth="60dp"
-            android:singleLine="true"
             android:textSize="13.5dp"
+            android:singleLine="true"
+            android:maxWidth="60dp"
             />
 
         <TextView

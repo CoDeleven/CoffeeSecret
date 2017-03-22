@@ -94,6 +94,26 @@
                     android:layout_height="wrap_content"
                     android:text="Mediam"/>
             </RelativeLayout>
+
+            <TextView
+                android:paddingLeft="25.3125dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:background="#ECECEC"
+                android:textColor="#a29e9b"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="豆种补充"/>
+            <LinearLayout
+                android:paddingLeft="25.3125dp"
+                android:paddingRight="25.3125dp"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:id="@+id/id_bean_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </LinearLayout>
+
             <TextView
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
@@ -104,15 +124,17 @@
                 android:layout_height="wrap_content"
                 android:text="烘焙事件"/>
             <LinearLayout
+                android:orientation="vertical"
+                android:id="@+id/id_event_container"
                 android:paddingLeft="25.3125dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-                <android.support.v7.widget.RecyclerView
+                <!--<android.support.v7.widget.RecyclerView
                     android:id="@+id/id_edit_list"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+                    android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>-->
             </LinearLayout>
 
             <TextView

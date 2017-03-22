@@ -1,125 +1,135 @@
 package com.dhy.coffeesecret.pojo;
 
+import com.google.gson.annotations.Expose;
+
 import java.io.Serializable;
 
 public class BeanInfoSimple implements Serializable {
 
-	private String beanName;
-	// 豆种
-	private String species;
-	// 咖啡国别
-	private String country;
-	// 咖啡等级
-	private String level;
-	// 咖啡产区
-	private String area;
-	// 产地海拔
-	private String altitude;
-	// 咖啡庄园
-	private String manor;
-	// 处理方式
-	private String process;
-	// 含水量
-	private String waterContent;
-	// 使用量
-	private String usage;
+    private transient long singleBeanId;
+    private String beanName;
+    // 豆种
+    private String species;
+    // 咖啡国别
+    private String country;
+    // 咖啡等级
+    private String level;
+    // 咖啡产区
+    private String area;
+    // 产地海拔
+    private String altitude;
+    // 咖啡庄园
+    private String manor;
+    // 处理方式
+    private String process;
+    // 含水量
+    private String waterContent;
+    // 使用量
+    private String usage;
 
-	public BeanInfoSimple(){
+    public BeanInfoSimple() {
 
-	}
+    }
 
 
-	public BeanInfoSimple(BeanInfo beanInfo, String usage){
-		this.altitude = beanInfo.getAltitude();
-		this.area = beanInfo.getArea();
-		this.beanName = beanInfo.getName();
-		this.country = beanInfo.getCountry();
-		this.level = beanInfo.getLevel();
-		this.manor = beanInfo.getManor();
-		this.process = beanInfo.getProcess();
-		this.species = beanInfo.getSpecies();
-		this.usage = usage;
-		this.waterContent = beanInfo.getWaterContent() + "";
-	}
+    public BeanInfoSimple(BeanInfo beanInfo, String usage) {
+        this.altitude = beanInfo.getAltitude();
+        this.area = beanInfo.getArea();
+        this.beanName = beanInfo.getName();
+        this.country = beanInfo.getCountry();
+        this.level = beanInfo.getLevel();
+        this.manor = beanInfo.getManor();
+        this.process = beanInfo.getProcess();
+        this.species = beanInfo.getSpecies();
+        this.usage = usage;
+        this.waterContent = beanInfo.getWaterContent() + "";
+    }
 
-	public String getBeanName() {
-		return beanName;
-	}
+    public String getBeanName() {
+        return beanName;
+    }
 
-	public void setBeanName(String beanName) {
-		this.beanName = beanName;
-	}
+    public void setBeanName(String beanName) {
+        this.beanName = beanName;
+    }
 
-	public String getSpecies() {
-		return species;
-	}
+    public String getSpecies() {
+        return species;
+    }
 
-	public void setSpecies(String species) {
-		this.species = species;
-	}
+    public void setSpecies(String species) {
+        this.species = species;
+    }
 
-	public String getCountry() {
-		return country;
-	}
+    public String getCountry() {
+        return country;
+    }
 
-	public void setCountry(String country) {
-		this.country = country;
-	}
+    public void setCountry(String country) {
+        this.country = country;
+    }
 
-	public String getLevel() {
-		return level;
-	}
+    public String getLevel() {
+        return level;
+    }
 
-	public void setLevel(String level) {
-		this.level = level;
-	}
+    public void setLevel(String level) {
+        this.level = level;
+    }
 
-	public String getArea() {
-		return area;
-	}
+    public String getArea() {
+        return area;
+    }
 
-	public void setArea(String area) {
-		this.area = area;
-	}
+    public void setArea(String area) {
+        this.area = area;
+    }
 
-	public String getAltitude() {
-		return altitude;
-	}
+    public String getAltitude() {
+        return altitude;
+    }
 
-	public void setAltitude(String altitude) {
-		this.altitude = altitude;
-	}
+    public void setAltitude(String altitude) {
+        this.altitude = altitude;
+    }
 
-	public String getManor() {
-		return manor;
-	}
+    public String getManor() {
+        return manor;
+    }
 
-	public void setManor(String manor) {
-		this.manor = manor;
-	}
+    public void setManor(String manor) {
+        this.manor = manor;
+    }
 
-	public String getProcess() {
-		return process;
-	}
+    public String getProcess() {
+        return process;
+    }
 
-	public void setProcess(String process) {
-		this.process = process;
-	}
+    public void setProcess(String process) {
+        this.process = process;
+    }
 
-	public String getWaterContent() {
-		return waterContent;
-	}
+    public String getWaterContent() {
+        return waterContent;
+    }
 
-	public void setWaterContent(String waterContent) {
-		this.waterContent = waterContent;
-	}
+    public void setWaterContent(String waterContent) {
+        this.waterContent = waterContent;
+    }
 
-	public String getUsage() {
-		return usage;
-	}
+    public String getUsage() {
+        return usage;
+    }
 
-	public void setUsage(String usage) {
-		this.usage = usage;
-	}
+    public void setUsage(String usage) {
+        this.usage = usage;
+    }
 
+    public long getSingleBeanId() {
+        return singleBeanId;
+    }
+
+    public void setSingleBeanId(long singleBeanId) {
+        this.singleBeanId = singleBeanId;
+    }
 }

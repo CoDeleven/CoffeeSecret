@@ -72,8 +72,8 @@ public class BeanListAdapter extends RecyclerView.Adapter<BeanListAdapter.BeanLi
         if (!beaninfo.getDrawablePath().trim().equals("")) {
             holder.beanIcon.setImageResource(Integer.parseInt(beaninfo.getDrawablePath()));
         }
-        holder.beanArea.setText(beaninfo.getArea());
-        holder.beanManor.setText(beaninfo.getManor());
+        holder.beanName.setText(beaninfo.getName());
+        holder.beanSubName.setText(beaninfo.getCountry() + "-" + beaninfo.getArea() + "-" + beaninfo.getManor() + "-" + beaninfo.getLevel());
         holder.beanWeight.setText(beaninfo.getStockWeight() + SettingTool.getConfig(context).getWeightUnit());
         holder.itemBeanLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,8 +97,8 @@ public class BeanListAdapter extends RecyclerView.Adapter<BeanListAdapter.BeanLi
     class BeanListViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView beanIcon = null;
-        private TextView beanArea = null;
-        private TextView beanManor = null;
+        private TextView beanName = null;
+        private TextView beanSubName = null;
         private TextView beanWeight = null;
         private LinearLayout itemBeanLayout = null;
 
@@ -106,8 +106,8 @@ public class BeanListAdapter extends RecyclerView.Adapter<BeanListAdapter.BeanLi
             super(itemView);
 
             beanIcon = (ImageView) itemView.findViewById(R.id.list_bean_icon);
-            beanArea = (TextView) itemView.findViewById(R.id.list_bean_produceArea);
-            beanManor = (TextView) itemView.findViewById(R.id.list_bean_manor);
+            beanName = (TextView) itemView.findViewById(R.id.list_bean_name);
+            beanSubName = (TextView) itemView.findViewById(R.id.list_bean_subname);
             beanWeight = (TextView) itemView.findViewById(R.id.bean_weight);
             itemBeanLayout = (LinearLayout) itemView.findViewById(R.id.item_bean_layout);
         }

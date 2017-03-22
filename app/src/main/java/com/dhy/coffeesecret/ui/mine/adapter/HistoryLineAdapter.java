@@ -29,12 +29,6 @@ public class HistoryLineAdapter extends RecyclerView.Adapter<HistoryLineAdapter.
         this.onLineClickedListener = onLineClickedListener;
         this.layoutInflater = LayoutInflater.from(context);
         this.bakeReports = bakeReports;
-        Collections.sort(bakeReports, new Comparator<BakeReport>() {
-            @Override
-            public int compare(BakeReport o1, BakeReport o2) {
-                return (int)(Utils.date2IdWithTimestamp(o2.getDate()) - Utils.date2IdWithTimestamp(o1.getDate()));
-            }
-        });
     }
 
     @Override

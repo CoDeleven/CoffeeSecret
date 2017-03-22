@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.UniversalConfiguration;
 import com.dhy.coffeesecret.utils.SettingTool;
@@ -33,6 +34,10 @@ import butterknife.OnClick;
 public class SettingsActivity extends AppCompatActivity {
 
     private static final String TAG = "SettingsActivity";
+    private static final int SHOW_TEXT_DIALOG = 111;
+    private static final int SHOW_WHEEL_DIALOG = 222;
+    private static final int INTENT_TO_QUICK_EVENT = 333;
+    private static final int INTENT_TO_LINES_COLOR = 444;
     @Bind(R.id.check_quick_start)
     CheckBox checkQuickStart;
     @Bind(R.id.quick_start)
@@ -77,9 +82,9 @@ public class SettingsActivity extends AppCompatActivity {
     TextView titleText;
     @Bind(R.id.line_color)
     RelativeLayout lineColor;
-
     private Context mContext;
     private UniversalConfiguration config;
+    private SettingsHandler mHandler = new SettingsHandler(this);
 
     @Override
 
@@ -104,8 +109,8 @@ public class SettingsActivity extends AppCompatActivity {
         textReferDegree.setText(config.getReferDegree());
         textTimeShaft.setText(config.getMaxX() + " 分钟");
         textTemperatureShaft.setText("最高" + config.getMaxLeftY() + config.getTempratureUnit());
-        textTemperatureLine.setText("每秒的平均数为: " + config.getTempratureSmooth());
-        textHeatingLine.setText("每秒的平均数为: " + config.getTempratureAccSmooth());
+        textTemperatureLine.setText(config.getTempratureSmooth() + "级");
+        textHeatingLine.setText(config.getTempratureAccSmooth() + "级");
     }
 
     @OnClick({R.id.btn_back, R.id.quick_start, R.id.confirm_again, R.id.quick_event, R.id.weight_unit
@@ -207,9 +212,11 @@ public class SettingsActivity extends AppCompatActivity {
                                     switch (whichItem) {
                                         case "℃":
                                             maxLeftY = (int) ((config.getMaxLeftY() - 32) / 1.8);
+                                            ((MyApplication) getApplicationContext()).tempratureUnit = "℃";
                                             break;
                                         case "℉":
                                             maxLeftY = (int) (config.getMaxLeftY() * 1.8 + 32);
+                                            ((MyApplication) getApplicationContext()).tempratureUnit = "℉";
                                             break;
                                     }
                                     textTemperatureShaft.setText("最高" + maxLeftY
@@ -303,11 +310,21 @@ public class SettingsActivity extends AppCompatActivity {
         saveAll();
     }
 
-    private static final int SHOW_TEXT_DIALOG = 111;
-    private static final int SHOW_WHEEL_DIALOG = 222;
-    private static final int INTENT_TO_QUICK_EVENT = 333;
-    private static final int INTENT_TO_LINES_COLOR = 444;
-    private SettingsHandler mHandler = new SettingsHandler(this);
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.in_from_left, R.anim.out_to_right);
+    }
+
+    public void saveAll() {
+        SettingTool.saveConfig(config);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        saveAll();
+    }
 
     class SettingsHandler extends Handler {
         private final WeakReference<SettingsActivity> mActivity;
@@ -339,21 +356,5 @@ public class SettingsActivity extends AppCompatActivity {
                     break;
             }
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        overridePendingTransition(R.anim.in_from_left, R.anim.out_to_right);
-    }
-
-    public void saveAll() {
-        SettingTool.saveConfig(config);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        saveAll();
     }
 }

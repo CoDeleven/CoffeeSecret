@@ -20,6 +20,7 @@ import com.bigkoo.quicksidebar.QuickSideBarView;
 import com.bigkoo.quicksidebar.listener.OnQuickSideBarTouchListener;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.Species;
+import com.dhy.coffeesecret.ui.container.adapters.CountryListAdapter;
 import com.dhy.coffeesecret.ui.container.adapters.InfoListAdapter;
 import com.dhy.coffeesecret.ui.container.fragments.SearchFragment;
 import com.dhy.coffeesecret.utils.T;
@@ -230,7 +231,9 @@ public class SelectInfoActivity extends AppCompatActivity implements OnQuickSide
         ArrayList<String> infos = new ArrayList<>();
 
         for (int i = 0; i < list.size(); i++) {
-            infos.add((list.get(i)).getSpecies());
+            Species species = list.get(i);
+            // 放入大类的首字母标识符
+            infos.add(species.getOneSpecies().substring(0, 1) + species.getSpecies());
         }
         return infos;
     }

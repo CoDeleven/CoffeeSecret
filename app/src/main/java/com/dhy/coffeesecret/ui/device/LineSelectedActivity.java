@@ -113,7 +113,7 @@ public class LineSelectedActivity extends AppCompatActivity implements View.OnCl
         mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mHandler.sendEmptyMessage(LOADING_SUCCESS);
+                mHandler.sendEmptyMessage(GET_LINES_INFOS);
             }
         });
     }

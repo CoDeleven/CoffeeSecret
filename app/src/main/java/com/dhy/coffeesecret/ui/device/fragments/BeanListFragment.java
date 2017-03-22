@@ -393,25 +393,25 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
         String[] countryArray = null;
         switch (title) {
             case "全部":
-                countryArray = TestData.countryList1;
+                countryArray = getResources().getStringArray(R.array.all);
                 break;
             case "中美":
-                countryArray = TestData.countryList2;
+                countryArray = getResources().getStringArray(R.array.central_america);
                 break;
             case "南美":
-                countryArray = TestData.countryList3;
+                countryArray = getResources().getStringArray(R.array.south_america);
                 break;
             case "大洋":
-                countryArray = TestData.countryList4;
+                countryArray = getResources().getStringArray(R.array.oceania);
                 break;
             case "亚洲":
-                countryArray = TestData.countryList5;
+                countryArray = getResources().getStringArray(R.array.asia);
                 break;
             case "非洲":
-                countryArray = TestData.countryList6;
+                countryArray = getResources().getStringArray(R.array.africa);
                 break;
             default:
-                countryArray = TestData.countryList7;
+                countryArray = getResources().getStringArray(R.array.other);
                 break;
         }
         Collections.addAll(countries, countryArray);

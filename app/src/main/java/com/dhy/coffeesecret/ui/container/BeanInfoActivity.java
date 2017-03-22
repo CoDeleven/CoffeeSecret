@@ -64,7 +64,7 @@ public class BeanInfoActivity extends AppCompatActivity {
     ImageView btnEdit;
     private float editButtonTrans;
     private BeanInfo beanInfo;
-
+    private static BeanInfoActivity infoActivity;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,6 +76,7 @@ public class BeanInfoActivity extends AppCompatActivity {
         beanInfo = (BeanInfo) getIntent().getSerializableExtra("beanInfo");
 
         init();
+        infoActivity = this;
     }
 
     @Override
@@ -120,13 +121,15 @@ public class BeanInfoActivity extends AppCompatActivity {
             return;
         }
 
-        beanName.setText(beanInfo.getCountry() + beanInfo.getSpecies());
+        // beanName.setText(beanInfo.getCountry() + beanInfo.getSpecies());
+        // TODO 可以自定义豆名，默认豆名以国家+豆种形式呈现
+        beanName.setText(beanInfo.getName());
         infoArea.setText(beanInfo.getArea());
         infoManor.setText(beanInfo.getManor());
         infoAltitude.setText(beanInfo.getAltitude());
         infoSpecies.setText(beanInfo.getSpecies());
         infoLevel.setText(beanInfo.getLevel());
-        infoWaterContent.setText(beanInfo.getWaterContent() * 100 + "%");
+        infoWaterContent.setText(beanInfo.getWaterContent() + "%");
         infoHandler.setText(beanInfo.getProcess());
         infoSupplier.setText(beanInfo.getSupplier());
         infoPrice.setText("" + beanInfo.getPrice());
@@ -139,12 +142,13 @@ public class BeanInfoActivity extends AppCompatActivity {
         switch (resultCode) {
             case RESULT_OK:
                 newBeanInfo = (BeanInfo) data.getSerializableExtra("new_bean_info");
+                beanName.setText(newBeanInfo.getName());
                 infoArea.setText(newBeanInfo.getArea());
                 infoManor.setText(newBeanInfo.getManor());
                 infoAltitude.setText(newBeanInfo.getAltitude());
                 infoSpecies.setText(newBeanInfo.getSpecies());
                 infoLevel.setText(newBeanInfo.getLevel());
-                infoWaterContent.setText(newBeanInfo.getWaterContent() * 100 + "%");
+                infoWaterContent.setText(newBeanInfo.getWaterContent() + "%");
                 infoHandler.setText(newBeanInfo.getProcess());
                 infoSupplier.setText(newBeanInfo.getSupplier());
                 infoPrice.setText("" + newBeanInfo.getPrice());
@@ -169,5 +173,13 @@ public class BeanInfoActivity extends AppCompatActivity {
         }
         this.finish();
         overridePendingTransition(R.anim.in_from_left, R.anim.out_to_right);
+    }
+
+    /**
+     * 方便删除时关闭本activity
+     * @return
+     */
+    public static BeanInfoActivity getInstance(){
+        return infoActivity;
     }
 }

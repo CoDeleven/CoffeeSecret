@@ -25,6 +25,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.dhy.coffeesecret.ui.device.fragments.BakeDialog.SELECT_BEAN;
+
 public class DialogBeanSelected extends AppCompatActivity implements BeanListFragment.OnBeanSelectedLinstener, SearchFragment.OnSearchCallBack {
 
     private static final String TAG = "ContainerFragment";
@@ -156,7 +158,7 @@ public class DialogBeanSelected extends AppCompatActivity implements BeanListFra
     public void onSearchCallBack(BeanInfo info) {
         Intent intent = new Intent();
         intent.putExtra("beanInfo", info);
-        setResult(7, intent);
+        setResult(SELECT_BEAN, intent);
         finish();
     }
 
@@ -188,7 +190,7 @@ public class DialogBeanSelected extends AppCompatActivity implements BeanListFra
     public void onBeanSelected(BeanInfo beanInfo) {
         Intent intent = new Intent();
         intent.putExtra("beanInfo", beanInfo);
-        setResult(7, intent);
+        setResult(SELECT_BEAN, intent);
         finish();
     }
 }

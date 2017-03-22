@@ -29,7 +29,6 @@ import com.bigkoo.quicksidebar.QuickSideBarView;
 import com.bigkoo.quicksidebar.listener.OnQuickSideBarTouchListener;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BeanInfo;
-import com.dhy.coffeesecret.pojo.Global;
 import com.dhy.coffeesecret.ui.container.BeanInfoActivity;
 import com.dhy.coffeesecret.ui.container.adapters.BeanListAdapter;
 import com.dhy.coffeesecret.ui.container.adapters.CountryListAdapter;
@@ -51,13 +50,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.FormBody;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
@@ -251,16 +243,17 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
         String beanInfoListJson = "";
         try {
             beanInfoListJson = HttpUtils.getStringFromServer(URLs.GET_ALL_BEAN_INFO);
+            Log.i(TAG, "beanInfoListJson" + beanInfoListJson);
         } catch (IOException e) {
             mHandler.sendEmptyMessage(TOAST_3);
         }
         String[] beanLists = null;
         // beanInfoListJson = TestData.beaninfos;
         ArrayList<BeanInfo> beanInfoss = null;
-        try{
+        try {
             beanInfoss = gson.fromJson(beanInfoListJson, new TypeToken<ArrayList<BeanInfo>>() {
             }.getType());
-        }catch (Exception e){
+        } catch (Exception e) {
             Log.i(TAG, "beanInfoListJson" + beanInfoListJson);
             Log.i(TAG, "getBeanInfos: " + beanInfoss);
         }
@@ -283,6 +276,7 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
         if (coffeeBeanInfos != null) {
             coffeeBeanInfos.clear();
             coffeeBeanInfos.addAll(coffeeBeanInfoTemp);
+
         }
 
         mHandler.sendEmptyMessage(NO_LOADING);
@@ -303,13 +297,21 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
                     BeanInfo beanInfo = beanInfoss.get(j);
                     beanInfoss.set(j, beanInfoss.get(j + 1));
                     beanInfoss.set(j + 1, beanInfo);
+
                 } else if (a == b) {
-                    char c = Utils.getFirstPinYinLetter(beanInfoss.get(j + 1).getArea()).charAt(1);
-                    char d = Utils.getFirstPinYinLetter(beanInfoss.get(j).getArea()).charAt(1);
-                    if (c < d) {
-                        BeanInfo beanInfo = beanInfoss.get(j);
-                        beanInfoss.set(j, beanInfoss.get(j + 1));
-                        beanInfoss.set(j + 1, beanInfo);
+                    // 如果第一个字符比较是相等的，则比较第二个字符
+
+                    String area1 = beanInfoss.get(j + 1).getArea();
+                    String area2 = beanInfoss.get(j).getArea();
+                    // 如果没有第二个字符，则不进行判断
+                    if (area1.length() >= 2 && area2.length() >= 2) {
+                        char c = Utils.getFirstPinYinLetter(area1).charAt(1);
+                        char d = Utils.getFirstPinYinLetter(area2).charAt(1);
+                        if (c < d) {
+                            BeanInfo beanInfo = beanInfoss.get(j);
+                            beanInfoss.set(j, beanInfoss.get(j + 1));
+                            beanInfoss.set(j + 1, beanInfo);
+                        }
                     }
                 }
             }
@@ -402,22 +404,22 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
         String[] countryArray = null;
         switch (title) {
             case "全部":
-                countryArray = TestData.countryList1;
+                countryArray = getResources().getStringArray(R.array.other);
                 break;
             case "中美":
-                countryArray = TestData.countryList2;
+                countryArray = getResources().getStringArray(R.array.central_america);
                 break;
             case "南美":
-                countryArray = TestData.countryList3;
+                countryArray = getResources().getStringArray(R.array.south_america);
                 break;
             case "大洋":
-                countryArray = TestData.countryList4;
+                countryArray = getResources().getStringArray(R.array.oceania);
                 break;
             case "亚洲":
-                countryArray = TestData.countryList5;
+                countryArray = getResources().getStringArray(R.array.asia);
                 break;
             case "非洲":
-                countryArray = TestData.countryList6;
+                countryArray = getResources().getStringArray(R.array.africa);
                 break;
             default:
                 countryArray = TestData.countryList7;
@@ -482,7 +484,7 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
     private void startScreen() {
         ArrayList<BeanInfo> beanInfos = new ArrayList<>();
         beanInfos.addAll(coffeeBeanInfoTemp);
-        if (screenHandler.equals("全部")  || screenHandler.equals("")) {
+        if (screenHandler.equals("全部") || screenHandler.equals("")) {
             coffeeBeanInfos.clear();
             coffeeBeanInfos.addAll(coffeeBeanInfoTemp);
         } else if (!screenHandler.equals("")) {
@@ -561,6 +563,7 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
                     if (refreshBeanList != null && refreshBeanList.isRefreshing()) {
                         activity.refreshBeanList.setRefreshing(false);
                     }
+                    beanListAdapter.notifyDataSetChanged();
                     break;
                 case INIT_POPUP_WINDOW:
                     initCountryPopupWindow();

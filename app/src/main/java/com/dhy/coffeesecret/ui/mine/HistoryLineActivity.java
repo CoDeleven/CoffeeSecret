@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -24,6 +25,7 @@ import com.dhy.coffeesecret.ui.mine.adapter.HistoryLineAdapter;
 import com.dhy.coffeesecret.utils.HttpUtils;
 import com.dhy.coffeesecret.utils.T;
 import com.dhy.coffeesecret.utils.URLs;
+import com.dhy.coffeesecret.utils.Utils;
 import com.dhy.coffeesecret.views.DividerDecoration;
 import com.dhy.coffeesecret.views.SearchEditText;
 import com.google.gson.Gson;
@@ -32,6 +34,8 @@ import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 import static com.dhy.coffeesecret.ui.device.handler.LinesSelectorHandler.*;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -40,6 +44,7 @@ import butterknife.ButterKnife;
 
 public class HistoryLineActivity extends AppCompatActivity implements View.OnClickListener, SearchEditText.SearchBarListener,LinesSelectorHandler.Handling {
     public static String REFER_LINE = "refer_line";
+    private static final String TAG = "EditBehindActivity";
     @Bind(R.id.id_lines_list)
     RecyclerView listView;
     @Bind(R.id.id_back)
@@ -85,7 +90,6 @@ public class HistoryLineActivity extends AppCompatActivity implements View.OnCli
         Map<String, ? extends BakeReport> bakeReports = ((MyApplication) getApplication()).getBakeReports();
 
         bakeReportList.addAll(bakeReports.values());
-
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
 
         listView.setLayoutManager(layoutManager);
@@ -105,13 +109,16 @@ public class HistoryLineActivity extends AppCompatActivity implements View.OnCli
 
         mHandler = new LinesSelectorHandler(this, mRefreshLayout, mAdapter);
         mHandler.setHandling(this);
-
+        mHandler.sendEmptyMessage(GET_LINES_INFOS);
         mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mHandler.sendEmptyMessage(LOADING_SUCCESS);
+                mHandler.sendEmptyMessage(GET_LINES_INFOS);
             }
         });
+
+
+
     }
 
     @Override
@@ -151,11 +158,18 @@ public class HistoryLineActivity extends AppCompatActivity implements View.OnCli
                     String temp = HttpUtils.getStringFromServer(URLs.GET_ALL_BAKE_REPORT);
                     Type type = new TypeToken<Map<String, BakeReport>>() {
                     }.getType();
+                    Log.e(TAG, temp);
                     Map<String, BakeReport> bakeReports = new Gson().fromJson(temp, type);
                     // 清除上一次留下的数据
                     bakeReportList.clear();
                     // 重新添加数据
                     bakeReportList.addAll(bakeReports.values());
+                    Collections.sort(bakeReportList, new Comparator<BakeReport>() {
+                        @Override
+                        public int compare(BakeReport o1, BakeReport o2) {
+                            return (int)(Utils.date2IdWithTimestamp(o2.getDate()) - Utils.date2IdWithTimestamp(o1.getDate()));
+                        }
+                    });
                     // 请求成功
                     mHandler.sendEmptyMessage(LOADING_SUCCESS);
                 } catch (Exception e) {

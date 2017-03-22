@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,11 +22,9 @@ import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.pojo.BeanInfo;
 import com.dhy.coffeesecret.pojo.BeanInfoSimple;
-import com.dhy.coffeesecret.pojo.DialogBeanInfo;
 import com.dhy.coffeesecret.ui.device.DialogBeanSelected;
 import com.dhy.coffeesecret.ui.device.LineSelectedActivity;
 import com.dhy.coffeesecret.utils.SettingTool;
-import com.dhy.coffeesecret.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +40,8 @@ import butterknife.OnClick;
 public class BakeDialog extends DialogFragment {
     public static final int GET_HISTORY = 1;
     public static final int GET_COLLECTION = 2;
+    public static final int SELECT_BEAN = 111;
+
     // private static List<DialogBeanInfo> dialogBeanInfos;
     private static List<BeanInfoSimple> beanInfos;
     private static int curItem;
@@ -93,21 +92,8 @@ public class BakeDialog extends DialogFragment {
     private void initDefaultItem() {
         BeanInfoSimple testBean = new BeanInfoSimple();
         testBean.setBeanName("样品豆");
-        unit = SettingTool.getConfig(getContext()).getWeightUnit();
-        unit = Utils.convertUnitChineses2Eng(unit);
-        //默认5,根据单位乘1000或者500
-        float defaultWeight = -1;
-        if (unit.equals("g")) {
-            unit = "g";
-            defaultWeight = 500;
-        } else if (unit.equals("kg")) {
-            unit = "kg";
-            defaultWeight = 0.5f;
-        } else if (unit.equals("bl")) {
-            unit = "lb";
-            defaultWeight = 5 * 1.1f;
-        }
-        testBean.setUsage("" + defaultWeight);
+        testBean.setSingleBeanId(-1);
+        testBean.setUsage("" + getDefaultWeight());
         beanInfos.add(testBean);
     }
 
@@ -149,6 +135,8 @@ public class BakeDialog extends DialogFragment {
             public void onClick(View v) {
                 BeanInfoSimple simpleBean = new BeanInfoSimple();
                 simpleBean.setBeanName("样品豆");
+                simpleBean.setUsage(getDefaultWeight() + "");
+                simpleBean.setSingleBeanId(-1);
 
                 beanInfos.add(simpleBean);
                 ((BaseAdapter) mListView.getAdapter()).notifyDataSetChanged();
@@ -189,6 +177,7 @@ public class BakeDialog extends DialogFragment {
                 }
 
                 holder.beanName.setText(beanInfos.get(position).getBeanName());
+                // TODO 单位换算
                 holder.beanWeight.setText(beanInfos.get(position).getUsage());
 
                 holder.beanWeight.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -197,8 +186,8 @@ public class BakeDialog extends DialogFragment {
                         EditText editText = (EditText) v;
                         String result = editText.getText().toString();
                         if (beanInfos.size() > 0 && !hasFocus && editText.getText().length() > 0) {
-                            for(int i = 0; i < result.length(); ++i){
-                                if(!Character.isDigit(result.charAt(i))){
+                            for (int i = 0; i < result.length(); ++i) {
+                                if (!Character.isDigit(result.charAt(i))) {
                                     return;
                                 }
                             }
@@ -212,7 +201,7 @@ public class BakeDialog extends DialogFragment {
                     public void onClick(View v) {
                         curItem = position;
                         Intent intent = new Intent(mContext, DialogBeanSelected.class);
-                        startActivityForResult(intent, 7);
+                        startActivityForResult(intent, SELECT_BEAN);
                     }
                 });
 
@@ -220,7 +209,6 @@ public class BakeDialog extends DialogFragment {
                     @Override
                     public void onClick(View v) {
                         curItem = position;
-                        Log.e("codelevex", "position:" + position);
                         beanInfos.remove(curItem);
                         notifyDataSetChanged();
                     }
@@ -245,6 +233,7 @@ public class BakeDialog extends DialogFragment {
             BakeReport bakeReport = (BakeReport) data.getSerializableExtra("report");
             if (beanInfo != null) {
                 BeanInfoSimple simple = beanInfos.get(curItem);
+                simple.setSingleBeanId(beanInfo.getId());
                 simple.setBeanName(beanInfo.getName());
                 simple.setAltitude(beanInfo.getAltitude());
                 simple.setArea(beanInfo.getArea());
@@ -255,8 +244,8 @@ public class BakeDialog extends DialogFragment {
                 simple.setWaterContent(beanInfo.getWaterContent() + "");
                 simple.setSpecies(beanInfo.getSpecies());
             }
-            if(bakeReport != null){
-                referTempratures = (ArrayList)bakeReport.getTempratureSet().getBeanTemps();
+            if (bakeReport != null) {
+                referTempratures = (ArrayList) bakeReport.getTempratureSet().getBeanTemps();
             }
             ((BaseAdapter) mListView.getAdapter()).notifyDataSetChanged();
         }
@@ -277,6 +266,28 @@ public class BakeDialog extends DialogFragment {
                 intent = new Intent(getContext(), LineSelectedActivity.class);
                 startActivityForResult(intent, GET_COLLECTION);
         }
+    }
+
+    /**
+     * 获取默认的单位 默认500g,0.5kg,1.1lb
+     *
+     * @return
+     */
+    private float getDefaultWeight() {
+        unit = SettingTool.getConfig(getContext()).getWeightUnit();
+        //默认5,根据单位乘1000或者500
+        float defaultWeight = -1;
+        if (unit.equals("g")) {
+            unit = "g";
+            defaultWeight = 500;
+        } else if (unit.equals("kg")) {
+            unit = "kg";
+            defaultWeight = 0.5f;
+        } else if (unit.equals("lb")) {
+            unit = "lb";
+            defaultWeight = 1.1f;
+        }
+        return defaultWeight;
     }
 
     public interface OnBeaninfosConfirmListener {

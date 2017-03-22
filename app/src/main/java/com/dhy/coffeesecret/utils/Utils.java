@@ -1,18 +1,25 @@
 package com.dhy.coffeesecret.utils;
 
 
+import android.content.Context;
+import android.util.Log;
+
+import com.dhy.coffeesecret.MyApplication;
+import com.dhy.coffeesecret.pojo.UniversalConfiguration;
+
 import net.sourceforge.pinyin4j.PinyinHelper;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by CoDeleven on 17-2-9.
  */
 
 public class Utils {
+    public static final String KG = "kg", G = "g", LB = "lb";
+
     public static String bytesToHexString(byte[] src) {
         StringBuilder stringBuilder = new StringBuilder("");
         if (src == null || src.length <= 0) {
@@ -60,6 +67,7 @@ public class Utils {
 
     /**
      * 将中文转换为拼音首字母
+     *
      * @param cha 中文
      * @return
      */
@@ -78,7 +86,7 @@ public class Utils {
 
     // 判断一个字符是否是中文
     public static boolean isChinese(char c) {
-        return c >= 0x4E00 &&  c <= 0x9FA5;// 根据字节码判断
+        return c >= 0x4E00 && c <= 0x9FA5;// 根据字节码判断
     }
 
     // 判断一个字符串是否含有中文
@@ -89,42 +97,43 @@ public class Utils {
         }
         return false;
     }
-    public static String getTimeWithFormat(float time){
+
+    public static String getTimeWithFormat(float time) {
         int minutes = (int) (time / 60);
         int seconds = (int) (time % 60);
         return String.format("%1$02d", minutes) + ":" + String.format("%1$02d", seconds);
     }
 
-    public static String convertUnitChineses2Eng(String unitZh){
-        if("克".equals(unitZh)){
+    public static String convertUnitChineses2Eng(String unitZh) {
+        if ("克".equals(unitZh)) {
             return "g";
         }
-        if("千克".equals(unitZh)){
+        if ("千克".equals(unitZh)) {
             return "kg";
         }
-        if("磅".equals(unitZh)){
+        if ("磅".equals(unitZh)) {
             return "lb";
         }
         return "";
     }
 
-    public static long date2IdWithoutTimestamp(String date){
+    public static long date2IdWithoutTimestamp(String date) {
         SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
         long result = -1;
-        try{
+        try {
             result = format1.parse(date).getTime();
-        }catch(Exception e){
+        } catch (Exception e) {
 
         }
         return result;
     }
 
-    public static String data2Timestamp(Date time){
+    public static String data2Timestamp(Date time) {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         return format.format(time);
     }
 
-    public static String dateWidthoutTimestamp(String date){
+    public static String dateWidthoutTimestamp(String date) {
         SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
         try {
             return format1.format(format1.parse(date));
@@ -134,18 +143,66 @@ public class Utils {
         return null;
     }
 
-    public static long date2IdWithTimestamp(String date){
+    public static long date2IdWithTimestamp(String date) {
         SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd HH:ss");
         long result = -1;
-        try{
+        try {
             result = format1.parse(date).getTime();
-        }catch(Exception e){
+        } catch (Exception e) {
 
         }
         return result;
     }
 
-    public static float get2PrecisionFloat(float val){
-        return ((int)(val * 100)) / 100f;
+    public static float get2PrecisionFloat(float val) {
+        return ((int) (val * 100)) / 100f;
+    }
+
+    /**
+     * 将文件数值（默认kg）转换成当前设置的单位
+     *
+     * @param value 默认单位是kg的任何数值均可以转换
+     * @return
+     */
+    public static float getCrspWeightValue(String value) {
+        String curUnit = MyApplication.weightUnit;
+        float result = Float.parseFloat(value);
+        if ("g".equals(curUnit)) {
+            return get2PrecisionFloat(result * 1000);
+        } else if ("lb".equals(curUnit)) {
+            return get2PrecisionFloat(result * 2.20f);
+        }
+        return get2PrecisionFloat(result);
+    }
+
+    /**
+     * 将文件数值（默认摄氏度）转换成当前温度设置
+     *
+     * @param value  默认单位是摄氏度的均可以转换
+     * @return
+     */
+    public static float getCrspTempratureValue(String value) {
+        String curUnit = MyApplication.tempratureUnit;
+        float result = Float.parseFloat(value);
+        if ("℉".equals(curUnit)) {
+            return get2PrecisionFloat(result * 1.8f + 32.0f);
+        }
+        return get2PrecisionFloat(result);
+    }
+
+    /**
+     * 对输入的自定义单位进行转换
+     * @param value
+     * @return
+     */
+    public static float getReversed2DefaultWeight(String value){
+        String curUnit = MyApplication.weightUnit;
+        float result = Float.parseFloat(value);
+        if ("g".equals(curUnit)) {
+            return get2PrecisionFloat(result / 1000);
+        } else if ("lb".equals(curUnit)) {
+            return get2PrecisionFloat(result / 2.20f);
+        }
+        return get2PrecisionFloat(result);
     }
 }
