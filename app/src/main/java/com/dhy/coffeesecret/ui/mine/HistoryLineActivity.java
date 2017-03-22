@@ -83,9 +83,17 @@ public class HistoryLineActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void init() {
-        Map<String, ? extends BakeReport> bakeReports = ((MyApplication) getApplication()).getBakeReports();
-
-        bakeReportList.addAll(bakeReports.values());
+        /*
+         *从intent中获取烘焙报告对象 如果没有 则加载MyApplication中的bakeReports  by mxf 2017-03-22
+         */
+        List<BakeReport> reports = (List<BakeReport>) getIntent().getSerializableExtra("bakeReports");
+        Map<String, ? extends BakeReport> bakeReports;
+        if(reports == null){
+            bakeReports = ((MyApplication) getApplication()).getBakeReports();
+            bakeReportList.addAll(bakeReports.values());
+        }else {
+            bakeReportList.addAll(reports);
+        }
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
 

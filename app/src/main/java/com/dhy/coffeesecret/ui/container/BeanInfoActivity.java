@@ -12,11 +12,14 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.dhy.coffeesecret.R;
+import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.pojo.BeanInfo;
 import com.dhy.coffeesecret.ui.mine.HistoryLineActivity;
 import com.dhy.coffeesecret.utils.T;
 import com.dhy.coffeesecret.utils.UIUtils;
 import com.dhy.coffeesecret.utils.UnitConvert;
+
+import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -105,11 +108,11 @@ public class BeanInfoActivity extends AppCompatActivity {
             }
         });
 
-
         btnCurve.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(BeanInfoActivity.this, HistoryLineActivity.class);
+                intent.putExtra("bakeReports",(ArrayList<BakeReport>)beanInfo.getBakeReports());
                 startActivity(intent);
                 overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
             }

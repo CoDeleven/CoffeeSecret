@@ -15,9 +15,21 @@
             android:text="杯测"
             android:textColor="@color/white"
             android:textSize="@dimen/actionbar_title_font_size"/>
+        <ImageView
+            android:id="@+id/iv_search"
+            android:layout_toLeftOf="@+id/iv_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="14dp"
+            android:contentDescription="@null"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
+            android:paddingLeft="20dp"
+            android:src="@drawable/ic_first_search"/>
 
         <ImageView
-            android:id="@+id/iv_add"
+            android:id="@id/iv_add"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -26,7 +38,6 @@
             android:contentDescription="@null"
             android:paddingTop="20dp"
             android:paddingBottom="20dp"
-            android:paddingLeft="20dp"
             android:src="@drawable/ic_container_add_plus"/>
 
     </RelativeLayout>
