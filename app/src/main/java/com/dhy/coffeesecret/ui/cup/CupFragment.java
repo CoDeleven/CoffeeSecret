@@ -383,7 +383,7 @@ public class CupFragment extends Fragment implements View.OnClickListener {
             Bundle bundle = new Bundle();
             bundle.putSerializable("cuppingInfos", (Serializable) (allCuppingInfos == null?cuppingInfos:allCuppingInfos));
             searchFragment.setArguments(bundle);
-            tx.add(R.id.activity_main, searchFragment, "search_bean");
+            tx.add(R.id.activity_main, searchFragment, "search_cupping");
             isAddSearchFragment = true;
         } else {
             tx.show(searchFragment);
