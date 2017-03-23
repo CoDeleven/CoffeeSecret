@@ -36,9 +36,9 @@
 
     <com.dhy.coffeesecret.views.SearchEditText
         android:id="@+id/lines_selected_srh"
+        android:cursorVisible="false"
         style="@style/SearchBar"
         android:layout_below="@id/toolbar_device_activtiy"
-
         android:layout_margin="10dp">
     </com.dhy.coffeesecret.views.SearchEditText>
 

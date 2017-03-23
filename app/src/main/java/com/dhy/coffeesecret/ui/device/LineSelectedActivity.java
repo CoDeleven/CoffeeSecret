@@ -20,6 +20,7 @@ import com.dhy.coffeesecret.ui.device.handler.LinesSelectorHandler;
 import com.dhy.coffeesecret.ui.mine.adapter.HistoryLineAdapter;
 import com.dhy.coffeesecret.utils.HttpUtils;
 import com.dhy.coffeesecret.utils.URLs;
+import com.dhy.coffeesecret.utils.Utils;
 import com.dhy.coffeesecret.views.DividerDecoration;
 import com.dhy.coffeesecret.views.SearchEditText;
 import com.google.gson.Gson;
@@ -28,6 +29,8 @@ import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import static com.dhy.coffeesecret.ui.device.handler.LinesSelectorHandler.*;
@@ -47,7 +50,8 @@ public class LineSelectedActivity extends AppCompatActivity implements View.OnCl
     SwipeRefreshLayout mRefreshLayout;
     @Bind(R.id.id_back)
     ImageView back;
-    private SearchEditText searchBar;
+    @Bind(R.id.lines_selected_srh)
+    SearchEditText searchBar;
     private SearchFragment searchFragment = new SearchFragment();
     private Toolbar toolbar;
     private boolean isAddSearchFragment = false;
@@ -83,10 +87,16 @@ public class LineSelectedActivity extends AppCompatActivity implements View.OnCl
         }
     }
 
-    private void init() {
-        Map<String, ? extends BakeReport> bakeReports = ((MyApplication) getApplication()).getBakeReports();
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mHandler.sendEmptyMessage(GET_LINES_INFOS);
+    }
 
-        bakeReportList.addAll(bakeReports.values());
+    private void init() {
+        // Map<String, ? extends BakeReport> bakeReports = ((MyApplication) getApplication()).getBakeReports();
+
+        // bakeReportList.addAll(bakeReports.values());
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
 
@@ -116,6 +126,8 @@ public class LineSelectedActivity extends AppCompatActivity implements View.OnCl
                 mHandler.sendEmptyMessage(GET_LINES_INFOS);
             }
         });
+
+        searchBar.setSearchBarListener(this);
     }
 
     @Override
@@ -128,15 +140,11 @@ public class LineSelectedActivity extends AppCompatActivity implements View.OnCl
         FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
         tx.setCustomAnimations(R.anim.in_from_right, R.anim.out_to_left);
 
-        if (!isAddSearchFragment) {
-            Bundle bundle = new Bundle();
-            // bundle.putSerializable("reportList", (Serializable) getDatas());
-            searchFragment.setArguments(bundle);
-            tx.add(R.id.id_lines_container, searchFragment, "search_line");
-            isAddSearchFragment = true;
-        } else {
-            tx.show(searchFragment);
-        }
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("reportList", new ArrayList<>(bakeReportList));
+        searchFragment.setArguments(bundle);
+        tx.add(R.id.id_lines_container, searchFragment, "search_line");
+
         tx.commit();
     }
 
@@ -160,6 +168,13 @@ public class LineSelectedActivity extends AppCompatActivity implements View.OnCl
                     bakeReportList.clear();
                     // 重新添加数据
                     bakeReportList.addAll(bakeReports.values());
+                    // 进行排序
+                    Collections.sort(bakeReportList, new Comparator<BakeReport>() {
+                        @Override
+                        public int compare(BakeReport o1, BakeReport o2) {
+                            return (int) (Utils.date2IdWithTimestamp(o2.getDate()) - Utils.date2IdWithTimestamp(o1.getDate()));
+                        }
+                    });
                     // 请求成功
                     mHandler.sendEmptyMessage(LOADING_SUCCESS);
                 } catch (Exception e) {

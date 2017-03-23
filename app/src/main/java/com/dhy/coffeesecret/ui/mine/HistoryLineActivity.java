@@ -78,7 +78,6 @@ public class HistoryLineActivity extends AppCompatActivity implements View.OnCli
 
     @Override
     public void onBackPressed() {
-        // super.onBackPressed();
         if (searchFragment != null && !searchFragment.isHidden()) {
             FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
             tx.hide(searchFragment);
