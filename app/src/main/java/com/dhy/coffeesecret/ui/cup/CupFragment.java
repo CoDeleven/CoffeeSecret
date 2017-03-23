@@ -9,7 +9,9 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -20,9 +22,12 @@ import android.widget.PopupWindow;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.dhy.coffeesecret.MainActivity;
 import com.dhy.coffeesecret.R;
-import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.pojo.CuppingInfo;
+import com.dhy.coffeesecret.ui.container.adapters.HandlerAdapter;
+import com.dhy.coffeesecret.ui.container.fragments.SearchFragment;
+import com.dhy.coffeesecret.ui.cup.filter.Filter;
 import com.dhy.coffeesecret.ui.cup.adapter.CuppingListAdapter;
 import com.dhy.coffeesecret.ui.cup.comparator.BaseComparator;
 import com.dhy.coffeesecret.ui.cup.comparator.DateComparator;
@@ -30,27 +35,27 @@ import com.dhy.coffeesecret.ui.cup.comparator.OrderBy;
 import com.dhy.coffeesecret.ui.cup.comparator.ScoreComparator;
 import com.dhy.coffeesecret.utils.HttpUtils;
 import com.dhy.coffeesecret.utils.T;
-import com.dhy.coffeesecret.utils.TestData;
 import com.dhy.coffeesecret.utils.URLs;
 import com.dhy.coffeesecret.views.DividerDecoration;
+import com.edmodo.rangebar.RangeBar;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
+import java.io.Serializable;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static com.dhy.coffeesecret.ui.cup.NewCuppingActivity.*;
 import static com.dhy.coffeesecret.ui.cup.NewCuppingActivity.VIEW_TYPE;
 
-public class CupFragment extends Fragment {
+public class CupFragment extends Fragment implements View.OnClickListener {
 
     private static final int GET_CUPPING_INFOS = 0x00001;
     private static final int LOADING = 0x00010;
@@ -67,13 +72,12 @@ public class CupFragment extends Fragment {
 
     public static final String[] SORT_ORDER = {"评分最高", "评分最低", "最早的杯测", "最晚的杯测"}; // TODO: 2017/3/8  i18n
 
-    private OnCupInteractionListener mListener;
     private View mCuppingView;
     private Context mContext;
-    private ImageView mAddButton;
     private RecyclerView mRecyclerView;
     private SwipeRefreshLayout mRefreshLayout;
     private PopupWindow mSortWindow;
+    private PopupWindow mScreenWindow;
 
     private View mSortButton;
     private View mScreenButton;
@@ -82,6 +86,7 @@ public class CupFragment extends Fragment {
     private CuppingInfoHandler mHandler;
 
     private List<CuppingInfo> cuppingInfos;
+    private List<CuppingInfo> allCuppingInfos;
     private CuppingListAdapter mAdapter;
     private boolean isShow;
 
@@ -92,6 +97,10 @@ public class CupFragment extends Fragment {
     private ScoreComparator scoreDescComparator;
     private DateComparator dateAscComparator;
     private DateComparator dateDescComparator;
+
+    private Filter filter;
+    private boolean isAddSearchFragment;
+    private SearchFragment searchFragment;
 
 
     public CupFragment() {
@@ -110,12 +119,15 @@ public class CupFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         mRefreshLayout = (SwipeRefreshLayout) mCuppingView.findViewById(R.id.refresh_layout);
-        mAddButton = (ImageView) mCuppingView.findViewById(R.id.iv_add);
         mRecyclerView = (RecyclerView) mCuppingView.findViewById(R.id.rv_cupping);
         mSortButton = mCuppingView.findViewById(R.id.btn_sort);
         mScreenButton = mCuppingView.findViewById(R.id.btn_screen);
         mSortText = (TextView) mCuppingView.findViewById(R.id.sort_type);
         mAdapter = new CuppingListAdapter(mContext, cuppingInfos);
+
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        initSortPopupWindow(inflater);
+        initScreenPopupWindow(inflater);
 
         mAdapter.setOnItemClickListener(new CuppingListAdapter.OnItemClickListener() {
             @Override
@@ -134,24 +146,11 @@ public class CupFragment extends Fragment {
         mRecyclerView.addItemDecoration(decor);
         mRecyclerView.addItemDecoration(new DividerDecoration(mContext));
 
-        mAddButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), NewCuppingActivity.class);
-                intent.putExtra(VIEW_TYPE, NEW_CUPPING);
-                startActivityForResult(intent, REQ_CODE_NEW);
-            }
-        });
-        initPopupWindow(); // TODO: 2017/3/8
-        mSortButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mSortWindow != null && !isShow) {
-                    mSortWindow.showAsDropDown(mSortButton);
-                    isShow = true;
-                }
-            }
-        });
+        mCuppingView.findViewById(R.id.iv_add).setOnClickListener(this);
+        mCuppingView.findViewById(R.id.iv_search).setOnClickListener(this);
+
+        mSortButton.setOnClickListener(this);
+        mScreenButton.setOnClickListener(this);
 
         mHandler = new CuppingInfoHandler(this);
         mHandler.sendEmptyMessage(GET_CUPPING_INFOS);
@@ -189,8 +188,7 @@ public class CupFragment extends Fragment {
         return mCuppingView;
     }
 
-    private void initPopupWindow() {
-        LayoutInflater inflater = getActivity().getLayoutInflater();
+    private void initSortPopupWindow(LayoutInflater inflater) {
         View contentView = inflater.inflate(R.layout.ppw_cupping_sort, null);
         RadioGroup rg = (RadioGroup) contentView.findViewById(R.id.rg_type);
         for (int i = 0; i < rg.getChildCount(); i++) {
@@ -201,7 +199,47 @@ public class CupFragment extends Fragment {
                 }
             });
         }
-        mSortWindow = getPopupWindow(contentView);
+        mSortWindow = getPopupWindow(contentView, MATCH_PARENT, WRAP_CONTENT);
+    }
+
+    private void initScreenPopupWindow(LayoutInflater inflater) {
+
+        final List<String> items = new ArrayList<>();
+        items.add("全部");
+        items.add("近三日");
+        items.add("近一月");
+        items.add("近三月");
+        items.add("近一年");
+        items.add("更久");
+
+        filter = new Filter();
+        View contentView = inflater.inflate(R.layout.ppw_cupping_screen, null);
+        contentView.findViewById(R.id.btn_confirm).setOnClickListener(this);
+        RecyclerView recyclerView = (RecyclerView) contentView.findViewById(R.id.date_screen);
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
+        recyclerView.setAdapter(new HandlerAdapter(getContext(), items, new HandlerAdapter.OnItemSelectListener() {
+            @Override
+            public void onItemSelected(int position) {
+                filter.dateSelection = position;
+            }
+        }));
+
+        final TextView firView = (TextView) contentView.findViewById(R.id.tv_first_score);
+        final TextView secView = (TextView) contentView.findViewById(R.id.tv_second_score);
+
+        RangeBar rangeBar = (RangeBar) contentView.findViewById(R.id.rb_score);
+        rangeBar.setOnRangeBarChangeListener(new RangeBar.OnRangeBarChangeListener() {
+            @Override
+            public void onIndexChangeListener(RangeBar rangeBar, int i, int i1) {
+                int leftIndex = rangeBar.getLeftIndex();
+                int rightIndex = rangeBar.getRightIndex();
+                firView.setText(leftIndex + "");
+                secView.setText(rightIndex + "");
+                filter.max = rightIndex;
+                filter.min = leftIndex;
+            }
+        });
+        mScreenWindow = getPopupWindow(contentView, WRAP_CONTENT, WRAP_CONTENT);
     }
 
     private void setSortOrder(int id) {
@@ -251,14 +289,14 @@ public class CupFragment extends Fragment {
         if (show && !hasDecor) {
             mRecyclerView.addItemDecoration(decor);
             hasDecor = true;
-        }else if(!show && hasDecor){
+        } else if (!show && hasDecor) {
             mRecyclerView.removeItemDecoration(decor);
             hasDecor = false;
         }
     }
 
-    public PopupWindow getPopupWindow(View content) {
-        PopupWindow popupWindow = new PopupWindow(content, MATCH_PARENT, WRAP_CONTENT);
+    public PopupWindow getPopupWindow(View content, int width, int height) {
+        PopupWindow popupWindow = new PopupWindow(content, width, height);
         popupWindow.setBackgroundDrawable(new ColorDrawable());
         popupWindow.setOutsideTouchable(true);
         popupWindow.setFocusable(true);
@@ -275,29 +313,6 @@ public class CupFragment extends Fragment {
         this.mContext = context;
     }
 
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onCupInteraction(uri);
-        }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnCupInteractionListener) {
-            mListener = (OnCupInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnContainerInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
     //加载数据
     public void loadInfos() {
         new Thread() {
@@ -305,10 +320,8 @@ public class CupFragment extends Fragment {
             public void run() {
                 try {
                     String str = HttpUtils.getStringFromServer(URLs.GET_ALL_CUPPING);
-//                  System.out.println(str);
-//                  String str = TestData.cuppingInfos;
-
-                    Type type = new TypeToken<ArrayList<CuppingInfo>>() {}.getType();
+                    Type type = new TypeToken<ArrayList<CuppingInfo>>() {
+                    }.getType();
                     Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
                     List<CuppingInfo> newInfos = gson.fromJson(str, type);
 
@@ -328,8 +341,87 @@ public class CupFragment extends Fragment {
         }.start();
     }
 
-    public interface OnCupInteractionListener {
-        void onCupInteraction(Uri uri);
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.btn_sort:
+                if (mSortWindow != null && !isShow) {
+                    mSortWindow.showAsDropDown(mSortButton);
+                    isShow = true;
+                }
+                break;
+            case R.id.btn_screen:
+                if (mScreenWindow != null && !isShow) {
+                    mScreenWindow.showAsDropDown(mScreenButton);
+                    isShow = true;
+                }
+                break;
+            case R.id.iv_add:
+                Intent intent = new Intent(getActivity(), NewCuppingActivity.class);
+                intent.putExtra(VIEW_TYPE, NEW_CUPPING);
+                startActivityForResult(intent, REQ_CODE_NEW);
+                break;
+            case R.id.iv_search:
+                search();
+                break;
+            case R.id.btn_confirm:
+                startScreen();
+                mScreenWindow.dismiss();
+                break;
+        }
+    }
+
+    private void search() {
+        FragmentTransaction tx = getActivity().getSupportFragmentManager().beginTransaction();
+        tx.setCustomAnimations(R.anim.in_from_right, R.anim.out_to_left);
+
+        if (searchFragment != null) {
+            isAddSearchFragment = !searchFragment.isRemoved();
+        }
+        if (!isAddSearchFragment) {
+            searchFragment = new SearchFragment();
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("cuppingInfos", (Serializable) (allCuppingInfos == null?cuppingInfos:allCuppingInfos));
+            searchFragment.setArguments(bundle);
+            tx.add(R.id.activity_main, searchFragment, "search_bean");
+            isAddSearchFragment = true;
+        } else {
+            tx.show(searchFragment);
+        }
+        tx.commit();
+    }
+
+    private void startScreen() {
+        List<CuppingInfo> temp = new ArrayList<>();
+        if(allCuppingInfos == null){
+            allCuppingInfos = new ArrayList<>();
+            allCuppingInfos.addAll(cuppingInfos);
+        }
+        for (CuppingInfo cuppingInfo : allCuppingInfos) {
+            if(filter.doFilter(cuppingInfo)){
+                temp.add(cuppingInfo);
+            }
+        }
+
+        cuppingInfos.clear();
+        cuppingInfos.addAll(temp);
+        Collections.sort(cuppingInfos,currentComparator);
+        mAdapter.notifyDataSetChanged();
+    }
+
+    public void onBackPressed() {
+        if (searchFragment != null) {
+            isAddSearchFragment = !searchFragment.isRemoved();
+        }
+        if (isAddSearchFragment) {
+            searchFragment.remove();
+            isAddSearchFragment = false;
+        }
+    }
+
+
+    public boolean isAddSearch() {
+        return isAddSearchFragment;
     }
 
     private class CuppingInfoHandler extends Handler {

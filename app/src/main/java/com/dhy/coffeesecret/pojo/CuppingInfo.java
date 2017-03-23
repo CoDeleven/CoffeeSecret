@@ -5,7 +5,7 @@ import java.util.Date;
 
 public class CuppingInfo implements Serializable {
     // id
-    private int id;
+    private long id;
 
     private String name;
     // 咖啡得分
@@ -47,11 +47,11 @@ public class CuppingInfo implements Serializable {
 
     private BakeReport bakeReport;
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

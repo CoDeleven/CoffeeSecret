@@ -21,7 +21,7 @@ import com.dhy.coffeesecret.ui.mine.MineFragment;
 import com.dhy.coffeesecret.utils.T;
 import com.dhy.coffeesecret.utils.UIUtils;
 
-public class MainActivity extends AppCompatActivity implements CupFragment.OnCupInteractionListener {
+public class MainActivity extends AppCompatActivity {
 
     // 默认图标id
     private static final int[] IMG_SELECTOR_IDS = {R.drawable.nav_container_selector, R.drawable.nav_cup_selector, R.drawable.nav_device_selector, R.drawable.nav_community_selector, R.drawable.nav_mine_selector};
@@ -109,20 +109,19 @@ public class MainActivity extends AppCompatActivity implements CupFragment.OnCup
         return view;
     }
 
-    /**
-     * MainActivity和MyCupFragment交互的方法
-     *
-     * @param uri
-     */
-    @Override
-    public void onCupInteraction(Uri uri) {
-
-    }
-
     @Override
     public void onBackPressed() {
-        if (containerFragment != null && containerFragment.isAddSearch()) {
-            containerFragment.onBackPressed();
+        if ((containerFragment != null && containerFragment.isAddSearch())
+                || (cupFragment != null && cupFragment.isAddSearch())) {
+
+            if (containerFragment.isAddSearch()){
+                containerFragment.onBackPressed();
+            }
+
+            if (cupFragment.isAddSearch()){
+                cupFragment.onBackPressed();
+            }
+
         } else {
             exitApp();
         }

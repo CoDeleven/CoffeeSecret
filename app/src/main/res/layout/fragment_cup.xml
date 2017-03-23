@@ -54,17 +54,18 @@
             android:orientation="horizontal"
             android:paddingRight="25dp">
 
-            <!--<TextView-->
-                <!--android:id="@+id/textView"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:text="筛选"-->
-                <!--android:textColor="@android:color/black" />-->
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="筛选"
+                android:textSize="@dimen/font_size_primary"
+                android:textColor="@android:color/black" />
 
-            <!--<ImageView-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:src="@drawable/ic_screen" />-->
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_screen" />
         </LinearLayout>
     </LinearLayout>
     <View style="@style/HorizontalLine"

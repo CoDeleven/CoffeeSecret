@@ -50,12 +50,9 @@ public class ContainerFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         containerView = inflater.inflate(R.layout.fragment_container, container, false);
-
         context = getActivity();
         initPagerData();
-
         return containerView;
     }
 
@@ -67,7 +64,6 @@ public class ContainerFragment extends Fragment {
         btnAddBean = (LinearLayout) containerView.findViewById(R.id.btn_add_bean);
         containerTabs = (PagerSlidingTabStrip) containerView.findViewById(R.id.container_tabs);
         containerPager = (ViewPager) containerView.findViewById(R.id.container_pager);
-
         initView();
     }
 

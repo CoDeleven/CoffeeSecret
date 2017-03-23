@@ -6,12 +6,6 @@
     android:background="@android:color/transparent"
     android:orientation="vertical">
 
-    <View
-        android:layout_width="120dp"
-        android:layout_height="0.5dp"
-        android:layout_gravity="right"
-        android:background="@color/white" />
-
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -30,11 +24,10 @@
             android:textSize="12sp" />
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/handler_recycler"
+            android:id="@+id/date_screen"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="17dp" />
-
+            android:layout_height="wrap_content">
+        </android.support.v7.widget.RecyclerView>
     </LinearLayout>
 
     <LinearLayout
@@ -55,16 +48,16 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="价格"
+                android:text="最终得分"
                 android:textColor="@color/white"
-                android:textSize="12sp" />
+                android:textSize="@dimen/font_size_primary" />
 
             <TextView
-                android:id="@+id/tv_first_price"
+                android:id="@+id/tv_first_score"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
-                android:text="50"
+                android:text="0"
                 android:textColor="@color/white"
                 android:textSize="12sp" />
 
@@ -76,24 +69,16 @@
                 android:textSize="12sp" />
 
             <TextView
-                android:id="@+id/tv_second_price"
+                android:id="@+id/tv_second_score"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="100"
+                android:text="80"
                 android:textColor="@color/white"
-                android:textSize="12sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="元"
-                android:layout_marginLeft="10dp"
-                android:textColor="@color/white"
-                android:textSize="12sp" />
+                android:textSize="@dimen/font_size_primary" />
         </LinearLayout>
 
         <com.edmodo.rangebar.RangeBar
-            android:id="@+id/range_price"
+            android:id="@+id/rb_score"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -103,73 +88,11 @@
             app:connectingLineWeight="1dp"
             app:thumbColorNormal="@color/colorPrimaryLight"
             app:thumbColorPressed="@color/colorPrimary"
-            app:tickCount="100"
-            app:tickHeight="0dp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="23dp"
-            android:background="@color/colorPrimary"
-            android:orientation="horizontal"
-            android:paddingLeft="12dp"
-            android:paddingTop="5dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="重量"
-                android:textColor="@color/white"
-                android:textSize="12sp" />
-
-            <TextView
-                android:id="@+id/tv_first_weight"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:text="50"
-                android:textColor="@color/white"
-                android:textSize="12sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="~"
-                android:textColor="@color/white"
-                android:textSize="12sp" />
-
-            <TextView
-                android:id="@+id/tv_second_weight"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="100"
-                android:textColor="@color/white"
-                android:textSize="12sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="kg"
-                android:layout_marginLeft="10dp"
-                android:textColor="@color/white"
-                android:textSize="12sp" />
-        </LinearLayout>
-
-        <com.edmodo.rangebar.RangeBar
-            android:id="@+id/range_weight"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            app:barColor="@color/border_color"
-            app:barWeight="2dp"
-            app:connectingLineColor="@color/colorPrimary"
-            app:connectingLineWeight="1dp"
-            app:thumbColorNormal="@color/colorPrimaryLight"
-            app:thumbColorPressed="@color/colorPrimary"
-            app:tickCount="100"
+            app:tickCount="81"
             app:tickHeight="0dp" />
 
         <Button
-            android:id="@+id/btn_confirm_condition"
+            android:id="@+id/btn_confirm"
             android:layout_width="155dp"
             android:layout_height="33dp"
             android:layout_gravity="center_horizontal"

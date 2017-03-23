@@ -168,7 +168,7 @@ public class NewCuppingActivity extends AppCompatActivity
 
         if (cuppingInfoFragment != null) {
             cuppingInfoFragment.setEditable(false);
-            cuppingInfoFragment.updateProgressBar((int)mCuppingInfo.getFeel(),(int)mCuppingInfo.getFlaw());
+            cuppingInfoFragment.updateProgressBar((int) mCuppingInfo.getFeel(), (int) mCuppingInfo.getFlaw());
         }
         viewType = SHOW_INFO;
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -315,7 +315,7 @@ public class NewCuppingActivity extends AppCompatActivity
         final Map<String, Float> data = cuppingInfoFragment.getData();
         map2Bean(data, mCuppingInfo);
 
-        cuppingInfoFragment.updateProgressBar((int)mCuppingInfo.getFeel(),(int)mCuppingInfo.getFlaw());
+        cuppingInfoFragment.updateProgressBar((int) mCuppingInfo.getFeel(), (int) mCuppingInfo.getFlaw());
         if (NEW_CUPPING.equals(viewType) || isNew) {
             mCuppingInfo.setBakeReport(mBakeReport);
             if (mCuppingInfo.getName() == null) {
@@ -336,10 +336,9 @@ public class NewCuppingActivity extends AppCompatActivity
 
                             @Override
                             public void onResponse(Call call, final Response response) throws IOException {
-                                System.out.println(response.body().string());
                                 mHandler.sendEmptyMessage(SUCCESS);
-                                // TODO: 2017/3/4 返回主键 并设置主键
-                                //mCuppingInfo.setId();
+                                Long aLong = Long.valueOf(response.body().string().trim());
+                                mCuppingInfo.setId(aLong);
                                 loadShowViewInMain();
                                 mResultCode = CupFragment.RESULT_CODE_ADD;
                                 mResultIntent = new Intent();
@@ -469,7 +468,6 @@ public class NewCuppingActivity extends AppCompatActivity
                     break;
                 case UPDATE:
                     progress = ProgressDialog.show(NewCuppingActivity.this, null, "更新中...", true);
-
                     break;
                 case CANCEL:
                     if (progress != null && progress.isShowing()) {
@@ -481,11 +479,10 @@ public class NewCuppingActivity extends AppCompatActivity
                     break;
                 case SUCCESS:
                     sendEmptyMessage(CANCEL);
-                    T.showShort(getApplicationContext(), "success");
                     break;
                 case ERROR:
                     sendEmptyMessage(CANCEL);
-                    T.showShort(getApplicationContext(), "error");
+                    T.showShort(getApplicationContext(), "网络错误");
                     break;
             }
         }

@@ -315,7 +315,6 @@ public class SearchFragment extends Fragment {
                                 activity.infos.add(string);
                             }
                         }
-
                         activity.infoListAdapter.notifyDataSetChanged();
                     }
                     break;
