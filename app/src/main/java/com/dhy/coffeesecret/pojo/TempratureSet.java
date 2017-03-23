@@ -11,6 +11,7 @@ import java.util.Map;
  */
 
 public class TempratureSet implements Serializable{
+
     private List<Float> beanTemps = new ArrayList<>();
     private List<Float> inwindTemps = new ArrayList<>();
     private List<Float> outwindTemps = new ArrayList<>();

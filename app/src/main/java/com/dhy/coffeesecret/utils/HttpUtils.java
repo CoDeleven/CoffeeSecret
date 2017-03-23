@@ -24,7 +24,8 @@ import okhttp3.Response;
 public class HttpUtils {
     private static final String TAG = "HTTPUtils";
     private static final OkHttpClient mOkHttpClient;
-    private static final Gson mGson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+    private static final Gson mGson = new GsonBuilder()
+            .setDateFormat("yyyy-MM-dd").setExclusionStrategies().create();
 
     private static final long TIMEOUT = 4;
     private static final String CHARSET_NAME = "UTF-8";

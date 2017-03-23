@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.dhy.coffeesecret.MyApplication;
@@ -64,6 +65,8 @@ public class HistoryLineActivity extends AppCompatActivity implements View.OnCli
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         setContentView(R.layout.history_lines);
         ButterKnife.bind(this);
         back.setOnClickListener(new View.OnClickListener() {
@@ -97,6 +100,17 @@ public class HistoryLineActivity extends AppCompatActivity implements View.OnCli
         // Map<String, ? extends BakeReport> bakeReports = ((MyApplication) getApplication()).getBakeReports();
 
         // bakeReportList.addAll(bakeReports.values());
+        /*
+         *从intent中获取烘焙报告对象 如果没有 则加载MyApplication中的bakeReports  by mxf 2017-03-22
+         */
+  /*      List<BakeReport> reports = (List<BakeReport>) getIntent().getSerializableExtra("bakeReports");
+        Map<String, ? extends BakeReport> bakeReports;
+        if(reports == null){
+            bakeReports = ((MyApplication) getApplication()).getBakeReports();
+            bakeReportList.addAll(bakeReports.values());
+        }else {
+            bakeReportList.addAll(reports);
+        }*/
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
 
         listView.setLayoutManager(layoutManager);

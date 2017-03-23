@@ -29,6 +29,7 @@ import com.bigkoo.quicksidebar.QuickSideBarView;
 import com.bigkoo.quicksidebar.listener.OnQuickSideBarTouchListener;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BeanInfo;
+import com.dhy.coffeesecret.pojo.Global;
 import com.dhy.coffeesecret.ui.container.BeanInfoActivity;
 import com.dhy.coffeesecret.ui.container.adapters.BeanListAdapter;
 import com.dhy.coffeesecret.ui.container.adapters.CountryListAdapter;
@@ -50,6 +51,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
@@ -248,17 +256,17 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
         String beanInfoListJson = "";
         try {
             beanInfoListJson = HttpUtils.getStringFromServer(URLs.GET_ALL_BEAN_INFO);
-            Log.i(TAG, "beanInfoListJson" + beanInfoListJson);
         } catch (IOException e) {
+            e.printStackTrace();
             mHandler.sendEmptyMessage(TOAST_3);
         }
         String[] beanLists = null;
         // beanInfoListJson = TestData.beaninfos;
         ArrayList<BeanInfo> beanInfoss = null;
-        try {
-            beanInfoss = gson.fromJson(beanInfoListJson, new TypeToken<ArrayList<BeanInfo>>() {
-            }.getType());
-        } catch (Exception e) {
+        try{
+            beanInfoss = gson.fromJson(beanInfoListJson, new TypeToken<ArrayList<BeanInfo>>() {}.getType());
+        }catch (Exception e){
+            e.printStackTrace();
             Log.i(TAG, "beanInfoListJson" + beanInfoListJson);
             Log.i(TAG, "getBeanInfos: " + beanInfoss);
         }
@@ -281,7 +289,6 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
         if (coffeeBeanInfos != null) {
             coffeeBeanInfos.clear();
             coffeeBeanInfos.addAll(coffeeBeanInfoTemp);
-
         }
 
         mHandler.sendEmptyMessage(NO_LOADING);
@@ -302,7 +309,6 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
                     BeanInfo beanInfo = beanInfoss.get(j);
                     beanInfoss.set(j, beanInfoss.get(j + 1));
                     beanInfoss.set(j + 1, beanInfo);
-
                 } else if (a == b) {
                     // 如果第一个字符比较是相等的，则比较第二个字符
 
@@ -489,7 +495,7 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
     private void startScreen() {
         ArrayList<BeanInfo> beanInfos = new ArrayList<>();
         beanInfos.addAll(coffeeBeanInfoTemp);
-        if (screenHandler.equals("全部") || screenHandler.equals("")) {
+        if ("全部".equals(screenHandler) || "".equals(screenHandler)) {
             coffeeBeanInfos.clear();
             coffeeBeanInfos.addAll(coffeeBeanInfoTemp);
         } else if (!screenHandler.equals("")) {

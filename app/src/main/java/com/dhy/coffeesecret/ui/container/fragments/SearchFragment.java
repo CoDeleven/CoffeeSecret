@@ -25,16 +25,24 @@ import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.pojo.BeanInfo;
+import com.dhy.coffeesecret.pojo.CuppingInfo;
 import com.dhy.coffeesecret.ui.container.BeanInfoActivity;
 import com.dhy.coffeesecret.ui.container.adapters.BeanListAdapter;
 import com.dhy.coffeesecret.ui.container.adapters.InfoListAdapter;
 import com.dhy.coffeesecret.ui.container.adapters.LineListAdapter;
+import com.dhy.coffeesecret.ui.cup.CupFragment;
+import com.dhy.coffeesecret.ui.cup.NewCuppingActivity;
+import com.dhy.coffeesecret.ui.cup.adapter.CuppingListAdapter;
 import com.dhy.coffeesecret.ui.device.ReportActivity;
 import com.dhy.coffeesecret.ui.mine.HistoryLineActivity;
 import com.dhy.coffeesecret.utils.Utils;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+
+import static com.dhy.coffeesecret.ui.cup.NewCuppingActivity.SHOW_INFO;
+import static com.dhy.coffeesecret.ui.cup.NewCuppingActivity.TARGET;
+import static com.dhy.coffeesecret.ui.cup.NewCuppingActivity.VIEW_TYPE;
 
 
 public class SearchFragment extends Fragment {
@@ -43,6 +51,7 @@ public class SearchFragment extends Fragment {
     private static final int GET_LIKE_BEAN_LIST = 111;
     private static final int GET_LIKE_LINE_LIST = 222;
     private static final int GET_LIKE_INFO_LIST = 333;
+    private static final int GET_LIKE_CUPPING_LIST = 444;
     private View searchView;
     private EditText editText;
     private Button cancel;
@@ -53,10 +62,13 @@ public class SearchFragment extends Fragment {
     private BeanListAdapter beanListAdapter;
     private LineListAdapter lineListAdapter;
     private InfoListAdapter infoListAdapter;
+    private CuppingListAdapter cuppingListAdapter;
     private ArrayList<BeanInfo> beanInfos;
     private ArrayList<BeanInfo> beanInfoTemp;
     private ArrayList<BakeReport> bakeReports;
     private ArrayList<BakeReport> bakeReportTemp;
+    private ArrayList<CuppingInfo> cuppingInfos;
+    private ArrayList<CuppingInfo> cuppingInfosTemp;
     private ArrayList<String> infos;
     private ArrayList<String> infoTemp;
     private String entrance;
@@ -123,6 +135,19 @@ public class SearchFragment extends Fragment {
                     onSearchCallBack.onSearchCallBack(item);
                 }
             });
+        } else if (entrance.equals("search_cupping")) {
+            cuppingInfos = new ArrayList<>();
+            cuppingInfosTemp = (ArrayList<CuppingInfo>) bundle.getSerializable("cuppingInfos");
+            cuppingListAdapter = new CuppingListAdapter(mContext, cuppingInfos);
+            cuppingListAdapter.setOnItemClickListener(new CuppingListAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(int position) {
+                    Intent intent = new Intent(mContext, NewCuppingActivity.class);
+                    intent.putExtra(TARGET, cuppingInfos.get(position));
+                    intent.putExtra(VIEW_TYPE, SHOW_INFO);
+                    startActivityForResult(intent, CupFragment.REQ_CODE_EDIT);
+                }
+            });
         }
 
     }
@@ -146,8 +171,10 @@ public class SearchFragment extends Fragment {
             initSearchList(lineListAdapter);
         } else if (entrance.equals("search_info")) {
             initSearchList(infoListAdapter);
+        }else if(entrance.equals("search_cupping")){
+            initSearchList(cuppingListAdapter);
         }
-    }
+}
 
     private void initSearchList(RecyclerView.Adapter adapter) {
 
@@ -201,6 +228,9 @@ public class SearchFragment extends Fragment {
                     case "search_info":
                         msg.what = GET_LIKE_INFO_LIST;
                         break;
+                    case "search_cupping":
+                        msg.what =  GET_LIKE_CUPPING_LIST;
+                        break;
                 }
                 msg.obj = searchText;
                 mHandler.sendMessage(msg);
@@ -227,7 +257,7 @@ public class SearchFragment extends Fragment {
         isRemoved = true;
     }
 
-    public boolean isRemoved(){
+    public boolean isRemoved() {
         return isRemoved;
     }
 
@@ -317,8 +347,17 @@ public class SearchFragment extends Fragment {
                                 activity.infos.add(string);
                             }
                         }
-
                         activity.infoListAdapter.notifyDataSetChanged();
+                    }
+                    break;
+                case GET_LIKE_CUPPING_LIST:
+                    if(cuppingInfosTemp != null){
+                        cuppingInfos.clear();
+                        for (CuppingInfo cuppingInfo : cuppingInfosTemp) {
+                            cuppingInfos.add(cuppingInfo);
+                        }
+                        System.out.println(cuppingInfos);
+                        cuppingListAdapter.notifyDataSetChanged();
                     }
                     break;
                 default:

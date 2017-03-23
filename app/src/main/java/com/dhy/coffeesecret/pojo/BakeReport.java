@@ -165,8 +165,12 @@ public class BakeReport implements Serializable {
         beanInfoSimples.get(0).setBeanName(beanName);
     }
 
-    public void setBeanId(long id){
-        this.beanId = id;
+    public Long getBeanId() {
+        return beanId;
+    }
+
+    public void setBeanId(Long beanId) {
+        this.beanId = beanId;
     }
 
 }

@@ -13,12 +13,15 @@ import android.widget.TextView;
 
 import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
+import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.pojo.BeanInfo;
 import com.dhy.coffeesecret.ui.mine.HistoryLineActivity;
 import com.dhy.coffeesecret.utils.T;
 import com.dhy.coffeesecret.utils.UIUtils;
 import com.dhy.coffeesecret.utils.UnitConvert;
 import com.dhy.coffeesecret.utils.Utils;
+
+import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -74,9 +77,7 @@ public class BeanInfoActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         UIUtils.steepToolBar(this);
-
         beanInfo = (BeanInfo) getIntent().getSerializableExtra("beanInfo");
-
         init();
         infoActivity = this;
     }
@@ -109,10 +110,12 @@ public class BeanInfoActivity extends AppCompatActivity {
                 overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
             }
         });
+
         btnCurve.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(BeanInfoActivity.this, HistoryLineActivity.class);
+                intent.putExtra("bakeReports",(ArrayList<BakeReport>)beanInfo.getBakeReports());
                 startActivity(intent);
                 overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
             }
@@ -138,8 +141,10 @@ public class BeanInfoActivity extends AppCompatActivity {
         // 数值的单位kg转换为当前单位
         infoWeight.setText(Utils.getCrspWeightValue(beanInfo.getStockWeight() + "") + MyApplication.weightUnit);
         infoBuyDate.setText(String.format("%1$tY-%1$tm-%1$te", beanInfo.getDate()));
+        btnCurve.setEnabled(beanInfo.hasBakeReports());
     }
     private BeanInfo newBeanInfo;
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (resultCode) {
@@ -157,6 +162,7 @@ public class BeanInfoActivity extends AppCompatActivity {
                 infoPrice.setText("" + newBeanInfo.getPrice());
                 infoWeight.setText(Utils.getCrspWeightValue(newBeanInfo.getStockWeight() + "") + MyApplication.weightUnit);
                 infoBuyDate.setText(String.format("%1$tY-%1$tm-%1$te", newBeanInfo.getDate()));
+                btnCurve.setEnabled(newBeanInfo.hasBakeReports());
                 break;
         }
     }
