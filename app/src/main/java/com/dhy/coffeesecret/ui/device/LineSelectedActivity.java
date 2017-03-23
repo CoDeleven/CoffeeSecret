@@ -33,11 +33,14 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import static com.dhy.coffeesecret.ui.device.handler.LinesSelectorHandler.*;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 import static com.dhy.coffeesecret.ui.cup.fragment.BakeInfoFragment.RESULT_CODE_ADD;
+import static com.dhy.coffeesecret.ui.device.handler.LinesSelectorHandler.GET_LINES_INFOS;
+import static com.dhy.coffeesecret.ui.device.handler.LinesSelectorHandler.LOADING_ERROR;
+import static com.dhy.coffeesecret.ui.device.handler.LinesSelectorHandler.LOADING_SUCCESS;
 
 /**
  * Created by CoDeleven on 17-3-12.
@@ -54,7 +57,6 @@ public class LineSelectedActivity extends AppCompatActivity implements View.OnCl
     SearchEditText searchBar;
     private SearchFragment searchFragment = new SearchFragment();
     private Toolbar toolbar;
-    private boolean isAddSearchFragment = false;
     private List<BakeReport> bakeReportList = new ArrayList<>();
     private LinesSelectorHandler mHandler;
     private HistoryLineAdapter mAdapter;
