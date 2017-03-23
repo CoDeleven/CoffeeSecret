@@ -28,6 +28,7 @@ import com.dhy.coffeesecret.utils.HttpUtils;
 import com.dhy.coffeesecret.utils.SettingTool;
 import com.dhy.coffeesecret.utils.T;
 import com.dhy.coffeesecret.utils.URLs;
+import com.dhy.coffeesecret.utils.Utils;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -176,9 +177,13 @@ public class EditBeanActivity extends AppCompatActivity {
 
         if (beanInfo.getDrawablePath() == null || beanInfo.getDrawablePath().trim().equals("")) {
             beanInfo.setDrawablePath(R.drawable.ic_container_add_bean + "");
+            drawPath = R.drawable.ic_container_add_bean + "";
+        }else{
+            drawPath = beanInfo.getDrawablePath();
+            editIcon.setImageResource(Integer.parseInt(drawPath));
         }
         id = beanInfo.getId();
-        editIcon.setImageResource(Integer.parseInt(beanInfo.getDrawablePath()));
+
         editName.setText(beanInfo.getName());
         editCountry.setText(beanInfo.getCountry());
         editArea.setText(beanInfo.getArea());
@@ -374,6 +379,7 @@ public class EditBeanActivity extends AppCompatActivity {
         beanInfo.setContinent(((MyApplication) getApplicationContext()).getContinent(editCountry.getText().toString()));
         Log.e("EditBeanActivity", beanInfo.getContinent());
         beanInfo.setCountry(editCountry.getText().toString());
+
         beanInfo.setArea(editArea.getText().toString());
         beanInfo.setManor(editManor.getText().toString());
         beanInfo.setAltitude(editAltitude.getText().toString());
@@ -382,7 +388,7 @@ public class EditBeanActivity extends AppCompatActivity {
         beanInfo.setWaterContent(Float.parseFloat(editWaterContent.getText().toString()));
         beanInfo.setSupplier(editSupplier.getText().toString());
         beanInfo.setPrice(Double.parseDouble(editPrice.getText().toString()));
-        beanInfo.setStockWeight(Double.parseDouble(editWeight.getText().toString()));
+        beanInfo.setStockWeight(Utils.getReversed2DefaultWeight(Float.parseFloat(editWeight.getText().toString()) + ""));
         beanInfo.setDate(parseDate(editBuyDate.getText().toString()));
         // TODO 如果豆名为空字串或者为null，则默认给予国家+豆种格式
         beanInfo.setName(editName.getText().toString());
@@ -500,11 +506,11 @@ public class EditBeanActivity extends AppCompatActivity {
                     break;
                 case BEAN_ICON:
                     str = ((String) msg.obj).substring(0, 2);
-                    if (str.toLowerCase().contains("a")) {
+                    if (str.toLowerCase().contains("aa")) {
                         drawPath = R.drawable.ic_container_aa + "";
-                    } else if (str.toLowerCase().contains("c")) {
+                    } else if (str.toLowerCase().contains("ac")) {
                         drawPath = R.drawable.ic_container_ac + "";
-                    } else if (str.toLowerCase().contains("e")) {
+                    } else if (str.toLowerCase().contains("ae")) {
                         drawPath = R.drawable.ic_container_ae + "";
                     } else {
                         drawPath = R.drawable.ic_container_al + "";

@@ -129,7 +129,7 @@ public class Utils {
     }
 
     public static String data2Timestamp(Date time) {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return format.format(time);
     }
 

@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +27,10 @@ import com.dhy.coffeesecret.pojo.BeanInfo;
 import com.dhy.coffeesecret.pojo.BeanInfoSimple;
 import com.dhy.coffeesecret.ui.device.DialogBeanSelected;
 import com.dhy.coffeesecret.ui.device.LineSelectedActivity;
+import com.dhy.coffeesecret.ui.device.adapter.BeanSelectAdapter;
 import com.dhy.coffeesecret.utils.SettingTool;
+import com.dhy.coffeesecret.utils.T;
+import com.dhy.coffeesecret.views.DividerDecoration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,13 +43,13 @@ import butterknife.OnClick;
  * Created by CoDeleven on 17-2-18.
  */
 
-public class BakeDialog extends DialogFragment {
+public class BakeDialog extends DialogFragment implements BeanSelectAdapter.MyButtonOnClick {
     public static final int GET_HISTORY = 1;
     public static final int GET_COLLECTION = 2;
     public static final int SELECT_BEAN = 111;
 
     // private static List<DialogBeanInfo> dialogBeanInfos;
-    private static List<BeanInfoSimple> beanInfos;
+    private List<BeanInfoSimple> beanInfos;
     private static int curItem;
     @Bind(R.id.id_bake_dialog_refer_collection)
     ImageView referCollection;
@@ -59,17 +65,16 @@ public class BakeDialog extends DialogFragment {
     @Bind(R.id.id_bake_dialog_refer_selector)
     View mLinesSelector;
     @Bind(R.id.id_bake_dialog_scroll)
-    ListView mListView;
+    RecyclerView mListView;
     @Bind(R.id.id_bake_dialog_add)
     Button mAdd;
     private OnBeaninfosConfirmListener beaninfosConfirmListener;
     private ArrayList<Float> referTempratures;
     private String unit;
 
-    public BakeDialog() {
-        beanInfos = new ArrayList<>();
-    }
+    public BakeDialog(){
 
+    }
 
     @Nullable
     @Override
@@ -78,7 +83,13 @@ public class BakeDialog extends DialogFragment {
         getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
         View view = inflater.inflate(R.layout.bake_dialog, container, false);
         ButterKnife.bind(this, view);
-
+        Bundle bundle = getArguments();
+        if(bundle != null){
+            beanInfos = (ArrayList<BeanInfoSimple>)bundle.getSerializable("beanInfos");
+        }
+        if(beanInfos == null){
+            beanInfos = new ArrayList<>();
+        }
         initDefaultItem();
         // 初始化确认和取消
         initConfirmCancel();
@@ -90,11 +101,13 @@ public class BakeDialog extends DialogFragment {
     }
 
     private void initDefaultItem() {
-        BeanInfoSimple testBean = new BeanInfoSimple();
-        testBean.setBeanName("样品豆");
-        testBean.setSingleBeanId(-1);
-        testBean.setUsage("" + getDefaultWeight());
-        beanInfos.add(testBean);
+        if(beanInfos.size() == 0){
+            BeanInfoSimple testBean = new BeanInfoSimple();
+            testBean.setBeanName("样品豆");
+            testBean.setSingleBeanId(-1);
+            testBean.setUsage("" + getDefaultWeight());
+            beanInfos.add(testBean);
+        }
     }
 
     private void initConfirmCancel() {
@@ -109,6 +122,14 @@ public class BakeDialog extends DialogFragment {
             public void onClick(View v) {
                 //处理确定情况
                 beaninfosConfirmListener.setBeanInfos(beanInfos);
+                for(BeanInfoSimple info:beanInfos){
+                    try{
+                        Float.parseFloat(info.getUsage());
+                    }catch (Exception e){
+                        T.showShort(getContext(), info.getBeanName() + "使用量异常，请检查...");
+                        return;
+                    }
+                }
                 beaninfosConfirmListener.setTempratures(referTempratures);
                 dismiss();
             }
@@ -139,86 +160,15 @@ public class BakeDialog extends DialogFragment {
                 simpleBean.setSingleBeanId(-1);
 
                 beanInfos.add(simpleBean);
-                ((BaseAdapter) mListView.getAdapter()).notifyDataSetChanged();
-                mListView.setSelection(beanInfos.size() - 1);
+                mListView.getAdapter().notifyDataSetChanged();
+
             }
         });
-
-        mListView.setAdapter(new BaseAdapter() {
-            @Override
-            public int getCount() {
-                return beanInfos.size();
-            }
-
-            @Override
-            public Object getItem(int position) {
-                return beanInfos.get(position);
-            }
-
-            @Override
-            public long getItemId(int position) {
-                return position;
-            }
-
-            @Override
-            public View getView(final int position, View convertView, ViewGroup parent) {
-                ViewHolder holder;
-                if (convertView == null) {
-                    holder = new ViewHolder();
-                    convertView = LayoutInflater.from(mContext).inflate(R.layout.bake_dialog_item, parent, false);
-                    holder.beanName = (Button) convertView.findViewById(R.id.id_bake_dialog_beanName);
-                    holder.beanWeight = (EditText) convertView.findViewById(R.id.id_bake_dialog_beanWeight);
-                    holder.beanDel = (ImageView) convertView.findViewById(R.id.id_bake_dialog_delete);
-                    holder.weightUnit = (TextView) convertView.findViewById(R.id.id_bake_dialog_unit);
-
-                    convertView.setTag(holder);
-                } else {
-                    holder = (ViewHolder) convertView.getTag();
-                }
-
-                holder.beanName.setText(beanInfos.get(position).getBeanName());
-                // TODO 单位换算
-                holder.beanWeight.setText(beanInfos.get(position).getUsage());
-
-                holder.beanWeight.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                    @Override
-                    public void onFocusChange(View v, boolean hasFocus) {
-                        EditText editText = (EditText) v;
-                        String result = editText.getText().toString();
-                        if (beanInfos.size() > 0 && !hasFocus && editText.getText().length() > 0) {
-                            for (int i = 0; i < result.length(); ++i) {
-                                if (!Character.isDigit(result.charAt(i))) {
-                                    return;
-                                }
-                            }
-                            beanInfos.get(position).setUsage("" + Float.parseFloat(result));
-                        }
-                    }
-                });
-
-                holder.beanName.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        curItem = position;
-                        Intent intent = new Intent(mContext, DialogBeanSelected.class);
-                        startActivityForResult(intent, SELECT_BEAN);
-                    }
-                });
-
-                holder.beanDel.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        curItem = position;
-                        beanInfos.remove(curItem);
-                        notifyDataSetChanged();
-                    }
-                });
-                holder.weightUnit.setText(unit);
-                return convertView;
-            }
-        });
-
-
+        mListView.setLayoutManager(new LinearLayoutManager(getContext()));
+        BeanSelectAdapter adapter = new BeanSelectAdapter(getContext(), beanInfos);
+        adapter.setMyButtonOnClick(this);
+        mListView.setAdapter(adapter);
+        mListView.addItemDecoration(new DividerDecoration(getContext()));
     }
 
     public void setBeanInfosListener(OnBeaninfosConfirmListener beanInfosListener) {
@@ -247,7 +197,7 @@ public class BakeDialog extends DialogFragment {
             if (bakeReport != null) {
                 referTempratures = (ArrayList) bakeReport.getTempratureSet().getBeanTemps();
             }
-            ((BaseAdapter) mListView.getAdapter()).notifyDataSetChanged();
+             mListView.getAdapter().notifyDataSetChanged();
         }
     }
 
@@ -288,6 +238,20 @@ public class BakeDialog extends DialogFragment {
             defaultWeight = 1.1f;
         }
         return defaultWeight;
+    }
+
+    @Override
+    public void onNameClick(int position) {
+        curItem = position;
+        Intent intent = new Intent(mContext, DialogBeanSelected.class);
+        startActivityForResult(intent, SELECT_BEAN);
+    }
+
+    @Override
+    public void onDeleteClick(int position) {
+        curItem = position;
+        beanInfos.remove(curItem);
+        mListView.getAdapter().notifyDataSetChanged();
     }
 
     public interface OnBeaninfosConfirmListener {

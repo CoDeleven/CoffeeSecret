@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BakeReport;
+import com.dhy.coffeesecret.utils.Utils;
 
 import java.util.List;
 
@@ -38,7 +39,7 @@ public class LineListAdapter extends RecyclerView.Adapter<LineListAdapter.LineVi
     @Override
     public void onBindViewHolder(final LineViewHolder holder, int position) {
         holder.lineName.setText(reports.get(position).getSingleBeanName());
-        holder.dateName.setText("日期:" + String.format("%1$tY-%1$tm-%1$te", reports.get(position).getDate()));
+        holder.dateName.setText("日期:" + reports.get(position).getDate());
         holder.lineLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

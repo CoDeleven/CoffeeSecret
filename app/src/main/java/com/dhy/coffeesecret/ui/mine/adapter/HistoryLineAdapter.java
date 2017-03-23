@@ -10,11 +10,9 @@ import android.widget.TextView;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.utils.Utils;
+import com.dhy.coffeesecret.views.SearchEditText;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -70,19 +68,20 @@ public class HistoryLineAdapter extends RecyclerView.Adapter<HistoryLineAdapter.
         return bakeReports.size();
     }
 
-    class HistoryLineViewHolder extends RecyclerView.ViewHolder{
+    public interface OnLineClickedListener {
+        void onLineClicked(BakeReport bakeReport);
+    }
+
+    class HistoryLineViewHolder extends RecyclerView.ViewHolder {
         TextView itemName;
         TextView itemDate;
         View layout;
         public HistoryLineViewHolder(View itemView) {
             super(itemView);
             layout = itemView;
-            itemName = (TextView)layout.findViewById(R.id.id_lines_item_name);
-            itemDate = (TextView)layout.findViewById(R.id.id_lines_item_date);
-        }
-    }
+            itemName = (TextView) layout.findViewById(R.id.id_lines_item_name);
+            itemDate = (TextView) layout.findViewById(R.id.id_lines_item_date);
 
-    public interface OnLineClickedListener{
-        void onLineClicked(BakeReport bakeReport);
+        }
     }
 }

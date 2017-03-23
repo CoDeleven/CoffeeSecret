@@ -238,6 +238,7 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
     public void onMoreClick(){
         Intent intent = new Intent(this, EditBehindActiviy.class);
         startActivity(intent);
+        finish();
     }
 
 

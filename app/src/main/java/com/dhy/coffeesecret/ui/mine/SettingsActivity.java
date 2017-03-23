@@ -204,6 +204,7 @@ public class SettingsActivity extends AppCompatActivity {
                             case R.id.weight_unit:
                                 textWeightUnit.setText(whichItem);
                                 config.setWeightUnit(Utils.convertUnitChineses2Eng(whichItem));
+                                ((MyApplication) getApplicationContext()).weightUnit = Utils.convertUnitChineses2Eng(whichItem);
                                 break;
                             case R.id.temperature_unit:
                                 textTemperatureUnit.setText(whichItem);

@@ -14,6 +14,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -94,7 +95,7 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
     @Bind(R.id.id_baking_developbar)
     DevelopBar developBar;
     @Bind(R.id.id_baking_start)
-    Button mStart;
+    ImageButton mStart;
     private PopupWindow popupWindow;
     private BluetoothService.BluetoothOperator mBluetoothOperator;
     private float lastTime = 0;

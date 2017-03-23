@@ -228,7 +228,7 @@
                         android:layout_marginLeft="86dp"
                         android:layout_marginRight="108.5dp"
                         android:background="@null"
-                        android:inputType="text"
+                        android:inputType="numberDecimal"
                         android:text="1000~1300"
                         android:textColor="@color/black"
                         android:textSize="14.5sp" />

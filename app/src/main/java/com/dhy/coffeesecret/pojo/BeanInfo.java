@@ -7,7 +7,7 @@ import java.util.List;
 
 public class BeanInfo implements Serializable {
 
-	private int id = -1;
+	private int id;
 	// 咖啡名称
 	private String name;
 	// 咖啡庄园
@@ -44,7 +44,7 @@ public class BeanInfo implements Serializable {
 	private List<BakeReport> bakeReports;
 
 	// 是否有烘焙报告
-	private boolean hasBakeReports;
+	private boolean hasBakeReports = false;
 
 	public int getId() {
 		return id;

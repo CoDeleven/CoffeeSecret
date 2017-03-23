@@ -2,8 +2,6 @@ package com.dhy.coffeesecret.ui.mine;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -23,7 +21,6 @@ import com.dhy.coffeesecret.ui.device.ReportActivity;
 import com.dhy.coffeesecret.ui.device.handler.LinesSelectorHandler;
 import com.dhy.coffeesecret.ui.mine.adapter.HistoryLineAdapter;
 import com.dhy.coffeesecret.utils.HttpUtils;
-import com.dhy.coffeesecret.utils.T;
 import com.dhy.coffeesecret.utils.URLs;
 import com.dhy.coffeesecret.utils.Utils;
 import com.dhy.coffeesecret.views.DividerDecoration;
@@ -31,7 +28,7 @@ import com.dhy.coffeesecret.views.SearchEditText;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
-import static com.dhy.coffeesecret.ui.device.handler.LinesSelectorHandler.*;
+
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -42,17 +39,22 @@ import java.util.Map;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class HistoryLineActivity extends AppCompatActivity implements View.OnClickListener, SearchEditText.SearchBarListener,LinesSelectorHandler.Handling {
-    public static String REFER_LINE = "refer_line";
+import static com.dhy.coffeesecret.ui.device.handler.LinesSelectorHandler.GET_LINES_INFOS;
+import static com.dhy.coffeesecret.ui.device.handler.LinesSelectorHandler.LOADING_ERROR;
+import static com.dhy.coffeesecret.ui.device.handler.LinesSelectorHandler.LOADING_SUCCESS;
+
+public class HistoryLineActivity extends AppCompatActivity implements View.OnClickListener, SearchEditText.SearchBarListener, LinesSelectorHandler.Handling {
     private static final String TAG = "EditBehindActivity";
+    public static String REFER_LINE = "refer_line";
     @Bind(R.id.id_lines_list)
     RecyclerView listView;
     @Bind(R.id.id_back)
     ImageView back;
     @Bind(R.id.id_swipeRefresh)
     SwipeRefreshLayout mRefreshLayout;
+    @Bind(R.id.lines_selected_srh)
+    SearchEditText searchBar;
     private HistoryLineAdapter mAdapter;
-    private SearchEditText searchBar;
     private SearchFragment searchFragment = new SearchFragment();
     private Toolbar toolbar;
     private boolean isAddSearchFragment = false;
@@ -93,9 +95,9 @@ public class HistoryLineActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void init() {
-        Map<String, ? extends BakeReport> bakeReports = ((MyApplication) getApplication()).getBakeReports();
+        // Map<String, ? extends BakeReport> bakeReports = ((MyApplication) getApplication()).getBakeReports();
 
-        bakeReportList.addAll(bakeReports.values());
+        // bakeReportList.addAll(bakeReports.values());
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
 
         listView.setLayoutManager(layoutManager);
@@ -113,6 +115,7 @@ public class HistoryLineActivity extends AppCompatActivity implements View.OnCli
         listView.addItemDecoration(decoration);
         listView.addItemDecoration(new DividerDecoration(this));
 
+
         mHandler = new LinesSelectorHandler(this, mRefreshLayout, mAdapter);
         mHandler.setHandling(this);
         mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -123,7 +126,7 @@ public class HistoryLineActivity extends AppCompatActivity implements View.OnCli
         });
 
 
-
+        searchBar.setSearchBarListener(this);
     }
 
     @Override
@@ -136,15 +139,11 @@ public class HistoryLineActivity extends AppCompatActivity implements View.OnCli
         FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
         tx.setCustomAnimations(R.anim.in_from_right, R.anim.out_to_left);
 
-        if (!isAddSearchFragment) {
-            Bundle bundle = new Bundle();
-            // bundle.putSerializable("reportList", (Serializable) getDatas());
-            searchFragment.setArguments(bundle);
-            tx.add(R.id.id_lines_container, searchFragment, "search_line");
-            isAddSearchFragment = true;
-        } else {
-            tx.show(searchFragment);
-        }
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("reportList", new ArrayList<>(bakeReportList));
+        searchFragment.setArguments(bundle);
+        tx.add(R.id.id_lines_container, searchFragment, "search_line");
+
         tx.commit();
     }
 
@@ -172,7 +171,7 @@ public class HistoryLineActivity extends AppCompatActivity implements View.OnCli
                     Collections.sort(bakeReportList, new Comparator<BakeReport>() {
                         @Override
                         public int compare(BakeReport o1, BakeReport o2) {
-                            return (int)(Utils.date2IdWithTimestamp(o2.getDate()) - Utils.date2IdWithTimestamp(o1.getDate()));
+                            return (int) (Utils.date2IdWithTimestamp(o2.getDate()) - Utils.date2IdWithTimestamp(o1.getDate()));
                         }
                     });
                     // 请求成功

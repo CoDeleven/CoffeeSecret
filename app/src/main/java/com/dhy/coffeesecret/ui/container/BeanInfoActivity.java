@@ -11,12 +11,14 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BeanInfo;
 import com.dhy.coffeesecret.ui.mine.HistoryLineActivity;
 import com.dhy.coffeesecret.utils.T;
 import com.dhy.coffeesecret.utils.UIUtils;
 import com.dhy.coffeesecret.utils.UnitConvert;
+import com.dhy.coffeesecret.utils.Utils;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -133,7 +135,8 @@ public class BeanInfoActivity extends AppCompatActivity {
         infoHandler.setText(beanInfo.getProcess());
         infoSupplier.setText(beanInfo.getSupplier());
         infoPrice.setText("" + beanInfo.getPrice());
-        infoWeight.setText(beanInfo.getStockWeight() + "g");
+        // 数值的单位kg转换为当前单位
+        infoWeight.setText(Utils.getCrspWeightValue(beanInfo.getStockWeight() + "") + MyApplication.weightUnit);
         infoBuyDate.setText(String.format("%1$tY-%1$tm-%1$te", beanInfo.getDate()));
     }
     private BeanInfo newBeanInfo;
@@ -152,7 +155,7 @@ public class BeanInfoActivity extends AppCompatActivity {
                 infoHandler.setText(newBeanInfo.getProcess());
                 infoSupplier.setText(newBeanInfo.getSupplier());
                 infoPrice.setText("" + newBeanInfo.getPrice());
-                infoWeight.setText(newBeanInfo.getStockWeight() + "g");
+                infoWeight.setText(Utils.getCrspWeightValue(newBeanInfo.getStockWeight() + "") + MyApplication.weightUnit);
                 infoBuyDate.setText(String.format("%1$tY-%1$tm-%1$te", newBeanInfo.getDate()));
                 break;
         }

@@ -287,9 +287,13 @@
 
             android:text="快捷标注"/>
 
-        <Button
+        <ImageButton
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_start_bg"
             android:id="@+id/id_baking_start"
-            style="@style/bakingOperator"
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="开始"/>
     </RelativeLayout>
 </LinearLayout>

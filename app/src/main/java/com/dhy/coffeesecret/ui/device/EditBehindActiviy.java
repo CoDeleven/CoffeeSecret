@@ -30,6 +30,7 @@ import com.dhy.coffeesecret.pojo.BeanInfo;
 import com.dhy.coffeesecret.pojo.BeanInfoSimple;
 import com.dhy.coffeesecret.utils.HttpUtils;
 import com.dhy.coffeesecret.utils.SettingTool;
+import com.dhy.coffeesecret.utils.T;
 import com.dhy.coffeesecret.utils.URLs;
 import com.dhy.coffeesecret.utils.Utils;
 import com.dhy.coffeesecret.views.CircleSeekBar;
@@ -102,7 +103,7 @@ public class EditBehindActiviy extends AppCompatActivity implements CircleSeekBa
         mSeekBar.setOnSeekBarChangeListener(this);
         init();
         unit = SettingTool.getConfig(this).getWeightUnit();
-        cookedWeight.setHint("请填写熟豆重量，此处单位为" + unit);
+        cookedWeight.setHint("当前生豆为"+ proxy.getRawBeanWeight() + MyApplication.weightUnit);
 
         generateItem();
         generateBean();
@@ -158,7 +159,12 @@ public class EditBehindActiviy extends AppCompatActivity implements CircleSeekBa
 
         String weight = cookedWeight.getText().toString();
         if (!"".equals(weight) && weight != null) {
-            proxy.setCookedBeanWeight(Utils.getReversed2DefaultWeight(Float.parseFloat(weight) + ""));
+            float defaultWeight = Utils.getReversed2DefaultWeight(Float.parseFloat(weight) + "");
+            if(defaultWeight > proxy.getRawBeanWeight()){
+                T.showShort(this, "填写不大于生豆重量的数值...");
+                return;
+            }
+            proxy.setCookedBeanWeight(defaultWeight);
         } else {
             proxy.setCookedBeanWeight(0);
         }
@@ -179,9 +185,6 @@ public class EditBehindActiviy extends AppCompatActivity implements CircleSeekBa
             public void run() {
                 try {
                     HttpUtils.execute(URLs.ADD_BAKE_REPORT, proxy);
-                    // 先如此使用着,id这个问题需要得到解决
-                    // ((MyApplication) getApplication()).setUrl(URLs.GET_ALL_BAKE_REPORT);
-                    // ((MyApplication) getApplication()).initMapFromServer(BakeReport.class);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

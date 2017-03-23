@@ -263,8 +263,6 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
     @Override
     public void onStart() {
         super.onStart();
-        // 默认每次重启不准备
-        hasPrepared = false;
 
         // 清空上一次的beanInfo
         if (beanInfos != null) {
@@ -292,6 +290,12 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
 
     private void showDialogFragment() {
         final BakeDialog dialogFragment = new BakeDialog();
+        Bundle bundle = new Bundle();
+        if(beanInfos != null){
+            bundle.putSerializable("beanInfos", new ArrayList<>(beanInfos));
+        }
+        dialogFragment.setArguments(bundle);
+
         dialogFragment.setBeanInfosListener(new BakeDialog.OnBeaninfosConfirmListener() {
             @Override
             public void setBeanInfos(List<BeanInfoSimple> beanInfos) {
@@ -357,6 +361,7 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
                     rerangeBean.setVisibility(View.INVISIBLE);
                     startActivity(intent);
                     mBluetoothOperator.setDataChangedListener(null);
+                    hasPrepared = false;
                 }
             });
         } else {
@@ -375,6 +380,7 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
 
     @OnClick(R.id.id_rerange_bean)
     public void onRerange(View view) {
+        showDialogFragment();
     }
 
     @Override

@@ -23,7 +23,7 @@ public class FragmentTool {
         this.fragmentManager = fragmentManager;
     }
 
-    public static FragmentTool getFragmentToolInstance(Context context) {
+    public static FragmentTool  getFragmentToolInstance(Context context) {
         if (!managerMap.containsKey(context)) {
             managerMap.put(context, new FragmentTool(((FragmentActivity) context).getSupportFragmentManager()));
         }

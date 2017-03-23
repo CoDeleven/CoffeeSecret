@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BeanInfo;
 import com.dhy.coffeesecret.utils.SettingTool;
@@ -74,7 +75,7 @@ public class BeanListAdapter extends RecyclerView.Adapter<BeanListAdapter.BeanLi
         }
         holder.beanName.setText(beaninfo.getName());
         holder.beanSubName.setText(beaninfo.getCountry() + "-" + beaninfo.getArea() + "-" + beaninfo.getManor() + "-" + beaninfo.getLevel());
-        holder.beanWeight.setText(beaninfo.getStockWeight() + SettingTool.getConfig(context).getWeightUnit());
+        holder.beanWeight.setText(Utils.getCrspWeightValue(beaninfo.getStockWeight() + "") + MyApplication.weightUnit);
         holder.itemBeanLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

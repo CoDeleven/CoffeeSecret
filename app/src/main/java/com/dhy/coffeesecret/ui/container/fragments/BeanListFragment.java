@@ -124,10 +124,7 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
         beanListAdapter = new BeanListAdapter(context, coffeeBeanInfos, new BeanListAdapter.OnItemClickListener() {
             @Override
             public void onItemClicked(int position) {
-                Intent intent = new Intent(context, BeanInfoActivity.class);
-                intent.putExtra("beanInfo", coffeeBeanInfos.get(position));
-                startActivityForResult(intent, position);
-                getActivity().overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
+                hook(coffeeBeanInfos.get(position));
             }
         });
 
@@ -161,6 +158,14 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
                 }
             }
         });
+    }
+
+    // 钩子函数，时间紧急，使用继承
+    public void hook(BeanInfo beanInfo){
+        Intent intent = new Intent(context, BeanInfoActivity.class);
+        intent.putExtra("beanInfo", beanInfo);
+        startActivityForResult(intent, 1);
+        getActivity().overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
     }
 
     @TargetApi(Build.VERSION_CODES.CUPCAKE)
