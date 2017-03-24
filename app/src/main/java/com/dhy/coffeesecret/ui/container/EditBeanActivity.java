@@ -27,6 +27,7 @@ import com.dhy.coffeesecret.pojo.BeanInfo;
 import com.dhy.coffeesecret.utils.HttpUtils;
 import com.dhy.coffeesecret.utils.SettingTool;
 import com.dhy.coffeesecret.utils.T;
+import com.dhy.coffeesecret.utils.UIUtils;
 import com.dhy.coffeesecret.utils.URLs;
 import com.dhy.coffeesecret.utils.Utils;
 
@@ -126,9 +127,8 @@ public class EditBeanActivity extends AppCompatActivity {
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         ButterKnife.bind(this);
-
+        UIUtils.steepToolBar(this);
         mContext = EditBeanActivity.this;
-
         initParams();
         init();
     }

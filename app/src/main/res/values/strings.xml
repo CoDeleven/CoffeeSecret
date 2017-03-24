@@ -88,6 +88,6 @@
     <string name="max_score">评分最高</string>
     <string name="min_score">评分最低</string>
     <string name="early_cupping">最早的杯测</string>
-    <string name="later_cupping">最晚的杯测</string>
+    <string name="later_cupping">最新的杯测</string>
 
 </resources>

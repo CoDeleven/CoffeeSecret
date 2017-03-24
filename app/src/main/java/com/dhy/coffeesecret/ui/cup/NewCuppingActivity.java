@@ -304,7 +304,7 @@ public class NewCuppingActivity extends AppCompatActivity
         dialog.show();
     }
 
-    /******************
+    /**
      * 点击保存按钮时调用
      */
     @Override

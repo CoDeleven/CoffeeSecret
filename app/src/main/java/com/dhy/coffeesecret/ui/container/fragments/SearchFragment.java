@@ -150,6 +150,16 @@ public class SearchFragment extends Fragment {
                     }
                 }
             });
+        }else if (entrance.equals("select_line")) {
+            bakeReports = new ArrayList<>();
+            bakeReportTemp = (ArrayList<BakeReport>) bundle.getSerializable("reportList");
+            lineListAdapter = new LineListAdapter(mContext, bakeReports, new LineListAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClicked(int position, BakeReport report) {
+                    remove();
+                    resultClickListenr.onItemClick(report);
+                }
+            });
         }
 
     }

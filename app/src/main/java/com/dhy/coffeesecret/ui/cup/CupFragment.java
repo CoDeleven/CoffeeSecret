@@ -175,6 +175,7 @@ public class CupFragment extends Fragment implements View.OnClickListener {
             if (resultCode == RESULT_CODE_ADD) {
                 CuppingInfo info = (CuppingInfo) data.getSerializableExtra(TARGET);
                 mAdapter.add(info);
+                sortList();
             }
         }
     }
@@ -185,6 +186,12 @@ public class CupFragment extends Fragment implements View.OnClickListener {
         mCuppingView = inflater.inflate(R.layout.fragment_cup, container, false);
         mContext = getContext();
         return mCuppingView;
+    }
+
+    private void sortList(){
+        if(cuppingInfos != null&& currentComparator != null){
+            Collections.sort(cuppingInfos,currentComparator);
+        }
     }
 
     private void initSortPopupWindow(LayoutInflater inflater) {
@@ -278,7 +285,7 @@ public class CupFragment extends Fragment implements View.OnClickListener {
             default:
                 break;
         }
-        Collections.sort(cuppingInfos, currentComparator);
+        sortList();
         mAdapter.notifyDataSetChanged();
         mSortWindow.dismiss();
         isShow = false;
@@ -414,7 +421,7 @@ public class CupFragment extends Fragment implements View.OnClickListener {
 
         cuppingInfos.clear();
         cuppingInfos.addAll(temp);
-        Collections.sort(cuppingInfos,currentComparator);
+        sortList();
         mAdapter.notifyDataSetChanged();
     }
 
@@ -461,7 +468,7 @@ public class CupFragment extends Fragment implements View.OnClickListener {
                     }
                     break;
                 case LOADING_SUCCESS:
-                    Collections.sort(cuppingInfos, currentComparator);
+                    sortList();
                     mAdapter.notifyDataSetChanged();
                     sendEmptyMessage(NO_LOADING);
                     break;

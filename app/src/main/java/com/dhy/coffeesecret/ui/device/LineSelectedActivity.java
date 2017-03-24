@@ -20,6 +20,7 @@ import com.dhy.coffeesecret.ui.container.fragments.SearchFragment;
 import com.dhy.coffeesecret.ui.device.handler.LinesSelectorHandler;
 import com.dhy.coffeesecret.ui.mine.adapter.HistoryLineAdapter;
 import com.dhy.coffeesecret.utils.HttpUtils;
+import com.dhy.coffeesecret.utils.UIUtils;
 import com.dhy.coffeesecret.utils.URLs;
 import com.dhy.coffeesecret.utils.Utils;
 import com.dhy.coffeesecret.views.DividerDecoration;
@@ -38,6 +39,8 @@ import java.util.Map;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
+import static android.view.WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION;
+import static android.view.WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
 import static com.dhy.coffeesecret.ui.cup.fragment.BakeInfoFragment.RESULT_CODE_ADD;
 import static com.dhy.coffeesecret.ui.device.handler.LinesSelectorHandler.GET_LINES_INFOS;
 import static com.dhy.coffeesecret.ui.device.handler.LinesSelectorHandler.LOADING_ERROR;
@@ -61,6 +64,7 @@ public class LineSelectedActivity extends AppCompatActivity implements View.OnCl
     private List<BakeReport> bakeReportList = new ArrayList<>();
     private LinesSelectorHandler mHandler;
     private HistoryLineAdapter mAdapter;
+    private boolean isAddSearchFragment = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -68,6 +72,7 @@ public class LineSelectedActivity extends AppCompatActivity implements View.OnCl
         getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         setContentView(R.layout.history_lines);
+        UIUtils.steepToolBar(this);
         ButterKnife.bind(this);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,7 +82,6 @@ public class LineSelectedActivity extends AppCompatActivity implements View.OnCl
         });
         toolbar = (Toolbar) findViewById(R.id.toolbar_device_activtiy);
         init();
-
     }
 
     @Override
@@ -144,12 +148,19 @@ public class LineSelectedActivity extends AppCompatActivity implements View.OnCl
     public void starSearchPage() {
         FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
         tx.setCustomAnimations(R.anim.in_from_right, R.anim.out_to_left);
+        if (searchFragment != null) {
+            isAddSearchFragment = !searchFragment.isRemoved();
+        }
 
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("reportList", new ArrayList<>(bakeReportList));
-        searchFragment.setArguments(bundle);
-        tx.add(R.id.id_lines_container, searchFragment, "search_line");
-
+        if(!isAddSearchFragment){
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("reportList", new ArrayList<>(bakeReportList));
+            searchFragment.setArguments(bundle);
+            tx.add(R.id.id_lines_container, searchFragment, "search_line");
+            isAddSearchFragment = true;
+        }else {
+            tx.show(searchFragment);
+        }
         tx.commit();
     }
 

@@ -22,6 +22,7 @@ import com.dhy.coffeesecret.ui.device.ReportActivity;
 import com.dhy.coffeesecret.ui.device.handler.LinesSelectorHandler;
 import com.dhy.coffeesecret.ui.mine.adapter.HistoryLineAdapter;
 import com.dhy.coffeesecret.utils.HttpUtils;
+import com.dhy.coffeesecret.utils.UIUtils;
 import com.dhy.coffeesecret.utils.URLs;
 import com.dhy.coffeesecret.utils.Utils;
 import com.dhy.coffeesecret.views.DividerDecoration;
@@ -56,7 +57,7 @@ public class HistoryLineActivity extends AppCompatActivity implements View.OnCli
     @Bind(R.id.lines_selected_srh)
     SearchEditText searchBar;
     private HistoryLineAdapter mAdapter;
-    private SearchFragment searchFragment = new SearchFragment();
+    private SearchFragment searchFragment;
     private Toolbar toolbar;
     private boolean isAddSearchFragment = false;
     private List<BakeReport> bakeReportList = new ArrayList<>();
@@ -77,6 +78,8 @@ public class HistoryLineActivity extends AppCompatActivity implements View.OnCli
         });
         toolbar = (Toolbar) findViewById(R.id.toolbar_device_activtiy);
         init();
+        UIUtils.steepToolBar(this);
+
     }
 
     @Override
@@ -138,7 +141,6 @@ public class HistoryLineActivity extends AppCompatActivity implements View.OnCli
             }
         });
 
-
         searchBar.setSearchBarListener(this);
     }
 
@@ -152,11 +154,20 @@ public class HistoryLineActivity extends AppCompatActivity implements View.OnCli
         FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
         tx.setCustomAnimations(R.anim.in_from_right, R.anim.out_to_left);
 
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("reportList", new ArrayList<>(bakeReportList));
-        searchFragment.setArguments(bundle);
-        tx.add(R.id.id_lines_container, searchFragment, "search_line");
+        if (searchFragment != null) {
+            isAddSearchFragment = !searchFragment.isRemoved();
+        }
 
+        if(!isAddSearchFragment){
+            searchFragment = new SearchFragment();
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("reportList", new ArrayList<>(bakeReportList));
+            searchFragment.setArguments(bundle);
+            tx.add(R.id.id_lines_container, searchFragment, "search_line");
+            isAddSearchFragment = true;
+        }else {
+            tx.show(searchFragment);
+        }
         tx.commit();
     }
 
