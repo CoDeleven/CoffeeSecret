@@ -110,9 +110,10 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
             mBluetoothOperator.setDeviceChangedListener(DeviceFragment.this);
 
 
-            // 如果不为空，则尝试直接连接该蓝牙
+            // 如果lastaddress不为空，则尝试直接连接该蓝牙;
             if (!"".equals(lastAddress)) {
                 T.showShort(getContext(), "正在搜索上一次设备:" + lastAddress + "...");
+                // 通过扫描，如果扫描到地址一样的设备，则进行重连
                 mBluetoothOperator.startScanDevice();
             }
         }
@@ -184,33 +185,6 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
                     });
                     dialogBuilder.show();
                     break;
-                case 2:
-                    new Timer().schedule(new TimerTask() {
-                        @Override
-                        public void run() {
-                            progressDialog.dismiss();
-                            dialogBuilder.setMessage("重连失败，请检查蓝牙设备");
-                            dialogBuilder.setPositiveButton("手动连接", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    // TODO 去连接界面
-                                    dialog.dismiss();
-                                }
-                            });
-                            dialogBuilder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            });
-                            Looper.prepare();
-                            dialogBuilder.show();
-                        }
-                    }, 5000);
-                    mBluetoothOperator.reConnect();
-                    progressDialog.setMessage("正在尝试重连...请稍后...");
-                    progressDialog.show();
-                    break;
                 case 3:
 
             }
@@ -241,8 +215,9 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // 获取最后一次连接着的蓝牙设备地址
         lastAddress = SettingTool.getConfig(getContext()).getAddress();
-        // 获取上一次连接的蓝牙设备地址
+        // 判断是否连接过蓝牙，如果尚未连接过，初始化
         if (BluetoothService.BLUETOOTH_OPERATOR == null) {
             Intent intent = new Intent(getContext().getApplicationContext(), BluetoothService.class);
             getContext().getApplicationContext().bindService(intent, conn, Context.BIND_AUTO_CREATE);
@@ -264,16 +239,15 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
     public void onStart() {
         super.onStart();
 
-        // 清空上一次的beanInfo
+        /*// 清空上一次的beanInfo
         if (beanInfos != null) {
             beanInfos.clear();
-        }
-        // 每次回到主界面清楚DialogBeanInfo的static属性
-        DialogBeanInfo.totalWegith = 0;
+        }*/
         // 根据是否准备，更换按钮事件
         switchStatus();
-        // 如果连接
+        // 如果操作对象不为null而且是连接着的状态
         if (BluetoothService.BLUETOOTH_OPERATOR != null && BluetoothService.BLUETOOTH_OPERATOR.isConnected()) {
+            // 重新赋值当前的操作对象
             mBluetoothOperator = BluetoothService.BLUETOOTH_OPERATOR;
             // 更改已连接的视图
             mTextHandler.sendEmptyMessage(0);
@@ -429,17 +403,23 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
     public void notifyDeviceConnectStatus(boolean isConnected, BluetoothDevice device) {
         if (isConnected) {
             mTextHandler.sendEmptyMessage(0);
+            if(mBluetoothOperator.isDataChangedNull()){
+                mBluetoothOperator.setDataChangedListener(this);
+            }
         } else {
             mTextHandler.sendEmptyMessage(1);
-            mShowHandler.sendEmptyMessage(2);
+            // mShowHandler.sendEmptyMessage(2);
         }
     }
 
     @Override
     public void notifyNewDevice(BluetoothDevice device, int rssi) {
-        if (lastAddress.equals(device.getAddress())) {
+        if (device.getAddress().equals(lastAddress)) {
+            Log.e("DeviceFragment", "我");
             T.showShort(getContext(), "正在尝试自动连接...");
+            // 连接蓝牙设备
             mBluetoothOperator.connect(device);
+            // 停止扫描
             mBluetoothOperator.stopScanDevice();
         }
     }

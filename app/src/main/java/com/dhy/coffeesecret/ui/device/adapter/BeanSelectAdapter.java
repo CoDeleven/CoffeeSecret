@@ -47,6 +47,7 @@ public class BeanSelectAdapter extends RecyclerView.Adapter<BeanSelectAdapter.Be
             }
         });
         holder.beanWeight.setText(simple.getUsage());
+        holder.beanIndex.setText(position + "");
         holder.beanWeight.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -87,6 +88,7 @@ public class BeanSelectAdapter extends RecyclerView.Adapter<BeanSelectAdapter.Be
     }
 
     class BeanSelectHandler extends RecyclerView.ViewHolder {
+        private TextView beanIndex;
         private TextView beanName;
         private EditText beanWeight;
         private ImageView delete;
@@ -96,6 +98,7 @@ public class BeanSelectAdapter extends RecyclerView.Adapter<BeanSelectAdapter.Be
             beanName = (TextView) itemView.findViewById(R.id.id_bake_dialog_beanName);
             beanWeight = (EditText) itemView.findViewById(R.id.id_bake_dialog_beanWeight);
             delete = (ImageView) itemView.findViewById(R.id.id_bake_dialog_delete);
+            beanIndex = (TextView)itemView.findViewById(R.id.id_dialog_beanIndex);
         }
     }
 }

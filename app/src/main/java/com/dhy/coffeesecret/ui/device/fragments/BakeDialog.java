@@ -161,7 +161,7 @@ public class BakeDialog extends DialogFragment implements BeanSelectAdapter.MyBu
 
                 beanInfos.add(simpleBean);
                 mListView.getAdapter().notifyDataSetChanged();
-
+                mListView.scrollToPosition(mListView.getAdapter().getItemCount() - 1);
             }
         });
         mListView.setLayoutManager(new LinearLayoutManager(getContext()));

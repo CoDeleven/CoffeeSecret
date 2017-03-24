@@ -23,13 +23,14 @@ import java.util.Map;
  */
 
 public class BluetoothListAdapter extends RecyclerView.Adapter<BluetoothListAdapter.BluetoothViewHolder> {
-    public static String lastConnectedAddress = null;
+    public String lastConnectedAddress = null;
     private Context context;
     private LayoutInflater layoutInflater;
     private List<BluetoothDevice> devices = new ArrayList<>();
     private Map<String, ImageView> rssiTextView = new HashMap<>();
     private Map<String, Integer> rssiMac = new HashMap<>();
     private OnItemClickListener onItemClickListener;
+    private int curIndex;
 
     public BluetoothListAdapter(Context context) {
         this.context = context;
@@ -38,6 +39,7 @@ public class BluetoothListAdapter extends RecyclerView.Adapter<BluetoothListAdap
 
     @Override
     public int getItemCount() {
+        Log.e("BluetoothListAdapter", "获取item" + devices.size());
         return devices.size();
     }
 
@@ -48,7 +50,7 @@ public class BluetoothListAdapter extends RecyclerView.Adapter<BluetoothListAdap
     }
 
     @Override
-    public void onBindViewHolder(final BluetoothViewHolder holder, int position) {
+    public void onBindViewHolder(final BluetoothViewHolder holder, final int position) {
         final BluetoothDevice device = devices.get(position);
         /*
             因ListActivity重新生成，所以判断上一次因连接成功关闭activity时，所设置地址是否和本次地址一致，true则直接默认该设备tick可见
@@ -57,7 +59,7 @@ public class BluetoothListAdapter extends RecyclerView.Adapter<BluetoothListAdap
             // 默认设置tick可见
             holder.tick.setVisibility(View.VISIBLE);
             // 重置该属性,防止重复连接时出现勾圈同存情况
-            lastConnectedAddress = null;
+            // lastConnectedAddress = null;
         }else{
             // 默认设置tick可见
             holder.tick.setVisibility(View.GONE);
@@ -83,6 +85,7 @@ public class BluetoothListAdapter extends RecyclerView.Adapter<BluetoothListAdap
         holder.layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                curIndex = position;
                 onItemClickListener.onItemClick(device, holder.layout);
             }
         });
@@ -94,6 +97,7 @@ public class BluetoothListAdapter extends RecyclerView.Adapter<BluetoothListAdap
 
     public void addDevice(BluetoothDevice device) {
         devices.add(device);
+        Log.e("BluetoothListAdapter", "addDevice:" + device.getAddress());
         notifyDataSetChanged();
     }
 
@@ -106,6 +110,13 @@ public class BluetoothListAdapter extends RecyclerView.Adapter<BluetoothListAdap
         devices.clear();
     }
 
+    /**
+     * 移除当前连接着的设备，并设置连接地址为null，
+     */
+    public void clearConnectedDevice(){
+        devices.remove(curIndex);
+        lastConnectedAddress = null;
+    }
     public interface OnItemClickListener {
         void onItemClick(BluetoothDevice device, View view);
     }
