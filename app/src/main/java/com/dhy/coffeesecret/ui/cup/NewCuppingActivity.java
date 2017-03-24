@@ -108,8 +108,6 @@ public class NewCuppingActivity extends AppCompatActivity
             loadShowInfoView();
         } else if (NEW_CUPPING.equals(viewType)) {
             loadNewCuppingView();
-        } else {
-            // TODO: 2017/2/23
         }
         initParam();
     }

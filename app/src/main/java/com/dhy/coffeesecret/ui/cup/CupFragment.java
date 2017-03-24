@@ -124,7 +124,6 @@ public class CupFragment extends Fragment implements View.OnClickListener {
         mScreenButton = mCuppingView.findViewById(R.id.btn_screen);
         mSortText = (TextView) mCuppingView.findViewById(R.id.sort_type);
         mAdapter = new CuppingListAdapter(mContext, cuppingInfos);
-
         LayoutInflater inflater = getActivity().getLayoutInflater();
         initSortPopupWindow(inflater);
         initScreenPopupWindow(inflater);
@@ -385,6 +384,16 @@ public class CupFragment extends Fragment implements View.OnClickListener {
             searchFragment.setArguments(bundle);
             tx.add(R.id.activity_main, searchFragment, "search_cupping");
             isAddSearchFragment = true;
+
+            searchFragment.setOnResultClickListenr(new SearchFragment.OnResultClickListenr() {
+                @Override
+                public void onItemClick(Serializable serializable) {
+                    Intent intent = new Intent(mContext, NewCuppingActivity.class);
+                    intent.putExtra(TARGET, serializable);
+                    intent.putExtra(VIEW_TYPE, SHOW_INFO);
+                    startActivityForResult(intent, REQ_CODE_EDIT);
+                }
+            });
         } else {
             tx.show(searchFragment);
         }
