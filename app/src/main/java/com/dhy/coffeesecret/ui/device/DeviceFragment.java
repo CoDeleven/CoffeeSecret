@@ -36,19 +36,22 @@ import com.dhy.coffeesecret.utils.FragmentTool;
 import com.dhy.coffeesecret.utils.SettingTool;
 import com.dhy.coffeesecret.utils.T;
 import com.dhy.coffeesecret.utils.Utils;
+import com.dhy.coffeesecret.views.ArcProgress;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+
+// TODO 待重构,重构对象-> 统一符号处理、统一handler处理、统一dialog的生成方式
 
 public class DeviceFragment extends Fragment implements BluetoothService.DeviceChangedListener, BluetoothService.DataChangedListener {
     private static String lastAddress = null;
+
     @Bind(R.id.id_device_prepare_bake)
     Button mPrepareBake;
     boolean hasPrepared = false;
@@ -80,6 +83,19 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
     ImageView accOutwindView;
     @Bind(R.id.id_rerange_bean)
     Button rerangeBean;
+    @Bind(R.id.id_arcprogress_bean)
+    ArcProgress tempratureNeedConvert1;
+    @Bind(R.id.id_arcprogress_inwind)
+    ArcProgress tempratureNeedConvert2;
+    @Bind(R.id.id_arcprogress_outwind)
+    ArcProgress tempratureNeedConvert3;
+    @Bind(R.id.id_bake_accBeanUnit)
+    TextView accBeanUnit;
+    @Bind(R.id.id_bake_accinwindUnit)
+    TextView accInwindunit;
+    @Bind(R.id.id_bake_accoutwindUnit)
+    TextView accOutwindUnit;
+
     private BluetoothService.BluetoothOperator mBluetoothOperator;
     private float beginTemp;
     private boolean isStart = false;
@@ -206,15 +222,15 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
         public boolean handleMessage(Message msg) {
             Bundle bundle = msg.getData();
             Temprature temprature = (Temprature) bundle.getSerializable("temprature");
-            beanTemp.setText(String.format("%1$.2f", temprature.getBeanTemp()));
+            beanTemp.setText(Utils.getCrspTempratureValue(String.format("%1$.2f", temprature.getBeanTemp())) + MyApplication.tempratureUnit);
             // 随时保存开始烘焙的温度
             beginTemp = Utils.get2PrecisionFloat(temprature.getBeanTemp());
             envTemp = Utils.get2PrecisionFloat(temprature.getEnvTemp());
-            inwindTemp.setText(String.format("%1$.2f", temprature.getInwindTemp()));
-            outwindTemp.setText(String.format("%1$.2f", temprature.getOutwindTemp()));
-            accBeanTemp.setText(String.format("%1$.2f", temprature.getAccBeanTemp()));
-            accInwindTemp.setText(String.format("%1$.2f", temprature.getAccInwindTemp()));
-            accOutwindTemp.setText(String.format("%1$.2f", temprature.getAccOutwindTemp()));
+            inwindTemp.setText(Utils.getCrspTempratureValue(temprature.getInwindTemp() + "") + MyApplication.tempratureUnit);
+            outwindTemp.setText(Utils.getCrspTempratureValue(temprature.getOutwindTemp() + "") + MyApplication.tempratureUnit);
+            accBeanTemp.setText(Utils.getCrspTempratureValue(temprature.getAccBeanTemp() + "") + "");
+            accInwindTemp.setText(Utils.getCrspTempratureValue(temprature.getAccInwindTemp() + "") + "");
+            accOutwindTemp.setText(Utils.getCrspTempratureValue(temprature.getAccOutwindTemp() + "") + "");
 
             switchImage(temprature);
 
@@ -247,8 +263,6 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
     @Override
     public void onStart() {
         super.onStart();
-        // 默认每次重启不准备
-        hasPrepared = false;
 
         // 清空上一次的beanInfo
         if (beanInfos != null) {
@@ -270,11 +284,18 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
             mTextHandler.sendEmptyMessage(1);
         }
 
-
+        // 转化单位
+        convertUnit();
     }
 
     private void showDialogFragment() {
         final BakeDialog dialogFragment = new BakeDialog();
+        Bundle bundle = new Bundle();
+        if(beanInfos != null){
+            bundle.putSerializable("beanInfos", new ArrayList<>(beanInfos));
+        }
+        dialogFragment.setArguments(bundle);
+
         dialogFragment.setBeanInfosListener(new BakeDialog.OnBeaninfosConfirmListener() {
             @Override
             public void setBeanInfos(List<BeanInfoSimple> beanInfos) {
@@ -322,22 +343,25 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
                         return;
                     }
                     BakeReportProxy proxy = new BakeReportProxy();
-                    ((MyApplication)getContext().getApplicationContext()).setBakeReport(proxy);
+                    ((MyApplication) getContext().getApplicationContext()).setBakeReport(proxy);
 
                     Intent intent = new Intent(getContext(), BakeActivity.class);
                     proxy.setBeanInfoSimples(beanInfos);
-                    // 以下内容的设置拖迟到烘焙中
-                    // intent.putExtra(BakeActivity.RAW_BEAN_INFO, beanInfos.toArray());
-                    intent.putExtra(BakeActivity.DEVICE_NAME, mBluetoothOperator.getCurDeviceName());
-                    // intent.putExtra(BakeActivity.START_TEMP, beginTemp);
+                    if (beanInfos.size() == 1) {
+                        proxy.setSingleBeanId(beanInfos.get(0).getSingleBeanId());
+                    }
+                    for(BeanInfoSimple simple: beanInfos){
+                        simple.setUsage(Utils.getReversed2DefaultWeight(simple.getUsage()) + "");
+                    }
 
-                    // intent.putExtra(BakeActivity.ENV_TEMP, envTemp);
+                    intent.putExtra(BakeActivity.DEVICE_NAME, mBluetoothOperator.getCurDeviceName());
                     if (referTempratures != null) {
                         intent.putExtra(BakeActivity.ENABLE_REFERLINE, referTempratures);
                     }
                     rerangeBean.setVisibility(View.INVISIBLE);
                     startActivity(intent);
                     mBluetoothOperator.setDataChangedListener(null);
+                    hasPrepared = false;
                 }
             });
         } else {
@@ -352,6 +376,11 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
                 }
             });
         }
+    }
+
+    @OnClick(R.id.id_rerange_bean)
+    public void onRerange(View view) {
+        showDialogFragment();
     }
 
     @Override
@@ -415,10 +444,11 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
         }
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    private void convertUnit() {
+        String tempratureUnit = MyApplication.tempratureUnit;
 
-
+        accBeanUnit.setText(tempratureUnit + "/m");
+        accInwindunit.setText(tempratureUnit + "/m");
+        accOutwindUnit.setText(tempratureUnit + "/m");
     }
 }

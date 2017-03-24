@@ -26,6 +26,7 @@ public class BakeReportProxy {
     private BakeReport bakeReport;
     private Map<Integer, ILineDataSet> lines = new HashMap<>();
     private List<Entry> entriesWithEvents;
+    private float rawBeanWeight;
 
     public BakeReportProxy(BakeReport bakeReport) {
         this.bakeReport = bakeReport;
@@ -160,8 +161,13 @@ public class BakeReportProxy {
 
     public void setBeanInfoSimples(List<BeanInfoSimple> beanInfoSimples) {
         bakeReport.setBeanInfoSimples(beanInfoSimples);
+        computeRawBeanWeight(beanInfoSimples);
     }
-
+    private void computeRawBeanWeight(List<BeanInfoSimple> beanInfoSimples){
+        for(BeanInfoSimple simple:beanInfoSimples){
+            rawBeanWeight += Float.parseFloat(simple.getUsage());
+        }
+    }
     public void setDevelopmentTime(String developmentTime) {
         bakeReport.setDevelopmentTime(developmentTime);
     }
@@ -201,9 +207,18 @@ public class BakeReportProxy {
     public void setBakeReport(BakeReport bakeReport, boolean toDesired){
         this.bakeReport = bakeReport;
         deseriData();
+        computeRawBeanWeight(bakeReport.getBeanInfoSimples());
     }
 
     public List<Float> getTimex(){
         return bakeReport.getTempratureSet().getTimex();
+    }
+
+    public void setSingleBeanId(long id){
+        bakeReport.setBeanId(id);
+    }
+
+    public float getRawBeanWeight() {
+        return rawBeanWeight;
     }
 }

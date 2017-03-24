@@ -1,15 +1,19 @@
 package com.dhy.coffeesecret.ui.container;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -17,18 +21,21 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.bigkoo.pickerview.TimePickerView;
+import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BeanInfo;
 import com.dhy.coffeesecret.utils.HttpUtils;
 import com.dhy.coffeesecret.utils.SettingTool;
 import com.dhy.coffeesecret.utils.T;
 import com.dhy.coffeesecret.utils.URLs;
+import com.dhy.coffeesecret.utils.Utils;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import butterknife.Bind;
@@ -39,7 +46,17 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 public class EditBeanActivity extends AppCompatActivity {
-
+    private static final String TAG = "EditBeanActivity";
+    private static final int COUNTRY = 1234;
+    private static final int AREA = 2345;
+    private static final int MANOR = 3456;
+    private static final int SPECIES = 4567;
+    private static final int BEAN_NAME = 5678;
+    private static final int BEAN_ICON = 6789;
+    private static final int TOAST_1 = 7890;
+    private static final int TOAST_2 = 7899;
+    private static final int TOAST_3 = 7889;
+    private static List<String> species;
     @Bind(R.id.btn_cancel)
     TextView btnCancel;
     @Bind(R.id.title_text)
@@ -82,8 +99,10 @@ public class EditBeanActivity extends AppCompatActivity {
     TextView editBuyDate;
     @Bind(R.id.edit_weight_unit)
     TextView editWeightUnit;
-    private TimePickerView pvTime;
+    @Bind(R.id.id_bean_delete)
+    Button beanDelete;
 
+    private TimePickerView pvTime;
     // 格式化器
     private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
     // 等级
@@ -98,8 +117,7 @@ public class EditBeanActivity extends AppCompatActivity {
     private String drawPath;
     private Context mContext;
     private int id; //bean的id 如果新添加的豆子 id = 0 否则等于原本的id
-
-    private static final String TAG = "EditBeanActivity";
+    private EditBeanHandler mHandler = new EditBeanHandler(EditBeanActivity.this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,21 +162,28 @@ public class EditBeanActivity extends AppCompatActivity {
      * 初始化
      */
     private void init() {
+        // 豆子信息
         BeanInfo beanInfo = (BeanInfo) getIntent().getSerializableExtra("beanInfo");
+
+        // 如果当前豆子信息为空，那么是添加豆子，如果豆子信息不为空，那么是编辑豆子
         if (beanInfo == null) {
             titleText.setText("添加豆子");
             beanInfo = new BeanInfo();
         } else {
             Log.i(TAG, "init: beanInfo" + beanInfo.toString());
             titleText.setText("编辑豆子");
+            beanDelete.setVisibility(View.VISIBLE);
         }
-
 
         if (beanInfo.getDrawablePath() == null || beanInfo.getDrawablePath().trim().equals("")) {
             beanInfo.setDrawablePath(R.drawable.ic_container_add_bean + "");
+            drawPath = R.drawable.ic_container_add_bean + "";
+        }else{
+            drawPath = beanInfo.getDrawablePath();
+            editIcon.setImageResource(Integer.parseInt(drawPath));
         }
         id = beanInfo.getId();
-        editIcon.setImageResource(Integer.parseInt(beanInfo.getDrawablePath()));
+
         editName.setText(beanInfo.getName());
         editCountry.setText(beanInfo.getCountry());
         editArea.setText(beanInfo.getArea());
@@ -166,7 +191,7 @@ public class EditBeanActivity extends AppCompatActivity {
         editAltitude.setText(beanInfo.getAltitude());
         editSpecies.setText(beanInfo.getSpecies());
         editLevel.setSelection(getLevelSelection(beanInfo.getLevel()), true);
-        editWaterContent.setText(beanInfo.getWaterContent() * 100 + "");
+        editWaterContent.setText(beanInfo.getWaterContent() + "");
         editHandler.setSelection(getHandlerSelection(beanInfo.getProcess()), true);
         editAnotherHandler.setEnabled(false);
         editSupplier.setText(beanInfo.getSupplier());
@@ -206,6 +231,12 @@ public class EditBeanActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * 格式化日期
+     *
+     * @param date 日期
+     * @return
+     */
     private String formatDate(Date date) {
         if (date == null) {
             return format.format(new Date());
@@ -213,6 +244,12 @@ public class EditBeanActivity extends AppCompatActivity {
         return format.format(date);
     }
 
+    /**
+     * 解析日期
+     *
+     * @param dateString yyyy-MM-dd HH:ss
+     * @return
+     */
     private Date parseDate(String dateString) {
         try {
             return format.parse(dateString);
@@ -224,7 +261,8 @@ public class EditBeanActivity extends AppCompatActivity {
 
     /**
      * 获取显示的处理方式
-     * @param handler   豆子的处理方式
+     *
+     * @param handler 豆子的处理方式
      * @return 该处理方式在 spinner 中的位置
      */
     private int getHandlerSelection(String handler) {
@@ -241,6 +279,7 @@ public class EditBeanActivity extends AppCompatActivity {
 
     /**
      * 获取初始被选择的等级
+     *
      * @param level 豆子的等级
      * @return 该等级在 spinner 的位置
      */
@@ -257,7 +296,7 @@ public class EditBeanActivity extends AppCompatActivity {
         return 0;
     }
 
-    @OnClick({R.id.btn_cancel, R.id.btn_save, R.id.edit_layout_country, R.id.edit_layout_species, R.id.edit_buy_date})
+    @OnClick({R.id.btn_cancel, R.id.btn_save, R.id.edit_layout_country, R.id.edit_layout_species, R.id.edit_buy_date, R.id.id_bean_delete})
     public void onClick(View view) {
         Intent intent;
         switch (view.getId()) {
@@ -283,9 +322,48 @@ public class EditBeanActivity extends AppCompatActivity {
                 break;
             case R.id.edit_buy_date:
                 pvTime.show();
+                break;
+            case R.id.id_bean_delete:
+                Dialog dialog = new AlertDialog.Builder(mContext).setMessage("是否确认删除").setTitle("删除").setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        deleteBeanInfo();
+                        BeanInfoActivity.getInstance().finish();
+                        EditBeanActivity.this.finish();
+
+                    }
+                }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).create();
+                dialog.show();
+                break;
             default:
                 break;
         }
+    }
+
+    private void deleteBeanInfo() {
+        // 添加新的BeanInfo,因为删除只需要id
+        BeanInfo beanInfo = new BeanInfo();
+        // 单纯添加其id
+        beanInfo.setId(id);
+
+        Log.e(TAG, URLs.getDeleteBeanInfo(id));
+        HttpUtils.enqueue(URLs.getDeleteBeanInfo(id), null, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.e(TAG, "输出错误");
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                mHandler.sendEmptyMessage(TOAST_3);
+            }
+        });
+
     }
 
     private void saveBeanInfo() {
@@ -297,9 +375,11 @@ public class EditBeanActivity extends AppCompatActivity {
         BeanInfo beanInfo = new BeanInfo();
         beanInfo.setId(id);
         beanInfo.setDrawablePath(drawPath);
-        beanInfo.setName(editName.getText().toString());
-        beanInfo.setContinent("亚洲"); // TODO
+        // TODO
+        beanInfo.setContinent(((MyApplication) getApplicationContext()).getContinent(editCountry.getText().toString()));
+        Log.e("EditBeanActivity", beanInfo.getContinent());
         beanInfo.setCountry(editCountry.getText().toString());
+
         beanInfo.setArea(editArea.getText().toString());
         beanInfo.setManor(editManor.getText().toString());
         beanInfo.setAltitude(editAltitude.getText().toString());
@@ -308,15 +388,20 @@ public class EditBeanActivity extends AppCompatActivity {
         beanInfo.setWaterContent(Float.parseFloat(editWaterContent.getText().toString()));
         beanInfo.setSupplier(editSupplier.getText().toString());
         beanInfo.setPrice(Double.parseDouble(editPrice.getText().toString()));
-        beanInfo.setStockWeight(Double.parseDouble(editWeight.getText().toString()));
+        beanInfo.setStockWeight(Utils.getReversed2DefaultWeight(Float.parseFloat(editWeight.getText().toString()) + ""));
         beanInfo.setDate(parseDate(editBuyDate.getText().toString()));
+        // TODO 如果豆名为空字串或者为null，则默认给予国家+豆种格式
+        beanInfo.setName(editName.getText().toString());
+        if ("".equals(beanInfo.getName().trim())) {
+            beanInfo.setName(editCountry.getText() + "" + editSpecies.getText());
+        }
 
         if (currentHandler.equals("其它")) {
             beanInfo.setProcess(editAnotherHandler.getText().toString());
         } else {
             beanInfo.setProcess(currentHandler);
         }
-//        Log.i(TAG, "saveBeanInfo: " + beanInfo.toString());
+
         updateBeanInfo(beanInfo);
         Log.i(TAG, "saveBeanInfo: " + beanInfo.toString());
     }
@@ -379,17 +464,6 @@ public class EditBeanActivity extends AppCompatActivity {
         exitToRight();
     }
 
-    private static final int COUNTRY = 1234;
-    private static final int AREA = 2345;
-    private static final int MANOR = 3456;
-    private static final int SPECIES = 4567;
-    private static final int BEAN_NAME = 5678;
-    private static final int BEAN_ICON = 6789;
-    private static final int TOAST_1 = 7890;
-    private static final int TOAST_2 = 7899;
-    private static final int TOAST_3 = 7889;
-    private EditBeanHandler mHandler = new EditBeanHandler(EditBeanActivity.this);
-
     class EditBeanHandler extends Handler {
 
         private final WeakReference<EditBeanActivity> mActivity;
@@ -403,6 +477,7 @@ public class EditBeanActivity extends AppCompatActivity {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
+            String str = null;
             final EditBeanActivity activity = mActivity.get();
             switch (msg.what) {
                 case COUNTRY:
@@ -416,18 +491,26 @@ public class EditBeanActivity extends AppCompatActivity {
                     activity.editManor.setText((String) msg.obj);
                     break;
                 case SPECIES:
-                    activity.editSpecies.setText((String) msg.obj);
+                    str = (String) msg.obj;
+                    // 取出除第一个字符之后的小类
+                    activity.editSpecies.setText(str.substring(1, str.length()));
+                    // 将这个字符串发给BEAN_ICON进行处理
+                    msg = new Message();
+                    msg.what = BEAN_ICON;
+                    msg.obj = str;
+                    mHandler.sendMessage(msg);
                     break;
                 case BEAN_NAME:
                     country = activity.editCountry.getText().toString();
                     species = activity.editSpecies.getText().toString();
                     break;
                 case BEAN_ICON:
-                    if (species.toLowerCase().contains("a")) {
+                    str = ((String) msg.obj).substring(0, 2);
+                    if (str.toLowerCase().contains("aa")) {
                         drawPath = R.drawable.ic_container_aa + "";
-                    } else if (species.toLowerCase().contains("c")) {
+                    } else if (str.toLowerCase().contains("ac")) {
                         drawPath = R.drawable.ic_container_ac + "";
-                    } else if (species.toLowerCase().contains("e")) {
+                    } else if (str.toLowerCase().contains("ae")) {
                         drawPath = R.drawable.ic_container_ae + "";
                     } else {
                         drawPath = R.drawable.ic_container_al + "";
@@ -440,6 +523,9 @@ public class EditBeanActivity extends AppCompatActivity {
                 case TOAST_2:
                     activity.btnSave.setClickable(true);
                     T.showShort(mContext, "保存失败，请稍后再试");
+                    break;
+                case TOAST_3:
+                    T.showShort(mContext, "删除成功");
                     break;
                 default:
                     break;

@@ -132,10 +132,7 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
         beanListAdapter = new BeanListAdapter(context, coffeeBeanInfos, new BeanListAdapter.OnItemClickListener() {
             @Override
             public void onItemClicked(int position) {
-                Intent intent = new Intent(context, BeanInfoActivity.class);
-                intent.putExtra("beanInfo", coffeeBeanInfos.get(position));
-                startActivityForResult(intent, position);
-                getActivity().overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
+                hook(coffeeBeanInfos.get(position));
             }
         });
 
@@ -169,6 +166,14 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
                 }
             }
         });
+    }
+
+    // 钩子函数，时间紧急，使用继承
+    public void hook(BeanInfo beanInfo){
+        Intent intent = new Intent(context, BeanInfoActivity.class);
+        intent.putExtra("beanInfo", beanInfo);
+        startActivityForResult(intent, 1);
+        getActivity().overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
     }
 
     @TargetApi(Build.VERSION_CODES.CUPCAKE)
@@ -305,12 +310,19 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
                     beanInfoss.set(j, beanInfoss.get(j + 1));
                     beanInfoss.set(j + 1, beanInfo);
                 } else if (a == b) {
-                    char c = Utils.getFirstPinYinLetter(beanInfoss.get(j + 1).getArea()).charAt(1);
-                    char d = Utils.getFirstPinYinLetter(beanInfoss.get(j).getArea()).charAt(1);
-                    if (c < d) {
-                        BeanInfo beanInfo = beanInfoss.get(j);
-                        beanInfoss.set(j, beanInfoss.get(j + 1));
-                        beanInfoss.set(j + 1, beanInfo);
+                    // 如果第一个字符比较是相等的，则比较第二个字符
+
+                    String area1 = beanInfoss.get(j + 1).getArea();
+                    String area2 = beanInfoss.get(j).getArea();
+                    // 如果没有第二个字符，则不进行判断
+                    if (area1.length() >= 2 && area2.length() >= 2) {
+                        char c = Utils.getFirstPinYinLetter(area1).charAt(1);
+                        char d = Utils.getFirstPinYinLetter(area2).charAt(1);
+                        if (c < d) {
+                            BeanInfo beanInfo = beanInfoss.get(j);
+                            beanInfoss.set(j, beanInfoss.get(j + 1));
+                            beanInfoss.set(j + 1, beanInfo);
+                        }
                     }
                 }
             }
@@ -403,22 +415,22 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
         String[] countryArray = null;
         switch (title) {
             case "全部":
-                countryArray = TestData.countryList1;
+                countryArray = getResources().getStringArray(R.array.other);
                 break;
             case "中美":
-                countryArray = TestData.countryList2;
+                countryArray = getResources().getStringArray(R.array.central_america);
                 break;
             case "南美":
-                countryArray = TestData.countryList3;
+                countryArray = getResources().getStringArray(R.array.south_america);
                 break;
             case "大洋":
-                countryArray = TestData.countryList4;
+                countryArray = getResources().getStringArray(R.array.oceania);
                 break;
             case "亚洲":
-                countryArray = TestData.countryList5;
+                countryArray = getResources().getStringArray(R.array.asia);
                 break;
             case "非洲":
-                countryArray = TestData.countryList6;
+                countryArray = getResources().getStringArray(R.array.africa);
                 break;
             default:
                 countryArray = TestData.countryList7;
@@ -483,7 +495,7 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
     private void startScreen() {
         ArrayList<BeanInfo> beanInfos = new ArrayList<>();
         beanInfos.addAll(coffeeBeanInfoTemp);
-        if (screenHandler.equals("全部")  || screenHandler.equals("")) {
+        if ("全部".equals(screenHandler) || "".equals(screenHandler)) {
             coffeeBeanInfos.clear();
             coffeeBeanInfos.addAll(coffeeBeanInfoTemp);
         } else if (!screenHandler.equals("")) {
@@ -562,6 +574,7 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
                     if (refreshBeanList != null && refreshBeanList.isRefreshing()) {
                         activity.refreshBeanList.setRefreshing(false);
                     }
+                    beanListAdapter.notifyDataSetChanged();
                     break;
                 case INIT_POPUP_WINDOW:
                     initCountryPopupWindow();

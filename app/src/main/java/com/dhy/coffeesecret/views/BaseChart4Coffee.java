@@ -5,7 +5,9 @@ import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
+import android.util.Log;
 
+import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.pojo.UniversalConfiguration;
 import com.dhy.coffeesecret.ui.device.formatter.XAxisFormatter4Time;
 import com.dhy.coffeesecret.utils.SettingTool;
@@ -32,7 +34,7 @@ public class BaseChart4Coffee extends LineChart {
 
     public final static int BEANLINE = 0, ACCBEANLINE = 1, INWINDLINE = 2, ACCINWINDLINE = 3, OUTWINDLINE = 4, ACCOUTWINDLINE = 5, REFERLINE = 6;
     private static Map<Integer, String> labels = new HashMap<>();
-    private List<Entry> referEntries;
+
     static {
         labels.put(BEANLINE, "豆温");
         labels.put(ACCBEANLINE, "豆升温");
@@ -43,6 +45,7 @@ public class BaseChart4Coffee extends LineChart {
         labels.put(REFERLINE, "");
     }
 
+    private List<Entry> referEntries;
     private UniversalConfiguration mConfig;
     private Map<Integer, ILineDataSet> lines = new HashMap<>();
     private Handler mHandler = new Handler(new Handler.Callback() {
@@ -126,6 +129,9 @@ public class BaseChart4Coffee extends LineChart {
         // 设置最小值
         leftAxis.setAxisMinimum(0f);
         leftAxis.setAxisMaximum(mConfig.getMaxLeftY());
+
+        Log.e("BaseChart4Coffee", mConfig.getMaxLeftY() + "");
+
         leftAxis.setDrawGridLines(false);
         leftAxis.setGranularityEnabled(true);
         leftAxis.unit = mConfig.getTempratureUnit();
@@ -137,7 +143,7 @@ public class BaseChart4Coffee extends LineChart {
         // 设置最小值
         rightAxis.setAxisMinimum(0f);
         rightAxis.setDrawGridLines(false);
-        rightAxis.unit = mConfig.getTempratureUnit();
+        rightAxis.unit = MyApplication.tempratureUnit;
 
         tempSmoothNumber = mConfig.getTempratureSmooth();
         accTempSmoothNumber = mConfig.getTempratureAccSmooth();
@@ -238,6 +244,17 @@ public class BaseChart4Coffee extends LineChart {
      * @param lineIndex 曲线编号
      */
     public void addOneDataToLine(Entry beanData, int lineIndex) {
+        addOneDataToLine(beanData, lineIndex, true);
+    }
+
+    /**
+     * 防止addNewDatas不重复invalidate, 让其手动刷新
+     *
+     * @param beanData  温度实体
+     * @param lineIndex 曲线编号
+     * @param toRefresh 是否实时刷新
+     */
+    public void addOneDataToLine(Entry beanData, int lineIndex, boolean toRefresh) {
         LineDataSet beanLine = (LineDataSet) lines.get(lineIndex);
         int total = beanLine.getEntryCount();
         float sum = beanData.getY();
@@ -261,7 +278,9 @@ public class BaseChart4Coffee extends LineChart {
         }
         beanData.setY(sum / (max == 0 ? 1 : max));
         beanLine.addEntry(beanData);
-        mHandler.sendMessage(new Message());
+        if (toRefresh) {
+            mHandler.sendMessage(new Message());
+        }
     }
 
     /**
@@ -271,7 +290,9 @@ public class BaseChart4Coffee extends LineChart {
      * @param lineIndex 曲线的编号
      */
     public void addNewDatas(List<Entry> beanDatas, int lineIndex) {
-        ((LineDataSet) lines.get(lineIndex)).setValues(beanDatas);
+        for (Entry entry : beanDatas) {
+            addOneDataToLine(entry, lineIndex, false);
+        }
         // TODO 这里获取的数据也均需要求平均值
         mHandler.sendEmptyMessage(0);
     }
@@ -328,10 +349,10 @@ public class BaseChart4Coffee extends LineChart {
     }
 
     @Override
-    public void clear(){
+    public void clear() {
         super.clear();
         initLine();
-        if(referEntries != null && referEntries.size() > 0){
+        if (referEntries != null && referEntries.size() > 0) {
             enableReferLine(referEntries);
         }
     }

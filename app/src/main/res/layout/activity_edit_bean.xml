@@ -228,7 +228,7 @@
                         android:layout_marginLeft="86dp"
                         android:layout_marginRight="108.5dp"
                         android:background="@null"
-                        android:inputType="text"
+                        android:inputType="numberDecimal"
                         android:text="1000~1300"
                         android:textColor="@color/black"
                         android:textSize="14.5sp" />
@@ -624,6 +624,21 @@
 
             </RelativeLayout>
 
+            <Button
+                android:id="@+id/id_bean_delete"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginBottom="20dp"
+
+                android:background="@drawable/bg_round_radius_danger"
+                android:minHeight="30dp"
+                android:text="删除"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/font_size_primary"
+                android:visibility="gone" />
         </LinearLayout>
 
     </ScrollView>

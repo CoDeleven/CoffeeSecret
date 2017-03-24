@@ -288,7 +288,8 @@
     </style>
 
     <style name="bakingOperator">
-        <item name="android:background">@drawable/bg_round_3radius</item>
+        <item name="android:background">@drawable/bg_round_pricolor_selector</item>
+        <item name="android:textColor">@color/white</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:minHeight">29.25dp</item>

@@ -20,7 +20,7 @@ import com.dhy.coffeesecret.pojo.BakeReportProxy;
 import com.dhy.coffeesecret.pojo.BeanInfoSimple;
 import com.dhy.coffeesecret.ui.cup.LinesSelectedActivity;
 import com.dhy.coffeesecret.ui.device.ReportActivity;
-import com.dhy.coffeesecret.utils.TestData;
+import com.dhy.coffeesecret.utils.Utils;
 import com.dhy.coffeesecret.views.BaseChart4Coffee;
 
 import java.util.List;
@@ -91,9 +91,9 @@ public class BakeInfoFragment extends Fragment implements View.OnClickListener {
                 mBakeReport = (BakeReport) data.getSerializableExtra("report");
                 mOnBakeInfoLoadedListener.onLoaded(mBakeReport);
                 updateUI();
-            }else if(RESULT_CODE_EXIT == resultCode){
+            } else if (RESULT_CODE_EXIT == resultCode) {
                 getActivity().finish();
-                getActivity().overridePendingTransition(R.anim.in_fade,R.anim.out_to_right);
+                getActivity().overridePendingTransition(R.anim.in_fade, R.anim.out_to_right);
             }
         }
 
@@ -111,7 +111,7 @@ public class BakeInfoFragment extends Fragment implements View.OnClickListener {
         super.onActivityCreated(savedInstanceState);
         mButtonBake = (Button) mView.findViewById(R.id.btn_bake);
         mButtonBake.setOnClickListener(this);
-        if(!isNewCupping && mBakeReport == null){
+        if (!isNewCupping && mBakeReport == null) {
             mButtonBake.setEnabled(false);
         }
         mDevTime = (TextView) mView.findViewById(R.id.dev_time);
@@ -171,7 +171,7 @@ public class BakeInfoFragment extends Fragment implements View.OnClickListener {
                 TextView tv_process = (TextView) inflate.findViewById(R.id.tv_process);
 
                 tv_name.setText(simple.getBeanName());
-                tv_use.setText(simple.getUsage());
+                tv_use.setText(Utils.getCrspWeightValue(simple.getUsage()) + MyApplication.weightUnit);
                 tv_country.setText(simple.getCountry());
                 tv_manor.setText(simple.getManor());
                 tv_altitude.setText(simple.getAltitude());
@@ -193,10 +193,10 @@ public class BakeInfoFragment extends Fragment implements View.OnClickListener {
     public void updateUI() {
         if (mBakeReport != null && mDevTime != null) {
             mDevTime.setText(mBakeReport.getDevelopmentTime());
-            mDevRate.setText(mBakeReport.getDevelopmentRate());
-            mEndTemp.setText(mBakeReport.getEndTemperature());
-            mStartTemp.setText(mBakeReport.getStartTemperature());
-            mEnvTime.setText(mBakeReport.getAmbientTemperature());
+            mDevRate.setText(mBakeReport.getDevelopmentRate() + "%");
+            mEndTemp.setText(Utils.getCrspTempratureValue(mBakeReport.getEndTemperature()) + MyApplication.tempratureUnit);
+            mStartTemp.setText(Utils.getCrspTempratureValue(mBakeReport.getStartTemperature()) + MyApplication.tempratureUnit);
+            mEnvTime.setText(Utils.getCrspTempratureValue(mBakeReport.getAmbientTemperature()) + MyApplication.tempratureUnit);
 
             BakeReportProxy proxy = new BakeReportProxy(mBakeReport);
 

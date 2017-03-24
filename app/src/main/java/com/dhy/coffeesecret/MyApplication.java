@@ -2,6 +2,9 @@ package com.dhy.coffeesecret;
 
 import android.app.Application;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.bugtags.library.Bugtags;
 import com.bugtags.library.BugtagsOptions;
@@ -9,6 +12,7 @@ import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.pojo.BakeReportProxy;
 import com.dhy.coffeesecret.pojo.BeanInfo;
 import com.dhy.coffeesecret.pojo.CuppingInfo;
+import com.dhy.coffeesecret.pojo.UniversalConfiguration;
 import com.dhy.coffeesecret.services.BluetoothService;
 import com.dhy.coffeesecret.utils.CacheUtils;
 import com.dhy.coffeesecret.utils.HttpParser;
@@ -42,14 +46,31 @@ public class MyApplication extends Application {
     private static String url = "-1";
     private static CacheUtils cacheUtils;
     private static BakeReportProxy BAKE_REPORT;
+    private static SQLiteDatabase country2Continent;
     private String user;
-
+    public static String weightUnit;
+    public static String tempratureUnit;
     public MyApplication() {
         super();
     }
 
     public static void setUrl(String temp) {
         url = temp;
+    }
+
+    public static SQLiteDatabase getCountry2Continent() {
+        return country2Continent;
+    }
+
+    public static void setCountry2Continent(SQLiteDatabase country2Continent) {
+        MyApplication.country2Continent = country2Continent;
+    }
+
+    public static String getContinent(String country) {
+        Cursor cursor = country2Continent.rawQuery("select continent from countries, continent where country='" + country + "' and countries.parent=continent.id", null);
+        cursor.moveToFirst();
+        String str = cursor.getString(0);
+        return str;
     }
 
     @Override
@@ -79,7 +100,7 @@ public class MyApplication extends Application {
                 extraOptions(Bugtags.BTGConsoleLogCapacityKey, 500).                //设置 log 记录的行数，详见下文
                 build();
         //在这里初始化
-        Bugtags.start("e71c5cd04eea2bf6fd7e179915935981", this, Bugtags.BTGInvocationEventBubble, options);
+        Bugtags.start("e71c5cd04eea2bf6fd7e179915935981", this, Bugtags.BTGInvocationEventNone, options);
     }
 
     // 每次进入应用时进行校验
@@ -106,7 +127,6 @@ public class MyApplication extends Application {
             }
         });*/
     }
-
 
     /**
      * 获取所有的bakeReports
@@ -257,4 +277,9 @@ public class MyApplication extends Application {
         stopService(intent);
     }
 
+    public void initUnit(){
+        UniversalConfiguration config = SettingTool.getConfig(this);
+        weightUnit = config.getWeightUnit();
+        tempratureUnit = config.getTempratureUnit();
+    }
 }

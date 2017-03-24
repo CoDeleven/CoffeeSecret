@@ -46,12 +46,12 @@
         android:background="#FFF"
         android:orientation="vertical">
 
-        <ListView
+        <android.support.v7.widget.RecyclerView
             android:id="@+id/id_bake_dialog_scroll"
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:layout_marginLeft="17.4375dp"
-            android:scrollbars="none"></ListView>
+            android:scrollbars="none"></android.support.v7.widget.RecyclerView>
 
         <Button
             android:id="@+id/id_bake_dialog_add"

@@ -44,7 +44,7 @@ public class BeanInfo implements Serializable {
 	private List<BakeReport> bakeReports;
 
 	// 是否有烘焙报告
-	private boolean hasBakeReports;
+	private boolean hasBakeReports = false;
 
 	public int getId() {
 		return id;

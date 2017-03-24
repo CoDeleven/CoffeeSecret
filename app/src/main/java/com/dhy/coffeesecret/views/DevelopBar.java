@@ -127,7 +127,7 @@ public class DevelopBar extends View {
     }
 
     public String getDevelopRate() {
-        return String.format("%1$.2f", (firstBurstTime * 100) / totalTime) + "%";
+        return String.format("%1$.2f", (firstBurstTime * 100) / totalTime);
     }
 
     public float getDevelopRateWithoutFormat(){

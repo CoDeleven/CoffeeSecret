@@ -21,6 +21,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
+import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.pojo.BeanInfo;
@@ -33,6 +34,8 @@ import com.dhy.coffeesecret.ui.cup.CupFragment;
 import com.dhy.coffeesecret.ui.cup.NewCuppingActivity;
 import com.dhy.coffeesecret.ui.cup.adapter.CuppingListAdapter;
 import com.dhy.coffeesecret.ui.device.ReportActivity;
+import com.dhy.coffeesecret.ui.mine.HistoryLineActivity;
+import com.dhy.coffeesecret.utils.Utils;
 
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
@@ -112,9 +115,9 @@ public class SearchFragment extends Fragment {
             lineListAdapter = new LineListAdapter(mContext, bakeReports, new LineListAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClicked(int position, BakeReport report) {
-                    Intent intent = new Intent(mContext, ReportActivity.class);
-                    intent.putExtra("bakeReport", bakeReports);
+                    ((MyApplication) (getContext().getApplicationContext())).setBakeReport(report);
                     remove();
+                    Intent intent = new Intent(getContext(), ReportActivity.class);
                     startActivity(intent);
                 }
             });
@@ -340,8 +343,7 @@ public class SearchFragment extends Fragment {
 
                         String bakeDate = null;
                         for (BakeReport bakeReport : activity.bakeReportTemp) {
-                            bakeDate = String.format("%1$tY-%1$tm-%1$te", bakeReport.getDate());
-                            if (bakeDate.toLowerCase().contains(msgObj)) {
+                            if (bakeReport.getDate().toLowerCase().contains(msgObj)) {
                                 activity.bakeReports.add(bakeReport);
                             }
                         }

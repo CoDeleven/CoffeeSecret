@@ -83,18 +83,27 @@ public class InfoListAdapter extends RecyclerView.Adapter<InfoListAdapter.InfoLi
         String item = "";
         if (speciesList == null || speciesList.size() == 0) {
             item = infoList.get(position);
+            final String finalItem = item;
             holder.infoTV.setText(item);
+            holder.infoLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onInfoListClickListener.onInfoClicked(finalItem);
+                }
+            });
         } else {
             item = speciesList.get(position).getSpecies();
+            final String finalItem = item;
+            item = item.substring(1, item.length());
             holder.infoTV.setText(item);
+            holder.infoLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onInfoListClickListener.onInfoClicked(finalItem);
+                }
+            });
         }
-        final String finalItem = item;
-        holder.infoLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onInfoListClickListener.onInfoClicked(finalItem);
-            }
-        });
+
     }
 
     @Override

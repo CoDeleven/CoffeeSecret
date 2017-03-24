@@ -30,7 +30,7 @@
             app:layout_widthPercent="70%">
 
             <TextView
-                android:id="@+id/list_bean_produceArea"
+                android:id="@+id/list_bean_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/produce_area"
@@ -38,7 +38,7 @@
                 android:textSize="11.5sp"/>
 
             <TextView
-                android:id="@+id/list_bean_manor"
+                android:id="@+id/list_bean_subname"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"

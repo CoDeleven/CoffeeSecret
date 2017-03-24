@@ -112,6 +112,7 @@
                             android:textSize="19sp" />
 
                         <TextView
+                            android:id="@+id/id_bake_accBeanUnit"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="bottom"
@@ -268,6 +269,7 @@
                             android:textSize="11.25sp" />
 
                         <TextView
+                            android:id="@+id/id_bake_accinwindUnit"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="bottom"
@@ -380,6 +382,7 @@
                             android:textSize="11.25sp" />
 
                         <TextView
+                            android:id="@+id/id_bake_accoutwindUnit"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="bottom"

@@ -11,6 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.pojo.BeanInfo;
@@ -18,6 +19,7 @@ import com.dhy.coffeesecret.ui.mine.HistoryLineActivity;
 import com.dhy.coffeesecret.utils.T;
 import com.dhy.coffeesecret.utils.UIUtils;
 import com.dhy.coffeesecret.utils.UnitConvert;
+import com.dhy.coffeesecret.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -67,7 +69,7 @@ public class BeanInfoActivity extends AppCompatActivity {
     ImageView btnEdit;
     private float editButtonTrans;
     private BeanInfo beanInfo;
-
+    private static BeanInfoActivity infoActivity;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,6 +79,7 @@ public class BeanInfoActivity extends AppCompatActivity {
         UIUtils.steepToolBar(this);
         beanInfo = (BeanInfo) getIntent().getSerializableExtra("beanInfo");
         init();
+        infoActivity = this;
     }
 
     @Override
@@ -123,17 +126,20 @@ public class BeanInfoActivity extends AppCompatActivity {
             return;
         }
 
-        beanName.setText(beanInfo.getCountry() + beanInfo.getSpecies());
+        // beanName.setText(beanInfo.getCountry() + beanInfo.getSpecies());
+        // TODO 可以自定义豆名，默认豆名以国家+豆种形式呈现
+        beanName.setText(beanInfo.getName());
         infoArea.setText(beanInfo.getArea());
         infoManor.setText(beanInfo.getManor());
         infoAltitude.setText(beanInfo.getAltitude());
         infoSpecies.setText(beanInfo.getSpecies());
         infoLevel.setText(beanInfo.getLevel());
-        infoWaterContent.setText(beanInfo.getWaterContent() * 100 + "%");
+        infoWaterContent.setText(beanInfo.getWaterContent() + "%");
         infoHandler.setText(beanInfo.getProcess());
         infoSupplier.setText(beanInfo.getSupplier());
         infoPrice.setText("" + beanInfo.getPrice());
-        infoWeight.setText(beanInfo.getStockWeight() + "g");
+        // 数值的单位kg转换为当前单位
+        infoWeight.setText(Utils.getCrspWeightValue(beanInfo.getStockWeight() + "") + MyApplication.weightUnit);
         infoBuyDate.setText(String.format("%1$tY-%1$tm-%1$te", beanInfo.getDate()));
         btnCurve.setEnabled(beanInfo.hasBakeReports());
     }
@@ -144,16 +150,17 @@ public class BeanInfoActivity extends AppCompatActivity {
         switch (resultCode) {
             case RESULT_OK:
                 newBeanInfo = (BeanInfo) data.getSerializableExtra("new_bean_info");
+                beanName.setText(newBeanInfo.getName());
                 infoArea.setText(newBeanInfo.getArea());
                 infoManor.setText(newBeanInfo.getManor());
                 infoAltitude.setText(newBeanInfo.getAltitude());
                 infoSpecies.setText(newBeanInfo.getSpecies());
                 infoLevel.setText(newBeanInfo.getLevel());
-                infoWaterContent.setText(newBeanInfo.getWaterContent() * 100 + "%");
+                infoWaterContent.setText(newBeanInfo.getWaterContent() + "%");
                 infoHandler.setText(newBeanInfo.getProcess());
                 infoSupplier.setText(newBeanInfo.getSupplier());
                 infoPrice.setText("" + newBeanInfo.getPrice());
-                infoWeight.setText(newBeanInfo.getStockWeight() + "g");
+                infoWeight.setText(Utils.getCrspWeightValue(newBeanInfo.getStockWeight() + "") + MyApplication.weightUnit);
                 infoBuyDate.setText(String.format("%1$tY-%1$tm-%1$te", newBeanInfo.getDate()));
                 btnCurve.setEnabled(newBeanInfo.hasBakeReports());
                 break;
@@ -175,5 +182,13 @@ public class BeanInfoActivity extends AppCompatActivity {
         }
         this.finish();
         overridePendingTransition(R.anim.in_from_left, R.anim.out_to_right);
+    }
+
+    /**
+     * 方便删除时关闭本activity
+     * @return
+     */
+    public static BeanInfoActivity getInstance(){
+        return infoActivity;
     }
 }

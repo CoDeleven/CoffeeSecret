@@ -17,7 +17,7 @@ import com.astuetz.PagerSlidingTabStrip;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BeanInfo;
 import com.dhy.coffeesecret.ui.container.EditBeanActivity;
-import com.dhy.coffeesecret.ui.device.fragments.BeanListFragment;
+import com.dhy.coffeesecret.ui.device.fragments.BakeBeanListFragment;
 import com.dhy.coffeesecret.ui.device.fragments.SearchFragment;
 import com.dhy.coffeesecret.views.SearchEditText;
 
@@ -25,7 +25,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DialogBeanSelected extends AppCompatActivity implements BeanListFragment.OnBeanSelectedLinstener, SearchFragment.OnSearchCallBack {
+import static com.dhy.coffeesecret.ui.device.fragments.BakeDialog.SELECT_BEAN;
+
+public class DialogBeanSelected extends AppCompatActivity implements BakeBeanListFragment.OnBeanSelected, SearchFragment.OnSearchCallBack {
 
     private static final String TAG = "DialogBeanSelected";
     private static final int ADD_BEAN = 111;
@@ -36,7 +38,7 @@ public class DialogBeanSelected extends AppCompatActivity implements BeanListFra
     private ViewPager containerPager = null;
     private PagerSlidingTabStrip containerTabs = null;
 
-    private List<BeanListFragment> fragments = null;
+    private List<BakeBeanListFragment> fragments = null;
     private boolean isAddSearchFragment = false;
     private SearchFragment searchFragment;
 
@@ -102,10 +104,8 @@ public class DialogBeanSelected extends AppCompatActivity implements BeanListFra
         fragments = new ArrayList<>();
 
         for (String TITLE : TITLES) {
-            BeanListFragment fragment = new BeanListFragment();
-
-            fragment.setOnBeanSelectedLinstener(this);
-
+            BakeBeanListFragment fragment = new BakeBeanListFragment();
+            fragment.setOnBeanSelected(DialogBeanSelected.this);
             fragment.setTitle(TITLE);
             fragments.add(fragment);
         }
@@ -156,7 +156,7 @@ public class DialogBeanSelected extends AppCompatActivity implements BeanListFra
     public void onSearchCallBack(BeanInfo info) {
         Intent intent = new Intent();
         intent.putExtra("beanInfo", info);
-        setResult(7, intent);
+        setResult(SELECT_BEAN, intent);
         finish();
     }
 
@@ -188,7 +188,7 @@ public class DialogBeanSelected extends AppCompatActivity implements BeanListFra
     public void onBeanSelected(BeanInfo beanInfo) {
         Intent intent = new Intent();
         intent.putExtra("beanInfo", beanInfo);
-        setResult(7, intent);
+        setResult(SELECT_BEAN, intent);
         finish();
     }
 }

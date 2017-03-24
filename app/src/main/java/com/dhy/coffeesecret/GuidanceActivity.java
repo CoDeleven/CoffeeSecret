@@ -2,6 +2,7 @@ package com.dhy.coffeesecret;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -13,9 +14,9 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.dhy.coffeesecret.pojo.Global;
+import com.dhy.coffeesecret.pojo.SQLiteHelper;
 import com.dhy.coffeesecret.utils.SPPrivateUtils;
 
 import java.util.ArrayList;
@@ -46,6 +47,8 @@ public class GuidanceActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         super.setContentView(R.layout.activity_guidance);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+
 
         viewPager = (ViewPager) super.findViewById(R.id.view_pager);
         indicator = (CircleIndicator) super.findViewById(R.id.indicator);
