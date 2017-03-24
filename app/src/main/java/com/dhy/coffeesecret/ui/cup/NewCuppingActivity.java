@@ -108,8 +108,6 @@ public class NewCuppingActivity extends AppCompatActivity
             loadShowInfoView();
         } else if (NEW_CUPPING.equals(viewType)) {
             loadNewCuppingView();
-        } else {
-            // TODO: 2017/2/23
         }
         initParam();
     }
@@ -306,7 +304,7 @@ public class NewCuppingActivity extends AppCompatActivity
         dialog.show();
     }
 
-    /******************
+    /**
      * 点击保存按钮时调用
      */
     @Override

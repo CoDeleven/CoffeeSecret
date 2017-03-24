@@ -4,13 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context="com.dhy.coffeesecret.ui.mine.HistoryLineActivity">
+    android:fitsSystemWindows="true">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar_device_activtiy"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fitsSystemWindows="true"
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize">
 
@@ -36,7 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="right|center_vertical"
             android:background="@android:color/transparent"
-            android:onClick="back"
+            android:onClick="skip"
             android:text="跳过"
             android:textColor="#FFF"
              />

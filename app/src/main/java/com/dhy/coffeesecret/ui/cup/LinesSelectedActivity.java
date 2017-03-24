@@ -27,6 +27,7 @@ import com.dhy.coffeesecret.ui.device.handler.LinesSelectorHandler;
 import com.dhy.coffeesecret.ui.mine.HistoryLineActivity;
 import com.dhy.coffeesecret.ui.mine.adapter.HistoryLineAdapter;
 import com.dhy.coffeesecret.utils.HttpUtils;
+import com.dhy.coffeesecret.utils.UIUtils;
 import com.dhy.coffeesecret.utils.URLs;
 import com.dhy.coffeesecret.utils.Utils;
 import com.dhy.coffeesecret.views.DividerDecoration;
@@ -35,6 +36,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
+import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -51,11 +53,12 @@ import static com.dhy.coffeesecret.ui.device.handler.LinesSelectorHandler.GET_LI
 import static com.dhy.coffeesecret.ui.device.handler.LinesSelectorHandler.LOADING_ERROR;
 import static com.dhy.coffeesecret.ui.device.handler.LinesSelectorHandler.LOADING_SUCCESS;
 
-public class LinesSelectedActivity extends AppCompatActivity implements View.OnClickListener, SearchEditText.SearchBarListener, LinesSelectorHandler.Handling {
+public class LinesSelectedActivity extends AppCompatActivity
+        implements View.OnClickListener, SearchEditText.SearchBarListener, LinesSelectorHandler.Handling, SearchFragment.OnResultClickListenr {
 
     private RecyclerView listView;
     private SearchEditText searchBar;
-    private SearchFragment searchFragment = new SearchFragment();
+    private SearchFragment searchFragment;
     private Toolbar toolbar;
     private boolean isAddSearchFragment = false;
     private List<BakeReport> bakeReportList = new ArrayList<>();
@@ -76,8 +79,7 @@ public class LinesSelectedActivity extends AppCompatActivity implements View.OnC
         mRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.id_swipeRefresh);
         searchBar = (SearchEditText)findViewById(R.id.lines_selected_srh) ;
         init();
-        getWindow().addFlags(FLAG_TRANSLUCENT_STATUS);
-        getWindow().addFlags(FLAG_TRANSLUCENT_NAVIGATION);
+        UIUtils.steepToolBar(this);
     }
 
     @Override
@@ -87,7 +89,7 @@ public class LinesSelectedActivity extends AppCompatActivity implements View.OnC
             tx.hide(searchFragment);
             tx.commit();
         } else {
-            setResult(RESULT_CODE_NONE);
+            setResult(RESULT_CODE_EXIT);
             finish();
         }
     }
@@ -120,10 +122,8 @@ public class LinesSelectedActivity extends AppCompatActivity implements View.OnC
         listView.addItemDecoration(decoration);
         listView.addItemDecoration(new DividerDecoration(this));
 
-
         searchBar.setSearchBarListener(this);
         backButton.setOnClickListener(this);
-
 
         mHandler = new LinesSelectorHandler(this, mRefreshLayout, mAdapter);
         mHandler.setHandling(this);
@@ -154,7 +154,8 @@ public class LinesSelectedActivity extends AppCompatActivity implements View.OnC
 
     }
 
-    public void back(View view) {
+    //点击跳过 跳过曲线选择
+    public void skip(View view) {
         setResult(RESULT_CODE_NONE);
         finish();
         overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
@@ -162,17 +163,36 @@ public class LinesSelectedActivity extends AppCompatActivity implements View.OnC
 
     @Override
     public void starSearchPage() {
+
         FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
         tx.setCustomAnimations(R.anim.in_from_right, R.anim.out_to_left);
 
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("reportList", new ArrayList<>(bakeReportList));
-        searchFragment.setArguments(bundle);
-        tx.add(R.id.id_lines_container, searchFragment, "search_line");
+        if (searchFragment != null) {
+            isAddSearchFragment = !searchFragment.isRemoved();
+        }
+
+        if(!isAddSearchFragment){
+            searchFragment = new SearchFragment();
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("reportList", (ArrayList)bakeReportList);
+            searchFragment.setArguments(bundle);
+            tx.add(R.id.id_lines_container, searchFragment, "select_line");
+            searchFragment.setOnResultClickListenr(this);
+            isAddSearchFragment = true;
+        }else {
+            tx.show(searchFragment);
+        }
 
         tx.commit();
     }
 
+    @Override
+    public void onItemClick(Serializable serializable) {
+        Intent intent = new Intent();
+        intent.putExtra("report", serializable);
+        setResult(RESULT_CODE_ADD, intent);
+        finish();
+    }
 
     @Override
     public void handling() {

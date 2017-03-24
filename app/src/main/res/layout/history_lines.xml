@@ -1,15 +1,17 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:id="@+id/id_lines_container"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/white"
-                tools:context="com.dhy.coffeesecret.ui.mine.HistoryLineActivity">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/id_lines_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:fitsSystemWindows="true"
+    tools:context=".ui.mine.HistoryLineActivity"
+    >
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar_device_activtiy"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize">
 
@@ -21,7 +23,7 @@
             android:layout_gravity="center_horizontal|center_vertical"
             android:text="历史曲线"
             android:textColor="#FFF"
-            android:textSize="20sp"/>
+            android:textSize="20sp" />
 
         <ImageView
             android:id="@+id/id_back"
@@ -31,27 +33,25 @@
             android:background="@android:color/transparent"
             android:src="@drawable/ic_back"
             android:textColor="#FFF"
-            android:textSize="17sp"/>
+            android:textSize="17sp" />
     </android.support.v7.widget.Toolbar>
 
     <com.dhy.coffeesecret.views.SearchEditText
         android:id="@+id/lines_selected_srh"
-        android:cursorVisible="false"
         style="@style/SearchBar"
         android:layout_below="@id/toolbar_device_activtiy"
-        android:layout_margin="10dp">
-    </com.dhy.coffeesecret.views.SearchEditText>
+        android:layout_margin="10dp"
+        android:cursorVisible="false"></com.dhy.coffeesecret.views.SearchEditText>
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/id_swipeRefresh"
-        android:layout_below="@id/lines_selected_srh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@id/lines_selected_srh">
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/id_lines_list"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            >
-        </android.support.v7.widget.RecyclerView>
+            android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
     </android.support.v4.widget.SwipeRefreshLayout>
 </RelativeLayout>

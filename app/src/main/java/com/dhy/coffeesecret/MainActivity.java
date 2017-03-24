@@ -83,7 +83,6 @@ public class MainActivity extends AppCompatActivity {
             mTabLayout.getTabAt(i).setCustomView(getCustomerView(i));
         }
 
-
         mViewPager.setCurrentItem(2);
         // 设置tablayout固定
         mTabLayout.setTabMode(TabLayout.MODE_FIXED);

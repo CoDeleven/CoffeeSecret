@@ -1,5 +1,6 @@
 package com.dhy.coffeesecret.ui.cup.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -7,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -26,6 +28,7 @@ public class InputNameDialog extends DialogFragment {
     private EditText mEditText;
     private Button mConfirm;
     private Button mCancel;
+    private InputMethodManager methodManager;
 
     private OnConfirmListener mOnConfirmListener;
 
@@ -86,7 +89,6 @@ public class InputNameDialog extends DialogFragment {
         dialog.setArguments(args);
         return dialog;
     }
-
 
     public void setOnConfirmClickListener(OnConfirmListener listener){
         this.mOnConfirmListener = listener;

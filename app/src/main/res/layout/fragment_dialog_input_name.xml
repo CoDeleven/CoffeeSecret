@@ -50,6 +50,7 @@
         android:layout_marginBottom="15dp"
         android:paddingLeft="4dp"
         android:paddingRight="2dp"
+        android:focusableInTouchMode="true"
         android:hint="请输入杯测名称"
         android:textColorLink="@color/colorPrimary"
         android:textSize="@dimen/font_size_primary" />

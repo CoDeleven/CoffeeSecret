@@ -51,7 +51,6 @@ public class LinesSelectorHandler extends Handler {
                 }
                 break;
             case LOADING_SUCCESS:
-                T.showShort(mContext, "success");
                 mAdapter.notifyDataSetChanged();
                 sendEmptyMessage(NO_LOADING);
                 break;
