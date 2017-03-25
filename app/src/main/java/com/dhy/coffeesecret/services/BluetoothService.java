@@ -109,9 +109,7 @@ public class BluetoothService extends Service {
         @Override
         public void onDescriptorWrite(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
             Log.e(TAG, "descriptor写入成功");
-
             mHandler.sendMessage(new Message());
-
             startRead();
         }
 
