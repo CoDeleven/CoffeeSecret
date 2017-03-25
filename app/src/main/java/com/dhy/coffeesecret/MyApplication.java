@@ -4,7 +4,6 @@ import android.app.Application;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import com.bugtags.library.Bugtags;
 import com.bugtags.library.BugtagsOptions;
@@ -40,6 +39,8 @@ import static com.dhy.coffeesecret.utils.HttpUtils.getRequest;
  */
 
 public class MyApplication extends Application {
+    public static String weightUnit;
+    public static String tempratureUnit;
     private static Map<String, BeanInfo> beanInfos = new HashMap<>();
     private static Map<String, CuppingInfo> cupInfos = new HashMap<>();
     private static Map<String, BakeReport> bakeReports = new HashMap<>();
@@ -48,8 +49,7 @@ public class MyApplication extends Application {
     private static BakeReportProxy BAKE_REPORT;
     private static SQLiteDatabase country2Continent;
     private String user;
-    public static String weightUnit;
-    public static String tempratureUnit;
+
     public MyApplication() {
         super();
     }
@@ -100,7 +100,7 @@ public class MyApplication extends Application {
                 extraOptions(Bugtags.BTGConsoleLogCapacityKey, 500).                //设置 log 记录的行数，详见下文
                 build();
         //在这里初始化
-        Bugtags.start("e71c5cd04eea2bf6fd7e179915935981", this, Bugtags.BTGInvocationEventNone, options);
+        Bugtags.start("e71c5cd04eea2bf6fd7e179915935981", this, Bugtags.BTGInvocationEventBubble, options);
     }
 
     // 每次进入应用时进行校验
@@ -278,7 +278,7 @@ public class MyApplication extends Application {
         BluetoothService.BLUETOOTH_OPERATOR.disableBluetooth();
     }
 
-    public void initUnit(){
+    public void initUnit() {
         UniversalConfiguration config = SettingTool.getConfig(this);
         weightUnit = config.getWeightUnit();
         tempratureUnit = config.getTempratureUnit();

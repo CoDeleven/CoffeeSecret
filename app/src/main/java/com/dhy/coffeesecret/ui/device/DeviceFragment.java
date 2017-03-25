@@ -345,7 +345,6 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
                 @Override
                 public void onClick(View v) {
                     // 方便测试烘焙过程界面, 暂时隐藏
-                    Log.e("codelevex", "卧槽，准备烘焙");
                     showDialogFragment();
                 }
             });
@@ -415,7 +414,6 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
     @Override
     public void notifyNewDevice(BluetoothDevice device, int rssi) {
         if (device.getAddress().equals(lastAddress)) {
-            Log.e("DeviceFragment", "我");
             T.showShort(getContext(), "正在尝试自动连接...");
             // 连接蓝牙设备
             mBluetoothOperator.connect(device);

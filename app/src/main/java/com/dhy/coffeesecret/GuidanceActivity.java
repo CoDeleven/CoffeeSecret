@@ -17,6 +17,7 @@ import android.widget.ImageView;
 
 import com.dhy.coffeesecret.pojo.Global;
 import com.dhy.coffeesecret.pojo.SQLiteHelper;
+import com.dhy.coffeesecret.utils.ImageHandler;
 import com.dhy.coffeesecret.utils.SPPrivateUtils;
 
 import java.util.ArrayList;
@@ -116,7 +117,9 @@ public class GuidanceActivity extends AppCompatActivity implements View.OnClickL
             for (int i = 0; i < list.get(0).size(); i++) {
                 View view = mLayoutInflater.inflate(R.layout.item_pager_img, null);
                 ImageView pagerImg = (ImageView) view.findViewById(R.id.pager_img);
-                pagerImg.setImageResource(list.get(0).get("imgs_" + i));
+                // pagerImg.setImageResource(list.get(0).get("imgs_" + i));
+                ;
+                pagerImg.setImageBitmap(ImageHandler.decodeSampledBitmapFromResource(getResources(), list.get(0).get("imgs_" + i), getResources().getDisplayMetrics().widthPixels, getResources().getDisplayMetrics().heightPixels));
                 views.add(view);
             }
             View view = mLayoutInflater.inflate(R.layout.item_guidance_last, null);
