@@ -119,7 +119,8 @@ public class LinesColorAdapter extends FootViewAdapter {
         @Override
         public void handleMessage(final Message msg) {
             super.handleMessage(msg);
-            final LinesColor linesColor = linesColorList.get(msg.arg1);
+            final int index = msg.arg1;
+            final LinesColor linesColor = linesColorList.get(index);
             switch (msg.what) {
                 case SHOW_DIALOG:
                     View view = mLayoutInflater.inflate(R.layout.dialog_lines_preview, null);
@@ -148,7 +149,7 @@ public class LinesColorAdapter extends FootViewAdapter {
                         public void onClick(View v) {
                             Message message = new Message();
                             message.what = CHANGE_CHECKED;
-                            message.arg1 = msg.arg1;
+                            message.arg1 = index;
                             mHandler.sendMessage(message);
                             dialog.dismiss();
                         }

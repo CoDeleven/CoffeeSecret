@@ -497,8 +497,8 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
                 BakeReportProxy imm = generateReport();
                 imm.setEndTemp(Utils.get2PrecisionFloat(curBeanEntry.getY()));
                 Intent intent = new Intent(BakeActivity.this, EditBehindActiviy.class);
-                // 停止读取
-                BluetoothService.READABLE = false;
+                /*// 停止读取
+                BluetoothService.READABLE = false;*/
                 // 发送一个bundle来标识是否来自bakeactivity的请求
                 intent.putExtra("status", I_AM_BAKEACTIVITY);
                 startActivity(intent);

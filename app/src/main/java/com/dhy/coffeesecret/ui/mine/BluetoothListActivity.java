@@ -29,7 +29,6 @@ import butterknife.OnClick;
 public class BluetoothListActivity extends AppCompatActivity implements BluetoothListAdapter.OnItemClickListener,
         CompoundButton.OnCheckedChangeListener, BluetoothService.DeviceChangedListener, BluetoothService.ViewControllerListener {
     public static final int DEVICE_CONNECTING = 0, DEVICE_CONNECT_FAILED = 1, DEVICE_CONNECTED = 2;
-    private static BluetoothDevice curDevice = null;
     @Bind(R.id.id_connecting_bluetooth_list)
     RecyclerView devices;
     @Bind(R.id.id_bluetooth_switch)
@@ -98,7 +97,8 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
             // 刷新列表
             adapter.notifyDataSetChanged();
             devices.invalidate();
-
+            // 关闭蓝牙初始化状态
+            adapter.lastConnectedAddress = null;
             // 请求关闭蓝牙设备
             mBluetoothOperator.disableBluetooth();
             // 关闭蓝牙设备后清空已连接的设备状态
@@ -135,12 +135,21 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
         // 设置视图更改器，用于当蓝牙连接成功时，设置勾给相应的条目
         mBluetoothOperator.setViewControllerListener(this);
 
+        // 如果蓝牙已经开启
         if (mBluetoothOperator.isEnable()) {
+            // 打开连接按钮
             switchButton.setChecked(true);
+            // 开始扫描
             mBluetoothOperator.startScanDevice();
-            curDevice = mBluetoothOperator.getBluetoothDevice();
+            // 获取当前连接着的设备
+            BluetoothDevice curDevice = mBluetoothOperator.getBluetoothDevice();
+            // 如果当前连接着的设备是空的，即没连接状态
             if (curDevice != null) {
+                // 获取连接着的设备地址并赋给adapter
                 adapter.lastConnectedAddress = curDevice.getAddress();
+                // 为本数据集合添加数据
+                canConnectDeviceMap.put(curDevice.getAddress(), curDevice);
+                // 为adapter添加该设备
                 adapter.addDevice(curDevice);
             }
         }
@@ -148,6 +157,7 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
 
     @Override
     public void notifyDeviceConnectStatus(boolean isConnected, BluetoothDevice device) {
+        Log.e("BluetoothListActivity", device.getAddress() + ":" + isConnected);
         if (isConnected) {
             // 设置已连接设备
             adapter.lastConnectedAddress = device.getAddress();
@@ -163,7 +173,19 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
             adapter.lastConnectedAddress = null;
             // 设置连接失败状态
             progressViewHandler.sendEmptyMessage(DEVICE_CONNECT_FAILED);
+            // 清理devicemap中连接的设备信息
+            canConnectDeviceMap.remove(device.getAddress());
+            // 清理adapter中的设备信息
+            adapter.clearConnectedDevice();
+
             hasConnected = null;
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    // 每次发现新设备刷新列表
+                    refreshListView();
+                }
+            });
         }
 
     }
@@ -206,7 +228,7 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
     }
 
     @Override
-    public void onItemClick(BluetoothDevice device, View view) {
+    public void onItemClick(final BluetoothDevice device, View view) {
         BluetoothDevice hasConnectedDevice = mBluetoothOperator.getBluetoothDevice();
         if (hasConnectedDevice != null && device != null && device.getAddress().equals(hasConnectedDevice.getAddress())) {
             return;
@@ -223,10 +245,15 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
         // 当前状态是处于正在连接的状态
         progressViewHandler.sendEmptyMessage(DEVICE_CONNECTING);
         // 开始正式请求连接,因为连接是异步回调，不是及时消息,如果此时false，一定不能连接成功
-        if (!mBluetoothOperator.connect(device)) {
-            progressViewHandler.sendEmptyMessage(DEVICE_CONNECT_FAILED);
-            return;
-        }
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (!mBluetoothOperator.connect(device)) {
+                    progressViewHandler.sendEmptyMessage(DEVICE_CONNECT_FAILED);
+                    return;
+                }
+            }
+        });
     }
 
     @Override
@@ -235,8 +262,6 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
         adapter.clearDevices();
         mBluetoothOperator.stopScanDevice();
         progressViewHandler = null;
-        // 重置当前设备
-        curDevice = null;
     }
 
 }

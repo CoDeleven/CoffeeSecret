@@ -9,12 +9,21 @@
         android:orientation="horizontal"
         android:paddingLeft="17.4375dp"
         android:paddingRight="17.4375dp">
-
-        <ImageView
+        <TextView
+            android:id="@+id/id_dialog_beanIndex"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:src="@drawable/ic_bake_dialog_singlebean"/>
+            android:text="0"
+            android:drawablePadding="10dp"
+            android:drawableRight="@drawable/ic_bake_dialog_singlebean"
+            />
+
+        <!--<ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_bake_dialog_singlebean"/>-->
 
         <Button
             android:id="@+id/id_bake_dialog_beanName"

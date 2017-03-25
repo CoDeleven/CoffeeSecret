@@ -9,7 +9,6 @@ import java.io.Serializable;
 public class DialogBeanInfo implements Serializable {
     private BeanInfo beanInfo;
     private float weight;
-    public static float totalWegith = 0;
     public BeanInfo getBeanInfo() {
         return beanInfo;
     }
@@ -24,6 +23,5 @@ public class DialogBeanInfo implements Serializable {
 
     public void setWeight(float weight) {
         this.weight = weight;
-        totalWegith += weight;
     }
 }

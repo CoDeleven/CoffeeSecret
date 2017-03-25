@@ -8,8 +8,8 @@ android {
         applicationId "com.dhy.coffeesecret"
         minSdkVersion 18
         targetSdkVersion 24
-        versionCode 1
-        versionName "0.8.5"
+        versionCode 2
+        versionName "1.0.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             // 设置支持的 SO 库构架
