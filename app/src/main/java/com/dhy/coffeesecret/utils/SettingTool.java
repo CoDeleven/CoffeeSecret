@@ -40,7 +40,7 @@ public class SettingTool {
     private static void setupConfig(Context context) {
         sharedPreferences = context.getSharedPreferences("secret", Context.MODE_PRIVATE);
         mConfig = new UniversalConfiguration();
-        mConfig.setWeightUnit(sharedPreferences.getString("weightUnit", "千克"));
+        mConfig.setWeightUnit(sharedPreferences.getString("weightUnit", "kg"));
         mConfig.setTempratureUnit(sharedPreferences.getString("tempratureUnit", "℃"));
         mConfig.setReferDegree(sharedPreferences.getString("referDegree", "Agtron"));
         mConfig.setQuickStart(sharedPreferences.getBoolean("quickStart", false));

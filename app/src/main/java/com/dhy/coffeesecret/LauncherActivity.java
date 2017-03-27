@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.WindowManager;
 
 import com.dhy.coffeesecret.pojo.Global;
@@ -22,13 +23,13 @@ public class LauncherActivity extends AppCompatActivity {
         public boolean handleMessage(Message msg) {
             Intent intent;
             intent = new Intent(LauncherActivity.this, MainActivity.class);
-           if (SPPrivateUtils.getBoolean(LauncherActivity.this, Global.IS_FIRST_TIME, true)) {
+/*           if (SPPrivateUtils.getBoolean(LauncherActivity.this, Global.IS_FIRST_TIME, true)) {
                intent = new Intent(LauncherActivity.this, GuidanceActivity.class);
            } else if ("".equals(SPPrivateUtils.getString(LauncherActivity.this, "address", ""))) {
                intent = new Intent(LauncherActivity.this, FirstConnectedActivity.class);
            } else {
                intent = new Intent(LauncherActivity.this, MainActivity.class);
-           }
+           }*/
 
             startActivity(intent);
             overridePendingTransition(R.anim.in_fade, R.anim.out_fade);
@@ -54,6 +55,7 @@ public class LauncherActivity extends AppCompatActivity {
         SQLiteOpenHelper helper = new SQLiteHelper(this);
         ((MyApplication) getApplicationContext()).setCountry2Continent(helper.getReadableDatabase());
         ((MyApplication)getApplicationContext()).initUnit();
+        Log.d("LauncherActivity", MyApplication.tempratureUnit + "," + MyApplication.weightUnit);
 
     }
 

@@ -240,7 +240,7 @@ public class BluetoothService extends Service {
         mRunThread.setReadable(true);
         mRunThread.setDataChangedListener(dataChangedListener);
         try {
-            Thread.currentThread().sleep(2000);
+            Thread.currentThread().sleep(500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
