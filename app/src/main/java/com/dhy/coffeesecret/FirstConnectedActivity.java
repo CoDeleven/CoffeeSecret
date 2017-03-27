@@ -176,4 +176,9 @@ public class FirstConnectedActivity extends AppCompatActivity implements Bluetoo
         recyclerView.invalidate();
     }
 
+    public void onClick(View view) {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
 }

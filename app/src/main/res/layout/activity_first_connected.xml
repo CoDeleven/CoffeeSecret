@@ -68,4 +68,16 @@
         android:layout_below="@id/id_fisrt_title"
         android:layout_width="match_parent"
         android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+    <TextView
+        android:id="@+id/skip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="33dp"
+        android:clickable="true"
+        android:onClick="onClick"
+        android:paddingRight="18dp"
+        android:text="跳过"
+        android:textColor="@color/white"
+        android:textSize="21sp" />
 </RelativeLayout>
