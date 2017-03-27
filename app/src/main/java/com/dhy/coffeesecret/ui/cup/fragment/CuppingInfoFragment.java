@@ -195,7 +195,7 @@ public class CuppingInfoFragment extends Fragment implements InputDialogFragment
         }
 
         if (feelScores == null) {
-            feelScores = new float[]{0, 0, 0, 0, 0, 0, 0, 0};
+            feelScores = new float[]{10f, 10f, 10f, 10f, 10f, 10f, 10f, 10f};
             flawScores = new float[]{0, 0, 0, 0, 0, 0};
             isNewCupping = true;
         }
