@@ -134,7 +134,7 @@ public class FirstConnectedActivity extends AppCompatActivity implements Bluetoo
             // 连接成功，结束activity
             Intent intent = new Intent(this, ConnectedActivity.class);
             startActivity(intent);
-
+            finish();
         } else {
             // 确保连接设备为null
             mAdapter.lastConnectedAddress = null;
@@ -176,4 +176,9 @@ public class FirstConnectedActivity extends AppCompatActivity implements Bluetoo
         recyclerView.invalidate();
     }
 
+    public void onClick(View view) {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
 }

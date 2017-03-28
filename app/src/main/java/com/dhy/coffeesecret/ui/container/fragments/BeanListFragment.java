@@ -101,6 +101,8 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
     private boolean isPopupWindowShowing = false;
     private Handler mHandler = new BeanListHandler(this);
 
+    // 因为此处需要用到position，而继承不需要
+    private int curPosition = -1;
     public BeanListFragment() {
         super();
     }
@@ -132,6 +134,7 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
         beanListAdapter = new BeanListAdapter(context, coffeeBeanInfos, new BeanListAdapter.OnItemClickListener() {
             @Override
             public void onItemClicked(int position) {
+                curPosition = position;
                 hook(coffeeBeanInfos.get(position));
             }
         });
@@ -172,7 +175,7 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
     public void hook(BeanInfo beanInfo){
         Intent intent = new Intent(context, BeanInfoActivity.class);
         intent.putExtra("beanInfo", beanInfo);
-        startActivityForResult(intent, 1);
+        startActivityForResult(intent, curPosition);
         getActivity().overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
     }
 

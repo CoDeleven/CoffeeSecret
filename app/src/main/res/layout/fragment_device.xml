@@ -289,7 +289,9 @@
             android:layout_alignParentRight="true"
             android:id="@+id/id_rerange_bean"
             android:text="修改信息"
+            android:textColor="@color/white"
             android:visibility="invisible"
+            android:background="@drawable/bg_modify_round"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <!-- 第三个圈，出风温-->

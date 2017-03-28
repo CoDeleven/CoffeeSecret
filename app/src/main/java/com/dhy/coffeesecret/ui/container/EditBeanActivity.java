@@ -57,6 +57,9 @@ public class EditBeanActivity extends AppCompatActivity {
     private static final int TOAST_1 = 7890;
     private static final int TOAST_2 = 7899;
     private static final int TOAST_3 = 7889;
+    private static final int AREA_NONE = 7755;
+    private static final int SPECIES_NONE = 6644;
+    private static final int LEVEL_NONE = 7425;
     private static List<String> species;
     @Bind(R.id.btn_cancel)
     TextView btnCancel;
@@ -178,7 +181,7 @@ public class EditBeanActivity extends AppCompatActivity {
         if (beanInfo.getDrawablePath() == null || beanInfo.getDrawablePath().trim().equals("")) {
             beanInfo.setDrawablePath(R.drawable.ic_container_add_bean + "");
             drawPath = R.drawable.ic_container_add_bean + "";
-        }else{
+        } else {
             drawPath = beanInfo.getDrawablePath();
             editIcon.setImageResource(Integer.parseInt(drawPath));
         }
@@ -367,9 +370,13 @@ public class EditBeanActivity extends AppCompatActivity {
     }
 
     private void saveBeanInfo() {
-        // TODO
-        if (editArea == null || editManor == null || editWeight.getText().toString().trim().equals("")) {
+        // TODO 判断必填值是否输入
+        /*if (editArea == null || editManor == null || editWeight.getText().toString().trim().equals("")) {
             mHandler.sendEmptyMessage(TOAST_3);
+            return;
+        }*/
+        if (!checkValidation()) {
+            btnSave.setClickable(true);
             return;
         }
         BeanInfo beanInfo = new BeanInfo();
@@ -380,7 +387,14 @@ public class EditBeanActivity extends AppCompatActivity {
         Log.e("EditBeanActivity", beanInfo.getContinent());
         beanInfo.setCountry(editCountry.getText().toString());
 
-        beanInfo.setArea(editArea.getText().toString());
+        // 如果用户没填该项则默认给予一个未知
+        String beanArea = editArea.getText().toString();
+        if ("".equals(beanArea.trim())) {
+            beanInfo.setArea("未知");
+        } else {
+            beanInfo.setArea(beanArea);
+        }
+
         beanInfo.setManor(editManor.getText().toString());
         beanInfo.setAltitude(editAltitude.getText().toString());
         beanInfo.setSpecies(editSpecies.getText().toString());
@@ -464,6 +478,18 @@ public class EditBeanActivity extends AppCompatActivity {
         exitToRight();
     }
 
+    private boolean checkValidation() {
+        if ("".equals(editArea.getText().toString().trim())) {
+            mHandler.sendEmptyMessage(AREA_NONE);
+            return false;
+        }
+        if ("".equals(editSpecies.getText().toString().trim())) {
+            mHandler.sendEmptyMessage(SPECIES_NONE);
+            return false;
+        }
+        return true;
+    }
+
     class EditBeanHandler extends Handler {
 
         private final WeakReference<EditBeanActivity> mActivity;
@@ -526,6 +552,12 @@ public class EditBeanActivity extends AppCompatActivity {
                     break;
                 case TOAST_3:
                     T.showShort(mContext, "删除成功");
+                    break;
+                case AREA_NONE:
+                    T.showShort(mContext, "产地不能为空");
+                    break;
+                case SPECIES_NONE:
+                    T.showShort(mContext, "豆种不能为空");
                     break;
                 default:
                     break;
