@@ -12,7 +12,6 @@
         android:background="@color/colorPrimary"
         android:fitsSystemWindows="true"
         android:orientation="horizontal" />
-
     <RadioGroup
         android:id="@+id/tabs"
         android:layout_width="match_parent"
