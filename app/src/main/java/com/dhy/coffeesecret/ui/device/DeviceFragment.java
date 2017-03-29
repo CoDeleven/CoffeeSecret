@@ -368,7 +368,6 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
         message.setData(bundle);
 
         mHandler.sendMessage(message);
-
     }
 
     private void switchImage(Temprature temprature) {
@@ -407,6 +406,9 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
             }
         } else {
             mTextHandler.sendEmptyMessage(1);
+            while(!mBluetoothOperator.reConnect()){
+
+            }
             // mShowHandler.sendEmptyMessage(2);
         }
     }

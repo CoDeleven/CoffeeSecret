@@ -71,7 +71,7 @@ public class BakeDialog extends DialogFragment implements BeanSelectAdapter.MyBu
     private OnBeaninfosConfirmListener beaninfosConfirmListener;
     private ArrayList<Float> referTempratures;
     private String unit;
-
+    
     public BakeDialog(){
 
     }

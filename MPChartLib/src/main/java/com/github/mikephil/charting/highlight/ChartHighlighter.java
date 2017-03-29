@@ -177,13 +177,16 @@ public class ChartHighlighter<T extends BarLineScatterCandleBubbleDataProvider> 
             return highlights;
 
         for (Entry e : entries) {
-            MPPointD pixels = mChart.getTransformer(
-                    set.getAxisDependency()).getPixelForValues(e.getX(), e.getY());
+            if(!"".equals(e.getEvent().getDescription())){
+                MPPointD pixels = mChart.getTransformer(
+                        set.getAxisDependency()).getPixelForValues(e.getX(), e.getY());
 
-            highlights.add(new Highlight(
-                    e.getX(), e.getY(),
-                    (float) pixels.x, (float) pixels.y,
-                    dataSetIndex, set.getAxisDependency()));
+                highlights.add(new Highlight(
+                        e.getX(), e.getY(),
+                        (float) pixels.x, (float) pixels.y,
+                        dataSetIndex, set.getAxisDependency()));
+            }
+
         }
 
         return highlights;
@@ -241,6 +244,7 @@ public class ChartHighlighter<T extends BarLineScatterCandleBubbleDataProvider> 
     }
 
     protected BarLineScatterCandleBubbleData getData() {
+
         return mChart.getData();
     }
 }

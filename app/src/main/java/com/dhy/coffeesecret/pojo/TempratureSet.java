@@ -118,4 +118,14 @@ public class TempratureSet implements Serializable{
     public void addTimex(float timex) {
         this.timex.add(timex);
     }
+
+    public void clear(){
+        beanTemps.clear();;
+        accBeanTemps.clear();;
+        inwindTemps.clear();
+        accInwindTemps.clear();
+        outwindTemps.clear();
+        accOutwindTemps.clear();
+        timex.clear();
+    }
 }

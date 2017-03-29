@@ -48,6 +48,7 @@ public class BluetoothService extends Service {
     private BluetoothGattCharacteristic mWriter;
     private BluetoothGattCharacteristic mReader;
     private BluetoothDevice mCurDevice;
+    private String lastAddress;
     private int mConnectionState = STATE_DISCONNECTED;
     private DataChangedListener dataChangedListener;
     private DeviceChangedListener deviceChangedListener;
@@ -139,6 +140,7 @@ public class BluetoothService extends Service {
                 mBluetoothGatt.discoverServices();
                 // 设置当前设备
                 mCurDevice = gatt.getDevice();
+                lastAddress = mCurDevice.getAddress();
                 deviceChangedListener.notifyDeviceConnectStatus(true, gatt.getDevice());
             } else if (newState == STATE_DISCONNECTED || newState == STATE_DISCONNECTING) {
                 mConnectionState = STATE_DISCONNECTED;
@@ -240,7 +242,7 @@ public class BluetoothService extends Service {
         mRunThread.setReadable(true);
         mRunThread.setDataChangedListener(dataChangedListener);
         try {
-            Thread.currentThread().sleep(500);
+            Thread.currentThread().sleep(300);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -441,7 +443,7 @@ public class BluetoothService extends Service {
          * @return
          */
         public boolean reConnect() {
-            BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(mCurDevice.getAddress());
+            BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(lastAddress);
             if (device == null) {
                 return false;
             } else {
@@ -556,6 +558,7 @@ public class BluetoothService extends Service {
                 dataReader.setWriteCommand();
                 // 等待dataRead返回数据
                 try {
+                    Log.e(TAG, "读取");
                     while (dataReader.isHandling()) {
                     }
                     Log.d(TAG, this.toString());

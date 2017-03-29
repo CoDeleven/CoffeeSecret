@@ -175,13 +175,14 @@ public class BaseChart4Coffee extends LineChart {
             set.setDrawCircles(true);
         }
 
-        set.setHighLightColor(Color.rgb(244, 117, 117));
+
         set.setDrawValues(false);
         set.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
 
         switch (lineIndex) {
             case BEANLINE:
                 set.setColor(mConfig.getBeanColor());
+                set.setHighLightColor(Color.rgb(244, 117, 117));
                 break;
             case ACCBEANLINE:
                 set.setColor(mConfig.getAccBeanColor());
@@ -309,6 +310,7 @@ public class BaseChart4Coffee extends LineChart {
      * 按照用户设置，初始化曲线,默认显示全部曲线
      */
     public void initLine() {
+        this.setData(null);
         addTempratureLine(BaseChart4Coffee.BEANLINE);
         addTempratureLine(BaseChart4Coffee.INWINDLINE);
         addTempratureLine(BaseChart4Coffee.OUTWINDLINE);

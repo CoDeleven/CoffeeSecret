@@ -12,6 +12,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 
@@ -51,7 +52,6 @@ public class DialogBeanSelected extends AppCompatActivity implements BakeBeanLis
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dialog_bean_selected);
-        ((InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 
         searchBeanET = (SearchEditText) findViewById(R.id.search_bean);
         btnAddBean = (LinearLayout) findViewById(R.id.btn_add_bean);
@@ -60,6 +60,7 @@ public class DialogBeanSelected extends AppCompatActivity implements BakeBeanLis
         initView();
 
         initPagerData();
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
     }
 

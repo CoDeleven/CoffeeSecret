@@ -1,13 +1,13 @@
 package com.dhy.coffeesecret.ui.device;
 
 import android.app.ProgressDialog;
+import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -58,7 +58,7 @@ import static com.dhy.coffeesecret.views.BaseChart4Coffee.OUTWINDLINE;
 import static com.dhy.coffeesecret.views.DevelopBar.AFTER160;
 import static com.dhy.coffeesecret.views.DevelopBar.RAWBEAN;
 
-public class BakeActivity extends AppCompatActivity implements BluetoothService.DataChangedListener, View.OnClickListener, CompoundButton.OnCheckedChangeListener, Other.OnOtherAddListener, FireWindDialog.OnFireWindAddListener {
+public class BakeActivity extends AppCompatActivity implements BluetoothService.DataChangedListener, View.OnClickListener, CompoundButton.OnCheckedChangeListener, Other.OnOtherAddListener, FireWindDialog.OnFireWindAddListener, BluetoothService.DeviceChangedListener {
     public static final String DEVICE_NAME = "com.dhy.coffeesercret.ui.device.BakeActivity.DEVICE_NAME";
     public static final String ENABLE_REFERLINE = "com.dhy.coffeesercret.ui.device.BakeActivity.REFER_LINE";
     public static final int I_AM_BAKEACTIVITY = 123;
@@ -97,6 +97,7 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
     @Bind(R.id.id_baking_start)
     ImageButton mStart;
     private PopupWindow popupWindow;
+    private View popuoOperator;
     private BluetoothService.BluetoothOperator mBluetoothOperator;
     private float lastTime = 0;
     private TextView[] beanTemps = new TextView[2];
@@ -205,6 +206,19 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
         }
     }
 
+    @Override
+    public void notifyDeviceConnectStatus(boolean isConnected, BluetoothDevice device) {
+        if (!isConnected) {
+            while(!BluetoothService.BLUETOOTH_OPERATOR.reConnect()){
+
+            }
+        }
+    }
+
+    @Override
+    public void notifyNewDevice(BluetoothDevice device, int rssi) {
+
+    }
 
     @Override
     public void notifyDataChanged(Temprature temprature) {
@@ -219,7 +233,6 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
 
         lastTime = (System.currentTimeMillis() - startTime) / 1000.0f;
         lastTime = ((int) (lastTime * 100)) / 100.0f;
-
 
 
         curBeanEntry = new Entry(lastTime, Utils.getCrspTempratureValue(tempratures[0] + ""));
@@ -304,6 +317,7 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
             mBluetoothOperator = BluetoothService.BLUETOOTH_OPERATOR;
         }
         mBluetoothOperator.setDataChangedListener(this);
+        mBluetoothOperator.setDeviceChangedListener(this);
         startTime = System.currentTimeMillis();
  /*       if (timer == null) {
             isReading = true;
@@ -365,26 +379,26 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
      */
     private PopupWindow getPopupwindow() {
         if (popupWindow == null) {
-            final View view = getLayoutInflater().inflate(R.layout.bake_lines_operator, null, false);
-            popupWindow = new PopupWindow(view, UnitConvert.dp2px(getResources(), 86), UnitConvert.dp2px(getResources(), 150), true);
+            popuoOperator = getLayoutInflater().inflate(R.layout.bake_lines_operator, null, false);
+            popupWindow = new PopupWindow(popuoOperator, UnitConvert.dp2px(getResources(), 86), UnitConvert.dp2px(getResources(), 150), true);
             popupWindow.setAnimationStyle(R.style.PopupWindowAnimation);
-            view.setOnTouchListener(new View.OnTouchListener() {
+            popuoOperator.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
-                    if (view != null && view.isShown()) {
+                    if (popuoOperator != null && popuoOperator.isShown()) {
                         popupWindow.dismiss();
                     }
                     return false;
                 }
             });
-            view.setBackgroundResource(R.drawable.bg_round_black_border);
+            popuoOperator.setBackgroundResource(R.drawable.bg_round_black_border);
 
-            ((CheckBox) view.findViewById(R.id.id_baking_line_bean)).setOnCheckedChangeListener(this);
-            ((CheckBox) view.findViewById(R.id.id_baking_line_inwind)).setOnCheckedChangeListener(this);
-            ((CheckBox) view.findViewById(R.id.id_baking_line_outwind)).setOnCheckedChangeListener(this);
-            ((CheckBox) view.findViewById(R.id.id_baking_line_accBean)).setOnCheckedChangeListener(this);
-            ((CheckBox) view.findViewById(R.id.id_baking_line_accInwind)).setOnCheckedChangeListener(this);
-            ((CheckBox) view.findViewById(R.id.id_baking_line_accOutwind)).setOnCheckedChangeListener(this);
+            ((CheckBox) popuoOperator.findViewById(R.id.id_baking_line_bean)).setOnCheckedChangeListener(this);
+            ((CheckBox) popuoOperator.findViewById(R.id.id_baking_line_inwind)).setOnCheckedChangeListener(this);
+            ((CheckBox) popuoOperator.findViewById(R.id.id_baking_line_outwind)).setOnCheckedChangeListener(this);
+            ((CheckBox) popuoOperator.findViewById(R.id.id_baking_line_accBean)).setOnCheckedChangeListener(this);
+            ((CheckBox) popuoOperator.findViewById(R.id.id_baking_line_accInwind)).setOnCheckedChangeListener(this);
+            ((CheckBox) popuoOperator.findViewById(R.id.id_baking_line_accOutwind)).setOnCheckedChangeListener(this);
 
         }
         return popupWindow;
@@ -450,11 +464,19 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
         showButton();
         startTime = System.currentTimeMillis();
         chart.clear();
+        set.clear();
         mStart.setVisibility(View.GONE);
         BakeReportProxy bakeReport = ((MyApplication) getApplication()).getBakeReport();
         bakeReport.setStartTemperature(startTemp + "");
         bakeReport.setDate(Utils.data2Timestamp(new Date()));
         bakeReport.setAmbientTemperature(Temprature.getEnvTemp() + "");
+
+        ((CheckBox) popuoOperator.findViewById(R.id.id_baking_line_bean)).setChecked(true);
+        ((CheckBox) popuoOperator.findViewById(R.id.id_baking_line_inwind)).setChecked(true);
+        ((CheckBox) popuoOperator.findViewById(R.id.id_baking_line_outwind)).setChecked(true);
+        ((CheckBox) popuoOperator.findViewById(R.id.id_baking_line_accBean)).setChecked(true);
+        ((CheckBox) popuoOperator.findViewById(R.id.id_baking_line_accInwind)).setChecked(true);
+        ((CheckBox) popuoOperator.findViewById(R.id.id_baking_line_accOutwind)).setChecked(true);
     }
 
     private void addEvent(View v) {
