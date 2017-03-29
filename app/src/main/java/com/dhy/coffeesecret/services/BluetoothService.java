@@ -21,6 +21,8 @@ import android.util.Log;
 import com.dhy.coffeesecret.pojo.Temprature;
 import com.dhy.coffeesecret.utils.Utils;
 
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.UUID;
 
 import static android.bluetooth.BluetoothProfile.STATE_CONNECTED;
@@ -217,6 +219,7 @@ public class BluetoothService extends Service {
             return;
         }
         mBluetoothGatt.disconnect();
+        mBluetoothGatt.close();
     }
 
     // 服务绑定返回唯一的操作对象
@@ -556,12 +559,25 @@ public class BluetoothService extends Service {
         public void run() {
             while (readable) {
                 dataReader.setWriteCommand();
+                Timer waitTime = new Timer();
                 // 等待dataRead返回数据
                 try {
                     Log.e(TAG, "读取");
                     while (dataReader.isHandling()) {
+                        waitTime.schedule(new TimerTask() {
+                            @Override
+                            public void run() {
+                               // 如果3s以后isHanding依然处于true的状态则断开进行重连
+                               if(dataReader.isHandling()) {
+                                   disconnect();
+                                   BLUETOOTH_OPERATOR.reConnect();
+                               }
+                            }
+                        }, 3000);
                     }
-                    Log.d(TAG, this.toString());
+                    // 已经成功，则取消timer
+                    waitTime.cancel();
+
                     dataReader.setHandling(true);
 
                     Thread.currentThread().sleep(sleepTime);

@@ -209,7 +209,7 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
     @Override
     public void notifyDeviceConnectStatus(boolean isConnected, BluetoothDevice device) {
         if (!isConnected) {
-            while(!BluetoothService.BLUETOOTH_OPERATOR.reConnect()){
+            while (!BluetoothService.BLUETOOTH_OPERATOR.reConnect()) {
 
             }
         }
@@ -470,13 +470,14 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
         bakeReport.setStartTemperature(startTemp + "");
         bakeReport.setDate(Utils.data2Timestamp(new Date()));
         bakeReport.setAmbientTemperature(Temprature.getEnvTemp() + "");
-
-        ((CheckBox) popuoOperator.findViewById(R.id.id_baking_line_bean)).setChecked(true);
-        ((CheckBox) popuoOperator.findViewById(R.id.id_baking_line_inwind)).setChecked(true);
-        ((CheckBox) popuoOperator.findViewById(R.id.id_baking_line_outwind)).setChecked(true);
-        ((CheckBox) popuoOperator.findViewById(R.id.id_baking_line_accBean)).setChecked(true);
-        ((CheckBox) popuoOperator.findViewById(R.id.id_baking_line_accInwind)).setChecked(true);
-        ((CheckBox) popuoOperator.findViewById(R.id.id_baking_line_accOutwind)).setChecked(true);
+        if (popuoOperator != null) {
+            ((CheckBox) popuoOperator.findViewById(R.id.id_baking_line_bean)).setChecked(true);
+            ((CheckBox) popuoOperator.findViewById(R.id.id_baking_line_inwind)).setChecked(true);
+            ((CheckBox) popuoOperator.findViewById(R.id.id_baking_line_outwind)).setChecked(true);
+            ((CheckBox) popuoOperator.findViewById(R.id.id_baking_line_accBean)).setChecked(true);
+            ((CheckBox) popuoOperator.findViewById(R.id.id_baking_line_accInwind)).setChecked(true);
+            ((CheckBox) popuoOperator.findViewById(R.id.id_baking_line_accOutwind)).setChecked(true);
+        }
     }
 
     private void addEvent(View v) {
