@@ -41,7 +41,7 @@ public class BluetoothService extends Service {
     public static volatile boolean READABLE = false;
     public static BluetoothService.BluetoothOperator BLUETOOTH_OPERATOR;
     private static ReadTasker mRunThread;
-    private final int sleepTime = 1000;
+    private final int sleepTime = 750;
     private BluetoothManager mBluetoothManager;
     private BluetoothAdapter mBluetoothAdapter;
     private BluetoothGatt mBluetoothGatt;

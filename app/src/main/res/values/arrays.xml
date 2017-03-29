@@ -130,21 +130,47 @@
         <item>日本</item>
         <item>荷兰</item>
     </string-array>
-    
     <string-array name="arabica">
-        <item>aest1</item>
-        <item>best1</item>
-        <item>cest1</item>
-        <item>dest1</item>
-        <item>eest1</item>
-        <item>fest1</item>
+        <item>Java</item>
+        <item>Dilla</item>
+        <item>Deiga</item>
+        <item>Dalle</item>
+        <item>Alghe</item>
+        <item>Agaro</item>
+        <item>Gesha</item>
+        <item>Rume</item>
+        <item>Sudan</item>
+        <item>Kaffa</item>
+        <item>Ennarea</item>
+        <item>Gimma</item>
+        <item>Tafari-kela</item>
+        <item>Rambung</item>
+        <item>S.4</item>
+        <item>S.12</item>
+        <item>USDA</item>
+        <item>Amarello</item>
+        <item>San Ramon</item>
+        <item>Pluma Hidalgo</item>
+        <item>Pache Comum</item>
+        <item>Bergandal</item>
+        <item>Blue Mt.</item>
+        <item>Kent</item>
+        <item>SL-34</item>
+        <item>SL-28</item>
     </string-array>
     <string-array name="robusta">
-        <item>aest1</item>
-        <item>best1</item>
-        <item>cest1</item>
-        <item>dest1</item>
-        <item>eest1</item>
-        <item>fest1</item>
+        <item>Catiomors</item>
+        <item>Tupi</item>
+        <item>Obata</item>
+        <item>Catisic</item>
+        <item>Lempira</item>
+        <item>IAPAR59</item>
+        <item>Colombia</item>
+        <item>Sarchimor</item>
+    </string-array>
+
+    <string-array name="liberica">
+        <item>S288</item>
+        <item>ST95</item>
     </string-array>
 </resources>

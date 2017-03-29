@@ -171,7 +171,7 @@ public class SelectInfoActivity extends AppCompatActivity implements OnQuickSide
                 for (String oneSpecies : TestData.beanList4) {
                     switch (oneSpecies) {
                         case "Arabica":
-                            for (String spec : TestData.beanList5) {
+                            for (String spec : getResources().getStringArray(R.array.arabica)) {
                                 Species species = new Species();
                                 species.setOneSpecies(oneSpecies);
                                 species.setSpecies(spec);
@@ -179,7 +179,7 @@ public class SelectInfoActivity extends AppCompatActivity implements OnQuickSide
                             }
                             break;
                         case "Robusta":
-                            for (String spec : TestData.beanList6) {
+                            for (String spec : getResources().getStringArray(R.array.robusta)) {
                                 Species species = new Species();
                                 species.setOneSpecies(oneSpecies);
                                 species.setSpecies(spec);
@@ -187,7 +187,7 @@ public class SelectInfoActivity extends AppCompatActivity implements OnQuickSide
                             }
                             break;
                         case "Liberica":
-                            for (String spec : TestData.beanList7) {
+                            for (String spec : getResources().getStringArray(R.array.liberica)) {
                                 Species species = new Species();
                                 species.setOneSpecies(oneSpecies);
                                 species.setSpecies(spec);

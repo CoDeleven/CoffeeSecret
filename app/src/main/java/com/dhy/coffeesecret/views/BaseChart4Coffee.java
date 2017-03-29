@@ -11,6 +11,7 @@ import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.pojo.UniversalConfiguration;
 import com.dhy.coffeesecret.ui.device.formatter.XAxisFormatter4Time;
 import com.dhy.coffeesecret.utils.SettingTool;
+import com.dhy.coffeesecret.utils.Utils;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
@@ -280,6 +281,12 @@ public class BaseChart4Coffee extends LineChart {
         beanLine.addEntry(beanData);
         if (toRefresh) {
             mHandler.sendMessage(new Message());
+            if(lineIndex == BEANLINE){
+                // Log.e("BaseChar4Coffee", "getXRange:" + getXRange() + "," + "getXChartMax" + getXChartMax() + "," + "getXChartMin" + getXChartMin());
+                float afterScaleX = (getXRange() / getScaleX());
+                float curPosition = beanData.getX() - (afterScaleX - 5);
+                this.moveViewToX(curPosition);
+            }
         }
     }
 
@@ -291,6 +298,7 @@ public class BaseChart4Coffee extends LineChart {
      */
     public void addNewDatas(List<Entry> beanDatas, int lineIndex) {
         for (Entry entry : beanDatas) {
+            entry.setY(Utils.getCrspTempratureValue(entry.getY() + ""));
             addOneDataToLine(entry, lineIndex, false);
         }
         // TODO 这里获取的数据也均需要求平均值

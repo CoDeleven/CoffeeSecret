@@ -100,7 +100,7 @@ public class MyApplication extends Application {
                 extraOptions(Bugtags.BTGConsoleLogCapacityKey, 500).                //设置 log 记录的行数，详见下文
                 build();
         //在这里初始化
-        Bugtags.start("e71c5cd04eea2bf6fd7e179915935981", this, Bugtags.BTGInvocationEventBubble, options);
+        Bugtags.start("e71c5cd04eea2bf6fd7e179915935981", this, Bugtags.BTGInvocationEventNone, options);
     }
 
     // 每次进入应用时进行校验

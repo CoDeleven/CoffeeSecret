@@ -43,9 +43,9 @@ public class Temprature implements Serializable {
         temp.setEnvTemp(Float.parseFloat(subStr[0]));
 
         if (lastTemprature != null) {
-            temp.setAccBeanTemp(Utils.get2PrecisionFloat(beanTemp - lastTemprature.getBeanTemp()));
-            temp.setAccInwindTemp(Utils.get2PrecisionFloat(inwindTemp - lastTemprature.getInwindTemp()));
-            temp.setAccOutwindTemp(Utils.get2PrecisionFloat(outwindTemp - lastTemprature.getOutwindTemp()));
+            temp.setAccBeanTemp(Utils.get2PrecisionFloat((beanTemp - lastTemprature.getBeanTemp()) * 60));
+            temp.setAccInwindTemp(Utils.get2PrecisionFloat((inwindTemp - lastTemprature.getInwindTemp()) * 60));
+            temp.setAccOutwindTemp(Utils.get2PrecisionFloat((outwindTemp - lastTemprature.getOutwindTemp()) * 60));
         }
         lastTemprature = temp;
         return temp;

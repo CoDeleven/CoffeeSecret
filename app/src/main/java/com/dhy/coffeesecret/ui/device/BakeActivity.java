@@ -63,7 +63,7 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
     public static final String ENABLE_REFERLINE = "com.dhy.coffeesercret.ui.device.BakeActivity.REFER_LINE";
     public static final int I_AM_BAKEACTIVITY = 123;
     private static final int[] LINE_INDEX = {BEANLINE, INWINDLINE, OUTWINDLINE, ACCBEANLINE, ACCINWINDLINE, ACCOUTWINDLINE};
-    private static Thread timer = null;
+    // private static Thread timer = null;
     @Bind(R.id.id_baking_chart)
     BaseChart4Coffee chart;
     @Bind(R.id.id_baking_lineOperator)
@@ -208,6 +208,8 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
 
     @Override
     public void notifyDataChanged(Temprature temprature) {
+        // chart.getHighestVisibleX()
+
         // 温度数组: 0->豆温，1->进风温, 2->出风温, 3->加速豆温, 4->加速进风温, 5->加速出风温
         float[] tempratures = {temprature.getBeanTemp(), temprature.getInwindTemp(),
                 temprature.getOutwindTemp(), temprature.getAccBeanTemp(), temprature.getAccInwindTemp(),
@@ -217,6 +219,8 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
 
         lastTime = (System.currentTimeMillis() - startTime) / 1000.0f;
         lastTime = ((int) (lastTime * 100)) / 100.0f;
+
+
 
         curBeanEntry = new Entry(lastTime, Utils.getCrspTempratureValue(tempratures[0] + ""));
 
@@ -250,6 +254,7 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
         mHandler.sendMessage(msg);
 
         chart.notifyDataSetChanged();
+        mTimer.sendEmptyMessage(0);
     }
 
     @Override
@@ -300,7 +305,7 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
         }
         mBluetoothOperator.setDataChangedListener(this);
         startTime = System.currentTimeMillis();
-        if (timer == null) {
+ /*       if (timer == null) {
             isReading = true;
             timer = new Thread(new Runnable() {
                 @Override
@@ -308,7 +313,7 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
                     while (isReading) {
                         mTimer.sendEmptyMessage(0);
                         try {
-                            Thread.currentThread().sleep(1000);
+                            Thread.currentThread().sleep(1250);
                         } catch (InterruptedException e) {
                             Log.e("BakeActivity", "已经中断");
                             break;
@@ -317,7 +322,7 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
                 }
             });
             timer.start();
-        }
+        }*/
     }
 
     /**
@@ -553,8 +558,8 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
     protected void onDestroy() {
         super.onDestroy();
         isReading = false;
-        timer.interrupt();
-        timer = null;
+        // timer.interrupt();
+        // timer = null;
     }
 
     private BakeReportProxy generateReport() {
