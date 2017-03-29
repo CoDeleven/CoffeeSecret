@@ -20,7 +20,7 @@ public class AccountAdapter extends RecyclerView.Adapter<ItemViewHolder> {
     private List<String> accounts;
     private Context context;
     private OnItemDelete onItemDelete;
-//    private OnItemClick onItemClick;
+    private OnItemClick onItemClick;
 
 
     public AccountAdapter(List<String> accounts,Context context,OnItemDelete onItemDelete) {
@@ -43,7 +43,9 @@ public class AccountAdapter extends RecyclerView.Adapter<ItemViewHolder> {
         holder.accountView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                if(onItemClick != null){
+                    onItemClick.onItemClick(accounts.get(position));
+                }
             }
         });
     }
@@ -57,6 +59,10 @@ public class AccountAdapter extends RecyclerView.Adapter<ItemViewHolder> {
     @Override
     public int getItemCount() {
         return accounts.size();
+    }
+
+    public void setOnItemClick(OnItemClick onItemClick){
+        this.onItemClick = onItemClick;
     }
 
     public interface OnItemDelete {
