@@ -79,7 +79,7 @@ public class MineFragment extends Fragment {
         ButterKnife.unbind(this);
     }
 
-    @OnClick({R.id.attention_layout, R.id.fans_layout, R.id.collection_layout, R.id.mine_my_privacy, R.id.mine_history_line, R.id.mine_settings, R.id.mine_my_device, R.id.mine_about_us,R.id.mine_qr_code})
+    @OnClick({R.id.attention_layout, R.id.fans_layout, R.id.collection_layout, R.id.mine_my_privacy, R.id.mine_history_line, R.id.mine_settings, R.id.mine_my_device, R.id.mine_about_us,R.id.mine_qr_code,R.id.mine_head_img})
     public void onClick(View view) {
         Intent intent;
         switch (view.getId()) {
@@ -107,6 +107,10 @@ public class MineFragment extends Fragment {
                 break;
             case R.id.mine_qr_code:
                 intent = new Intent(mContext,QRCodeActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.mine_head_img:
+                intent = new Intent(mContext,LoginActivity.class);
                 startActivity(intent);
         }
         getActivity().overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);

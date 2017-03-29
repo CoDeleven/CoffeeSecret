@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.dhy.coffeesecret">
 
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -116,15 +116,16 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".MainActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".GuidanceActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".FirstConnectedActivity"
-            android:windowSoftInputMode="adjustPan"></activity>
-        <activity android:name=".ConnectedActivity"></activity>
+            android:windowSoftInputMode="adjustPan" />
+        <activity android:name=".ConnectedActivity" />
         <activity android:name=".ui.mine.QRCodeActivity" />
+        <activity android:name=".ui.mine.LoginActivity"></activity>
     </application>
 
 </manifest>
