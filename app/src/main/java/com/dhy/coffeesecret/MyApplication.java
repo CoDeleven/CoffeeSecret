@@ -68,8 +68,12 @@ public class MyApplication extends Application {
 
     public static String getContinent(String country) {
         Cursor cursor = country2Continent.rawQuery("select continent from countries, continent where country='" + country + "' and countries.parent=continent.id", null);
-        cursor.moveToFirst();
-        String str = cursor.getString(0);
+        String str;
+        if(cursor.moveToFirst()){
+            str = cursor.getString(0);
+        }else{
+            str="其它";
+        }
         return str;
     }
 

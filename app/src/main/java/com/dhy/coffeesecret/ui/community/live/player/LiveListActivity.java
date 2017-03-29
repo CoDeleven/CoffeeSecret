@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -29,6 +31,9 @@ public class LiveListActivity extends AppCompatActivity {
     RelativeLayout activityLiveList;
     @Bind(R.id.title_text)
     TextView titleText;
+    @Bind(R.id.btn_back)
+    ImageView backBtn;
+
 
     private Context context;
     private LiveListAdapter liveListAdapter = null;
@@ -40,17 +45,20 @@ public class LiveListActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         context = LiveListActivity.this;
-
         init();
     }
 
     private void init() {
         titleText.setText("直播列表");
-
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
         LinearLayoutManager manager = new LinearLayoutManager(LiveListActivity.this);
         manager.setOrientation(LinearLayoutManager.VERTICAL);
-
-        final ArrayList<String> list = new ArrayList<String>();
+        final ArrayList<String> list = new ArrayList<>();
         list.add("叶老板正在直播");
         list.add("磊少正在直播");
         list.add("杨大咖正在直播");

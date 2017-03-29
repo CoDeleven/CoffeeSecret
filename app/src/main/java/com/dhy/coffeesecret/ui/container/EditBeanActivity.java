@@ -383,9 +383,11 @@ public class EditBeanActivity extends AppCompatActivity {
         beanInfo.setId(id);
         beanInfo.setDrawablePath(drawPath);
         // TODO
-        beanInfo.setContinent(((MyApplication) getApplicationContext()).getContinent(editCountry.getText().toString()));
+        String country = editCountry.getText().toString();
+        String continent = ((MyApplication) getApplicationContext()).getContinent(country);
+        beanInfo.setContinent(continent);
         Log.e("EditBeanActivity", beanInfo.getContinent());
-        beanInfo.setCountry(editCountry.getText().toString());
+        beanInfo.setCountry(country);
 
         // 如果用户没填该项则默认给予一个未知
         String beanArea = editArea.getText().toString();
