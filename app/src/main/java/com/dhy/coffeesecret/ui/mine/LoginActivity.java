@@ -50,7 +50,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private void init() {
         accountSet = new HashSet<>();
-        accountSet = getSharedPreferences("account", MODE_PRIVATE).getStringSet("account", accountSet);
+        SharedPreferences sharedPreferences = getSharedPreferences("account", MODE_PRIVATE);
+        accountSet = sharedPreferences.getStringSet("account", accountSet);
+        String lastUser = sharedPreferences.getString("last_user", "");
+        usernameView.setText(lastUser);
 
         accounts = new ArrayList<>(accountSet);
         AccountAdapter adapter = new AccountAdapter(accounts, this, new AccountAdapter.OnItemDelete() {
@@ -60,15 +63,31 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 accountSet.remove(s);
                 accounts.clear();
                 accounts.addAll(accountSet);
-                SharedPreferences.Editor edit = getSharedPreferences("account", MODE_PRIVATE).edit();
-                edit.putStringSet("account", accountSet);
+                SharedPreferences preferences = getSharedPreferences("account", MODE_PRIVATE);
+                SharedPreferences.Editor edit = preferences.edit();
+                if(s.equals(preferences.getString("last_user",""))){
+                    edit.remove("last_user");
+                }
+                if(accountSet.size() == 0){
+                    edit.clear();
+                }else {
+                    edit.putStringSet("account", accountSet);
+                }
                 edit.commit();
+                accountWindow.dismiss();
             }
         });
         initPopWindow(adapter);
         clearButton.setOnClickListener(this);
         showButton.setOnClickListener(this);
         usernameView.addTextChangedListener(this);
+        adapter.setOnItemClick(new AccountAdapter.OnItemClick() {
+            @Override
+            public void onItemClick(String str) {
+                usernameView.setText(str);
+                accountWindow.dismiss();
+            }
+        });
     }
 
     private void initPopWindow(AccountAdapter adapter) {
@@ -81,12 +100,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         accountWindow.setBackgroundDrawable(new ColorDrawable());
         accountWindow.setOutsideTouchable(true);
         accountWindow.setFocusable(true);
-//        accountWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
-//            @Override
-//            public void onDismiss() {
-//                isShow = false;
-//            }
-//        });
     }
 
     public void login(View view) {
@@ -94,6 +107,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         accountSet.add(username);
         SharedPreferences.Editor edit = getSharedPreferences("account", MODE_PRIVATE).edit();
         edit.putStringSet("account", accountSet);
+        edit.putString("last_user",username);
         edit.commit();
     }
 

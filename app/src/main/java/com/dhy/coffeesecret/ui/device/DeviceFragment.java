@@ -108,8 +108,6 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
             mBluetoothOperator = (BluetoothService.BluetoothOperator) service;
             mBluetoothOperator.setDataChangedListener(DeviceFragment.this);
             mBluetoothOperator.setDeviceChangedListener(DeviceFragment.this);
-
-
             // 如果lastaddress不为空，则尝试直接连接该蓝牙;
             if (!"".equals(lastAddress)) {
                 T.showShort(getContext(), "正在搜索上一次设备:" + lastAddress + "...");
@@ -308,7 +306,7 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
             mPrepareBake.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (!mBluetoothOperator.isConnected()) {
+                    if (mBluetoothOperator == null || !mBluetoothOperator.isConnected()) {
                         mShowHandler.sendEmptyMessage(0);
                         return;
                     }
