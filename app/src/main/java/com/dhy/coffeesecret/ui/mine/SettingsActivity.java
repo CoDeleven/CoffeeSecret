@@ -154,7 +154,7 @@ public class SettingsActivity extends AppCompatActivity {
                 msg = new Message();
                 msg.what = SHOW_TEXT_DIALOG;
                 msg.arg1 = R.id.refer_degree;
-                msg.obj = new String[]{"Agtron", "Brother", "Candy", "Death"};
+                msg.obj = new String[]{"Agtron"};
                 mHandler.sendMessage(msg);
                 break;
             case R.id.time_shaft:
@@ -295,12 +295,12 @@ public class SettingsActivity extends AppCompatActivity {
                         break;
                     case R.id.temperature_line:
                         max = numberTen.getValue() * 10 + numberSingle.getValue();
-                        textTemperatureLine.setText("每秒的平均数为: " + max);
+                        textTemperatureLine.setText(max + "级");
                         config.setTempratureSmooth(max);
                         break;
                     case R.id.heating_line:
                         max = numberTen.getValue() * 10 + numberSingle.getValue();
-                        textHeatingLine.setText("每秒的平均数为: " + max);
+                        textHeatingLine.setText(max + "级");
                         config.setTempratureAccSmooth(max);
                         break;
                 }

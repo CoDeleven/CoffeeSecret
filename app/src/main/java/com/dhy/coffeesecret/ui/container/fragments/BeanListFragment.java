@@ -29,7 +29,6 @@ import com.bigkoo.quicksidebar.QuickSideBarView;
 import com.bigkoo.quicksidebar.listener.OnQuickSideBarTouchListener;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BeanInfo;
-import com.dhy.coffeesecret.pojo.Global;
 import com.dhy.coffeesecret.ui.container.BeanInfoActivity;
 import com.dhy.coffeesecret.ui.container.adapters.BeanListAdapter;
 import com.dhy.coffeesecret.ui.container.adapters.CountryListAdapter;
@@ -51,13 +50,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.FormBody;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
@@ -103,6 +95,7 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
 
     // 因为此处需要用到position，而继承不需要
     private int curPosition = -1;
+
     public BeanListFragment() {
         super();
     }
@@ -172,7 +165,7 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
     }
 
     // 钩子函数，时间紧急，使用继承
-    public void hook(BeanInfo beanInfo){
+    public void hook(BeanInfo beanInfo) {
         Intent intent = new Intent(context, BeanInfoActivity.class);
         intent.putExtra("beanInfo", beanInfo);
         startActivityForResult(intent, curPosition);
@@ -266,9 +259,10 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
         String[] beanLists = null;
         // beanInfoListJson = TestData.beaninfos;
         ArrayList<BeanInfo> beanInfoss = null;
-        try{
-            beanInfoss = gson.fromJson(beanInfoListJson, new TypeToken<ArrayList<BeanInfo>>() {}.getType());
-        }catch (Exception e){
+        try {
+            beanInfoss = gson.fromJson(beanInfoListJson, new TypeToken<ArrayList<BeanInfo>>() {
+            }.getType());
+        } catch (Exception e) {
             e.printStackTrace();
             Log.i(TAG, "beanInfoListJson" + beanInfoListJson);
             Log.i(TAG, "getBeanInfos: " + beanInfoss);

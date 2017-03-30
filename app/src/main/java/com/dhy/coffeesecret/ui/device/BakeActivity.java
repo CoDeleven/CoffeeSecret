@@ -121,6 +121,7 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
     private Entry curBeanEntry;
     private boolean isFisrtBurstEnd = false;
     private boolean isSecondBurstEnd = false;
+    private Entry fireWindBeanEntry = null;
     private ArrayList<Float> tempratures;
     private TempratureSet set = new TempratureSet();
     // 执行UI操作
@@ -499,11 +500,8 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
                     isFisrtBurstEnd = true;
                     ((TextView) v).setText("一爆结束");
                     return;
-
                 }
-
                 status = true;
-
                 break;
             case R.id.id_baking_secondBurst:
                 if (isSecondBurstEnd) {
@@ -538,11 +536,20 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
             case R.id.id_baking_wind_fire:
                 FireWindDialog fireWind = new FireWindDialog();
                 fireWind.setOnFireWindAddListener(this);
+                // 保存这个时刻的节点
+                fireWindBeanEntry = curBeanEntry;
+                eventRecords.add(fireWindBeanEntry);
+
                 fragmentTool.showDialogFragmen("fireWindFragment", fireWind);
                 break;
             case R.id.id_baking_other:
                 Other other = new Other();
                 other.setOnOtherAddListener(this);
+
+                // 保存这个时刻的节点
+                fireWindBeanEntry = curBeanEntry;
+                eventRecords.add(fireWindBeanEntry);
+
                 fragmentTool.showDialogFragmen("otherFragment", other);
                 break;
         }
@@ -555,12 +562,28 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
 
     @Override
     public void onFireWindChanged(Event event) {
-        updateCurBeanEntryEvent(event);
+        if (event == null) {
+            // 移除事件列表里的firewindbean
+            eventRecords.remove(fireWindBeanEntry);
+            fireWindBeanEntry = null;
+            return;
+        }
+        // updateCurBeanEntryEvent(event);
+        if (fireWindBeanEntry != null) {
+            fireWindBeanEntry.setEvent(event);
+            // 存储事件详情时，最后一个冒号后面是该事件的类别
+            set.addEvent(fireWindBeanEntry.getX() + "", event.getDescription() + ":" + event.getCurStatus());
+        }
+
+
+        chart.invalidate();
+        // 清除引用
+        fireWindBeanEntry = null;
     }
 
     @Override
     public void onDataChanged(Event event) {
-        updateCurBeanEntryEvent(event);
+        onFireWindChanged(event);
     }
 
     @Override

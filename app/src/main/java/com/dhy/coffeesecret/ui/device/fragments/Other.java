@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.dhy.coffeesecret.R;
+import com.dhy.coffeesecret.utils.SettingTool;
 import com.dhy.coffeesecret.utils.UnitConvert;
 import com.github.mikephil.charting.data.Event;
 
@@ -52,6 +53,13 @@ public class Other extends DialogFragment {
                 dismiss();
             }
         });
+        String[] events = SettingTool.getConfig(getContext()).getQuickEvents().split(",");
+        quick1.setText(events[0]);
+        quick2.setText(events[1]);
+        quick3.setText(events[2]);
+        quick4.setText(events[3]);
+        quick5.setText(events[4]);
+
         return view;
     }
 
