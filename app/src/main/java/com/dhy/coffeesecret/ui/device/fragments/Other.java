@@ -17,6 +17,8 @@ import com.dhy.coffeesecret.utils.SettingTool;
 import com.dhy.coffeesecret.utils.UnitConvert;
 import com.github.mikephil.charting.data.Event;
 
+import java.util.List;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -53,12 +55,14 @@ public class Other extends DialogFragment {
                 dismiss();
             }
         });
-        String[] events = SettingTool.getConfig(getContext()).getQuickEvents().split(",");
-        quick1.setText(events[0]);
-        quick2.setText(events[1]);
-        quick3.setText(events[2]);
-        quick4.setText(events[3]);
-        quick5.setText(events[4]);
+        List<String> temp = SettingTool.parse2List(SettingTool.getConfig(getContext()).getQuickEvents());
+        quick1.setText(temp.get(0));
+        quick2.setText(temp.get(1));
+        quick3.setText(temp.get(2));
+        quick4.setText(temp.get(3));
+        quick5.setText(temp.get(4));
+
+
 
         return view;
     }
