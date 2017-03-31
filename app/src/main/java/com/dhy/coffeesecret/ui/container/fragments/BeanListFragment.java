@@ -85,8 +85,8 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
     private BeanListAdapter beanListAdapter;
     private Context context;
     private String title = "";
-    private int maxPrice = 2000;
-    private int maxWeight = 10;
+    private int maxPrice = 1005;
+    private int maxWeight = 505;
     private String screenHandler = "";
     private int[] screenPrice = new int[2];
     private int[] screenWeight = new int[2];
@@ -378,7 +378,11 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
             @Override
             public void onIndexChangeListener(RangeBar rangeBar, int thumb1, int thumb2) {
                 tvFirstPrice.setText(thumb1 + "");
-                tvSecondPrice.setText(thumb2 + "");
+                if(thumb2 >= maxPrice - 5){
+                    tvSecondPrice.setText("1000+");
+                }else{
+                    tvSecondPrice.setText(thumb2 + "");
+                }
                 screenPrice[0] = thumb1;
                 screenPrice[1] = thumb2;
             }
@@ -388,7 +392,12 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
             @Override
             public void onIndexChangeListener(RangeBar rangeBar, int thumb1, int thumb2) {
                 tvFirstWeight.setText(thumb1 + "");
-                tvSecondWeight.setText(thumb2 + "");
+
+                if(thumb2 > maxWeight -5){
+                    tvSecondWeight.setText("500+");
+                }else{
+                    tvSecondWeight.setText(thumb2 + "");
+                }
                 screenWeight[0] = thumb1;
                 screenWeight[1] = thumb2;
             }
@@ -509,7 +518,7 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
         if ((screenPrice[0] > 0 || screenPrice[1] < maxPrice - 1)) {
             coffeeBeanInfos.clear();
             for (BeanInfo beanInfo : beanInfos) {
-                if (beanInfo.getPrice() >= screenPrice[0] && beanInfo.getPrice() <= screenPrice[1]) {
+                if (beanInfo.getPrice() >= screenPrice[0] && (screenPrice[1] > 1000 ? true : beanInfo.getPrice() <= screenPrice[1])) {
                     coffeeBeanInfos.add(beanInfo);
                 }
             }

@@ -42,7 +42,7 @@ import static android.bluetooth.BluetoothProfile.STATE_DISCONNECTING;
 //                     | \_| ''\---/'' | |
 //                      \ .-\__ `-` ___/-. /
 //                   ___`. .' /--.--\ `. . __
-//                ."" '&lt; `.___\_&lt;|&gt;_/___.' &gt;'"".
+//                ."" '< `.___\_<|>_/___.' &gt;'"".
 //               | | : `- \`.;`\ _ /`;.`/ - ` : | |
 //                 \ \ `-. \_ __\ /__ _/ .-` / /
 //         ======`-.____`-.___\_____/___.-`____.-'======
@@ -80,6 +80,7 @@ public class BluetoothService extends Service {
     private BluetoothGattCharacteristic mReader;
     private BluetoothDevice mCurDevice;
     private String lastAddress;
+    private boolean tempStatus = false;
     private int mConnectionState = STATE_DISCONNECTED;
     private DataChangedListener dataChangedListener;
     private DeviceChangedListener deviceChangedListener;
@@ -588,24 +589,25 @@ public class BluetoothService extends Service {
         public void run() {
             while (readable) {
                 dataReader.setWriteCommand();
-                Timer waitTime = new Timer();
+                // final Timer waitTime = new Timer();
+                // tempStatus = false;
                 // 等待dataRead返回数据
                 try {
                     Log.e(TAG, "读取");
                     while (dataReader.isHandling()) {
-                        waitTime.schedule(new TimerTask() {
+                        /*waitTime.schedule(new TimerTask() {
                             @Override
                             public void run() {
-                               // 如果3s以后isHanding依然处于true的状态则断开进行重连
-                               if(dataReader.isHandling()) {
-                                   disconnect();
-                                   BLUETOOTH_OPERATOR.reConnect();
-                               }
+                                // 如果3s以后isHanding依然处于true的状态则断开进行重连
+                                if(dataReader.isHandling()) {
+                                    disconnect();
+                                    BLUETOOTH_OPERATOR.reConnect();
+                                }
                             }
-                        }, 5000);
+                        }, 5000);*/
                     }
                     // 已经成功，则取消timer
-                    waitTime.cancel();
+                    // waitTime.cancel();
 
                     dataReader.setHandling(true);
 

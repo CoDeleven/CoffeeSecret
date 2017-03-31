@@ -31,6 +31,7 @@ import com.dhy.coffeesecret.ui.device.fragments.FireWindDialog;
 import com.dhy.coffeesecret.ui.device.fragments.Other;
 import com.dhy.coffeesecret.utils.FragmentTool;
 import com.dhy.coffeesecret.utils.SettingTool;
+import com.dhy.coffeesecret.utils.T;
 import com.dhy.coffeesecret.utils.UnitConvert;
 import com.dhy.coffeesecret.utils.Utils;
 import com.dhy.coffeesecret.views.BaseChart4Coffee;
@@ -210,6 +211,7 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
     @Override
     public void notifyDeviceConnectStatus(boolean isConnected, BluetoothDevice device) {
         if (!isConnected) {
+            T.showShort(this, "蓝牙已断开，请勿远离...");
             while (!BluetoothService.BLUETOOTH_OPERATOR.reConnect()) {
 
             }

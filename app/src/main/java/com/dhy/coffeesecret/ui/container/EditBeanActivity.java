@@ -189,17 +189,29 @@ public class EditBeanActivity extends AppCompatActivity {
 
         editName.setText(beanInfo.getName());
         editCountry.setText(beanInfo.getCountry());
+        if ("".equals(editCountry.getText().toString().trim())) {
+            editCountry.setText("未知");
+        }
         editArea.setText(beanInfo.getArea());
         editManor.setText(beanInfo.getManor());
         editAltitude.setText(beanInfo.getAltitude());
         editSpecies.setText(beanInfo.getSpecies());
         editLevel.setSelection(getLevelSelection(beanInfo.getLevel()), true);
         editWaterContent.setText(beanInfo.getWaterContent() + "");
+        if ("0.0".equals(editWaterContent.getText().toString().trim())) {
+            editWaterContent.setText("");
+        }
         editHandler.setSelection(getHandlerSelection(beanInfo.getProcess()), true);
         editAnotherHandler.setEnabled(false);
         editSupplier.setText(beanInfo.getSupplier());
         editPrice.setText(beanInfo.getPrice() + "");
+        if ("0.0".equals(editPrice.getText().toString().trim())) {
+            editPrice.setText("");
+        }
         editWeight.setText(beanInfo.getStockWeight() + "");
+        if ("0.0".equals(editWeight.getText().toString().trim())) {
+            editWeight.setText("");
+        }
         editWeightUnit.setText(SettingTool.getConfig(mContext).getWeightUnit());
         editBuyDate.setText(formatDate(beanInfo.getDate()));
 
@@ -390,12 +402,7 @@ public class EditBeanActivity extends AppCompatActivity {
         beanInfo.setCountry(country);
 
         // 如果用户没填该项则默认给予一个未知
-        String beanArea = editArea.getText().toString();
-        if ("".equals(beanArea.trim())) {
-            beanInfo.setArea("未知");
-        } else {
-            beanInfo.setArea(beanArea);
-        }
+        beanInfo.setArea(editArea.getText().toString());
 
         beanInfo.setManor(editManor.getText().toString());
         beanInfo.setAltitude(editAltitude.getText().toString());
@@ -480,10 +487,23 @@ public class EditBeanActivity extends AppCompatActivity {
         exitToRight();
     }
 
+    /**
+     * 在保存或更新信息之前检测输入栏中的数值是否符合要求
+     * @return
+     */
     private boolean checkValidation() {
         if ("".equals(editArea.getText().toString().trim())) {
-            mHandler.sendEmptyMessage(AREA_NONE);
-            return false;
+            // mHandler.sendEmptyMessage(AREA_NONE);
+            editArea.setText("未知");
+        }
+        if("".equals(editPrice.getText().toString().trim())){
+            editPrice.setText("0.0");
+        }
+        if("".equals(editWaterContent.getText().toString().trim())){
+            editWaterContent.setText("0.0");
+        }
+        if("".equals(editWeight.getText().toString().trim())){
+            editWeight.setText("0.0");
         }
         if ("".equals(editSpecies.getText().toString().trim())) {
             mHandler.sendEmptyMessage(SPECIES_NONE);
