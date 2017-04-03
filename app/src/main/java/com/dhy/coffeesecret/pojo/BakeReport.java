@@ -1,8 +1,11 @@
 package com.dhy.coffeesecret.pojo;
 
+import com.github.mikephil.charting.data.Event;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 //import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -173,4 +176,7 @@ public class BakeReport implements Serializable {
         this.beanId = beanId;
     }
 
+    public Map<String, String> getEvents(){
+        return tempratureSet.getEvents();
+    }
 }

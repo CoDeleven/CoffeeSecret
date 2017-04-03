@@ -33,7 +33,7 @@ import java.util.Map;
 
 public class BaseChart4Coffee extends LineChart {
 
-    public final static int BEANLINE = 0, ACCBEANLINE = 1, INWINDLINE = 2, ACCINWINDLINE = 3, OUTWINDLINE = 4, ACCOUTWINDLINE = 5, REFERLINE = 6;
+    public final static int BEANLINE = 1, ACCBEANLINE = 0, INWINDLINE = 2, ACCINWINDLINE = 4, OUTWINDLINE = 3, ACCOUTWINDLINE = 5, REFERLINE = 6;
     private static Map<Integer, String> labels = new HashMap<>();
 
     static {

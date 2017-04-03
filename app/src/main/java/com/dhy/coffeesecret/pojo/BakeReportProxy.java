@@ -5,6 +5,7 @@ import com.github.mikephil.charting.data.Event;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,12 +23,12 @@ import static com.dhy.coffeesecret.views.BaseChart4Coffee.getLableByIndex;
  * Created by CoDeleven on 17-3-3.
  */
 
-public class BakeReportProxy {
+public class BakeReportProxy implements Serializable{
     private BakeReport bakeReport;
     private Map<Integer, ILineDataSet> lines = new HashMap<>();
     private List<Entry> entriesWithEvents;
     private float rawBeanWeight;
-
+    private Map<String, String> events;
     public BakeReportProxy(BakeReport bakeReport) {
         this.bakeReport = bakeReport;
         if (bakeReport != null) {
@@ -220,5 +221,41 @@ public class BakeReportProxy {
 
     public float getRawBeanWeight() {
         return rawBeanWeight;
+    }
+
+    public List<Float> getAccBeanTempratures(){
+        return bakeReport.getTempratureSet().getAccBeanTemps();
+    }
+    public List<Float> getAccInwindTempratures(){
+        return bakeReport.getTempratureSet().getAccInwindTemps();
+    }
+    public List<Float> getAccOutwindTempratures(){
+        return bakeReport.getTempratureSet().getAccOutwindTemps();
+    }
+    public List<Float> getTempratureByIndex(int index){
+        if(index == BEANLINE){
+            return bakeReport.getTempratureSet().getBeanTemps();
+        }else if(index == INWINDLINE){
+            return bakeReport.getTempratureSet().getInwindTemps();
+        }else if(index == OUTWINDLINE){
+            return bakeReport.getTempratureSet().getOutwindTemps();
+        }
+        return new ArrayList<Float>();
+    }
+    public Event getEventByX(int x){
+        if(events == null){
+            events = bakeReport.getTempratureSet().getEvents();
+        }
+        String time = getTimex().get(x) + "";
+        String eventStr = events.get(time);
+        if(eventStr == null){
+            return null;
+        }
+        Event event = new Event();
+        // 存入事件的类型
+        event.setCurStatus(Integer.parseInt(eventStr.substring(eventStr.length() - 1, eventStr.length())));
+        // 存入事件的具体情况
+        event.setDescription(eventStr.substring(0, eventStr.length() - 2));
+        return event;
     }
 }

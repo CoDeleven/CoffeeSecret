@@ -23,6 +23,7 @@ import android.widget.TextView;
 
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BakeReport;
+import com.dhy.coffeesecret.pojo.BakeReportProxy;
 import com.dhy.coffeesecret.pojo.BeanInfo;
 import com.dhy.coffeesecret.pojo.BeanInfoSimple;
 import com.dhy.coffeesecret.ui.device.DialogBeanSelected;
@@ -69,7 +70,7 @@ public class BakeDialog extends DialogFragment implements BeanSelectAdapter.MyBu
     @Bind(R.id.id_bake_dialog_add)
     Button mAdd;
     private OnBeaninfosConfirmListener beaninfosConfirmListener;
-    private ArrayList<Float> referTempratures;
+    private BakeReport referTempratures;
     private String unit;
     
     public BakeDialog(){
@@ -195,7 +196,7 @@ public class BakeDialog extends DialogFragment implements BeanSelectAdapter.MyBu
                 simple.setSpecies(beanInfo.getSpecies());
             }
             if (bakeReport != null) {
-                referTempratures = (ArrayList) bakeReport.getTempratureSet().getBeanTemps();
+                referTempratures = bakeReport;
             }
              mListView.getAdapter().notifyDataSetChanged();
         }
@@ -257,7 +258,7 @@ public class BakeDialog extends DialogFragment implements BeanSelectAdapter.MyBu
     public interface OnBeaninfosConfirmListener {
         void setBeanInfos(List<BeanInfoSimple> beanInfos);
 
-        void setTempratures(ArrayList<Float> tempratures);
+        void setTempratures(BakeReport tempratures);
     }
 
     class ViewHolder {
