@@ -39,6 +39,8 @@ public class BeanInfoActivity extends AppCompatActivity {
     RelativeLayout header;
     @Bind(R.id.info_area)
     TextView infoArea;
+    @Bind(R.id.info_country)
+    TextView infoCountry;
     @Bind(R.id.textView2)
     TextView textView2;
     @Bind(R.id.info_manor)
@@ -129,6 +131,7 @@ public class BeanInfoActivity extends AppCompatActivity {
         // beanName.setText(beanInfo.getCountry() + beanInfo.getSpecies());
         // TODO 可以自定义豆名，默认豆名以国家+豆种形式呈现
         beanName.setText(beanInfo.getName());
+        infoCountry.setText(beanInfo.getCountry());
         infoArea.setText(beanInfo.getArea());
         infoManor.setText(beanInfo.getManor());
         infoAltitude.setText(beanInfo.getAltitude());
