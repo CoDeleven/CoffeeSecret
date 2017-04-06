@@ -18,6 +18,8 @@ import com.dhy.coffeesecret.utils.URLs;
 
 import java.io.IOException;
 
+import cniao5.com.cniao5shop.ShopActivity;
+
 
 public class CommunityFragment extends Fragment implements View.OnClickListener {
 
@@ -47,10 +49,11 @@ public class CommunityFragment extends Fragment implements View.OnClickListener 
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_customer:
-                intent = new Intent(getActivity(), MallActivity.class);
+                intent = new Intent(getActivity(), ShopActivity.class);
                 startActivity(intent);//TODO
                 break;
             case R.id.iv_business:
+
                 intent = new Intent(getActivity(), SellActivity.class);
                 startActivity(intent);//TODO
                 break;

@@ -29,7 +29,7 @@
         android:screenOrientation="portrait"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:replace="android:icon">
+        tools:replace="android:icon,android:name">
         <activity
             android:name=".LauncherActivity"
             android:launchMode="singleTask"
