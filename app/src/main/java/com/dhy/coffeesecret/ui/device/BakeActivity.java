@@ -48,6 +48,7 @@ import java.util.TimerTask;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 import static com.dhy.coffeesecret.MyApplication.tempratureUnit;
 import static com.dhy.coffeesecret.views.BaseChart4Coffee.ACCBEANLINE;
@@ -325,6 +326,8 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
             chart.enableReferLine(entries);
         }
         init();
+        // 设置tempraturset
+        chart.setTempratureSet(set);
     }
 
 
@@ -399,8 +402,8 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
         fragmentTool = FragmentTool.getFragmentToolInstance(this);
 
 
-        mStart.setVisibility(View.GONE);
-        showButton();
+        // mStart.setVisibility(View.GONE);
+        // showButton();
         BakeReportProxy bakeReport = ((MyApplication) getApplication()).getBakeReport();
         bakeReport.setStartTemperature(startTemp + "");
         bakeReport.setDate(Utils.data2Timestamp(new Date()));
@@ -494,7 +497,7 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
     /**
      * 开始烘焙按钮按下之后需要执行的操作
      */
-/*    @OnClick(R.id.id_baking_start)
+    @OnClick(R.id.id_baking_start)
     public void onBakeStart() {
         // TODO 3-20日，在开始烘焙按钮按下后的操作在这里执行
         showButton();
@@ -514,7 +517,7 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
             ((CheckBox) popuoOperator.findViewById(R.id.id_baking_line_accInwind)).setChecked(true);
             ((CheckBox) popuoOperator.findViewById(R.id.id_baking_line_accOutwind)).setChecked(true);
         }
-    }*/
+    }
 
     private void addEvent(View v) {
         int id = v.getId();

@@ -10,14 +10,16 @@ import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 
 public class XAxisFormatter4Time implements IAxisValueFormatter {
 
-    @Override
-    public String getFormattedValue(float value, AxisBase axis) {
-        return formatString2Time(value);
-    }
-    public static String formatString2Time(float value){
+    public static String formatString2Time(float value) {
         int time = (int) value;
         int minutes = time / 60;
         int seconds = time % 60;
         return String.format("%1$02d", minutes) + ":" + String.format("%1$02d", seconds);
     }
+
+    @Override
+    public String getFormattedValue(float value, AxisBase axis) {
+        return formatString2Time(value);
+    }
+
 }

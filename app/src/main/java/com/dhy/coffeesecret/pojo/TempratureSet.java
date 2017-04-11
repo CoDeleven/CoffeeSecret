@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+import static com.dhy.coffeesecret.views.BaseChart4Coffee.*;
 /**
  * Created by CoDeleven on 17-3-8.
  */
@@ -22,6 +22,24 @@ public class TempratureSet implements Serializable{
     private Map<String, String> events = new HashMap<>();
     private List<Float> timex = new ArrayList<>();
 
+    public List<Float> getTempratureByIndex(int index){
+        switch (index){
+            case BEANLINE:
+                return beanTemps;
+            case INWINDLINE:
+                return inwindTemps;
+            case OUTWINDLINE:
+                return outwindTemps;
+            case ACCBEANLINE:
+                return accBeanTemps;
+            case ACCINWINDLINE:
+                return accInwindTemps;
+            case ACCOUTWINDLINE:
+                return accOutwindTemps;
+            default:
+                return null;
+        }
+    }
 
     public List<Float> getAccBeanTemps() {
         return accBeanTemps;
