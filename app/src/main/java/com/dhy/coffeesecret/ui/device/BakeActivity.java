@@ -390,7 +390,6 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
         outwindTemps[0] = (TextView) findViewById(R.id.id_baking_outwindTemp);
         outwindTemps[1] = (TextView) findViewById(R.id.id_baking_accOutwindTemp);
 
-
         mDry.setOnClickListener(this);
         mFirstBurst.setOnClickListener(this);
         mSecondBurst.setOnClickListener(this);
@@ -402,8 +401,8 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
         fragmentTool = FragmentTool.getFragmentToolInstance(this);
 
 
-        mStart.setVisibility(View.GONE);
-        showButton();
+/*        mStart.setVisibility(View.GONE);
+        showButton();*/
         BakeReportProxy bakeReport = ((MyApplication) getApplication()).getBakeReport();
         bakeReport.setStartTemperature(startTemp + "");
         bakeReport.setDate(Utils.data2Timestamp(new Date()));
@@ -497,7 +496,7 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
     /**
      * 开始烘焙按钮按下之后需要执行的操作
      */
-/*    @OnClick(R.id.id_baking_start)
+    @OnClick(R.id.id_baking_start)
     public void onBakeStart() {
         // TODO 3-20日，在开始烘焙按钮按下后的操作在这里执行
         showButton();
@@ -517,7 +516,7 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
             ((CheckBox) popuoOperator.findViewById(R.id.id_baking_line_accInwind)).setChecked(true);
             ((CheckBox) popuoOperator.findViewById(R.id.id_baking_line_accOutwind)).setChecked(true);
         }
-    }*/
+    }
 
     private void addEvent(View v) {
         int id = v.getId();
@@ -753,7 +752,8 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
         for(int i = 0; i < 3; ++i){
             float target = referTempratures.getTempratureByIndex(i + 1).get(referIndex);
             float cur = tempratures[i];
-            tempratures[i] = cur + (target - cur) * (0.8f + (float)Math.random() * 0.2f);
+            // tempratures[i] = cur + (target - cur) * (0.9f + (float)Math.random() * 0.1f);
+            tempratures[i] = target + (target * (float)Math.random() * 0.15f) * (float)Math.pow(-1, (int)Math.random() * 2 + 1);
         }
         // 计算理想豆温加速度(两边差距太大，难以拟合)
         if(temprature.getBeanTemp() < 50){

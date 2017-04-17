@@ -70,7 +70,7 @@ public class CupFragment extends Fragment implements View.OnClickListener {
     public static final int RESULT_CODE_NONE = 0x2333;
     public static final int RESULT_CODE_DElETE = 0x5555;
 
-    public static final String[] SORT_ORDER = {"评分最高", "评分最低", "最早的杯测", "最晚的杯测"}; // TODO: 2017/3/8  i18n
+    public static final String[] SORT_ORDER = {"评分最高", "评分最低", "最早的杯测", "最新的杯测"}; // TODO: 2017/3/8  i18n
 
     private View mCuppingView;
     private Context mContext;

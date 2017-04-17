@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/activity_edit_bean"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    android:orientation="vertical">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:id="@+id/activity_edit_bean"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:fitsSystemWindows="true"
+              android:orientation="vertical">
 
-    <include layout="@layout/title_edit" />
+    <include layout="@layout/title_edit"/>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -32,7 +32,7 @@
                     android:layout_width="46dp"
                     android:layout_height="46dp"
                     android:contentDescription="@null"
-                    android:src="@drawable/ic_container_add_bean" />
+                    android:src="@drawable/ic_container_add_bean"/>
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -52,7 +52,7 @@
                             android:layout_marginTop="15dp"
                             android:text="@string/bean_name"
                             android:textColor="@color/color_gray_c9"
-                            android:textSize="14.5sp" />
+                            android:textSize="14.5sp"/>
 
                         <EditText
                             android:id="@+id/edit_name"
@@ -61,14 +61,14 @@
                             android:layout_marginLeft="56dp"
                             android:text="巴西黄波旁"
                             android:textColor="@color/black"
-                            android:textSize="14.5sp" />
+                            android:textSize="14.5sp"/>
                     </RelativeLayout>
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_alignParentBottom="true"
-                        android:background="@color/color_gray_c9" />
+                        android:background="@color/color_gray_c9"/>
                 </RelativeLayout>
 
             </LinearLayout>
@@ -93,7 +93,7 @@
                         android:layout_marginLeft="14dp"
                         android:text="@string/country"
                         android:textColor="@color/color_gray_c9"
-                        android:textSize="14.5sp" />
+                        android:textSize="14.5sp"/>
 
                     <TextView
                         android:id="@+id/edit_country"
@@ -103,7 +103,7 @@
                         android:layout_marginLeft="86dp"
                         android:text="未知"
                         android:textColor="@color/black"
-                        android:textSize="14.5sp" />
+                        android:textSize="14.5sp"/>
 
                     <ImageView
                         android:layout_width="13.75dp"
@@ -112,14 +112,14 @@
                         android:layout_centerVertical="true"
                         android:layout_marginRight="14.8dp"
                         android:contentDescription="@null"
-                        android:src="@drawable/ic_next" />
+                        android:src="@drawable/ic_next"/>
                 </RelativeLayout>
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_alignParentBottom="true"
-                    android:background="@color/color_gray_c9" />
+                    android:background="@color/color_gray_c9"/>
             </RelativeLayout>
 
             <RelativeLayout
@@ -140,7 +140,7 @@
                         android:layout_marginLeft="14dp"
                         android:text="@string/produce_area"
                         android:textColor="@color/color_gray_c9"
-                        android:textSize="14.5sp" />
+                        android:textSize="14.5sp"/>
 
                     <EditText
                         android:id="@+id/edit_area"
@@ -151,7 +151,7 @@
                         android:inputType="text"
                         android:text="米纳斯"
                         android:textColor="@color/black"
-                        android:textSize="14.5sp" />
+                        android:textSize="14.5sp"/>
 
                 </RelativeLayout>
 
@@ -159,7 +159,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_alignParentBottom="true"
-                    android:background="@color/color_gray_c9" />
+                    android:background="@color/color_gray_c9"/>
             </RelativeLayout>
 
             <RelativeLayout
@@ -180,7 +180,7 @@
                         android:layout_marginLeft="14dp"
                         android:text="@string/manor"
                         android:textColor="@color/color_gray_c9"
-                        android:textSize="14.5sp" />
+                        android:textSize="14.5sp"/>
 
                     <EditText
                         android:id="@+id/edit_manor"
@@ -191,7 +191,7 @@
                         android:inputType="text"
                         android:text="Chacal"
                         android:textColor="@color/black"
-                        android:textSize="14.5sp" />
+                        android:textSize="14.5sp"/>
 
                 </RelativeLayout>
 
@@ -199,7 +199,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_alignParentBottom="true"
-                    android:background="@color/color_gray_c9" />
+                    android:background="@color/color_gray_c9"/>
             </RelativeLayout>
 
             <RelativeLayout
@@ -220,7 +220,7 @@
                         android:layout_marginLeft="14dp"
                         android:text="@string/altitude"
                         android:textColor="@color/color_gray_c9"
-                        android:textSize="14.5sp" />
+                        android:textSize="14.5sp"/>
 
                     <EditText
                         android:id="@+id/edit_altitude"
@@ -232,7 +232,7 @@
                         android:inputType="numberDecimal"
                         android:text="1000~1300"
                         android:textColor="@color/black"
-                        android:textSize="14.5sp" />
+                        android:textSize="14.5sp"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -242,14 +242,14 @@
                         android:layout_marginRight="100dp"
                         android:text="m"
                         android:textColor="#7F7F7F"
-                        android:textSize="12sp" />
+                        android:textSize="12sp"/>
                 </RelativeLayout>
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_alignParentBottom="true"
-                    android:background="@color/color_gray_c9" />
+                    android:background="@color/color_gray_c9"/>
             </RelativeLayout>
 
             <RelativeLayout
@@ -271,7 +271,7 @@
                         android:layout_marginLeft="14dp"
                         android:text="@string/bean_species"
                         android:textColor="@color/color_gray_c9"
-                        android:textSize="14.5sp" />
+                        android:textSize="14.5sp"/>
 
                     <TextView
                         android:id="@+id/edit_species"
@@ -281,7 +281,7 @@
                         android:layout_marginLeft="86dp"
                         android:text="黄波旁"
                         android:textColor="@color/black"
-                        android:textSize="14.5sp" />
+                        android:textSize="14.5sp"/>
 
                     <ImageView
                         android:layout_width="13.75dp"
@@ -290,14 +290,14 @@
                         android:layout_centerVertical="true"
                         android:layout_marginRight="14.8dp"
                         android:contentDescription="@null"
-                        android:src="@drawable/ic_next" />
+                        android:src="@drawable/ic_next"/>
                 </RelativeLayout>
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_alignParentBottom="true"
-                    android:background="@color/color_gray_c9" />
+                    android:background="@color/color_gray_c9"/>
             </RelativeLayout>
 
             <RelativeLayout
@@ -318,24 +318,40 @@
                         android:layout_marginLeft="14dp"
                         android:text="@string/level"
                         android:textColor="@color/color_gray_c9"
-                        android:textSize="14.5sp" />
+                        android:textSize="14.5sp"/>
 
-                    <Spinner
-                        android:id="@+id/edit_level"
+                    <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="80.5dp"
-                        android:entries="@array/level"
-                        android:textColor="@color/black"
-                        android:textSize="14.5sp" />
+                        android:layout_marginLeft="80.5dp">
+
+                        <com.dhy.coffeesecret.views.ReSpinner
+                            android:id="@+id/edit_level"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:alpha="0"
+                            android:entries="@array/level"
+                            android:textSize="14.5sp"/>
+
+                        <TextView
+                            android:id="@+id/edit_level_temp"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_margin="0dp"
+                            android:gravity="center_vertical"
+                            android:includeFontPadding="false"
+                            android:text="请选择等级"
+                            android:textColor="@color/black"
+                            android:textSize="14.5sp"/>
+                    </FrameLayout>
                 </RelativeLayout>
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_alignParentBottom="true"
-                    android:background="@color/color_gray_c9" />
+                    android:background="@color/color_gray_c9"/>
             </RelativeLayout>
 
             <RelativeLayout
@@ -356,7 +372,7 @@
                         android:layout_marginLeft="14dp"
                         android:text="@string/water_content"
                         android:textColor="@color/color_gray_c9"
-                        android:textSize="14.5sp" />
+                        android:textSize="14.5sp"/>
 
                     <EditText
                         android:id="@+id/edit_water_content"
@@ -368,7 +384,7 @@
                         android:inputType="numberDecimal"
                         android:text="50.15"
                         android:textColor="@color/black"
-                        android:textSize="14.5sp" />
+                        android:textSize="14.5sp"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -378,14 +394,14 @@
                         android:layout_marginRight="100dp"
                         android:text="%"
                         android:textColor="#7F7F7F"
-                        android:textSize="12sp" />
+                        android:textSize="12sp"/>
                 </RelativeLayout>
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_alignParentBottom="true"
-                    android:background="@color/color_gray_c9" />
+                    android:background="@color/color_gray_c9"/>
             </RelativeLayout>
 
             <RelativeLayout
@@ -406,41 +422,52 @@
                         android:layout_marginLeft="14dp"
                         android:text="@string/handler"
                         android:textColor="@color/color_gray_c9"
-                        android:textSize="14.5sp" />
+                        android:textSize="14.5sp"/>
 
-                    <com.zhy.android.percent.support.PercentLinearLayout
+
+                    <FrameLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="77dp"
-                        android:gravity="center_vertical">
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="80.5dp">
 
                         <Spinner
                             android:id="@+id/edit_handler"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:entries="@array/handler"
-                            android:textColor="@color/black"
-                            android:textSize="14.5sp"
-                            app:layout_widthPercent="50%"/>
-
-                        <EditText
-                            android:id="@+id/edit_another_handler"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:background="@null"
-                            android:inputType="text"
-                            android:textColor="@color/black"
-                            android:textSize="14.5sp"
-                            app:layout_widthPercent="50%"/>
+                            android:alpha="0"
+                            android:entries="@array/handler"
+                            android:textSize="14.5sp"/>
 
-                    </com.zhy.android.percent.support.PercentLinearLayout>
+                        <TextView
+                            android:id="@+id/edit_handler_temp"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_margin="0dp"
+                            android:gravity="center_vertical"
+                            android:includeFontPadding="false"
+                            android:text="请选择处理方式"
+                            android:textColor="@color/black"
+                            android:textSize="14.5sp"/>
+                    </FrameLayout>
+
+                    <!--                                         <EditText
+                                                                 android:id="@+id/edit_another_handler"
+                                                                 android:layout_width="match_parent"
+                                                                 android:layout_height="match_parent"
+                                                                 android:background="@null"
+                                                                 android:inputType="text"
+                                                                 android:textColor="@color/black"
+                                                                 android:textSize="14.5sp"
+                                                                 app:layout_widthPercent="50%"/>-->
+
                 </RelativeLayout>
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_alignParentBottom="true"
-                    android:background="@color/color_gray_c9" />
+                    android:background="@color/color_gray_c9"/>
             </RelativeLayout>
 
             <RelativeLayout
@@ -461,7 +488,7 @@
                         android:layout_marginLeft="14dp"
                         android:text="@string/supplier"
                         android:textColor="@color/color_gray_c9"
-                        android:textSize="14.5sp" />
+                        android:textSize="14.5sp"/>
 
                     <EditText
                         android:id="@+id/edit_supplier"
@@ -472,14 +499,14 @@
                         android:inputType="text"
                         android:text="中国天地咖啡馆"
                         android:textColor="@color/black"
-                        android:textSize="14.5sp" />
+                        android:textSize="14.5sp"/>
                 </RelativeLayout>
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_alignParentBottom="true"
-                    android:background="@color/color_gray_c9" />
+                    android:background="@color/color_gray_c9"/>
             </RelativeLayout>
 
             <RelativeLayout
@@ -500,7 +527,7 @@
                         android:layout_marginLeft="14dp"
                         android:text="@string/price"
                         android:textColor="@color/color_gray_c9"
-                        android:textSize="14.5sp" />
+                        android:textSize="14.5sp"/>
 
                     <EditText
                         android:id="@+id/edit_price"
@@ -512,7 +539,7 @@
                         android:inputType="numberDecimal"
                         android:text="1000000"
                         android:textColor="@color/black"
-                        android:textSize="14.5sp" />
+                        android:textSize="14.5sp"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -522,14 +549,14 @@
                         android:layout_marginRight="100dp"
                         android:text="元"
                         android:textColor="#7F7F7F"
-                        android:textSize="12sp" />
+                        android:textSize="12sp"/>
                 </RelativeLayout>
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_alignParentBottom="true"
-                    android:background="@color/color_gray_c9" />
+                    android:background="@color/color_gray_c9"/>
             </RelativeLayout>
 
             <RelativeLayout
@@ -550,7 +577,7 @@
                         android:layout_marginLeft="14dp"
                         android:text="@string/weight"
                         android:textColor="@color/color_gray_c9"
-                        android:textSize="14.5sp" />
+                        android:textSize="14.5sp"/>
 
                     <EditText
                         android:id="@+id/edit_weight"
@@ -562,7 +589,7 @@
                         android:inputType="numberDecimal"
                         android:text="100"
                         android:textColor="@color/black"
-                        android:textSize="14.5sp" />
+                        android:textSize="14.5sp"/>
 
                     <TextView
                         android:id="@+id/edit_weight_unit"
@@ -573,14 +600,14 @@
                         android:layout_marginRight="100dp"
                         android:text="g"
                         android:textColor="#7F7F7F"
-                        android:textSize="12sp" />
+                        android:textSize="12sp"/>
                 </RelativeLayout>
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_alignParentBottom="true"
-                    android:background="@color/color_gray_c9" />
+                    android:background="@color/color_gray_c9"/>
             </RelativeLayout>
 
             <RelativeLayout
@@ -601,7 +628,7 @@
                         android:layout_marginLeft="14dp"
                         android:text="@string/buy_date"
                         android:textColor="@color/color_gray_c9"
-                        android:textSize="14.5sp" />
+                        android:textSize="14.5sp"/>
 
                     <TextView
                         android:id="@+id/edit_buy_date"
@@ -611,7 +638,7 @@
                         android:gravity="center_vertical"
                         android:text="2016-10-10"
                         android:textColor="@color/black"
-                        android:textSize="14.5sp" />
+                        android:textSize="14.5sp"/>
 
                     <ImageView
                         android:layout_width="13.75dp"
@@ -620,7 +647,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginRight="14.8dp"
                         android:contentDescription="@null"
-                        android:src="@drawable/ic_next" />
+                        android:src="@drawable/ic_next"/>
                 </RelativeLayout>
 
             </RelativeLayout>
@@ -629,17 +656,17 @@
                 android:id="@+id/id_bean_delete"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
                 android:layout_marginLeft="30dp"
                 android:layout_marginRight="30dp"
-                android:layout_marginBottom="20dp"
+                android:layout_marginTop="20dp"
 
                 android:background="@drawable/bg_round_radius_danger"
                 android:minHeight="30dp"
                 android:text="删除"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/font_size_primary"
-                android:visibility="gone" />
+                android:visibility="gone"/>
         </LinearLayout>
 
     </ScrollView>

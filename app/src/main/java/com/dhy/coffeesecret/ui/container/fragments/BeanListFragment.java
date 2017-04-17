@@ -580,6 +580,8 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
                     if (refreshBeanList != null && refreshBeanList.isRefreshing()) {
                         activity.refreshBeanList.setRefreshing(false);
                     }
+                    countryName.setText("全部");
+                    screenHandler = "全部";
                     beanListAdapter.notifyDataSetChanged();
                     break;
                 case INIT_POPUP_WINDOW:

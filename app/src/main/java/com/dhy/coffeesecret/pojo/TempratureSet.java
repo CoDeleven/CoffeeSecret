@@ -137,6 +137,37 @@ public class TempratureSet implements Serializable{
         this.timex.add(timex);
     }
 
+    public void addTempratureByIndex(int lineIndex, List<Float> temps){
+        switch (lineIndex){
+            case BEANLINE:
+                beanTemps.clear();
+                beanTemps.addAll(temps);
+                break;
+            case INWINDLINE:
+                inwindTemps.clear();
+                inwindTemps.addAll(temps);
+                break;
+            case OUTWINDLINE:
+                outwindTemps.clear();
+                outwindTemps.addAll(temps);
+                break;
+            case ACCBEANLINE:
+                accBeanTemps.clear();
+                accBeanTemps.addAll(temps);
+                break;
+            case ACCINWINDLINE:
+                accInwindTemps.clear();
+                accInwindTemps.addAll(temps);
+                break;
+            case ACCOUTWINDLINE:
+                accOutwindTemps.clear();
+                accOutwindTemps.addAll(temps);
+                break;
+            default:
+
+        }
+    }
+
     public void clear(){
         beanTemps.clear();;
         accBeanTemps.clear();;

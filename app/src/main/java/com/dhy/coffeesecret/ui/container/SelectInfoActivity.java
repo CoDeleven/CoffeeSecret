@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
@@ -33,6 +34,7 @@ import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 
 import butterknife.Bind;
@@ -159,12 +161,14 @@ public class SelectInfoActivity extends AppCompatActivity implements OnQuickSide
         dataList.clear();
         switch (listType) {
             case GET_COUNTRY_LIST:
-                Collections.addAll(dataList, TestData.countryList1);
+                Collections.addAll(dataList, getResources().getStringArray(R.array.all));
                 break;
             case GET_AREA_LIST:
+                // TODO 地区
                 Collections.addAll(dataList, TestData.beanList1);
                 break;
             case GET_MANOR_LIST:
+                // TODO 庄园
                 Collections.addAll(dataList, TestData.beanList2);
                 break;
             case GET_SPECIES_LIST:
@@ -200,7 +204,10 @@ public class SelectInfoActivity extends AppCompatActivity implements OnQuickSide
             default:
                 break;
         }
-        dataList = sortByInfo(dataList);
+        /* 原处理方式长达5s，对于双循环的算法hold不住
+         * 考虑其不变形，固在排序处理后加入arrays.xml中
+         */
+        // dataList = sortByInfo(dataList);
         getLetters(dataList);
         speciesList = sortBySpecies(speciesList);
         getLetters(getStrings(speciesList));
@@ -241,10 +248,12 @@ public class SelectInfoActivity extends AppCompatActivity implements OnQuickSide
     private ArrayList<String> sortByInfo(ArrayList<String> infos) {
 
         for (int i = infos.size() - 1; i > 0; --i) {
-            for (int j = 0; j < i; ++j) {
+            long startTime = System.currentTimeMillis();
 
+            for (int j = 0; j < i; ++j) {
                 char a = Utils.getFirstPinYinLetter(infos.get(j + 1)).charAt(0);
                 char b = Utils.getFirstPinYinLetter(infos.get(j)).charAt(0);
+
                 if (a < b) {
                     String s = infos.get(j);
                     infos.set(j, infos.get(j + 1));
@@ -259,6 +268,8 @@ public class SelectInfoActivity extends AppCompatActivity implements OnQuickSide
                     }
                 }
             }
+            Log.e("getFirstPinYinLetter" + i + ":" , System.currentTimeMillis() - startTime + "");
+
         }
 
         return infos;

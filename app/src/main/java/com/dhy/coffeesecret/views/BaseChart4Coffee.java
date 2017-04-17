@@ -40,10 +40,10 @@ public class BaseChart4Coffee extends LineChart {
 
     public final static int BEANLINE = 1, ACCBEANLINE = 4, INWINDLINE = 2, ACCINWINDLINE = 5, OUTWINDLINE = 3, ACCOUTWINDLINE = 6, REFERLINE = 7;
     private static Map<Integer, String> labels = new HashMap<>();
-    private static Map<Integer, WeightedObservedPoints> weightedObservedPointsMap = new HashMap<>();
+    private Map<Integer, WeightedObservedPoints> weightedObservedPointsMap = new HashMap<>();
     private Map<Integer, PolynomialCurveFitter> fitters = new HashMap<>();
-    private static Map<Integer, List<Double>> params = new HashMap<>();
-    static {
+    private Map<Integer, List<Double>> params = new HashMap<>();
+    static{
         labels.put(BEANLINE, "豆温");
         labels.put(ACCBEANLINE, "豆升温");
         labels.put(INWINDLINE, "进风温");
@@ -51,6 +51,9 @@ public class BaseChart4Coffee extends LineChart {
         labels.put(OUTWINDLINE, "出风温");
         labels.put(ACCOUTWINDLINE, "出风升温");
         labels.put(REFERLINE, "");
+    }
+    {
+
 
         weightedObservedPointsMap.put(BEANLINE, new WeightedObservedPoints());
         weightedObservedPointsMap.put(ACCBEANLINE, new WeightedObservedPoints());
@@ -301,12 +304,12 @@ public class BaseChart4Coffee extends LineChart {
             beanData.setY(temp);
         }
 
-        // 如果是从烘焙过程里出来的，则进行此方法
+/*        // 如果是从烘焙过程里出来的，则进行此方法
         if(beanData.getX() > 1 && set != null && toRefresh){
             float temp = getMockDataImm(lineIndex, beanData.getX());
-            System.out.println(temp);
+            // System.out.println(temp);
             beanData.setY(temp);
-        }
+        }*/
 
         beanLine.addEntry(beanData);
         if (toRefresh) {

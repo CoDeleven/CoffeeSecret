@@ -122,6 +122,8 @@ public class BakeInfoFragment extends Fragment implements View.OnClickListener {
         mChart = (BaseChart4Coffee) mView.findViewById(R.id.chart);
         mChart.initLine();
 
+        mChart.setTempratureSet(mBakeReport.getTempratureSet());
+
         mListView = (ExpandableLayoutListView) mView.findViewById(R.id.beanInfo);
         mAdapter = new BaseAdapter() {
             List<BeanInfoSimple> beanInfoSimples;
@@ -199,6 +201,7 @@ public class BakeInfoFragment extends Fragment implements View.OnClickListener {
             mEnvTime.setText(Utils.getCrspTempratureValue(mBakeReport.getAmbientTemperature()) + MyApplication.tempratureUnit);
 
             BakeReportProxy proxy = new BakeReportProxy(mBakeReport);
+            mChart.setTempratureSet(proxy.getBakeReport().getTempratureSet());
 
             int[] temp = {BEANLINE, ACCBEANLINE, INWINDLINE, OUTWINDLINE, ACCINWINDLINE, ACCOUTWINDLINE};
             for (int i : temp) {
