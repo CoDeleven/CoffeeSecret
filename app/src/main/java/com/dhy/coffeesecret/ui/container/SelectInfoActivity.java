@@ -209,7 +209,7 @@ public class SelectInfoActivity extends AppCompatActivity implements OnQuickSide
          */
         // dataList = sortByInfo(dataList);
         getLetters(dataList);
-        speciesList = sortBySpecies(speciesList);
+        // speciesList = sortBySpecies(speciesList);
         getLetters(getStrings(speciesList));
         infoAdapter.notifyDataSetChanged();
     }

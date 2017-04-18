@@ -611,7 +611,7 @@ public class EditBeanActivity extends AppCompatActivity {
                 case SPECIES:
                     str = (String) msg.obj;
                     // 取出除第一个字符之后的小类
-                    activity.editSpecies.setText(str.substring(1, str.length()));
+                    activity.editSpecies.setText(str);
                     // 将这个字符串发给BEAN_ICON进行处理
                     msg = new Message();
                     msg.what = BEAN_ICON;

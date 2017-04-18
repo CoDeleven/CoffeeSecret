@@ -143,7 +143,7 @@ public class BeanInfoActivity extends AppCompatActivity {
         infoSupplier.setText(beanInfo.getSupplier());
         infoPrice.setText("" + beanInfo.getPrice());
         // 数值的单位kg转换为当前单位
-        infoWeight.setText(Utils.getCrspWeightValue(beanInfo.getStockWeight() + "") + MyApplication.weightUnit);
+        infoWeight.setText(beanInfo.getStockWeight() + "kg");
         infoBuyDate.setText(String.format("%1$tY-%1$tm-%1$te", beanInfo.getDate()));
         btnCurve.setEnabled(beanInfo.hasBakeReports());
     }
@@ -165,7 +165,8 @@ public class BeanInfoActivity extends AppCompatActivity {
                 infoHandler.setText(newBeanInfo.getProcess());
                 infoSupplier.setText(newBeanInfo.getSupplier());
                 infoPrice.setText("" + newBeanInfo.getPrice());
-                infoWeight.setText(Utils.getCrspWeightValue(newBeanInfo.getStockWeight() + "") + MyApplication.weightUnit);
+                // 默认为kg
+                infoWeight.setText(Utils.get2PrecisionFloat((float)newBeanInfo.getStockWeight()) + "kg");
                 infoBuyDate.setText(String.format("%1$tY-%1$tm-%1$te", newBeanInfo.getDate()));
                 btnCurve.setEnabled(newBeanInfo.hasBakeReports());
                 break;

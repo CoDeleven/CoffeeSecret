@@ -510,46 +510,82 @@
         <item>荷兰</item>
     </string-array>
     <string-array name="arabica">
-        <item>Java</item>
-        <item>Dilla</item>
-        <item>Deiga</item>
-        <item>Dalle</item>
-        <item>Alghe</item>
-        <item>Agaro</item>
-        <item>Gesha</item>
-        <item>Rume</item>
-        <item>Sudan</item>
-        <item>Kaffa</item>
-        <item>Ennarea</item>
-        <item>Gimma</item>
-        <item>Tafari-kela</item>
-        <item>Rambung</item>
-        <item>S.4</item>
-        <item>S.12</item>
-        <item>USDA</item>
-        <item>Amarello</item>
-        <item>San Ramon</item>
-        <item>Pluma Hidalgo</item>
-        <item>Pache Comum</item>
-        <item>Bergandal</item>
-        <item>Blue Mt.</item>
-        <item>Kent</item>
-        <item>SL-34</item>
-        <item>SL-28</item>
+        <item>arabica</item>
+        <item>agaro</item>
+        <item>alghe</item>
+        <item>amarello be botucatu</item>
+        <item>barduk sudan</item>
+        <item>bergandal</item>
+        <item>blue mt.</item>
+        <item>bourbon</item>
+        <item>catuai</item>
+        <item>caturra</item>
+        <item>dalle</item>
+        <item>deiga/dega</item>
+        <item>dilla</item>
+        <item>ennarea</item>
+        <item>ethiopia/sudan accessions</item>
+        <item>french mission</item>
+        <item>gesha/abyssinia</item>
+        <item>gimma</item>
+        <item>java/sumatra</item>
+        <item>jackson</item>
+        <item>java(cultivar)</item>
+        <item>kaffa</item>
+        <item>kent</item>
+        <item>kona/guatemala</item>
+        <item>laurina(bourbon pointu)</item>
+        <item>maragogype</item>
+        <item>maracatu</item>
+        <item>maracaturra</item>
+        <item>mayaguez</item>
+        <item>mibirizi</item>
+        <item>mokka</item>
+        <item>mundo novo</item>
+        <item>orange bourbon</item>
+        <item>pache comum</item>
+        <item>pacamara</item>
+        <item>pacas</item>
+        <item>pink bourbon</item>
+        <item>pluma hidalgo</item>
+        <item>ramdung</item>
+        <item>red bourbon</item>
+        <item>rume sudan</item>
+        <item>s.12</item>
+        <item>s.4</item>
+        <item>san ramon</item>
+        <item>sl-34</item>
+        <item>sl-28</item>
+        <item>tafari-kela</item>
+        <item>typica</item>
+        <item>usda</item>
+        <item>villalobos</item>
+        <item>villa sarchi</item>
+        <item>yemen</item>
+        <item>yellow bourbon</item>
     </string-array>
+
     <string-array name="robusta">
-        <item>Catiomors</item>
-        <item>Tupi</item>
-        <item>Obata</item>
-        <item>Catisic</item>
-        <item>Lempira</item>
-        <item>IAPAR59</item>
-        <item>Colombia</item>
-        <item>Sarchimor</item>
+        <item>robusta</item>
+        <item>catimors(ateng)</item>
+        <item>catisic</item>
+        <item>catrenic</item>
+        <item>castillo</item>
+        <item>colombia</item>
+        <item>iapar59</item>
+        <item>icafe 95</item>
+        <item>ihcafe 90</item>
+        <item>lempira</item>
+        <item>obata</item>
+        <item>oro azteca</item>
+        <item>tupi</item>
+        <item>ruiru 11</item>
+        <item>sarchimor</item>
     </string-array>
 
     <string-array name="liberica">
-        <item>S288</item>
-        <item>ST95</item>
+        <item>liberica</item>
+        <item>s288</item>
+        <item>s795</item>
     </string-array>
 </resources>
