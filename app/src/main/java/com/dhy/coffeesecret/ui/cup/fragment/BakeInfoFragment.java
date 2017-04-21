@@ -111,9 +111,7 @@ public class BakeInfoFragment extends Fragment implements View.OnClickListener {
         super.onActivityCreated(savedInstanceState);
         mButtonBake = (Button) mView.findViewById(R.id.btn_bake);
         mButtonBake.setOnClickListener(this);
-        if (!isNewCupping && mBakeReport == null) {
-            mButtonBake.setEnabled(false);
-        }
+
         mDevTime = (TextView) mView.findViewById(R.id.dev_time);
         mDevRate = (TextView) mView.findViewById(R.id.dev_rate);
         mEndTemp = (TextView) mView.findViewById(R.id.end_temp);
@@ -122,7 +120,12 @@ public class BakeInfoFragment extends Fragment implements View.OnClickListener {
         mChart = (BaseChart4Coffee) mView.findViewById(R.id.chart);
         mChart.initLine();
 
-        mChart.setTempratureSet(mBakeReport.getTempratureSet());
+
+        if (!isNewCupping && mBakeReport == null) {
+            mButtonBake.setEnabled(false);
+
+            mChart.setTempratureSet(mBakeReport.getTempratureSet());
+        }
 
         mListView = (ExpandableLayoutListView) mView.findViewById(R.id.beanInfo);
         mAdapter = new BaseAdapter() {

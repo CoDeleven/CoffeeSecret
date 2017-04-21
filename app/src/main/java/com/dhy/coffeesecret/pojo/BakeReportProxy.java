@@ -78,10 +78,12 @@ public class BakeReportProxy implements Serializable{
 
 
     public List<Entry> convertTempData2Entry(List<Float> beanTemps, Map<String, String> events, List<Float> timex) {
+
         if (entriesWithEvents == null) {
             entriesWithEvents = new ArrayList<>();
         }
         List<Entry> entries = new ArrayList<>();
+        Entry.clearEvents();
         for (int i = 0; i < timex.size(); ++i) {
             Entry entry = new Entry(timex.get(i), beanTemps.get(i));
             String time = timex.get(i) + "";

@@ -24,11 +24,11 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import org.apache.commons.math3.fitting.PolynomialCurveFitter;
-import org.apache.commons.math3.fitting.WeightedObservedPoints;
+import org.apache.commons.math3.fitting.WeightedObservedPoint;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -40,10 +40,8 @@ public class BaseChart4Coffee extends LineChart {
 
     public final static int BEANLINE = 1, ACCBEANLINE = 4, INWINDLINE = 2, ACCINWINDLINE = 5, OUTWINDLINE = 3, ACCOUTWINDLINE = 6, REFERLINE = 7;
     private static Map<Integer, String> labels = new HashMap<>();
-    private Map<Integer, WeightedObservedPoints> weightedObservedPointsMap = new HashMap<>();
-    private Map<Integer, PolynomialCurveFitter> fitters = new HashMap<>();
-    private Map<Integer, List<Double>> params = new HashMap<>();
-    static{
+
+    static {
         labels.put(BEANLINE, "豆温");
         labels.put(ACCBEANLINE, "豆升温");
         labels.put(INWINDLINE, "进风温");
@@ -52,20 +50,10 @@ public class BaseChart4Coffee extends LineChart {
         labels.put(ACCOUTWINDLINE, "出风升温");
         labels.put(REFERLINE, "");
     }
-    {
 
-
-        weightedObservedPointsMap.put(BEANLINE, new WeightedObservedPoints());
-        weightedObservedPointsMap.put(ACCBEANLINE, new WeightedObservedPoints());
-        weightedObservedPointsMap.put(INWINDLINE, new WeightedObservedPoints());
-        weightedObservedPointsMap.put(OUTWINDLINE, new WeightedObservedPoints());
-        weightedObservedPointsMap.put(ACCOUTWINDLINE, new WeightedObservedPoints());
-        weightedObservedPointsMap.put(ACCINWINDLINE, new WeightedObservedPoints());
-
-
-
-    }
-
+    private Map<Integer, LinkedList<WeightedObservedPoint>> weightedObservedPointsMap = new HashMap<>();
+    private Map<Integer, PolynomialCurveFitter> fitters = new HashMap<>();
+    private Map<Integer, List<Double>> params = new HashMap<>();
     private TempratureSet set;
     private List<Entry> referEntries;
     private UniversalConfiguration mConfig;
@@ -79,6 +67,19 @@ public class BaseChart4Coffee extends LineChart {
     });
     private int tempSmoothNumber = -1;
     private int accTempSmoothNumber = -1;
+
+    {
+
+
+        weightedObservedPointsMap.put(BEANLINE, new LinkedList<WeightedObservedPoint>());
+        weightedObservedPointsMap.put(ACCBEANLINE, new LinkedList<WeightedObservedPoint>());
+        weightedObservedPointsMap.put(INWINDLINE, new LinkedList<WeightedObservedPoint>());
+        weightedObservedPointsMap.put(OUTWINDLINE, new LinkedList<WeightedObservedPoint>());
+        weightedObservedPointsMap.put(ACCOUTWINDLINE, new LinkedList<WeightedObservedPoint>());
+        weightedObservedPointsMap.put(ACCINWINDLINE, new LinkedList<WeightedObservedPoint>());
+
+
+    }
 
 
     public BaseChart4Coffee(Context context) {
@@ -282,7 +283,11 @@ public class BaseChart4Coffee extends LineChart {
      * @param lineIndex 曲线编号
      */
     public void addOneDataToLine(Entry beanData, int lineIndex) {
-        weightedObservedPointsMap.get(lineIndex).add(beanData.getX(), beanData.getY());
+        LinkedList<WeightedObservedPoint> queue = weightedObservedPointsMap.get(lineIndex);
+        if (queue.size() == 50) {
+            queue.pop();
+        }
+        queue.add(new WeightedObservedPoint(1d, beanData.getX(), beanData.getY()));
         // 此处本应进行set的设置，但是因为引用外界的tempratureSet，则不进行处理
         addOneDataToLine(beanData, lineIndex, true);
     }
@@ -304,12 +309,12 @@ public class BaseChart4Coffee extends LineChart {
             beanData.setY(temp);
         }
 
-/*        // 如果是从烘焙过程里出来的，则进行此方法
-        if(beanData.getX() > 1 && set != null && toRefresh){
+        // 如果是从烘焙过程里出来的，则进行此方法
+        if (beanData.getX() > 1 && set != null && toRefresh) {
             float temp = getMockDataImm(lineIndex, beanData.getX());
             // System.out.println(temp);
             beanData.setY(temp);
-        }*/
+        }
 
         beanLine.addEntry(beanData);
         if (toRefresh) {
@@ -330,14 +335,14 @@ public class BaseChart4Coffee extends LineChart {
      */
     public void addNewDatas(List<Entry> beanDatas, int lineIndex) {
         // 因为是直接添加全部的曲线，那么预先处理拟合的曲线函数
-        if (weightedObservedPointsMap.get(lineIndex).toList().size() == 0) {
+        if (weightedObservedPointsMap.get(lineIndex).size() == 0) {
             // 获取对应lineIndex的点
-            WeightedObservedPoints obs = weightedObservedPointsMap.get(lineIndex);
+            LinkedList obs = weightedObservedPointsMap.get(lineIndex);
             List<Float> floats = set.getTempratureByIndex(lineIndex);
             List<Float> timex = set.getTimex();
             for (int i = 0; i < floats.size(); ++i) {
                 // 添加观测点
-                obs.add((double) timex.get(i), (double) floats.get(i));
+                obs.add(new WeightedObservedPoint(1d, timex.get(i), floats.get(i)));
             }
         }
 
@@ -411,10 +416,11 @@ public class BaseChart4Coffee extends LineChart {
     }
 
     public float getMockData(int lineIndex, float x) {
-        if(params.get(lineIndex) == null){
-            double[] param = fitters.get(lineIndex).fit(weightedObservedPointsMap.get(lineIndex).toList());
+        if (params.get(lineIndex) == null) {
+            LinkedList queue = weightedObservedPointsMap.get(lineIndex);
+            double[] param = fitters.get(lineIndex).fit(queue.subList(0, queue.size()));
             List<Double> temp = new ArrayList<>();
-            for(int i = 0; i < param.length; ++i){
+            for (int i = 0; i < param.length; ++i) {
                 temp.add(param[i]);
             }
             params.put(lineIndex, temp);
@@ -422,24 +428,25 @@ public class BaseChart4Coffee extends LineChart {
         return getYByXValue(lineIndex, x);
     }
 
-    public float getMockDataImm(int lineIndex, float x){
-        double[] param = fitters.get(lineIndex).fit(weightedObservedPointsMap.get(lineIndex).toList());
+    public float getMockDataImm(int lineIndex, float x) {
+        LinkedList queue = weightedObservedPointsMap.get(lineIndex);
+        double[] param = fitters.get(lineIndex).fit(queue.subList(0, queue.size()));
         return getYByXValue(param, x);
     }
 
-    public float getYByXValue(double[] params, float x){
+    public float getYByXValue(double[] params, float x) {
         float sum = 0;
-        for(int i = 0; i < params.length; ++i){
-            sum += params[i] * Math.pow(x, (double)i);
+        for (int i = 0; i < params.length; ++i) {
+            sum += params[i] * Math.pow(x, (double) i);
         }
         return sum;
     }
 
-    public float getYByXValue(int lineIndex, float x){
+    public float getYByXValue(int lineIndex, float x) {
         float sum = 0;
         List<Double> temp = params.get(lineIndex);
-        for(int i = 0; i < temp.size(); ++i){
-            sum += temp.get(i) * Math.pow(x, (double)i);
+        for (int i = 0; i < temp.size(); ++i) {
+            sum += temp.get(i) * Math.pow(x, (double) i);
         }
         return sum;
     }

@@ -699,10 +699,14 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
     }
 
     private void notifyTempratureByManual(Temprature temprature){
+
+
+
         // 温度数组: 0->豆温，1->进风温, 2->出风温, 3->加速豆温, 4->加速进风温, 5->加速出风温
         float[] tempratures = {temprature.getBeanTemp(), temprature.getInwindTemp(),
                 temprature.getOutwindTemp(), temprature.getAccBeanTemp(), temprature.getAccInwindTemp(),
                 temprature.getAccOutwindTemp()};
+
 
         startTemp = tempratures[0];
 
