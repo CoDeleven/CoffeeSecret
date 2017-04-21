@@ -335,8 +335,8 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
                     }
                     for(BeanInfoSimple simple: beanInfos){
                         simple.setUsage(Utils.getReversed2DefaultWeight(simple.getUsage()) + "");
-                    }
 
+                    }
                     intent.putExtra(BakeActivity.DEVICE_NAME, mBluetoothOperator.getCurDeviceName());
                     if (referTempratures != null) {
                         intent.putExtra(BakeActivity.ENABLE_REFERLINE, referTempratures);

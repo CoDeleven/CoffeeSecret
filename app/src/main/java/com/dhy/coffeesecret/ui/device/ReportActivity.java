@@ -165,6 +165,14 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
 
         float cooked = Float.parseFloat(proxy.getBakeReport().getCookedBeanWeight());
         float raw = proxy.getRawBeanWeight();
+        // TODO 处理BakeReport中不包含生豆重量属性的替代方案(后续要改)
+        if(raw <= 0.0f){
+            raw = 0f;
+            for(BeanInfoSimple simple: proxy.getBeanInfos()){
+                raw += Float.parseFloat(simple.getUsage());
+            }
+        }
+
         species.setText("品种 （" + "熟豆重量：" + Utils.getCrspWeightValue(cooked + "") + weightUnit + "，" + "脱水率：" + Utils.get2PrecisionFloat((cooked * 100) / raw) + "% ）");
 
         tableLayout = (TableLayout) findViewById(R.id.id_report_table);
