@@ -246,8 +246,8 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
 
         startTemp = tempratures[0];
 
-        lastTime = (System.currentTimeMillis() - RecorderSystem.getStartTime()) / 1000.0f;
-        lastTime = ((int) (lastTime * 100)) / 100.0f;
+        lastTime = recorderSystem.addTemprature(temprature);
+
         Event e = referTempratures.getEventByX(referIndex++);
 
         curBeanEntry = new Entry(lastTime, Utils.getCrspTempratureValue(tempratures[0] + ""));
@@ -260,14 +260,7 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
         if (tempratures[0] > 160 && isOverBottom && curStatus != DevelopBar.FIRST_BURST) {
             curStatus = AFTER160;
         }
-
-/*        set.addBeanTemp(tempratures[0]);
-        set.addInwindTemp(tempratures[1]);
-        set.addOutwindTemp(tempratures[2]);
-        set.addAccBeanTemp(tempratures[3]);
-        set.addAccInwindTemp(tempratures[4]);
-        set.addAccOutwindTemp(tempratures[5]);
-        set.addTimex(lastTime);*/
+        
         // 自动出豆
         if(e != null && e.getCurStatus() == 4){
             runOnUiThread(new Runnable() {
