@@ -310,11 +310,11 @@ public class BaseChart4Coffee extends LineChart {
         }
 
         // 如果是从烘焙过程里出来的，则进行此方法
-        if (beanData.getX() > 1 && set != null && toRefresh) {
+/*        if (beanData.getX() > 1 && set != null && toRefresh) {
             float temp = getMockDataImm(lineIndex, beanData.getX());
             // System.out.println(temp);
             beanData.setY(temp);
-        }
+        }*/
 
         beanLine.addEntry(beanData);
         if (toRefresh) {
