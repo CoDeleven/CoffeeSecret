@@ -30,6 +30,7 @@ import com.dhy.coffeesecret.pojo.UniversalConfiguration;
 import com.dhy.coffeesecret.services.BluetoothService;
 import com.dhy.coffeesecret.ui.device.fragments.FireWindDialog;
 import com.dhy.coffeesecret.ui.device.fragments.Other;
+import com.dhy.coffeesecret.ui.device.record.BreakPointerRecorder;
 import com.dhy.coffeesecret.ui.device.record.RecorderSystem;
 import com.dhy.coffeesecret.utils.FragmentTool;
 import com.dhy.coffeesecret.utils.SettingTool;
@@ -115,7 +116,6 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
     private View curStatusView;
     private UniversalConfiguration mConfig;
     // private long startTime;
-    private boolean isOverBottom = false;
     private int curStatus = RAWBEAN;
     private boolean isReading = false;
     private FragmentTool fragmentTool;
@@ -129,7 +129,7 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
     private int mCurMode = 0;
     private int referIndex = 0;
     // private TempratureSet set = new TempratureSet();
-
+    private BreakPointerRecorder breakPointerRecorder;
     private RecorderSystem recorderSystem;
     // 执行UI操作
     private Handler mHandler = new Handler(new Handler.Callback() {
@@ -169,9 +169,9 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
             int minutes = now / 60;
             int seconds = now % 60;
             untilTime.setText(Utils.getTimeWithFormat(now));
-            if (!isOverBottom && minutes > 1 && seconds > 30) {
+            /*if (!isOverBottom && minutes > 1 && seconds > 30) {
                 isOverBottom = true;
-            }
+            }*/
             developBar.setCurStatus(curStatus);
             return false;
         }
@@ -257,7 +257,7 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
             recorderSystem.addEvent(lastTime + "", e.getDescription() + ":" + e.getCurStatus());
         }
 
-        if (tempratures[0] > 160 && isOverBottom && curStatus != DevelopBar.FIRST_BURST) {
+        if (breakPointerRecorder.record(temprature) && curStatus != DevelopBar.FIRST_BURST) {
             curStatus = AFTER160;
         }
         
@@ -348,6 +348,8 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
 
         // 开始计时,并初始化一系列任务
         recorderSystem = new RecorderSystem();
+        // 开始记录拐点发生的位置
+        breakPointerRecorder = new BreakPointerRecorder();
         // 设置tempraturset
         chart.setTempratureSet(recorderSystem.getTempratureSet());
 
@@ -502,6 +504,8 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
         // TODO 3-20日，在开始烘焙按钮按下后的操作在这里执行
         showButton();
         recorderSystem = new RecorderSystem();
+        // 重新初始化
+        breakPointerRecorder = new BreakPointerRecorder();
         chart.clear();
         mStart.setVisibility(View.GONE);
         BakeReportProxy bakeReport = ((MyApplication) getApplication()).getBakeReport();
@@ -704,7 +708,7 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
                 temprature.getOutwindTemp(), temprature.getAccBeanTemp(), temprature.getAccInwindTemp(),
                 temprature.getAccOutwindTemp()};
 
-        if (tempratures[0] > 160 && isOverBottom && curStatus != DevelopBar.FIRST_BURST) {
+        if (breakPointerRecorder.record(temprature) && curStatus != DevelopBar.FIRST_BURST) {
             curStatus = AFTER160;
         }
 

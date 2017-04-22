@@ -9,10 +9,17 @@ import com.dhy.coffeesecret.pojo.Temprature;
 public class BreakPointerRecorder extends AbstractTimeSystem {
     private Temprature lastTemprature;
 
-    public void record(Temprature temprature){
+    public boolean record(Temprature temprature){
         if(this.lastTemprature == null || lastTemprature.getBeanTemp() > temprature.getBeanTemp()){
             this.lastTemprature = temprature;
+            return false;
+        }else{
+            return true;
         }
+    }
+
+    public Temprature getBreakPointerTemprature(){
+        return lastTemprature;
     }
 
 }

@@ -551,11 +551,16 @@ public class BluetoothService extends Service {
             @Override
             public synchronized boolean readData(String str) {
                 synchronized (result) {
+                    Log.d(TAG, Thread.currentThread() + ":readData2:" + str);
                     result += str;
                     if (str.endsWith("0a")) {
                         dataReader = channelListener1;
                         if (dataChangedListener != null) {
-                            dataChangedListener.notifyDataChanged(Temprature.parseHex2Temprature(Utils.hexString2String(result)));
+                            try{
+                                dataChangedListener.notifyDataChanged(Temprature.parseHex2Temprature(Utils.hexString2String(result)));
+                            }catch(Exception e){
+                                e.printStackTrace();
+                            }
                             result = "";
                         }
                         return true;
