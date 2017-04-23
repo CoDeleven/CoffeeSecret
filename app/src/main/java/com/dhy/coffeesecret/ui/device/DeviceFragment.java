@@ -313,7 +313,7 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
         if (hasPrepared) {
             mPrepareBake.setText("开始烘焙");
             // TODO 省赛
-            // rerangeBean.setVisibility(View.VISIBLE);
+            rerangeBean.setVisibility(View.VISIBLE);
             mPrepareBake.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

@@ -275,6 +275,7 @@ public class BakeReportProxy implements Serializable{
         }else{
             bakeReport.setBreakPointerTemprature(pointerTemprature.getBeanTemp());
         }
+
     }
     public float getBreakPointerTemprature(){
         return bakeReport.getBreakPointerTemprature();
