@@ -421,7 +421,7 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
         fragmentTool = FragmentTool.getFragmentToolInstance(this);
 
 
-        mStart.setVisibility(View.GONE);
+        // mStart.setVisibility(View.GONE);
         // showButton();
         BakeReportProxy bakeReport = ((MyApplication) getApplication()).getBakeReport();
         bakeReport.setStartTemperature(startTemp + "");
