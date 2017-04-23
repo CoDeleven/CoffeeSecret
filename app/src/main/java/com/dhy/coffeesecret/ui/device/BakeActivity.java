@@ -421,8 +421,10 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
         fragmentTool = FragmentTool.getFragmentToolInstance(this);
 
 
-        mStart.setVisibility(View.GONE);
-        // showButton();
+        if(mCurMode == DeviceFragment.AUTOMATIC) {
+            mStart.setVisibility(View.GONE);
+            showButton();
+        }
         BakeReportProxy bakeReport = ((MyApplication) getApplication()).getBakeReport();
         bakeReport.setStartTemperature(startTemp + "");
         bakeReport.setDate(Utils.data2Timestamp(new Date()));
@@ -545,10 +547,11 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
         switch (id) {
             case R.id.id_baking_dry:
                 // 先当作脱水结束
+                avgDryTime = recorderSystem.getTimeInterval();
                 updateCurBeanEntryEvent(new Event(Event.DRY, "脱水"));
                 status = true;
                 avgDryTemprature = Utils.get2PrecisionFloat(recorderSystem.getAvgAccBeanTemprature());
-                avgDryTime = recorderSystem.getTimeInterval();
+
 
                 recorderSystem.startNewEvent();
                 break;
@@ -558,13 +561,14 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
                     curStatus = DevelopBar.FIRST_BURST;
                     v.setEnabled(false);
                 } else {
+                    avgFirstBurstTime = recorderSystem.getTimeInterval();
+
                     updateCurBeanEntryEvent(new Event(Event.FIRST_BURST, "一爆"));
                     curStatus = DevelopBar.FIRST_BURST;
                     isFisrtBurstEnd = true;
                     ((TextView) v).setText("一爆结束");
 
                     avgFirstBurstTemprature = Utils.get2PrecisionFloat(recorderSystem.getAvgAccBeanTemprature());
-                    avgFirstBurstTime = recorderSystem.getTimeInterval();
 
                     recorderSystem.startNewEvent();
                     return;

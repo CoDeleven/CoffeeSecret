@@ -22,6 +22,7 @@ public class RecorderSystem extends AbstractTimeSystem {
      */
     public RecorderSystem() {
         AbstractTimeSystem.startTime = System.currentTimeMillis();
+        resetEventTime();
         tempratureList = new LinkedList<>();
     }
 
@@ -78,6 +79,7 @@ public class RecorderSystem extends AbstractTimeSystem {
     public void startNewEvent(){
         // 保存当前的序号
         startIndex = tempratureList.size();
+        resetEventTime();
     }
 
     public TempratureSet getTempratureSet(){
