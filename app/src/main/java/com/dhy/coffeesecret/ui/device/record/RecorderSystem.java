@@ -21,7 +21,9 @@ public class RecorderSystem extends AbstractTimeSystem {
      * 每次创建新对象的时候都初始化开始时间和温度数据列表
      */
     public RecorderSystem() {
+        // 每次新建本对象，相当于 开始烘焙 事件，故需要重置事件时间
         AbstractTimeSystem.startTime = System.currentTimeMillis();
+        resetEventTime();
         tempratureList = new LinkedList<>();
     }
 
@@ -78,6 +80,7 @@ public class RecorderSystem extends AbstractTimeSystem {
     public void startNewEvent(){
         // 保存当前的序号
         startIndex = tempratureList.size();
+        resetEventTime();
     }
 
     public TempratureSet getTempratureSet(){

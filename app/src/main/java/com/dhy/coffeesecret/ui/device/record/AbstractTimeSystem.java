@@ -14,11 +14,15 @@ public abstract class AbstractTimeSystem {
     private long startEventTime;
 
     public AbstractTimeSystem(){
-        startEventTime = System.currentTimeMillis();
+        startTime = System.currentTimeMillis();
     }
 
     public static long getStartTime() {
         return startTime;
+    }
+
+    protected void resetEventTime(){
+        this.startEventTime = System.currentTimeMillis();
     }
 
     /**

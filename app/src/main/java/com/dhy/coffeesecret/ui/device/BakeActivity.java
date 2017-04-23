@@ -545,12 +545,14 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
         switch (id) {
             case R.id.id_baking_dry:
                 // 先当作脱水结束
-                updateCurBeanEntryEvent(new Event(Event.DRY, "脱水"));
-                status = true;
-                avgDryTemprature = Utils.get2PrecisionFloat(recorderSystem.getAvgAccBeanTemprature());
                 avgDryTime = recorderSystem.getTimeInterval();
+                updateCurBeanEntryEvent(new Event(Event.DRY, "脱水"));
+                avgDryTemprature = Utils.get2PrecisionFloat(recorderSystem.getAvgAccBeanTemprature());
 
                 recorderSystem.startNewEvent();
+
+                status = true;
+
                 break;
             case R.id.id_baking_firstBurst:
                 if (isFisrtBurstEnd) {
@@ -558,15 +560,16 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
                     curStatus = DevelopBar.FIRST_BURST;
                     v.setEnabled(false);
                 } else {
+                    avgFirstBurstTime = recorderSystem.getTimeInterval();
                     updateCurBeanEntryEvent(new Event(Event.FIRST_BURST, "一爆"));
+                    avgFirstBurstTemprature = Utils.get2PrecisionFloat(recorderSystem.getAvgAccBeanTemprature());
+                    recorderSystem.startNewEvent();
+
                     curStatus = DevelopBar.FIRST_BURST;
                     isFisrtBurstEnd = true;
                     ((TextView) v).setText("一爆结束");
 
-                    avgFirstBurstTemprature = Utils.get2PrecisionFloat(recorderSystem.getAvgAccBeanTemprature());
-                    avgFirstBurstTime = recorderSystem.getTimeInterval();
 
-                    recorderSystem.startNewEvent();
                     return;
                 }
                 status = true;
@@ -586,8 +589,8 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
 
                 break;
             case R.id.id_baking_end:
-                avgEndTemprature = Utils.get2PrecisionFloat(recorderSystem.getAvgAccBeanTemprature());
                 avgEndTime = recorderSystem.getTimeInterval();
+                avgEndTemprature = Utils.get2PrecisionFloat(recorderSystem.getAvgAccBeanTemprature());
                 avgGlobalTemprature = Utils.get2PrecisionFloat(recorderSystem.getGlobalAccTemprature());
 
                 updateCurBeanEntryEvent(new Event(Event.END, "结束"));
