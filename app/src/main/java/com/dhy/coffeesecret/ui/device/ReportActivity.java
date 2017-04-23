@@ -85,6 +85,18 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
     ImageView more;
     @Bind(R.id.id_report_species)
     TextView species;
+    @Bind(R.id.id_globalAcc)
+            TextView globalAccTemp;
+    @Bind(R.id.id_avgDry)
+            TextView avgDry;
+    @Bind(R.id.id_avgFirbu)
+            TextView avgFirbu;
+    @Bind(R.id.id_avgEnd)
+            TextView avgEnd;
+    @Bind(R.id.id_breakPointer_temp)
+            TextView breakPointerTemp;
+    @Bind(R.id.id_breakPointer_time)
+            TextView breakPointerTime;
     // 校园专用单一豆名
     String _bean_;
     String _species_;
@@ -158,6 +170,13 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
         date.setText("烘焙日期：" + proxy.getBakeDate());
         device.setText("设备：" + proxy.getDevice());
         score.setText(proxy.getBakeDegree());
+
+        globalAccTemp.setText("平均升温率：" + Utils.getCrspTempratureValue(proxy.getGlobalAccBeanTemp() + "") + tempratureUnit);
+        avgDry.setText("开始->脱水结束：" + Utils.getCrspTempratureValue(proxy.getAvgDryTemprature() + "") + tempratureUnit + "　　　" + Utils.getTimeWithFormat(proxy.getAvgDryTime()));
+        avgFirbu.setText("脱水结束->一爆开始：" + Utils.getCrspTempratureValue(proxy.getAvgFirstBurstTemprature() + "") + tempratureUnit + "　　　" + Utils.getTimeWithFormat(proxy.getAvgFirstBurstTime()));
+        avgEnd.setText("一爆开始->结束：" + Utils.getCrspTempratureValue(proxy.getAvgEndTemprature() + "") + tempratureUnit + "　　　" + Utils.getTimeWithFormat(proxy.getAvgEndTime()));
+        breakPointerTemp.setText("回温点温度：" + Utils.getCrspTempratureValue(proxy.getBreakPointerTemprature() + "") + tempratureUnit);
+        breakPointerTime.setText("回温点时间：" + Utils.getTimeWithFormat(proxy.getBreakPointerTime()));
 
         // 校园专用
         _bakeDegree_ = proxy.getBakeDegree();

@@ -200,7 +200,7 @@ public class BaseChart4Coffee extends LineChart {
         }
         set.setCircleColor(Color.parseColor("#6774a4"));
         // set.setCircleColorHole(Color.WHITE);
-        set.setLineWidth(2f);
+        set.setLineWidth(1f);
         set.setCircleRadius(4f);
         // set.setCircleHoleRadius(2f);
         set.setFillAlpha(65);
@@ -287,7 +287,7 @@ public class BaseChart4Coffee extends LineChart {
         if (queue.size() == 50) {
             queue.pop();
         }
-        queue.add(new WeightedObservedPoint(1d, beanData.getX(), beanData.getY()));
+        queue.offer(new WeightedObservedPoint(1d, beanData.getX(), beanData.getY()));
         // 此处本应进行set的设置，但是因为引用外界的tempratureSet，则不进行处理
         addOneDataToLine(beanData, lineIndex, true);
     }
@@ -431,6 +431,7 @@ public class BaseChart4Coffee extends LineChart {
     public float getMockDataImm(int lineIndex, float x) {
         LinkedList queue = weightedObservedPointsMap.get(lineIndex);
         double[] param = fitters.get(lineIndex).fit(queue.subList(0, queue.size()));
+        Log.e("wrong", x + "->" + getYByXValue(param, x));
         return getYByXValue(param, x);
     }
 

@@ -29,6 +29,8 @@ public class BakeReportProxy implements Serializable{
     private List<Entry> entriesWithEvents;
     private float rawBeanWeight;
     private Map<String, String> events;
+
+
     public BakeReportProxy(BakeReport bakeReport) {
         this.bakeReport = bakeReport;
         if (bakeReport != null) {
@@ -259,5 +261,73 @@ public class BakeReportProxy implements Serializable{
         // 存入事件的具体情况
         event.setDescription(eventStr.substring(0, eventStr.length() - 2));
         return event;
+    }
+    public float getBreakPointerTime(){
+        return bakeReport.getBreakPointerTime();
+    }
+    public void setBreakPointerTime(float time){
+        bakeReport.setBreakPointerTime(time);
+
+    }
+    public void setBreakPointerTemprature(Temprature pointerTemprature){
+        bakeReport.setBreakPointerTemprature(pointerTemprature.getBeanTemp());
+    }
+    public float getBreakPointerTemprature(){
+        return bakeReport.getBreakPointerTemprature();
+    }
+    public float getAvgDryTemprature() {
+        return bakeReport.getAvgDryTemprature();
+    }
+
+    public void setAvgDryTemprature(float avgDryTemprature) {
+        this.bakeReport.setAvgDryTemprature(avgDryTemprature);
+    }
+
+    public float getAvgDryTime() {
+        return this.bakeReport.getAvgDryTime();
+    }
+
+    public void setAvgDryTime(float avgDryTime) {
+        this.bakeReport.setAvgDryTime(avgDryTime);
+    }
+
+    public float getAvgFirstBurstTime() {
+        return bakeReport.getAvgFirstBurstTime();
+    }
+
+    public void setAvgFirstBurstTime(float avgFirstBurstTime) {
+        this.bakeReport.setAvgFirstBurstTime(avgFirstBurstTime);
+    }
+
+    public float getAvgFirstBurstTemprature() {
+        return this.bakeReport.getAvgFirstBurstTemprature();
+    }
+
+    public void setAvgFirstBurstTemprature(float avgFirstBurstTemprature) {
+        this.bakeReport.setAvgFirstBurstTemprature(avgFirstBurstTemprature);
+    }
+
+    public float getAvgEndTime() {
+        return this.bakeReport.getAvgEndTime();
+    }
+
+    public void setAvgEndTime(float avgEndTime) {
+        this.bakeReport.setAvgEndTime(avgEndTime);
+    }
+
+    public float getAvgEndTemprature() {
+        return this.bakeReport.getAvgEndTemprature();
+    }
+
+    public void setAvgEndTemprature(float avgEndTemprature) {
+        this.bakeReport.setAvgEndTemprature(avgEndTemprature);
+    }
+
+    public float getGlobalAccBeanTemp() {
+        return this.bakeReport.getAvgGlobalBeanTemprature();
+    }
+
+    public void setGlobalAccBeanTemp(float globalAccBeanTemp) {
+        this.bakeReport.setAvgGlobalBeanTemprature(globalAccBeanTemp);
     }
 }

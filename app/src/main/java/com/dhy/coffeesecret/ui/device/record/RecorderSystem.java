@@ -68,7 +68,7 @@ public class RecorderSystem extends AbstractTimeSystem {
         for(Temprature temprature : tempratureList.subList(start, end)){
             total += temprature.getAccBeanTemp();
         }
-        return total / end - start;
+        return total / (end - start);
     }
 
     public float getAvgAccBeanTemprature(){

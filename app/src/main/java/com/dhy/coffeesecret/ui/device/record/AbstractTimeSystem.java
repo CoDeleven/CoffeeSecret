@@ -21,6 +21,10 @@ public abstract class AbstractTimeSystem {
         return startTime;
     }
 
+    /**
+     * 当前系统时间减去开始该事件的时间
+     * @return
+     */
     public float getTimeInterval(){
         return Utils.get2PrecisionFloat((System.currentTimeMillis() - startEventTime) / 1000f);
     }

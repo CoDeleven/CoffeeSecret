@@ -26,6 +26,17 @@ public class BakeReport implements Serializable {
 
     private TempratureSet tempratureSet;
 
+    private float breakPointerTime;
+    private float breakPointerTemprature;
+    private float avgDryTemprature;
+    private float avgDryTime;
+    private float avgFirstBurstTime;
+    private float avgFirstBurstTemprature;
+    private float avgEndTime;
+    private float avgEndTemprature;
+    private float avgAccBeanTemprature;
+    private float avgGlobalBeanTemprature;
+
     // 发展时间
     private String developmentTime;
     // 发展率
@@ -178,5 +189,89 @@ public class BakeReport implements Serializable {
 
     public Map<String, String> getEvents(){
         return tempratureSet.getEvents();
+    }
+
+    public float getBreakPointerTime() {
+        return breakPointerTime;
+    }
+
+    public void setBreakPointerTime(float breakPointerTime) {
+        this.breakPointerTime = breakPointerTime;
+    }
+
+    public float getBreakPointerTemprature() {
+        return breakPointerTemprature;
+    }
+
+    public void setBreakPointerTemprature(float breakPointerTemprature) {
+        this.breakPointerTemprature = breakPointerTemprature;
+    }
+
+    public void setBeanId(long beanId) {
+        this.beanId = beanId;
+    }
+
+    public float getAvgDryTemprature() {
+        return avgDryTemprature;
+    }
+
+    public void setAvgDryTemprature(float avgDryTemprature) {
+        this.avgDryTemprature = avgDryTemprature;
+    }
+
+    public float getAvgDryTime() {
+        return avgDryTime;
+    }
+
+    public void setAvgDryTime(float avgDryTime) {
+        this.avgDryTime = avgDryTime;
+    }
+
+    public float getAvgFirstBurstTime() {
+        return avgFirstBurstTime;
+    }
+
+    public void setAvgFirstBurstTime(float avgFirstBurstTime) {
+        this.avgFirstBurstTime = avgFirstBurstTime;
+    }
+
+    public float getAvgFirstBurstTemprature() {
+        return avgFirstBurstTemprature;
+    }
+
+    public void setAvgFirstBurstTemprature(float avgFirstBurstTemprature) {
+        this.avgFirstBurstTemprature = avgFirstBurstTemprature;
+    }
+
+    public float getAvgEndTime() {
+        return avgEndTime;
+    }
+
+    public void setAvgEndTime(float avgEndTime) {
+        this.avgEndTime = avgEndTime;
+    }
+
+    public float getAvgEndTemprature() {
+        return avgEndTemprature;
+    }
+
+    public void setAvgEndTemprature(float avgEndTemprature) {
+        this.avgEndTemprature = avgEndTemprature;
+    }
+
+    public float getAvgAccBeanTemprature() {
+        return avgAccBeanTemprature;
+    }
+
+    public void setAvgAccBeanTemprature(float avgAccBeanTemprature) {
+        this.avgAccBeanTemprature = avgAccBeanTemprature;
+    }
+
+    public float getAvgGlobalBeanTemprature() {
+        return avgGlobalBeanTemprature;
+    }
+
+    public void setAvgGlobalBeanTemprature(float avgGlobalBeanTemprature) {
+        this.avgGlobalBeanTemprature = avgGlobalBeanTemprature;
     }
 }
