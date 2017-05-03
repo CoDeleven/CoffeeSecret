@@ -26,7 +26,6 @@ import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.pojo.BakeReportProxy;
 import com.dhy.coffeesecret.pojo.Temprature;
-import com.dhy.coffeesecret.pojo.TempratureSet;
 import com.dhy.coffeesecret.pojo.UniversalConfiguration;
 import com.dhy.coffeesecret.services.BluetoothService;
 import com.dhy.coffeesecret.ui.device.fragments.FireWindDialog;
@@ -246,9 +245,9 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
     @Override
     public void notifyDataChanged(Temprature temprature) {
         // chart.getHighestVisibleX()
-        if(mCurMode == DeviceFragment.MANUAL){
+        if (mCurMode == DeviceFragment.MANUAL) {
             notifyTempratureByManual(temprature);
-        }else{
+        } else {
             notifyTempratureByAtuo(temprature);
         }
 
@@ -268,25 +267,32 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
         Event e = referTempratures.getEventByX(referIndex++);
 
         curBeanEntry = new Entry(lastTime, Utils.getCrspTempratureValue(tempratures[0] + ""));
-        if(e != null){
+        if (e != null) {
             curBeanEntry.setEvent(e);
             eventRecords.add(curBeanEntry);
             recorderSystem.addEvent(lastTime + "", e.getDescription() + ":" + e.getCurStatus());
         }
 
-        if (breakPointerRecorder.record(temprature) && tempratures[0] > 160 && curStatus != DevelopBar.FIRST_BURST) {
+        if (lastTime > 90 && breakPointerRecorder.record(temprature) && tempratures[0] > 160 && curStatus != DevelopBar.FIRST_BURST) {
             curStatus = AFTER160;
         }
-        
+
         // 自动出豆
-        if(e != null && e.getCurStatus() == 4){
+        if (e != null && e.getCurStatus() == 4) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     addEvent(mEnd);
                 }
             });
-        }else{
+        } else if (e != null && e.getCurStatus() == 2) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    addEvent(mFirstBurst);
+                }
+            });
+        } else {
             chart.addOneDataToLine(curBeanEntry, BEANLINE);
         }
 
@@ -420,10 +426,10 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
 
         fragmentTool = FragmentTool.getFragmentToolInstance(this);
 
-
-        if(mCurMode == DeviceFragment.AUTOMATIC) {
+        System.out.println("mCurMode" + mCurMode);
+        if (mCurMode == DeviceFragment.AUTOMATIC) {
             mStart.setVisibility(View.GONE);
-            showButton();
+            // showButton();
         }
         BakeReportProxy bakeReport = ((MyApplication) getApplication()).getBakeReport();
         bakeReport.setStartTemperature(startTemp + "");
@@ -603,7 +609,6 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
                 mBluetoothOperator.setDataChangedListener(null);
 
 
-
                 // 发送一个bundle来标识是否来自bakeactivity的请求
                 intent.putExtra("status", I_AM_BAKEACTIVITY);
                 startActivity(intent);
@@ -751,7 +756,7 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
         }
     }
 
-    private void notifyTempratureByManual(Temprature temprature){
+    private void notifyTempratureByManual(Temprature temprature) {
         // 温度数组: 0->豆温，1->进风温, 2->出风温, 3->加速豆温, 4->加速进风温, 5->加速出风温
         float[] tempratures = {temprature.getBeanTemp(), temprature.getInwindTemp(),
                 temprature.getOutwindTemp(), temprature.getAccBeanTemp(), temprature.getAccInwindTemp(),
@@ -788,38 +793,36 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
         mTimer.sendEmptyMessage(0);
     }
 
-    private float[] wrapTempratureInAutoMode(Temprature temprature){
+    private float[] wrapTempratureInAutoMode(Temprature temprature) {
         float[] tempratures = {temprature.getBeanTemp(), temprature.getInwindTemp(),
                 temprature.getOutwindTemp(), temprature.getAccBeanTemp(), temprature.getAccInwindTemp(),
                 temprature.getAccOutwindTemp()};
-        for(int i = 0; i < 3; ++i){
+        for (int i = 0; i < 3; ++i) {
             float target = referTempratures.getTempratureByIndex(i + 1).get(referIndex);
-            float cur = tempratures[i];
-            // tempratures[i] = cur + (target - cur) * (0.9f + (float)Math.random() * 0.1f);
-            tempratures[i] = target;
-            //  + (target * (float)Math.random() * 0.15f) * (float)Math.pow(-1, (int)Math.random() * 2 + 1);
+            tempratures[i] = target + (target * (float) Math.random() * 0.1f) * (float) Math.pow(-1, (int) (Math.random() * 2) + 1);
         }
         // 计算理想豆温加速度(两边差距太大，难以拟合)
-        // if(temprature.getBeanTemp() < 50){
+        if (temprature.getBeanTemp() < 50) {
             tempratures[3] = referTempratures.getAccBeanTempratures().get(referIndex);
             tempratures[4] = referTempratures.getAccInwindTempratures().get(referIndex);
             tempratures[5] = referTempratures.getAccOutwindTempratures().get(referIndex);
-/*        }else{
+        } else {
             tempratures[3] = (tempratures[0] - temprature.getBeanTemp()) + temprature.getAccBeanTemp();
             tempratures[4] = (tempratures[1] - temprature.getInwindTemp()) + temprature.getAccInwindTemp();
             tempratures[5] = (tempratures[2] - temprature.getOutwindTemp()) + temprature.getAccOutwindTemp();
-        }*/
+        }
         //
         return tempratures;
     }
 
     /**
      * 测试功能
+     *
      * @param origin
      * @param tempratures
      * @return
      */
-    private void upwrapTemprature(Temprature origin, float[] tempratures){
+    private void upwrapTemprature(Temprature origin, float[] tempratures) {
         origin.setBeanTemp(tempratures[0]);
         origin.setInwindTemp(tempratures[1]);
         origin.setOutwindTemp(tempratures[2]);
