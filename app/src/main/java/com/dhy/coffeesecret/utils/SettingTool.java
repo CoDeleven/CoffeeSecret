@@ -48,7 +48,7 @@ public class SettingTool {
         mConfig.setMarkByCircle(sharedPreferences.getBoolean("markByCircle", false));
         mConfig.setMaxX(sharedPreferences.getInt("maxX", 20));
         mConfig.setMaxLeftY(sharedPreferences.getInt("maxLeftY", 300));
-        mConfig.setMaxRightY(sharedPreferences.getInt("maxRightY", 30));
+        mConfig.setMaxRightY(sharedPreferences.getInt("maxRightY", 50));
         mConfig.setTempratureSmooth(sharedPreferences.getInt("tempratureSmooth", 3));
         mConfig.setTempratureAccSmooth(sharedPreferences.getInt("tempratureAccSmooth", 10));
         mConfig.setCheckBeanTemp(sharedPreferences.getInt("checkBeanTemp", 0));

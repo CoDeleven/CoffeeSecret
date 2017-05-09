@@ -40,7 +40,7 @@ public class TestData {
     public static String[] beanList5 = {"Java", "Dilla", "Deiga", "Dalle", "Alghe", "Agaro", "Gesha", "Rume  Sudan", "Kaffa", "Ennarea", "Gimma", "Tafari-kela", "Ranbung", "S.4"};
     public static String[] beanList6 = {"Catiomors", "Tupi", "Tupi", "Obata", "Catisic", "Lempira", "IAPAR59", "Colombia", "Sarchimor"};
     public static String[] beanList7 = {"S288", "ST95"};
-    public static String[] countryList1 = {"全部", "墨西哥", "牙买加", "古巴", "海地", "多明尼加", "波多黎各", "多明尼克", "格瑞纳达", "贝里斯"
+    public static String[] countryList1 = {"全部","墨西哥", "牙买加", "古巴", "海地", "多明尼加", "波多黎各", "多明尼克", "格瑞纳达", "贝里斯"
             , "哥斯达黎加", "危地马拉", "宏都拉斯", "尼加拉瓜", "巴拿马", "萨尔瓦多", "巴西", "玻利维亚", "哥伦比亚", "厄瓜多尔", "秘鲁"
             , "盖亚那", "夏威夷", "斐济", "巴布亚新几内亚", "澳大利亚", "中国", "菲律宾", "印度", "泰国", "越南", "印尼", "刚果", "象牙海岸"
             , "安哥拉", "马达加斯加", "肯尼亚", "尚比亚", "美国", "英国", "日本", "荷兰"};

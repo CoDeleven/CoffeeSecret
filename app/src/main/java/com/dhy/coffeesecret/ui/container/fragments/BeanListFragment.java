@@ -29,7 +29,6 @@ import com.bigkoo.quicksidebar.QuickSideBarView;
 import com.bigkoo.quicksidebar.listener.OnQuickSideBarTouchListener;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BeanInfo;
-import com.dhy.coffeesecret.pojo.Global;
 import com.dhy.coffeesecret.ui.container.BeanInfoActivity;
 import com.dhy.coffeesecret.ui.container.adapters.BeanListAdapter;
 import com.dhy.coffeesecret.ui.container.adapters.CountryListAdapter;
@@ -51,13 +50,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.FormBody;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
@@ -93,8 +85,8 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
     private BeanListAdapter beanListAdapter;
     private Context context;
     private String title = "";
-    private int maxPrice = 2000;
-    private int maxWeight = 10;
+    private int maxPrice = 1005;
+    private int maxWeight = 505;
     private String screenHandler = "";
     private int[] screenPrice = new int[2];
     private int[] screenWeight = new int[2];
@@ -103,6 +95,7 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
 
     // 因为此处需要用到position，而继承不需要
     private int curPosition = -1;
+
     public BeanListFragment() {
         super();
     }
@@ -172,7 +165,7 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
     }
 
     // 钩子函数，时间紧急，使用继承
-    public void hook(BeanInfo beanInfo){
+    public void hook(BeanInfo beanInfo) {
         Intent intent = new Intent(context, BeanInfoActivity.class);
         intent.putExtra("beanInfo", beanInfo);
         startActivityForResult(intent, curPosition);
@@ -266,9 +259,10 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
         String[] beanLists = null;
         // beanInfoListJson = TestData.beaninfos;
         ArrayList<BeanInfo> beanInfoss = null;
-        try{
-            beanInfoss = gson.fromJson(beanInfoListJson, new TypeToken<ArrayList<BeanInfo>>() {}.getType());
-        }catch (Exception e){
+        try {
+            beanInfoss = gson.fromJson(beanInfoListJson, new TypeToken<ArrayList<BeanInfo>>() {
+            }.getType());
+        } catch (Exception e) {
             e.printStackTrace();
             Log.i(TAG, "beanInfoListJson" + beanInfoListJson);
             Log.i(TAG, "getBeanInfos: " + beanInfoss);
@@ -384,7 +378,11 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
             @Override
             public void onIndexChangeListener(RangeBar rangeBar, int thumb1, int thumb2) {
                 tvFirstPrice.setText(thumb1 + "");
-                tvSecondPrice.setText(thumb2 + "");
+                if(thumb2 >= maxPrice - 5){
+                    tvSecondPrice.setText("1000+");
+                }else{
+                    tvSecondPrice.setText(thumb2 + "");
+                }
                 screenPrice[0] = thumb1;
                 screenPrice[1] = thumb2;
             }
@@ -394,7 +392,12 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
             @Override
             public void onIndexChangeListener(RangeBar rangeBar, int thumb1, int thumb2) {
                 tvFirstWeight.setText(thumb1 + "");
-                tvSecondWeight.setText(thumb2 + "");
+
+                if(thumb2 > maxWeight -5){
+                    tvSecondWeight.setText("500+");
+                }else{
+                    tvSecondWeight.setText(thumb2 + "");
+                }
                 screenWeight[0] = thumb1;
                 screenWeight[1] = thumb2;
             }
@@ -418,7 +421,7 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
         String[] countryArray = null;
         switch (title) {
             case "全部":
-                countryArray = getResources().getStringArray(R.array.other);
+                countryArray = getResources().getStringArray(R.array.all);
                 break;
             case "中美":
                 countryArray = getResources().getStringArray(R.array.central_america);
@@ -436,7 +439,7 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
                 countryArray = getResources().getStringArray(R.array.africa);
                 break;
             default:
-                countryArray = TestData.countryList7;
+                countryArray = getResources().getStringArray(R.array.other);
                 break;
         }
         Collections.addAll(countries, countryArray);
@@ -515,7 +518,7 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
         if ((screenPrice[0] > 0 || screenPrice[1] < maxPrice - 1)) {
             coffeeBeanInfos.clear();
             for (BeanInfo beanInfo : beanInfos) {
-                if (beanInfo.getPrice() >= screenPrice[0] && beanInfo.getPrice() <= screenPrice[1]) {
+                if (beanInfo.getPrice() >= screenPrice[0] && (screenPrice[1] > 1000 ? true : beanInfo.getPrice() <= screenPrice[1])) {
                     coffeeBeanInfos.add(beanInfo);
                 }
             }
@@ -577,6 +580,8 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
                     if (refreshBeanList != null && refreshBeanList.isRefreshing()) {
                         activity.refreshBeanList.setRefreshing(false);
                     }
+                    countryName.setText("全部");
+                    screenHandler = "全部";
                     beanListAdapter.notifyDataSetChanged();
                     break;
                 case INIT_POPUP_WINDOW:

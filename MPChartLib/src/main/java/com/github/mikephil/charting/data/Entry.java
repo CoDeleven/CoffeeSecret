@@ -8,6 +8,8 @@ import android.os.Parcelable;
 import com.github.mikephil.charting.utils.Utils;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Class representing one entry in the chart. Might contain multiple values.
@@ -27,9 +29,11 @@ public class Entry extends BaseEntry implements Serializable {
 
     public void setEvent(Event event) {
         this.event = event;
+        Entry.entries.add(this);
     }
 
     private Event event;
+    private static List<Entry> entries = new ArrayList<>();
     /** the x value */
     private float x = 0f;
 
@@ -159,4 +163,17 @@ public class Entry extends BaseEntry implements Serializable {
             return new Entry[size];
         }
     };
+
+    /**
+     * 因遇到高亮事件出现的无法定位精准的问题，故在Entry中加入了
+     * 静态事件列表，可以在ChartHighlighter中的buildHighlights
+     * 自行加入判断
+     */
+    public static void clearEvents(){
+        entries.clear();;
+    }
+
+    public static List<Entry> getEvents() {
+        return entries;
+    }
 }

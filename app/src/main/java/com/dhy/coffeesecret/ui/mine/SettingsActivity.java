@@ -154,7 +154,7 @@ public class SettingsActivity extends AppCompatActivity {
                 msg = new Message();
                 msg.what = SHOW_TEXT_DIALOG;
                 msg.arg1 = R.id.refer_degree;
-                msg.obj = new String[]{"Agtron", "Brother", "Candy", "Death"};
+                msg.obj = new String[]{"Agtron"};
                 mHandler.sendMessage(msg);
                 break;
             case R.id.time_shaft:
@@ -210,19 +210,23 @@ public class SettingsActivity extends AppCompatActivity {
                                 textTemperatureUnit.setText(whichItem);
                                 if (!whichItem.equals(config.getTempratureUnit())) {
                                     int maxLeftY = 0;
+                                    int maxRightY = 0;
                                     switch (whichItem) {
                                         case "℃":
                                             maxLeftY = (int) ((config.getMaxLeftY() - 32) / 1.8);
+                                            maxRightY = (int) ((config.getMaxRightY() - 32) / 1.8);
                                             ((MyApplication) getApplicationContext()).tempratureUnit = "℃";
                                             break;
                                         case "℉":
                                             maxLeftY = (int) (config.getMaxLeftY() * 1.8 + 32);
+                                            maxRightY = (int) (config.getMaxRightY() * 1.8 + 32);
                                             ((MyApplication) getApplicationContext()).tempratureUnit = "℉";
                                             break;
                                     }
                                     textTemperatureShaft.setText("最高" + maxLeftY
                                             + whichItem);
                                     config.setMaxLeftY(maxLeftY);
+                                    config.setMaxRightY(maxRightY);
                                 }
                                 config.setTempratureUnit(whichItem);
                                 break;
@@ -291,12 +295,12 @@ public class SettingsActivity extends AppCompatActivity {
                         break;
                     case R.id.temperature_line:
                         max = numberTen.getValue() * 10 + numberSingle.getValue();
-                        textTemperatureLine.setText("每秒的平均数为: " + max);
+                        textTemperatureLine.setText(max + "级");
                         config.setTempratureSmooth(max);
                         break;
                     case R.id.heating_line:
                         max = numberTen.getValue() * 10 + numberSingle.getValue();
-                        textHeatingLine.setText("每秒的平均数为: " + max);
+                        textHeatingLine.setText(max + "级");
                         config.setTempratureAccSmooth(max);
                         break;
                 }

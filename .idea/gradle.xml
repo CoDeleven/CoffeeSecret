@@ -23,6 +23,7 @@
             <option value="$PROJECT_DIR$/shop" />
           </set>
         </option>
+        <option name="resolveModulePerSourceSet" value="false" />
       </GradleProjectSettings>
     </option>
   </component>

@@ -8,6 +8,8 @@
     android:orientation="vertical"
     tools:context="com.dhy.coffeesecret.ConnectedActivity">
     <RelativeLayout
+        android:paddingTop="50dp"
+        android:paddingBottom="50dp"
         android:gravity="center"
         android:background="@color/colorPrimary"
         android:layout_width="match_parent"

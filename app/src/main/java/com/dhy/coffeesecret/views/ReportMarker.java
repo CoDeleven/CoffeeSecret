@@ -3,7 +3,9 @@ package com.dhy.coffeesecret.views;
 import android.content.Context;
 import android.widget.TextView;
 
+import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
+import com.dhy.coffeesecret.utils.Utils;
 import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
@@ -21,6 +23,8 @@ public class ReportMarker extends MarkerView {
     TextView temp;
     @Bind(R.id.id_report_tips_event)
     TextView event;
+    @Bind(R.id.id_report_tips_time)
+    TextView time;
     public ReportMarker(Context context, int layoutResource) {
         super(context, layoutResource);
         ButterKnife.bind(this);
@@ -28,7 +32,8 @@ public class ReportMarker extends MarkerView {
     @Override
     public void refreshContent(Entry e, Highlight highlight) {
         if(!"".equals(e.getEvent().getDescription())){
-            temp.setText("温度:" + e.getY());
+            temp.setText("温度:" + Utils.getCrspTempratureValue(Utils.get2PrecisionFloat(e.getY()) + "") + MyApplication.tempratureUnit);
+            time.setText("时间："+ Utils.getTimeWithFormat(e.getX()));
             event.setText("事件:" + e.getEvent().getDescription());
         }
         super.refreshContent(e, highlight);

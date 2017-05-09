@@ -13,8 +13,11 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.dhy.coffeesecret.R;
+import com.dhy.coffeesecret.utils.SettingTool;
 import com.dhy.coffeesecret.utils.UnitConvert;
 import com.github.mikephil.charting.data.Event;
+
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -52,6 +55,15 @@ public class Other extends DialogFragment {
                 dismiss();
             }
         });
+        List<String> temp = SettingTool.parse2List(SettingTool.getConfig(getContext()).getQuickEvents());
+        quick1.setText(temp.get(0));
+        quick2.setText(temp.get(1));
+        quick3.setText(temp.get(2));
+        quick4.setText(temp.get(3));
+        quick5.setText(temp.get(4));
+
+
+
         return view;
     }
 

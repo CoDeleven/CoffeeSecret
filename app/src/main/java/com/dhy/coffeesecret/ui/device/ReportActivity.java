@@ -25,7 +25,6 @@ import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.pojo.BakeReportProxy;
 import com.dhy.coffeesecret.pojo.BeanInfoSimple;
-import com.dhy.coffeesecret.pojo.DialogBeanInfo;
 import com.dhy.coffeesecret.ui.device.fragments.SharedFragment;
 import com.dhy.coffeesecret.utils.FragmentTool;
 import com.dhy.coffeesecret.utils.SettingTool;
@@ -55,6 +54,7 @@ import static com.dhy.coffeesecret.views.BaseChart4Coffee.OUTWINDLINE;
 
 
 public class ReportActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener {
+    private static ReportActivity REPORT_ACTIVITY;
     @Bind(R.id.id_report_chart)
     BaseChart4Coffee mChart;
     @Bind(R.id.id_report_lineOperator)
@@ -83,10 +83,20 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
     ImageView barcode;
     @Bind(R.id.id_edit)
     ImageView more;
-
     @Bind(R.id.id_report_species)
     TextView species;
-
+    @Bind(R.id.id_globalAcc)
+            TextView globalAccTemp;
+    @Bind(R.id.id_avgDry)
+            TextView avgDry;
+    @Bind(R.id.id_avgFirbu)
+            TextView avgFirbu;
+    @Bind(R.id.id_avgEnd)
+            TextView avgEnd;
+    @Bind(R.id.id_breakPointer_temp)
+            TextView breakPointerTemp;
+    @Bind(R.id.id_breakPointer_time)
+            TextView breakPointerTime;
     // 校园专用单一豆名
     String _bean_;
     String _species_;
@@ -100,7 +110,11 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
     private List<LinearLayout> beanContent;
     private PopupWindow popupWindow;
     private BakeReportProxy proxy;
-    private static ReportActivity REPORT_ACTIVITY;
+
+    public static ReportActivity getInstance() {
+        return REPORT_ACTIVITY;
+    }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -137,6 +151,8 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
         mChart.setDrawMarkers(true);
         mChart.setMarker(new ReportMarker(this, R.layout.report_marker));
         mChart.initLine();
+        // 设置tempratureset，进行转换
+        mChart.setTempratureSet(proxy.getBakeReport().getTempratureSet());
 
         mChart.addNewDatas(proxy.getLineDataSetByIndex(BEANLINE).getValues(), BEANLINE);
         mChart.addNewDatas(proxy.getLineDataSetByIndex(INWINDLINE).getValues(), INWINDLINE);
@@ -145,9 +161,8 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
         mChart.addNewDatas(proxy.getLineDataSetByIndex(ACCINWINDLINE).getValues(), ACCINWINDLINE);
         mChart.addNewDatas(proxy.getLineDataSetByIndex(ACCOUTWINDLINE).getValues(), ACCOUTWINDLINE);
 
-
         envTemp.setText("环境温度：" + Utils.getCrspTempratureValue(proxy.getEnvTemp() + "") + tempratureUnit);
-        startTemp.setText("入豆温度：" + Utils.getCrspTempratureValue(proxy.getEndTemp()) + tempratureUnit);
+        startTemp.setText("入豆温度：" + Utils.getCrspTempratureValue(proxy.getStartTemp() + "") + tempratureUnit);
         endTemp.setText("结束温度：" + Utils.getCrspTempratureValue(proxy.getEndTemp()) + tempratureUnit);
         developTime.setText("发展时间：" + proxy.getDevelopTime());
         developRate.setText("发展率：" + proxy.getDevelopRate() + "%");
@@ -156,13 +171,28 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
         device.setText("设备：" + proxy.getDevice());
         score.setText(proxy.getBakeDegree());
 
+        globalAccTemp.setText("平均升温率：" + Utils.getCrspTempratureValue(proxy.getGlobalAccBeanTemp() + "") + tempratureUnit);
+        avgDry.setText("开始->脱水结束：" + Utils.getCrspTempratureValue(proxy.getAvgDryTemprature() + "") + tempratureUnit + "　　　" + Utils.getTimeWithFormat(proxy.getAvgDryTime()));
+        avgFirbu.setText("脱水结束->一爆开始：" + Utils.getCrspTempratureValue(proxy.getAvgFirstBurstTemprature() + "") + tempratureUnit + "　　　" + Utils.getTimeWithFormat(proxy.getAvgFirstBurstTime()));
+        avgEnd.setText("一爆开始->结束：" + Utils.getCrspTempratureValue(proxy.getAvgEndTemprature() + "") + tempratureUnit + "　　　" + Utils.getTimeWithFormat(proxy.getAvgEndTime()));
+        breakPointerTemp.setText("回温点温度：" + Utils.getCrspTempratureValue(proxy.getBreakPointerTemprature() + "") + tempratureUnit);
+        breakPointerTime.setText("回温点时间：" + Utils.getTimeWithFormat(proxy.getBreakPointerTime()));
+
         // 校园专用
         _bakeDegree_ = proxy.getBakeDegree();
         _developRate_ = proxy.getDevelopRate();
 
         float cooked = Float.parseFloat(proxy.getBakeReport().getCookedBeanWeight());
         float raw = proxy.getRawBeanWeight();
-        species.setText("品种 （" + "熟豆重量：" + Utils.getCrspWeightValue(cooked + "") + weightUnit + "，" + "脱水率：" + Utils.get2PrecisionFloat((cooked * 100) / raw)   + "% ）");
+        // TODO 处理BakeReport中不包含生豆重量属性的替代方案(后续要改)
+        if(raw <= 0.0f){
+            raw = 0f;
+            for(BeanInfoSimple simple: proxy.getBeanInfos()){
+                raw += Float.parseFloat(simple.getUsage());
+            }
+        }
+
+        species.setText("品种 （" + "熟豆重量：" + Utils.getCrspWeightValue(cooked + "") + weightUnit + "，" + "脱水率：" + Utils.get2PrecisionFloat((cooked * 100) / raw) + "% ）");
 
         tableLayout = (TableLayout) findViewById(R.id.id_report_table);
         beanContainer = (LinearLayout) findViewById(R.id.id_bean_container);
@@ -236,13 +266,13 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
         shared.setArguments(bundle);
         FragmentTool.getFragmentToolInstance(this).showDialogFragmen("dialogFragment", shared);
     }
+
     @OnClick(R.id.id_edit)
-    public void onMoreClick(){
+    public void onMoreClick() {
         Intent intent = new Intent(this, EditBehindActiviy.class);
         startActivity(intent);
         finish();
     }
-
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, final boolean isChecked) {
@@ -305,7 +335,6 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
             tableLayout.addView(tableRow, p);
         }
     }
-
 
     private List<LinearLayout> getNewInstance() {
         List<LinearLayout> linearLayouts = new ArrayList<>();
@@ -405,8 +434,5 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
             linearLayouts.add(outter);
         }
         return linearLayouts;
-    }
-    public static ReportActivity getInstance(){
-        return REPORT_ACTIVITY;
     }
 }

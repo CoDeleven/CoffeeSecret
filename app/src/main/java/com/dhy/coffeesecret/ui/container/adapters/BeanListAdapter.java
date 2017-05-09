@@ -75,7 +75,7 @@ public class BeanListAdapter extends RecyclerView.Adapter<BeanListAdapter.BeanLi
         }
         holder.beanName.setText(beaninfo.getName());
         holder.beanSubName.setText(beaninfo.getCountry() + "-" + beaninfo.getArea() + "-" + beaninfo.getManor() + "-" + beaninfo.getLevel());
-        holder.beanWeight.setText(Utils.getCrspWeightValue(beaninfo.getStockWeight() + "") + MyApplication.weightUnit);
+        holder.beanWeight.setText(Utils.get2PrecisionFloat((float)beaninfo.getStockWeight()) + "kg");
         holder.itemBeanLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

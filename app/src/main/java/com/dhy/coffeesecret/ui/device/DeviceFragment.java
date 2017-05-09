@@ -25,6 +25,7 @@ import android.widget.TextView;
 
 import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
+import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.pojo.BakeReportProxy;
 import com.dhy.coffeesecret.pojo.BeanInfoSimple;
 import com.dhy.coffeesecret.pojo.DialogBeanInfo;
@@ -51,7 +52,7 @@ import butterknife.OnClick;
 
 public class DeviceFragment extends Fragment implements BluetoothService.DeviceChangedListener, BluetoothService.DataChangedListener {
     private static String lastAddress = null;
-
+    public static final int MANUAL = 2, AUTOMATIC = 3;
     @Bind(R.id.id_device_prepare_bake)
     Button mPrepareBake;
     boolean hasPrepared = false;
@@ -95,12 +96,15 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
     TextView accInwindunit;
     @Bind(R.id.id_bake_accoutwindUnit)
     TextView accOutwindUnit;
+    @Bind(R.id.id_device_mode)
+    TextView mode;
 
     private BluetoothService.BluetoothOperator mBluetoothOperator;
     private float beginTemp;
     private boolean isStart = false;
+    private int curMode = MANUAL;
     private float envTemp;
-    private ArrayList<Float> referTempratures;
+    private BakeReport referTempratures;
     private ServiceConnection conn = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
@@ -134,6 +138,12 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
 
                     bluetoothStatus.setText(" 未连接");
                     operator.setText("连接");
+                    break;
+                case MANUAL:
+                    mode.setText("手动模式");
+                    break;
+                case AUTOMATIC:
+                    mode.setText("自动模式");
             }
             return false;
         }
@@ -278,7 +288,7 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
             }
 
             @Override
-            public void setTempratures(ArrayList<Float> tempratures) {
+            public void setTempratures(BakeReport tempratures) {
                 DeviceFragment.this.referTempratures = tempratures;
             }
         });
@@ -302,7 +312,8 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
     private void switchStatus() {
         if (hasPrepared) {
             mPrepareBake.setText("开始烘焙");
-            rerangeBean.setVisibility(View.VISIBLE);
+            // TODO 省赛
+            // rerangeBean.setVisibility(View.VISIBLE);
             mPrepareBake.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -324,12 +335,19 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
                     }
                     for(BeanInfoSimple simple: beanInfos){
                         simple.setUsage(Utils.getReversed2DefaultWeight(simple.getUsage()) + "");
-                    }
 
+                    }
                     intent.putExtra(BakeActivity.DEVICE_NAME, mBluetoothOperator.getCurDeviceName());
                     if (referTempratures != null) {
                         intent.putExtra(BakeActivity.ENABLE_REFERLINE, referTempratures);
                     }
+                    if(curMode == AUTOMATIC && referTempratures == null){
+                        T.showShort(getContext(), "自动模式下请选择参考曲线");
+                        hasPrepared = false;
+                        switchStatus();
+                        return;
+                    }
+                    intent.putExtra("mode", curMode);
                     rerangeBean.setVisibility(View.INVISIBLE);
                     startActivity(intent);
                     mBluetoothOperator.setDataChangedListener(null);
@@ -354,6 +372,18 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
         showDialogFragment();
     }
 
+    @OnClick(R.id.id_device_mode)
+    public void onModeChange(){
+        if(curMode == MANUAL){
+            curMode = AUTOMATIC;
+            mTextHandler.sendEmptyMessage(AUTOMATIC);
+        }else{
+            curMode = MANUAL;
+            mTextHandler.sendEmptyMessage(MANUAL);
+
+        }
+    }
+
     @Override
     public void notifyDataChanged(Temprature temprature) {
         Message message = new Message();
@@ -366,7 +396,6 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
         message.setData(bundle);
 
         mHandler.sendMessage(message);
-
     }
 
     private void switchImage(Temprature temprature) {
@@ -405,6 +434,9 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
             }
         } else {
             mTextHandler.sendEmptyMessage(1);
+            while(!mBluetoothOperator.reConnect()){
+
+            }
             // mShowHandler.sendEmptyMessage(2);
         }
     }

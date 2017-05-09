@@ -37,6 +37,8 @@ public class BeanInfoActivity extends AppCompatActivity {
     TextView beanName;
     @Bind(R.id.header)
     RelativeLayout header;
+    @Bind(R.id.info_country)
+    TextView infoCountry;
     @Bind(R.id.info_area)
     TextView infoArea;
     @Bind(R.id.info_country)
@@ -133,6 +135,8 @@ public class BeanInfoActivity extends AppCompatActivity {
         beanName.setText(beanInfo.getName());
         infoCountry.setText(beanInfo.getCountry());
         infoArea.setText(beanInfo.getArea());
+        // 添加了国家的显示
+        infoCountry.setText(beanInfo.getCountry());
         infoManor.setText(beanInfo.getManor());
         infoAltitude.setText(beanInfo.getAltitude());
         infoSpecies.setText(beanInfo.getSpecies());
@@ -142,7 +146,7 @@ public class BeanInfoActivity extends AppCompatActivity {
         infoSupplier.setText(beanInfo.getSupplier());
         infoPrice.setText("" + beanInfo.getPrice());
         // 数值的单位kg转换为当前单位
-        infoWeight.setText(Utils.getCrspWeightValue(beanInfo.getStockWeight() + "") + MyApplication.weightUnit);
+        infoWeight.setText(beanInfo.getStockWeight() + "kg");
         infoBuyDate.setText(String.format("%1$tY-%1$tm-%1$te", beanInfo.getDate()));
         btnCurve.setEnabled(beanInfo.hasBakeReports());
     }
@@ -155,6 +159,7 @@ public class BeanInfoActivity extends AppCompatActivity {
                 newBeanInfo = (BeanInfo) data.getSerializableExtra("new_bean_info");
                 beanName.setText(newBeanInfo.getName());
                 infoArea.setText(newBeanInfo.getArea());
+                infoCountry.setText(newBeanInfo.getCountry());
                 infoManor.setText(newBeanInfo.getManor());
                 infoAltitude.setText(newBeanInfo.getAltitude());
                 infoSpecies.setText(newBeanInfo.getSpecies());
@@ -163,7 +168,8 @@ public class BeanInfoActivity extends AppCompatActivity {
                 infoHandler.setText(newBeanInfo.getProcess());
                 infoSupplier.setText(newBeanInfo.getSupplier());
                 infoPrice.setText("" + newBeanInfo.getPrice());
-                infoWeight.setText(Utils.getCrspWeightValue(newBeanInfo.getStockWeight() + "") + MyApplication.weightUnit);
+                // 默认为kg
+                infoWeight.setText(Utils.get2PrecisionFloat((float)newBeanInfo.getStockWeight()) + "kg");
                 infoBuyDate.setText(String.format("%1$tY-%1$tm-%1$te", newBeanInfo.getDate()));
                 btnCurve.setEnabled(newBeanInfo.hasBakeReports());
                 break;

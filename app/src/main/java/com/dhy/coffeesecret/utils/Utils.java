@@ -5,7 +5,6 @@ import android.content.Context;
 import android.util.Log;
 
 import com.dhy.coffeesecret.MyApplication;
-import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.UniversalConfiguration;
 
 import net.sourceforge.pinyin4j.PinyinHelper;
@@ -179,7 +178,7 @@ public class Utils {
     /**
      * 将文件数值（默认摄氏度）转换成当前温度设置
      *
-     * @param value 默认单位是摄氏度的均可以转换
+     * @param value  默认单位是摄氏度的均可以转换
      * @return
      */
     public static float getCrspTempratureValue(String value) {
@@ -193,11 +192,10 @@ public class Utils {
 
     /**
      * 对输入的自定义单位进行转换
-     *
      * @param value
      * @return
      */
-    public static float getReversed2DefaultWeight(String value) {
+    public static float getReversed2DefaultWeight(String value){
         String curUnit = MyApplication.weightUnit;
         float result = Float.parseFloat(value);
         if ("g".equals(curUnit)) {

@@ -1,6 +1,7 @@
 package com.dhy.coffeesecret.ui.container.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.Species;
+import com.dhy.coffeesecret.utils.UnitConvert;
 import com.dhy.coffeesecret.utils.Utils;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
 
@@ -22,7 +24,8 @@ import java.util.ArrayList;
 
 public class InfoListAdapter extends RecyclerView.Adapter<InfoListAdapter.InfoListViewHolder>
         implements StickyRecyclerHeadersAdapter<InfoListAdapter.InfoListViewHolder> {
-
+    private static final String ONE_CLASS = "arabica|robusta|liberica";
+    private static final String TWO_CLASS = "yemen|ethiopia/sudan accessions|ruiru 11|sarchimor";
     private Context context;
     private ArrayList<Species> speciesList;
     private ArrayList<String> infoList;
@@ -59,7 +62,7 @@ public class InfoListAdapter extends RecyclerView.Adapter<InfoListAdapter.InfoLi
     public void onBindHeaderViewHolder(final InfoListViewHolder holder, int position) {
         TextView letter = (TextView) holder.itemView;
         if (speciesList == null || speciesList.size() == 0) {
-            letter.setText(Utils.getFirstPinYinLetter(infoList.get(position)).substring(0,1));
+            letter.setText(Utils.getFirstPinYinLetter(infoList.get(position)).substring(0, 1));
         } else {
             final String headItem = speciesList.get(position).getOneSpecies();
             letter.setText(headItem);
@@ -93,8 +96,20 @@ public class InfoListAdapter extends RecyclerView.Adapter<InfoListAdapter.InfoLi
         } else {
             item = speciesList.get(position).getSpecies();
             final String finalItem = item;
-            item = item.substring(1, item.length());
+
+            // 因为没有进行排序处理了，固隐藏
+            // item = item.substring(1, item.length());
             holder.infoTV.setText(item);
+            if (ONE_CLASS.contains(item)) {
+                holder.infoTV.setTextColor(Color.parseColor("#936746"));
+                holder.infoTV.setTextSize(20f);
+            } else if (TWO_CLASS.contains(item)) {
+                holder.infoTV.setTextColor(Color.parseColor("#AD7952"));
+                holder.infoTV.setTextSize(15f);
+            }else{
+                holder.infoTV.setTextColor(Color.parseColor("#000000"));
+                holder.infoTV.setTextSize(11.5f);
+            }
             holder.infoLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
