@@ -77,7 +77,6 @@ public class BluetoothService extends Service {
         @Override
         public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
             // 将bytes数组转换成16进制存储起来
-
             String hexData = null;
             hexData = Utils.bytesToHexString(characteristic.getValue());
             // 如果读到最后一行数据，返回true，并设置处理结束

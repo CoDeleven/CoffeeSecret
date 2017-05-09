@@ -179,11 +179,11 @@ public class EditBeanActivity extends AppCompatActivity {
         }
 
         if (beanInfo.getDrawablePath() == null || beanInfo.getDrawablePath().trim().equals("")) {
-            beanInfo.setDrawablePath(R.drawable.ic_container_add_bean + "");
-            drawPath = R.drawable.ic_container_add_bean + "";
+            beanInfo.setDrawablePath("default");
+            drawPath = "default";
         } else {
             drawPath = beanInfo.getDrawablePath();
-            editIcon.setImageResource(Integer.parseInt(drawPath));
+            editIcon.setImageResource(Utils.getContainerIcon(drawPath));
         }
         id = beanInfo.getId();
 
@@ -534,16 +534,17 @@ public class EditBeanActivity extends AppCompatActivity {
                     break;
                 case BEAN_ICON:
                     str = ((String) msg.obj).substring(0, 2);
-                    if (str.toLowerCase().contains("aa")) {
-                        drawPath = R.drawable.ic_container_aa + "";
-                    } else if (str.toLowerCase().contains("ac")) {
-                        drawPath = R.drawable.ic_container_ac + "";
-                    } else if (str.toLowerCase().contains("ae")) {
-                        drawPath = R.drawable.ic_container_ae + "";
-                    } else {
-                        drawPath = R.drawable.ic_container_al + "";
-                    }
-                    activity.editIcon.setImageResource(Integer.parseInt(drawPath));
+                    drawPath = str.toLowerCase();
+//                    if (str.toLowerCase().contains("aa")) {
+//                        drawPath = R.drawable.ic_container_aa + "";
+//                    } else if (str.toLowerCase().contains("ac")) {
+//                        drawPath = R.drawable.ic_container_ac + "";
+//                    } else if (str.toLowerCase().contains("ae")) {
+//                        drawPath = R.drawable.ic_container_ae + "";
+//                    } else {
+//                        drawPath = R.drawable.ic_container_al + "";
+//                    }
+                    activity.editIcon.setImageResource(Utils.getContainerIcon(drawPath));
                     break;
                 case TOAST_1:
                     T.showShort(mContext, "保存成功");

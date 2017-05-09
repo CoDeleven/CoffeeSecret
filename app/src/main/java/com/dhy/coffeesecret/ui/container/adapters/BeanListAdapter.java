@@ -71,7 +71,7 @@ public class BeanListAdapter extends RecyclerView.Adapter<BeanListAdapter.BeanLi
             beaninfo.setDrawablePath("2130837661");
         }
         if (!beaninfo.getDrawablePath().trim().equals("")) {
-            holder.beanIcon.setImageResource(Integer.parseInt(beaninfo.getDrawablePath()));
+            holder.beanIcon.setImageResource(Utils.getContainerIcon(beaninfo.getDrawablePath()));
         }
         holder.beanName.setText(beaninfo.getName());
         holder.beanSubName.setText(beaninfo.getCountry() + "-" + beaninfo.getArea() + "-" + beaninfo.getManor() + "-" + beaninfo.getLevel());

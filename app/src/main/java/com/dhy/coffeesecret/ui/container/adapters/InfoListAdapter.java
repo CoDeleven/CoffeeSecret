@@ -34,7 +34,6 @@ public class InfoListAdapter extends RecyclerView.Adapter<InfoListAdapter.InfoLi
         this.context = context;
         this.infoList = infoList;
         this.onInfoListClickListener = onInfoListClickListener;
-
         mLayoutInflater = LayoutInflater.from(context);
 
     }
