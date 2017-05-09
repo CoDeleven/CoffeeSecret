@@ -5,6 +5,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.dhy.coffeesecret.MyApplication;
+import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.UniversalConfiguration;
 
 import net.sourceforge.pinyin4j.PinyinHelper;
