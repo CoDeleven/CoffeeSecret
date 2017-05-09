@@ -68,10 +68,10 @@ public class BeanListAdapter extends RecyclerView.Adapter<BeanListAdapter.BeanLi
 
         BeanInfo beaninfo = coffeeBeanInfoList.get(position);
         if (beaninfo.getDrawablePath().equals("")) {
-            beaninfo.setDrawablePath("2130837661");
+            beaninfo.setDrawablePath("default");
         }
         if (!beaninfo.getDrawablePath().trim().equals("")) {
-            holder.beanIcon.setImageResource(Integer.parseInt(beaninfo.getDrawablePath()));
+            holder.beanIcon.setImageResource(Utils.getContainerIcon(beaninfo.getDrawablePath()));
         }
         holder.beanName.setText(beaninfo.getName());
         holder.beanSubName.setText(beaninfo.getCountry() + "-" + beaninfo.getArea() + "-" + beaninfo.getManor() + "-" + beaninfo.getLevel());

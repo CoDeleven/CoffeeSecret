@@ -5,6 +5,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.dhy.coffeesecret.MyApplication;
+import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.UniversalConfiguration;
 
 import net.sourceforge.pinyin4j.PinyinHelper;
@@ -206,4 +207,44 @@ public class Utils {
         return get2PrecisionFloat(result);
     }
 
+
+    public static int getContainerIcon(String icon) {
+        int id = -1;
+        switch (icon) {
+            case "aa":
+                id = R.drawable.ic_container_aa;
+                break;
+            case "ac":
+                id = R.drawable.ic_container_aa;
+                break;
+            case "ae":
+                id = R.drawable.ic_container_aa;
+                break;
+            case "al":
+                id = R.drawable.ic_container_aa;
+                break;
+            default:
+                id =  R.drawable.ic_container_add_bean;
+        }
+        return id;
+    }
+
+    public static String getContainerIconName(int id) {
+        String name = "";
+        switch (id) {
+            case R.drawable.ic_container_aa:
+                name = "aa";
+                break;
+            case R.drawable.ic_container_ac:
+                name = "ac";
+                break;
+            case R.drawable.ic_container_ae:
+                name = "ae";
+                break;
+            case R.drawable.ic_container_al:
+                name = "al";
+                break;
+        }
+        return name;
+    }
 }
