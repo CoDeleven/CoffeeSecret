@@ -68,7 +68,7 @@ public class BeanListAdapter extends RecyclerView.Adapter<BeanListAdapter.BeanLi
 
         BeanInfo beaninfo = coffeeBeanInfoList.get(position);
         if (beaninfo.getDrawablePath().equals("")) {
-            beaninfo.setDrawablePath("2130837661");
+            beaninfo.setDrawablePath("default");
         }
         if (!beaninfo.getDrawablePath().trim().equals("")) {
             holder.beanIcon.setImageResource(Utils.getContainerIcon(beaninfo.getDrawablePath()));
