@@ -37,8 +37,6 @@ public class BeanInfoActivity extends AppCompatActivity {
     TextView beanName;
     @Bind(R.id.header)
     RelativeLayout header;
-    @Bind(R.id.info_country)
-    TextView infoCountry;
     @Bind(R.id.info_area)
     TextView infoArea;
     @Bind(R.id.info_country)
