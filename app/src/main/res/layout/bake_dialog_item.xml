@@ -19,12 +19,6 @@
             android:drawableRight="@drawable/ic_bake_dialog_singlebean"
             />
 
-        <!--<ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:src="@drawable/ic_bake_dialog_singlebean"/>-->
-
         <Button
             android:id="@+id/id_bake_dialog_beanName"
             android:layout_width="wrap_content"
@@ -60,7 +54,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="20dp"
             android:padding="10dp"
             android:src="@drawable/ic_bake_dialog_delete"/>
     </LinearLayout>

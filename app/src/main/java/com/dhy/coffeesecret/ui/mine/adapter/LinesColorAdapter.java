@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.LinesColor;
+import com.dhy.coffeesecret.pojo.TempratureSet;
 import com.dhy.coffeesecret.pojo.UniversalConfiguration;
 import com.dhy.coffeesecret.utils.SettingTool;
 import com.dhy.coffeesecret.views.BaseChart4Coffee;
@@ -45,7 +46,7 @@ public class LinesColorAdapter extends FootViewAdapter {
     private List<LinesColor> linesColorList;
     private LayoutInflater mLayoutInflater;
     private LCHandler mHandler = new LCHandler();
-
+    private TempratureSet tempratureSet = new TempratureSet();
     public LinesColorAdapter(Context context, List<LinesColor> linesColorList, View footView) {
         this.context = context;
         this.footView = footView;
@@ -107,11 +108,15 @@ public class LinesColorAdapter extends FootViewAdapter {
     private List<Entry> initVirtualData(int line) {
 
         List<Entry> entries = new ArrayList<>();
-
+        List<Float> foo = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
+            if(line == BEANLINE){
+                tempratureSet.addTimex(i * 50);
+            }
             entries.add(new Entry(i * 50, i * line));
+            foo.add(new Float(i * line));
         }
-
+        tempratureSet.addTempratureByIndex(line, foo);
         return entries;
     }
 
@@ -127,6 +132,9 @@ public class LinesColorAdapter extends FootViewAdapter {
                     BaseChart4Coffee previewChart = (BaseChart4Coffee) view.findViewById(R.id.preview_chart);
                     Button btnUseDialog = (Button) view.findViewById(R.id.btn_use_dialog);
                     previewChart.initLine();
+
+                    previewChart.setTempratureSet(tempratureSet);
+
                     previewChart.changeColorByIndex(linesColor.getBeanColor(), BEANLINE);
                     previewChart.changeColorByIndex(linesColor.getAccBeanColor(), ACCBEANLINE);
                     previewChart.changeColorByIndex(linesColor.getInwindColor(), INWINDLINE);
@@ -134,12 +142,12 @@ public class LinesColorAdapter extends FootViewAdapter {
                     previewChart.changeColorByIndex(linesColor.getAccInwindColor(), ACCINWINDLINE);
                     previewChart.changeColorByIndex(linesColor.getAccOutwindColor(), ACCOUTWINDLINE);
 
-                    previewChart.addNewDatas(initVirtualData(1), 0);
-                    previewChart.addNewDatas(initVirtualData(3), 1);
-                    previewChart.addNewDatas(initVirtualData(5), 2);
-                    previewChart.addNewDatas(initVirtualData(7), 3);
-                    previewChart.addNewDatas(initVirtualData(9), 4);
-                    previewChart.addNewDatas(initVirtualData(11), 5);
+                    previewChart.addNewDatas(initVirtualData(BEANLINE), BEANLINE);
+                    previewChart.addNewDatas(initVirtualData(ACCBEANLINE), ACCBEANLINE);
+                    previewChart.addNewDatas(initVirtualData(INWINDLINE), INWINDLINE);
+                    previewChart.addNewDatas(initVirtualData(OUTWINDLINE), OUTWINDLINE);
+                    previewChart.addNewDatas(initVirtualData(ACCINWINDLINE), ACCINWINDLINE);
+                    previewChart.addNewDatas(initVirtualData(ACCOUTWINDLINE), ACCOUTWINDLINE);
                     final AlertDialog dialog = new AlertDialog.Builder(context)
                             .setTitle(linesColor.getPackageName())
                             .setView(view)

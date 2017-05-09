@@ -5,6 +5,7 @@ import com.github.mikephil.charting.data.Event;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,11 +23,13 @@ import static com.dhy.coffeesecret.views.BaseChart4Coffee.getLableByIndex;
  * Created by CoDeleven on 17-3-3.
  */
 
-public class BakeReportProxy {
+public class BakeReportProxy implements Serializable{
     private BakeReport bakeReport;
     private Map<Integer, ILineDataSet> lines = new HashMap<>();
     private List<Entry> entriesWithEvents;
     private float rawBeanWeight;
+    private Map<String, String> events;
+
 
     public BakeReportProxy(BakeReport bakeReport) {
         this.bakeReport = bakeReport;
@@ -77,10 +80,12 @@ public class BakeReportProxy {
 
 
     public List<Entry> convertTempData2Entry(List<Float> beanTemps, Map<String, String> events, List<Float> timex) {
+
         if (entriesWithEvents == null) {
             entriesWithEvents = new ArrayList<>();
         }
         List<Entry> entries = new ArrayList<>();
+        Entry.clearEvents();
         for (int i = 0; i < timex.size(); ++i) {
             Entry entry = new Entry(timex.get(i), beanTemps.get(i));
             String time = timex.get(i) + "";
@@ -220,5 +225,114 @@ public class BakeReportProxy {
 
     public float getRawBeanWeight() {
         return rawBeanWeight;
+    }
+
+    public List<Float> getAccBeanTempratures(){
+        return bakeReport.getTempratureSet().getAccBeanTemps();
+    }
+    public List<Float> getAccInwindTempratures(){
+        return bakeReport.getTempratureSet().getAccInwindTemps();
+    }
+    public List<Float> getAccOutwindTempratures(){
+        return bakeReport.getTempratureSet().getAccOutwindTemps();
+    }
+    public List<Float> getTempratureByIndex(int index){
+        if(index == BEANLINE){
+            return bakeReport.getTempratureSet().getBeanTemps();
+        }else if(index == INWINDLINE){
+            return bakeReport.getTempratureSet().getInwindTemps();
+        }else if(index == OUTWINDLINE){
+            return bakeReport.getTempratureSet().getOutwindTemps();
+        }
+        return new ArrayList<Float>();
+    }
+    public Event getEventByX(int x){
+        if(events == null){
+            events = bakeReport.getTempratureSet().getEvents();
+        }
+        String time = getTimex().get(x) + "";
+        String eventStr = events.get(time);
+        if(eventStr == null){
+            return null;
+        }
+        Event event = new Event();
+        // 存入事件的类型
+        event.setCurStatus(Integer.parseInt(eventStr.substring(eventStr.length() - 1, eventStr.length())));
+        // 存入事件的具体情况
+        event.setDescription(eventStr.substring(0, eventStr.length() - 2));
+        return event;
+    }
+    public float getBreakPointerTime(){
+        return bakeReport.getBreakPointerTime();
+    }
+    public void setBreakPointerTime(float time){
+        bakeReport.setBreakPointerTime(time);
+
+    }
+    public void setBreakPointerTemprature(Temprature pointerTemprature){
+        if(pointerTemprature == null){
+            bakeReport.setBreakPointerTemprature(-1f);
+        }else{
+            bakeReport.setBreakPointerTemprature(pointerTemprature.getBeanTemp());
+        }
+
+    }
+    public float getBreakPointerTemprature(){
+        return bakeReport.getBreakPointerTemprature();
+    }
+    public float getAvgDryTemprature() {
+        return bakeReport.getAvgDryTemprature();
+    }
+
+    public void setAvgDryTemprature(float avgDryTemprature) {
+        this.bakeReport.setAvgDryTemprature(avgDryTemprature);
+    }
+
+    public float getAvgDryTime() {
+        return this.bakeReport.getAvgDryTime();
+    }
+
+    public void setAvgDryTime(float avgDryTime) {
+        this.bakeReport.setAvgDryTime(avgDryTime);
+    }
+
+    public float getAvgFirstBurstTime() {
+        return bakeReport.getAvgFirstBurstTime();
+    }
+
+    public void setAvgFirstBurstTime(float avgFirstBurstTime) {
+        this.bakeReport.setAvgFirstBurstTime(avgFirstBurstTime);
+    }
+
+    public float getAvgFirstBurstTemprature() {
+        return this.bakeReport.getAvgFirstBurstTemprature();
+    }
+
+    public void setAvgFirstBurstTemprature(float avgFirstBurstTemprature) {
+        this.bakeReport.setAvgFirstBurstTemprature(avgFirstBurstTemprature);
+    }
+
+    public float getAvgEndTime() {
+        return this.bakeReport.getAvgEndTime();
+    }
+
+    public void setAvgEndTime(float avgEndTime) {
+        this.bakeReport.setAvgEndTime(avgEndTime);
+    }
+
+    public float getAvgEndTemprature() {
+        return this.bakeReport.getAvgEndTemprature();
+    }
+
+    public void setAvgEndTemprature(float avgEndTemprature) {
+        this.bakeReport.setAvgEndTemprature(avgEndTemprature);
+    }
+
+    public float getGlobalAccBeanTemp() {
+        return this.bakeReport.getAvgGlobalBeanTemprature();
+    }
+
+    public void setGlobalAccBeanTemp(float globalAccBeanTemp) {
+        this.bakeReport.setAvgGlobalBeanTemprature(globalAccBeanTemp);
     }
 }

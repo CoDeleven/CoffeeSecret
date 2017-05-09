@@ -1,6 +1,7 @@
 package com.dhy.coffeesecret.ui.device;
 
 import android.app.ProgressDialog;
+import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 
 import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
+import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.pojo.BakeReportProxy;
 import com.dhy.coffeesecret.pojo.Temprature;
 import com.dhy.coffeesecret.pojo.TempratureSet;
@@ -29,8 +31,11 @@ import com.dhy.coffeesecret.pojo.UniversalConfiguration;
 import com.dhy.coffeesecret.services.BluetoothService;
 import com.dhy.coffeesecret.ui.device.fragments.FireWindDialog;
 import com.dhy.coffeesecret.ui.device.fragments.Other;
+import com.dhy.coffeesecret.ui.device.record.BreakPointerRecorder;
+import com.dhy.coffeesecret.ui.device.record.RecorderSystem;
 import com.dhy.coffeesecret.utils.FragmentTool;
 import com.dhy.coffeesecret.utils.SettingTool;
+import com.dhy.coffeesecret.utils.T;
 import com.dhy.coffeesecret.utils.UnitConvert;
 import com.dhy.coffeesecret.utils.Utils;
 import com.dhy.coffeesecret.views.BaseChart4Coffee;
@@ -58,12 +63,12 @@ import static com.dhy.coffeesecret.views.BaseChart4Coffee.OUTWINDLINE;
 import static com.dhy.coffeesecret.views.DevelopBar.AFTER160;
 import static com.dhy.coffeesecret.views.DevelopBar.RAWBEAN;
 
-public class BakeActivity extends AppCompatActivity implements BluetoothService.DataChangedListener, View.OnClickListener, CompoundButton.OnCheckedChangeListener, Other.OnOtherAddListener, FireWindDialog.OnFireWindAddListener {
+public class BakeActivity extends AppCompatActivity implements BluetoothService.DataChangedListener, View.OnClickListener, CompoundButton.OnCheckedChangeListener, Other.OnOtherAddListener, FireWindDialog.OnFireWindAddListener, BluetoothService.DeviceChangedListener {
     public static final String DEVICE_NAME = "com.dhy.coffeesercret.ui.device.BakeActivity.DEVICE_NAME";
     public static final String ENABLE_REFERLINE = "com.dhy.coffeesercret.ui.device.BakeActivity.REFER_LINE";
     public static final int I_AM_BAKEACTIVITY = 123;
     private static final int[] LINE_INDEX = {BEANLINE, INWINDLINE, OUTWINDLINE, ACCBEANLINE, ACCINWINDLINE, ACCOUTWINDLINE};
-    private static Thread timer = null;
+    // private static Thread timer = null;
     @Bind(R.id.id_baking_chart)
     BaseChart4Coffee chart;
     @Bind(R.id.id_baking_lineOperator)
@@ -97,6 +102,7 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
     @Bind(R.id.id_baking_start)
     ImageButton mStart;
     private PopupWindow popupWindow;
+    private View popuoOperator;
     private BluetoothService.BluetoothOperator mBluetoothOperator;
     private float lastTime = 0;
     private TextView[] beanTemps = new TextView[2];
@@ -110,8 +116,7 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
     private boolean isDoubleClick;
     private View curStatusView;
     private UniversalConfiguration mConfig;
-    private long startTime;
-    private boolean isOverBottom = false;
+    // private long startTime;
     private int curStatus = RAWBEAN;
     private boolean isReading = false;
     private FragmentTool fragmentTool;
@@ -120,8 +125,26 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
     private Entry curBeanEntry;
     private boolean isFisrtBurstEnd = false;
     private boolean isSecondBurstEnd = false;
-    private ArrayList<Float> tempratures;
-    private TempratureSet set = new TempratureSet();
+    private Entry fireWindBeanEntry = null;
+    private BakeReportProxy referTempratures;
+    private int mCurMode = 0;
+    private int referIndex = 0;
+
+    // private TempratureSet set = new TempratureSet();
+    private BreakPointerRecorder breakPointerRecorder;
+    private RecorderSystem recorderSystem;
+
+
+    /*
+    * ===============以下暂时用于保存临时数据=================*/
+    private float avgDryTemprature;
+    private float avgDryTime;
+    private float avgFirstBurstTime;
+    private float avgFirstBurstTemprature;
+    private float avgEndTime;
+    private float avgEndTemprature;
+    private float avgGlobalTemprature;
+
     // 执行UI操作
     private Handler mHandler = new Handler(new Handler.Callback() {
         @Override
@@ -156,13 +179,13 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
         @Override
         public boolean handleMessage(Message msg) {
             // 转换成秒
-            int now = ((int) (System.currentTimeMillis() - startTime) / 1000);
+            int now = ((int) (System.currentTimeMillis() - RecorderSystem.getStartTime()) / 1000);
             int minutes = now / 60;
             int seconds = now % 60;
             untilTime.setText(Utils.getTimeWithFormat(now));
-            if (!isOverBottom && minutes > 1 && seconds > 30) {
+            /*if (!isOverBottom && minutes > 1 && seconds > 30) {
                 isOverBottom = true;
-            }
+            }*/
             developBar.setCurStatus(curStatus);
             return false;
         }
@@ -205,34 +228,77 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
         }
     }
 
+    @Override
+    public void notifyDeviceConnectStatus(boolean isConnected, BluetoothDevice device) {
+        if (!isConnected) {
+            T.showShort(this, "蓝牙已断开，请勿远离...");
+            while (!BluetoothService.BLUETOOTH_OPERATOR.reConnect()) {
+
+            }
+        }
+    }
+
+    @Override
+    public void notifyNewDevice(BluetoothDevice device, int rssi) {
+
+    }
 
     @Override
     public void notifyDataChanged(Temprature temprature) {
+        // chart.getHighestVisibleX()
+        if(mCurMode == DeviceFragment.MANUAL){
+            notifyTempratureByManual(temprature);
+        }else{
+            notifyTempratureByAtuo(temprature);
+        }
+
+    }
+
+    private void notifyTempratureByAtuo(Temprature temprature) {
         // 温度数组: 0->豆温，1->进风温, 2->出风温, 3->加速豆温, 4->加速进风温, 5->加速出风温
-        float[] tempratures = {temprature.getBeanTemp(), temprature.getInwindTemp(),
-                temprature.getOutwindTemp(), temprature.getAccBeanTemp(), temprature.getAccInwindTemp(),
-                temprature.getAccOutwindTemp()};
+        float[] tempratures = wrapTempratureInAutoMode(temprature);
+
+        // 代理额外进行处理
+        upwrapTemprature(temprature, tempratures);
 
         startTemp = tempratures[0];
 
-        lastTime = (System.currentTimeMillis() - startTime) / 1000.0f;
-        lastTime = ((int) (lastTime * 100)) / 100.0f;
+        lastTime = recorderSystem.addTemprature(temprature);
+
+        Event e = referTempratures.getEventByX(referIndex++);
 
         curBeanEntry = new Entry(lastTime, Utils.getCrspTempratureValue(tempratures[0] + ""));
+        if(e != null){
+            curBeanEntry.setEvent(e);
+            eventRecords.add(curBeanEntry);
+            recorderSystem.addEvent(lastTime + "", e.getDescription() + ":" + e.getCurStatus());
+        }
 
-        if (tempratures[0] > 160 && isOverBottom && curStatus != DevelopBar.FIRST_BURST) {
+
+        if (lastTime > 90 && breakPointerRecorder.record(temprature) && tempratures[0] > 160 && curStatus != DevelopBar.FIRST_BURST) {
             curStatus = AFTER160;
         }
 
-        set.addBeanTemp(tempratures[0]);
-        set.addInwindTemp(tempratures[1]);
-        set.addOutwindTemp(tempratures[2]);
-        set.addAccBeanTemp(tempratures[3]);
-        set.addAccInwindTemp(tempratures[4]);
-        set.addAccOutwindTemp(tempratures[5]);
-        set.addTimex(lastTime);
 
-        chart.addOneDataToLine(curBeanEntry, BEANLINE);
+        // 自动出豆
+        if(e != null && e.getCurStatus() == 4){
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    addEvent(mEnd);
+                }
+            });
+        }else if(e != null && e.getCurStatus() == 2){
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    addEvent(mFirstBurst);
+                }
+            });
+        } else{
+            chart.addOneDataToLine(curBeanEntry, BEANLINE);
+        }
+
         for (int i = 1; i < 6; ++i) {
             chart.addOneDataToLine(new Entry(lastTime, Utils.getCrspTempratureValue(tempratures[i] + "")), LINE_INDEX[i]);
         }
@@ -250,6 +316,8 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
         mHandler.sendMessage(msg);
 
         chart.notifyDataSetChanged();
+        mTimer.sendEmptyMessage(0);
+
     }
 
     @Override
@@ -267,18 +335,20 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
 
         mConfig = SettingTool.getConfig(this);
         enableDoubleConfirm = mConfig.isDoubleClick();
-
-        tempratures = (ArrayList<Float>) getIntent().getSerializableExtra(ENABLE_REFERLINE);
-        if (tempratures != null) {
+        mCurMode = getIntent().getIntExtra("mode", DeviceFragment.MANUAL);
+        BakeReport bakeReport = (BakeReport) getIntent().getSerializableExtra(ENABLE_REFERLINE);
+        if (bakeReport != null) {
+            referTempratures = new BakeReportProxy(bakeReport);
             List<Entry> entries = new ArrayList<>();
             int count = 0;
-            for (float temprature : tempratures) {
+            for (float temprature : referTempratures.getTempratureByIndex(BEANLINE)) {
                 entries.add(new Entry(count, temprature));
                 count += 1;
             }
             chart.enableReferLine(entries);
         }
         init();
+
     }
 
 
@@ -299,8 +369,17 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
             mBluetoothOperator = BluetoothService.BLUETOOTH_OPERATOR;
         }
         mBluetoothOperator.setDataChangedListener(this);
-        startTime = System.currentTimeMillis();
-        if (timer == null) {
+        mBluetoothOperator.setDeviceChangedListener(this);
+        // startTime = System.currentTimeMillis();
+
+        // 开始计时,并初始化一系列任务
+        recorderSystem = new RecorderSystem();
+        // 开始记录拐点发生的位置
+        breakPointerRecorder = new BreakPointerRecorder();
+        // 设置tempraturset
+        chart.setTempratureSet(recorderSystem.getTempratureSet());
+
+ /*       if (timer == null) {
             isReading = true;
             timer = new Thread(new Runnable() {
                 @Override
@@ -308,7 +387,7 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
                     while (isReading) {
                         mTimer.sendEmptyMessage(0);
                         try {
-                            Thread.currentThread().sleep(1000);
+                            Thread.currentThread().sleep(1250);
                         } catch (InterruptedException e) {
                             Log.e("BakeActivity", "已经中断");
                             break;
@@ -317,7 +396,7 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
                 }
             });
             timer.start();
-        }
+        }*/
     }
 
     /**
@@ -340,7 +419,6 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
         outwindTemps[0] = (TextView) findViewById(R.id.id_baking_outwindTemp);
         outwindTemps[1] = (TextView) findViewById(R.id.id_baking_accOutwindTemp);
 
-
         mDry.setOnClickListener(this);
         mFirstBurst.setOnClickListener(this);
         mSecondBurst.setOnClickListener(this);
@@ -350,6 +428,14 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
         mOther.setOnClickListener(this);
 
         fragmentTool = FragmentTool.getFragmentToolInstance(this);
+
+
+        // mStart.setVisibility(View.GONE);
+        // showButton();
+        BakeReportProxy bakeReport = ((MyApplication) getApplication()).getBakeReport();
+        bakeReport.setStartTemperature(startTemp + "");
+        bakeReport.setDate(Utils.data2Timestamp(new Date()));
+        bakeReport.setAmbientTemperature(Temprature.getEnvTemp() + "");
     }
 
 
@@ -360,26 +446,26 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
      */
     private PopupWindow getPopupwindow() {
         if (popupWindow == null) {
-            final View view = getLayoutInflater().inflate(R.layout.bake_lines_operator, null, false);
-            popupWindow = new PopupWindow(view, UnitConvert.dp2px(getResources(), 86), UnitConvert.dp2px(getResources(), 150), true);
+            popuoOperator = getLayoutInflater().inflate(R.layout.bake_lines_operator, null, false);
+            popupWindow = new PopupWindow(popuoOperator, UnitConvert.dp2px(getResources(), 86), UnitConvert.dp2px(getResources(), 150), true);
             popupWindow.setAnimationStyle(R.style.PopupWindowAnimation);
-            view.setOnTouchListener(new View.OnTouchListener() {
+            popuoOperator.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
-                    if (view != null && view.isShown()) {
+                    if (popuoOperator != null && popuoOperator.isShown()) {
                         popupWindow.dismiss();
                     }
                     return false;
                 }
             });
-            view.setBackgroundResource(R.drawable.bg_round_black_border);
+            popuoOperator.setBackgroundResource(R.drawable.bg_round_black_border);
 
-            ((CheckBox) view.findViewById(R.id.id_baking_line_bean)).setOnCheckedChangeListener(this);
-            ((CheckBox) view.findViewById(R.id.id_baking_line_inwind)).setOnCheckedChangeListener(this);
-            ((CheckBox) view.findViewById(R.id.id_baking_line_outwind)).setOnCheckedChangeListener(this);
-            ((CheckBox) view.findViewById(R.id.id_baking_line_accBean)).setOnCheckedChangeListener(this);
-            ((CheckBox) view.findViewById(R.id.id_baking_line_accInwind)).setOnCheckedChangeListener(this);
-            ((CheckBox) view.findViewById(R.id.id_baking_line_accOutwind)).setOnCheckedChangeListener(this);
+            ((CheckBox) popuoOperator.findViewById(R.id.id_baking_line_bean)).setOnCheckedChangeListener(this);
+            ((CheckBox) popuoOperator.findViewById(R.id.id_baking_line_inwind)).setOnCheckedChangeListener(this);
+            ((CheckBox) popuoOperator.findViewById(R.id.id_baking_line_outwind)).setOnCheckedChangeListener(this);
+            ((CheckBox) popuoOperator.findViewById(R.id.id_baking_line_accBean)).setOnCheckedChangeListener(this);
+            ((CheckBox) popuoOperator.findViewById(R.id.id_baking_line_accInwind)).setOnCheckedChangeListener(this);
+            ((CheckBox) popuoOperator.findViewById(R.id.id_baking_line_accOutwind)).setOnCheckedChangeListener(this);
 
         }
         return popupWindow;
@@ -443,13 +529,23 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
     public void onBakeStart() {
         // TODO 3-20日，在开始烘焙按钮按下后的操作在这里执行
         showButton();
-        startTime = System.currentTimeMillis();
+        recorderSystem = new RecorderSystem();
+        // 重新初始化
+        breakPointerRecorder = new BreakPointerRecorder();
         chart.clear();
         mStart.setVisibility(View.GONE);
         BakeReportProxy bakeReport = ((MyApplication) getApplication()).getBakeReport();
         bakeReport.setStartTemperature(startTemp + "");
         bakeReport.setDate(Utils.data2Timestamp(new Date()));
         bakeReport.setAmbientTemperature(Temprature.getEnvTemp() + "");
+        if (popuoOperator != null) {
+            ((CheckBox) popuoOperator.findViewById(R.id.id_baking_line_bean)).setChecked(true);
+            ((CheckBox) popuoOperator.findViewById(R.id.id_baking_line_inwind)).setChecked(true);
+            ((CheckBox) popuoOperator.findViewById(R.id.id_baking_line_outwind)).setChecked(true);
+            ((CheckBox) popuoOperator.findViewById(R.id.id_baking_line_accBean)).setChecked(true);
+            ((CheckBox) popuoOperator.findViewById(R.id.id_baking_line_accInwind)).setChecked(true);
+            ((CheckBox) popuoOperator.findViewById(R.id.id_baking_line_accOutwind)).setChecked(true);
+        }
     }
 
     private void addEvent(View v) {
@@ -457,8 +553,15 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
         boolean status = false;
         switch (id) {
             case R.id.id_baking_dry:
+                // 先当作脱水结束
+                avgDryTime = recorderSystem.getTimeInterval();
                 updateCurBeanEntryEvent(new Event(Event.DRY, "脱水"));
+                avgDryTemprature = Utils.get2PrecisionFloat(recorderSystem.getAvgAccBeanTemprature());
+
+                recorderSystem.startNewEvent();
+
                 status = true;
+
                 break;
             case R.id.id_baking_firstBurst:
                 if (isFisrtBurstEnd) {
@@ -466,16 +569,19 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
                     curStatus = DevelopBar.FIRST_BURST;
                     v.setEnabled(false);
                 } else {
+                    avgFirstBurstTime = recorderSystem.getTimeInterval();
                     updateCurBeanEntryEvent(new Event(Event.FIRST_BURST, "一爆"));
+                    avgFirstBurstTemprature = Utils.get2PrecisionFloat(recorderSystem.getAvgAccBeanTemprature());
+                    recorderSystem.startNewEvent();
+
                     curStatus = DevelopBar.FIRST_BURST;
                     isFisrtBurstEnd = true;
                     ((TextView) v).setText("一爆结束");
+
+
                     return;
-
                 }
-
                 status = true;
-
                 break;
             case R.id.id_baking_secondBurst:
                 if (isSecondBurstEnd) {
@@ -492,6 +598,9 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
 
                 break;
             case R.id.id_baking_end:
+                avgEndTime = recorderSystem.getTimeInterval();
+                avgEndTemprature = Utils.get2PrecisionFloat(recorderSystem.getAvgAccBeanTemprature());
+                avgGlobalTemprature = Utils.get2PrecisionFloat(recorderSystem.getGlobalAccTemprature());
 
                 updateCurBeanEntryEvent(new Event(Event.END, "结束"));
                 BakeReportProxy imm = generateReport();
@@ -499,22 +608,34 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
                 Intent intent = new Intent(BakeActivity.this, EditBehindActiviy.class);
                 /*// 停止读取
                 BluetoothService.READABLE = false;*/
+                mBluetoothOperator.setDataChangedListener(null);
+
+
+
                 // 发送一个bundle来标识是否来自bakeactivity的请求
                 intent.putExtra("status", I_AM_BAKEACTIVITY);
                 startActivity(intent);
 
                 finish();
                 status = true;
-
                 break;
             case R.id.id_baking_wind_fire:
                 FireWindDialog fireWind = new FireWindDialog();
                 fireWind.setOnFireWindAddListener(this);
+                // 保存这个时刻的节点
+                fireWindBeanEntry = curBeanEntry;
+                eventRecords.add(fireWindBeanEntry);
+
                 fragmentTool.showDialogFragmen("fireWindFragment", fireWind);
                 break;
             case R.id.id_baking_other:
                 Other other = new Other();
                 other.setOnOtherAddListener(this);
+
+                // 保存这个时刻的节点
+                fireWindBeanEntry = curBeanEntry;
+                eventRecords.add(fireWindBeanEntry);
+
                 fragmentTool.showDialogFragmen("otherFragment", other);
                 break;
         }
@@ -527,20 +648,36 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
 
     @Override
     public void onFireWindChanged(Event event) {
-        updateCurBeanEntryEvent(event);
+        if (event == null) {
+            // 移除事件列表里的firewindbean
+            eventRecords.remove(fireWindBeanEntry);
+            fireWindBeanEntry = null;
+            return;
+        }
+        // updateCurBeanEntryEvent(event);
+        if (fireWindBeanEntry != null) {
+            fireWindBeanEntry.setEvent(event);
+            // 存储事件详情时，最后一个冒号后面是该事件的类别
+            recorderSystem.addEvent(fireWindBeanEntry.getX() + "", event.getDescription() + ":" + event.getCurStatus());
+        }
+
+
+        chart.invalidate();
+        // 清除引用
+        fireWindBeanEntry = null;
     }
 
     @Override
     public void onDataChanged(Event event) {
-        updateCurBeanEntryEvent(event);
+        onFireWindChanged(event);
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (outState != null) {
+/*        if (outState != null) {
             outState.putLong("startTime", startTime);
-        }
+        }*/
     }
 
     @Override
@@ -553,8 +690,8 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
     protected void onDestroy() {
         super.onDestroy();
         isReading = false;
-        timer.interrupt();
-        timer = null;
+        // timer.interrupt();
+        // timer = null;
     }
 
     private BakeReportProxy generateReport() {
@@ -563,13 +700,26 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
 
         BakeReportProxy bakeReport = ((MyApplication) getApplication()).getBakeReport();
 
-        bakeReport.setTempratureSet(set);
+        bakeReport.setTempratureSet(recorderSystem.getTempratureSet());
 
         bakeReport.setDevice(deviceName);
 
         bakeReport.setDevelopmentTime(developBar.getDevelopTime());
 
         bakeReport.setDevelopmentRate(developBar.getDevelopRate());
+
+        // TODO 新
+        bakeReport.setBreakPointerTime(breakPointerRecorder.getbreakPointerTime());
+        bakeReport.setBreakPointerTemprature(breakPointerRecorder.getBreakPointerTemprature());
+        bakeReport.setAvgDryTime(avgDryTime);
+        bakeReport.setAvgDryTemprature(avgDryTemprature);
+        bakeReport.setAvgFirstBurstTime(avgFirstBurstTime);
+        bakeReport.setAvgFirstBurstTemprature(avgFirstBurstTemprature);
+        bakeReport.setAvgEndTime(avgEndTime);
+        bakeReport.setAvgEndTemprature(avgEndTemprature);
+        bakeReport.setGlobalAccBeanTemp(avgGlobalTemprature);
+
+        Log.e("wrong", this.toString());
 
         return bakeReport;
     }
@@ -578,7 +728,7 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
         curBeanEntry.setEvent(event);
         eventRecords.add(curBeanEntry);
         // 存储事件详情时，最后一个冒号后面是该事件的类别
-        set.addEvent(lastTime + "", event.getDescription() + ":" + event.getCurStatus());
+        recorderSystem.addEvent(lastTime + "", event.getDescription() + ":" + event.getCurStatus());
         chart.invalidate();
     }
 
@@ -607,5 +757,93 @@ public class BakeActivity extends AppCompatActivity implements BluetoothService.
         } else {
             accOutwindImg.setImageResource(R.drawable.ic_bake_acc_invariant_small);
         }
+    }
+
+    private void notifyTempratureByManual(Temprature temprature){
+        // 温度数组: 0->豆温，1->进风温, 2->出风温, 3->加速豆温, 4->加速进风温, 5->加速出风温
+        float[] tempratures = {temprature.getBeanTemp(), temprature.getInwindTemp(),
+                temprature.getOutwindTemp(), temprature.getAccBeanTemp(), temprature.getAccInwindTemp(),
+                temprature.getAccOutwindTemp()};
+
+        if (breakPointerRecorder.record(temprature) && tempratures[0] > 160 && curStatus != DevelopBar.FIRST_BURST) {
+            curStatus = AFTER160;
+        }
+
+        lastTime = recorderSystem.addTemprature(temprature);
+
+        curBeanEntry = new Entry(lastTime, Utils.getCrspTempratureValue(tempratures[0] + ""));
+
+        chart.addOneDataToLine(curBeanEntry, BEANLINE);
+        for (int i = 1; i < 6; ++i) {
+            chart.addOneDataToLine(new Entry(lastTime, Utils.getCrspTempratureValue(tempratures[i] + "")), LINE_INDEX[i]);
+        }
+
+        startTemp = tempratures[0];
+
+        Message msg = new Message();
+        Bundle bundle = new Bundle();
+        bundle.putFloat("bean", tempratures[0]);
+        bundle.putFloat("inwind", tempratures[1]);
+        bundle.putFloat("outwind", tempratures[2]);
+        bundle.putFloat("accBean", tempratures[3]);
+        bundle.putFloat("accInwind", tempratures[4]);
+        bundle.putFloat("accOutwind", tempratures[5]);
+        msg.setData(bundle);
+
+        mHandler.sendMessage(msg);
+
+        chart.notifyDataSetChanged();
+        mTimer.sendEmptyMessage(0);
+    }
+
+    private float[] wrapTempratureInAutoMode(Temprature temprature){
+        float[] tempratures = {temprature.getBeanTemp(), temprature.getInwindTemp(),
+                temprature.getOutwindTemp(), temprature.getAccBeanTemp(), temprature.getAccInwindTemp(),
+                temprature.getAccOutwindTemp()};
+        for(int i = 0; i < 3; ++i){
+            float target = referTempratures.getTempratureByIndex(i + 1).get(referIndex);
+            float cur = tempratures[i];
+            // tempratures[i] = cur + (target - cur) * (0.9f + (float)Math.random() * 0.1f);
+            tempratures[i] = target  + (target * (float)Math.random() * 0.1f) * (float)Math.pow(-1, (int)(Math.random() * 2) + 1);
+        }
+        // 计算理想豆温加速度(两边差距太大，难以拟合)
+        if(temprature.getBeanTemp() < 50){
+            tempratures[3] = referTempratures.getAccBeanTempratures().get(referIndex);
+            tempratures[4] = referTempratures.getAccInwindTempratures().get(referIndex);
+            tempratures[5] = referTempratures.getAccOutwindTempratures().get(referIndex);
+        }else{
+            tempratures[3] = (tempratures[0] - temprature.getBeanTemp()) + temprature.getAccBeanTemp();
+            tempratures[4] = (tempratures[1] - temprature.getInwindTemp()) + temprature.getAccInwindTemp();
+            tempratures[5] = (tempratures[2] - temprature.getOutwindTemp()) + temprature.getAccOutwindTemp();
+        }
+        //
+        return tempratures;
+    }
+
+    /**
+     * 测试功能
+     * @param origin
+     * @param tempratures
+     * @return
+     */
+    private void upwrapTemprature(Temprature origin, float[] tempratures){
+        origin.setBeanTemp(tempratures[0]);
+        origin.setInwindTemp(tempratures[1]);
+        origin.setOutwindTemp(tempratures[2]);
+        origin.setAccBeanTemp(tempratures[3]);
+        origin.setAccInwindTemp(tempratures[4]);
+        origin.setAccOutwindTemp(tempratures[5]);
+    }
+
+    @Override
+    public String toString() {
+        return "BakeActivity{" +
+                "avgDryTemprature=" + avgDryTemprature +
+                ", avgDryTime=" + avgDryTime +
+                ", avgFirstBurstTime=" + avgFirstBurstTime +
+                ", avgFirstBurstTemprature=" + avgFirstBurstTemprature +
+                ", avgEndTime=" + avgEndTime +
+                ", avgEndTemprature=" + avgEndTemprature +
+                '}';
     }
 }

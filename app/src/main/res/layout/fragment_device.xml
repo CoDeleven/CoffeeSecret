@@ -6,7 +6,31 @@
     android:background="@color/white"
     tools:context=".ui.device.DeviceFragment">
 
-    <include layout="@layout/normal_title_noback" />
+    <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    android:background="@color/colorPrimary">
+
+        <TextView
+            android:id="@+id/title_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="我的"
+            android:textColor="@color/white"
+            android:textSize="18.5sp" />
+
+        <Button
+            android:textColor="@color/white"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:background="@android:color/transparent"
+            android:id="@+id/id_device_mode"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="手动模式"/>
+    </RelativeLayout>
 
     <!-- TODO: Update blank fragment layout -->
     <RelativeLayout

@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BeanInfoSimple;
 
@@ -48,6 +49,7 @@ public class BeanSelectAdapter extends RecyclerView.Adapter<BeanSelectAdapter.Be
         });
         holder.beanWeight.setText(simple.getUsage());
         holder.beanIndex.setText(position + "");
+        holder.weightUnit.setText(MyApplication.weightUnit);
         holder.beanWeight.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -92,13 +94,14 @@ public class BeanSelectAdapter extends RecyclerView.Adapter<BeanSelectAdapter.Be
         private TextView beanName;
         private EditText beanWeight;
         private ImageView delete;
-
+        private TextView weightUnit;
         public BeanSelectHandler(View itemView) {
             super(itemView);
             beanName = (TextView) itemView.findViewById(R.id.id_bake_dialog_beanName);
             beanWeight = (EditText) itemView.findViewById(R.id.id_bake_dialog_beanWeight);
             delete = (ImageView) itemView.findViewById(R.id.id_bake_dialog_delete);
             beanIndex = (TextView)itemView.findViewById(R.id.id_dialog_beanIndex);
+            weightUnit = (TextView)itemView.findViewById(R.id.id_bake_dialog_unit);
         }
     }
 }

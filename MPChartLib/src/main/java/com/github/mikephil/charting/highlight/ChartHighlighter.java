@@ -158,11 +158,15 @@ public class ChartHighlighter<T extends BarLineScatterCandleBubbleDataProvider> 
      * @return
      */
     protected List<Highlight> buildHighlights(IDataSet set, int dataSetIndex, float xVal, DataSet.Rounding rounding) {
-
+        List<Entry> entries = Entry.getEvents();
         ArrayList<Highlight> highlights = new ArrayList<>();
 
+        if(entries == null){
+            return highlights;
+        }
+
         //noinspection unchecked
-        List<Entry> entries = set.getEntriesForXValue(xVal);
+        /*List<Entry> entries = set.getEntriesForXValue(xVal);
         if (entries.size() == 0) {
             // Try to find closest x-value and take all entries for that x-value
             final Entry closest = set.getEntryForXValue(xVal, Float.NaN, rounding);
@@ -171,20 +175,42 @@ public class ChartHighlighter<T extends BarLineScatterCandleBubbleDataProvider> 
                 //noinspection unchecked
                 entries = set.getEntriesForXValue(closest.getX());
             }
+        }*/
+        Entry cur = null;
+        float xDistance = Float.MAX_VALUE;
+        for(Entry entry: entries){
+            if(Math.abs(xVal - entry.getX()) < xDistance){
+                xDistance = xVal - entry.getX();
+                cur = entry;
+            }
         }
+        if(cur != null){
+            MPPointD pixels = mChart.getTransformer(
+                    set.getAxisDependency()).getPixelForValues(cur.getX(), cur.getY());
+
+            highlights.add(new Highlight(
+                    cur.getX(), cur.getY(),
+                    (float) pixels.x, (float) pixels.y,
+                    dataSetIndex, set.getAxisDependency()));
+        }
+
+/*
 
         if (entries.size() == 0)
             return highlights;
 
         for (Entry e : entries) {
-            MPPointD pixels = mChart.getTransformer(
-                    set.getAxisDependency()).getPixelForValues(e.getX(), e.getY());
+            if(!"".equals(e.getEvent().getDescription())){
+                MPPointD pixels = mChart.getTransformer(
+                        set.getAxisDependency()).getPixelForValues(e.getX(), e.getY());
 
-            highlights.add(new Highlight(
-                    e.getX(), e.getY(),
-                    (float) pixels.x, (float) pixels.y,
-                    dataSetIndex, set.getAxisDependency()));
-        }
+                highlights.add(new Highlight(
+                        e.getX(), e.getY(),
+                        (float) pixels.x, (float) pixels.y,
+                        dataSetIndex, set.getAxisDependency()));
+            }
+
+        }*/
 
         return highlights;
     }
@@ -241,6 +267,7 @@ public class ChartHighlighter<T extends BarLineScatterCandleBubbleDataProvider> 
     }
 
     protected BarLineScatterCandleBubbleData getData() {
+
         return mChart.getData();
     }
 }

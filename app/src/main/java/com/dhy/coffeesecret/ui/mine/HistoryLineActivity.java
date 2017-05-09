@@ -66,8 +66,6 @@ public class HistoryLineActivity extends AppCompatActivity implements View.OnCli
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setSoftInputMode(
-                WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         setContentView(R.layout.history_lines);
         ButterKnife.bind(this);
         back.setOnClickListener(new View.OnClickListener() {
@@ -78,6 +76,7 @@ public class HistoryLineActivity extends AppCompatActivity implements View.OnCli
         });
         toolbar = (Toolbar) findViewById(R.id.toolbar_device_activtiy);
         init();
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         UIUtils.steepToolBar(this);
 
     }
@@ -196,6 +195,8 @@ public class HistoryLineActivity extends AppCompatActivity implements View.OnCli
                         @Override
                         public int compare(BakeReport o1, BakeReport o2) {
                             return (int) (Utils.date2IdWithTimestamp(o2.getDate()) - Utils.date2IdWithTimestamp(o1.getDate()));
+                            // return -o1.getDate().compareTo(o2.getDate());
+
                         }
                     });
                     // 请求成功

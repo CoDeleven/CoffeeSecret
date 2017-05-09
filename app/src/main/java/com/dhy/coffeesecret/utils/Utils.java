@@ -144,7 +144,7 @@ public class Utils {
     }
 
     public static long date2IdWithTimestamp(String date) {
-        SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd HH:ss");
+        SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd hh:mm");
         long result = -1;
         try {
             result = format1.parse(date).getTime();
@@ -205,4 +205,5 @@ public class Utils {
         }
         return get2PrecisionFloat(result);
     }
+
 }

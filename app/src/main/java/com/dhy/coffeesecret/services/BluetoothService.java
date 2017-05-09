@@ -21,13 +21,44 @@ import android.util.Log;
 import com.dhy.coffeesecret.pojo.Temprature;
 import com.dhy.coffeesecret.utils.Utils;
 
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.UUID;
 
 import static android.bluetooth.BluetoothProfile.STATE_CONNECTED;
 import static android.bluetooth.BluetoothProfile.STATE_CONNECTING;
 import static android.bluetooth.BluetoothProfile.STATE_DISCONNECTED;
 import static android.bluetooth.BluetoothProfile.STATE_DISCONNECTING;
-
+//                            _ooOoo_
+//                           o8888888o
+//                           88" . "88
+//                           (| -_- |)
+//                            O\ = /O
+//                        ____/`---'\____
+//                      .   ' \\| |// `.
+//                       / \\||| : |||// \
+//                     / _||||| -:- |||||- \
+//                       | | \\\ - /// | |
+//                     | \_| ''\---/'' | |
+//                      \ .-\__ `-` ___/-. /
+//                   ___`. .' /--.--\ `. . __
+//                ."" '< `.___\_<|>_/___.' &gt;'"".
+//               | | : `- \`.;`\ _ /`;.`/ - ` : | |
+//                 \ \ `-. \_ __\ /__ _/ .-` / /
+//         ======`-.____`-.___\_____/___.-`____.-'======
+//                            `=---='
+//
+//         .............................................
+//                  佛祖保佑             永无BUG
+//          佛曰:
+//                  写字楼里写字间，写字间里程序员；
+//                  程序人员写程序，又拿程序换酒钱。
+//                  酒醒只在网上坐，酒醉还来网下眠；
+//                  酒醉酒醒日复日，网上网下年复年。
+//                  但愿老死电脑间，不愿鞠躬老板前；
+//                  奔驰宝马贵者趣，公交自行程序员。
+//                  别人笑我忒疯癫，我笑自己命太贱；
+//                  不见满街漂亮妹，哪个归得程序员？
 public class BluetoothService extends Service {
 
     public static final UUID PRIMARY_SERVICE = UUID.fromString("000018f0-0000-1000-8000-00805f9b34fb");
@@ -41,13 +72,15 @@ public class BluetoothService extends Service {
     public static volatile boolean READABLE = false;
     public static BluetoothService.BluetoothOperator BLUETOOTH_OPERATOR;
     private static ReadTasker mRunThread;
-    private final int sleepTime = 1000;
+    private final int sleepTime = 900;
     private BluetoothManager mBluetoothManager;
     private BluetoothAdapter mBluetoothAdapter;
     private BluetoothGatt mBluetoothGatt;
     private BluetoothGattCharacteristic mWriter;
     private BluetoothGattCharacteristic mReader;
     private BluetoothDevice mCurDevice;
+    private String lastAddress;
+    private boolean tempStatus = false;
     private int mConnectionState = STATE_DISCONNECTED;
     private DataChangedListener dataChangedListener;
     private DeviceChangedListener deviceChangedListener;
@@ -139,6 +172,7 @@ public class BluetoothService extends Service {
                 mBluetoothGatt.discoverServices();
                 // 设置当前设备
                 mCurDevice = gatt.getDevice();
+                lastAddress = mCurDevice.getAddress();
                 deviceChangedListener.notifyDeviceConnectStatus(true, gatt.getDevice());
             } else if (newState == STATE_DISCONNECTED || newState == STATE_DISCONNECTING) {
                 mConnectionState = STATE_DISCONNECTED;
@@ -215,6 +249,7 @@ public class BluetoothService extends Service {
             return;
         }
         mBluetoothGatt.disconnect();
+        mBluetoothGatt.close();
     }
 
     // 服务绑定返回唯一的操作对象
@@ -240,7 +275,7 @@ public class BluetoothService extends Service {
         mRunThread.setReadable(true);
         mRunThread.setDataChangedListener(dataChangedListener);
         try {
-            Thread.currentThread().sleep(500);
+            Thread.currentThread().sleep(100);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -441,7 +476,7 @@ public class BluetoothService extends Service {
          * @return
          */
         public boolean reConnect() {
-            BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(mCurDevice.getAddress());
+            BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(lastAddress);
             if (device == null) {
                 return false;
             } else {
@@ -516,11 +551,16 @@ public class BluetoothService extends Service {
             @Override
             public synchronized boolean readData(String str) {
                 synchronized (result) {
+                    Log.d(TAG, Thread.currentThread() + ":readData2:" + str);
                     result += str;
                     if (str.endsWith("0a")) {
                         dataReader = channelListener1;
                         if (dataChangedListener != null) {
-                            dataChangedListener.notifyDataChanged(Temprature.parseHex2Temprature(Utils.hexString2String(result)));
+                            try{
+                                dataChangedListener.notifyDataChanged(Temprature.parseHex2Temprature(Utils.hexString2String(result)));
+                            }catch(Exception e){
+                                e.printStackTrace();
+                            }
                             result = "";
                         }
                         return true;
@@ -554,11 +594,29 @@ public class BluetoothService extends Service {
         public void run() {
             while (readable) {
                 dataReader.setWriteCommand();
+                final Timer waitTime = new Timer();
+                // tempStatus = false;
                 // 等待dataRead返回数据
                 try {
+                    Log.e(TAG, "读取");
+                    int count = 1;
                     while (dataReader.isHandling()) {
+                        if(--count == 0){
+                            waitTime.schedule(new TimerTask() {
+                                @Override
+                                public void run() {
+                                    // 如果3s以后isHanding依然处于true的状态则断开进行重连
+                                    if(dataReader.isHandling()) {
+                                        dataReader = channelListener1;
+                                        dataReader.setHandling(false);
+                                    }
+                                }
+                            }, 3000);
+                        }
                     }
-                    Log.d(TAG, this.toString());
+                    // 已经成功，则取消timer
+                    waitTime.cancel();
+
                     dataReader.setHandling(true);
 
                     Thread.currentThread().sleep(sleepTime);

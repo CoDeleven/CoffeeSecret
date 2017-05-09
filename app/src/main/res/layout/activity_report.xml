@@ -285,6 +285,13 @@
                                 android:layout_height="wrap_content">
 
                                 <TextView
+                                    android:id="@+id/id_globalAcc"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="平均升温率：000.00℃"
+                                    android:textSize="12sp"/>
+                                <TextView
                                     android:id="@+id/id_developTime"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -299,14 +306,73 @@
                                     android:layout_weight="1"
                                     android:text="发展率：20%"
                                     android:textSize="12sp"/>
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+                                <TextView
+                                    android:id="@+id/id_breakPointer_time"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="回温点温度：000.00℃"
+                                    android:textSize="12sp"/>
+
+                                <TextView
+                                    android:id="@+id/id_breakPointer_temp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="回温点时间：00:00"
+                                    android:textSize="12sp"/>
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
-                                    android:text="　　　　　　"
+                                    android:text="　　　　　　　"
                                     android:textSize="12sp"/>
                             </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+                                <TextView
+                                    android:id="@+id/id_avgDry"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="开始->脱水结束：000.00℃　　　00:00"
+                                    android:textSize="12sp"/>
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+                                <TextView
+                                    android:id="@+id/id_avgFirbu"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="脱水结束->一爆开始：000.00℃　　　00:00"
+                                    android:textSize="12sp"/>
+
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+                                <TextView
+                                    android:id="@+id/id_avgEnd"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="一爆开始->结束：000.00℃　　　00:00"
+                                    android:textSize="12sp"/>
+                            </LinearLayout>
+
                         </LinearLayout>
 
                     </RelativeLayout>

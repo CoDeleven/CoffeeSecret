@@ -11,6 +11,7 @@
         android:scaleType="centerCrop"
         android:src="@drawable/ic_bus_tool"
         android:layout_width="match_parent"
+        android:onClick="back"
         android:layout_height="?attr/actionBarSize"/>
     <ScrollView
         android:layout_below="@id/iv"
@@ -19,7 +20,7 @@
         <ImageView
             android:src="@drawable/ic_business"
             android:scaleType="fitStart"
-            android:onClick="back"
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </ScrollView>

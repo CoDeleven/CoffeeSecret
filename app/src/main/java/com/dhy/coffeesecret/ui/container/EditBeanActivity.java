@@ -91,8 +91,10 @@ public class EditBeanActivity extends AppCompatActivity {
     EditText editWaterContent;
     @Bind(R.id.edit_handler)
     Spinner editHandler;
-    @Bind(R.id.edit_another_handler)
-    EditText editAnotherHandler;
+    /*    @Bind(R.id.edit_another_handler)
+        EditText editAnotherHandler;*/
+    @Bind(R.id.edit_handler_temp)
+    TextView editHandlerTemp;
     @Bind(R.id.edit_supplier)
     EditText editSupplier;
     @Bind(R.id.edit_price)
@@ -105,7 +107,8 @@ public class EditBeanActivity extends AppCompatActivity {
     TextView editWeightUnit;
     @Bind(R.id.id_bean_delete)
     Button beanDelete;
-
+    @Bind(R.id.edit_level_temp)
+    TextView editLevelTemp;
     private TimePickerView pvTime;
     // 格式化器
     private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
@@ -122,7 +125,8 @@ public class EditBeanActivity extends AppCompatActivity {
     private Context mContext;
     private int id; //bean的id 如果新添加的豆子 id = 0 否则等于原本的id
     private EditBeanHandler mHandler = new EditBeanHandler(EditBeanActivity.this);
-
+    private BeanInfo beanInfo;
+    private int count = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -166,12 +170,13 @@ public class EditBeanActivity extends AppCompatActivity {
      */
     private void init() {
         // 豆子信息
-        BeanInfo beanInfo = (BeanInfo) getIntent().getSerializableExtra("beanInfo");
+        beanInfo = (BeanInfo) getIntent().getSerializableExtra("beanInfo");
 
         // 如果当前豆子信息为空，那么是添加豆子，如果豆子信息不为空，那么是编辑豆子
         if (beanInfo == null) {
             titleText.setText("添加豆子");
             beanInfo = new BeanInfo();
+            count = 2;
         } else {
             Log.i(TAG, "init: beanInfo" + beanInfo.toString());
             titleText.setText("编辑豆子");
@@ -189,24 +194,76 @@ public class EditBeanActivity extends AppCompatActivity {
 
         editName.setText(beanInfo.getName());
         editCountry.setText(beanInfo.getCountry());
+        if ("".equals(editCountry.getText().toString().trim())) {
+            editCountry.setText("未知");
+        }
         editArea.setText(beanInfo.getArea());
         editManor.setText(beanInfo.getManor());
         editAltitude.setText(beanInfo.getAltitude());
         editSpecies.setText(beanInfo.getSpecies());
-        editLevel.setSelection(getLevelSelection(beanInfo.getLevel()), true);
+        // editLevel.setSelection(getLevelSelection(beanInfo.getLevel()), true);
+        /*
+         * 因为有其他选项的存在所以选择直接显示在遮罩上面
+         */
+        editLevelTemp.setText(beanInfo.getLevel());
+        currentLevel = beanInfo.getLevel();
         editWaterContent.setText(beanInfo.getWaterContent() + "");
-        editHandler.setSelection(getHandlerSelection(beanInfo.getProcess()), true);
-        editAnotherHandler.setEnabled(false);
+        if ("0.0".equals(editWaterContent.getText().toString().trim())) {
+            editWaterContent.setText("");
+        }
+        // editHandler.setSelection(getHandlerSelection(beanInfo.getProcess()), true);
+        editHandlerTemp.setText(beanInfo.getProcess());
+        currentHandler = beanInfo.getProcess();
+
         editSupplier.setText(beanInfo.getSupplier());
         editPrice.setText(beanInfo.getPrice() + "");
+        if ("0.0".equals(editPrice.getText().toString().trim())) {
+            editPrice.setText("");
+        }
         editWeight.setText(beanInfo.getStockWeight() + "");
+        if ("0.0".equals(editWeight.getText().toString().trim())) {
+            editWeight.setText("");
+        }
         editWeightUnit.setText(SettingTool.getConfig(mContext).getWeightUnit());
         editBuyDate.setText(formatDate(beanInfo.getDate()));
 
         editLevel.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(count < 2){
+                    ++count;
+                    return;
+                }
                 currentLevel = levelArray[position];
+                if (position == levelArray.length - 1) {
+                    final EditText editText = new EditText(EditBeanActivity.this);
+                    AlertDialog dialog = new AlertDialog.Builder(EditBeanActivity.this).setTitle("其他...")
+                            .setView(editText).setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // 设置当前等级
+                                    currentLevel = editText.getText().toString();
+                            /*
+                             * 因为spinner中的其他选项不能显示在选完后的界面上（选完后就是显示其他）
+                             * 固采用一个TextView作为内容，其中设置spinner的alpha为0
+                             * 用editLevelTemp遮住spinner
+                             */
+                                    editLevelTemp.setText(currentLevel);
+                                }
+                            }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                    editLevel.setSelection(0);
+                                    return;
+                                }
+                            }).setCancelable(false).create();
+                    dialog.show();
+                    ((TextView) view).setText(currentLevel);
+                } else {
+                    editLevelTemp.setText(levelArray[position]);
+                }
+
             }
 
             @Override
@@ -215,15 +272,42 @@ public class EditBeanActivity extends AppCompatActivity {
             }
         });
 
+
         editHandler.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(count < 2){
+                    ++count;
+                    return;
+                }
                 currentHandler = handlerArray[position];
-                if (currentHandler.equals("其它")) {
-                    editAnotherHandler.setEnabled(true);
+                if (position == handlerArray.length - 1) {
+                    final EditText editText = new EditText(EditBeanActivity.this);
+                    AlertDialog dialog = new AlertDialog.Builder(EditBeanActivity.this).setTitle("其他...")
+                            .setView(editText).setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // 设置当前等级
+                                    currentHandler = editText.getText().toString();
+                            /*
+                             * 因为spinner中的其他选项不能显示在选完后的界面上（选完后就是显示其他）
+                             * 固采用一个TextView作为内容，其中设置spinner的alpha为0
+                             * 用editLevelTemp遮住spinner
+                             */
+                                    editHandlerTemp.setText(currentHandler);
+                                }
+                            }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                    editHandler.setSelection(0);
+                                    return;
+                                }
+                            }).setCancelable(false).create();
+                    dialog.show();
+                    ((TextView) view).setText(currentHandler);
                 } else {
-                    editAnotherHandler.setText("");
-                    editAnotherHandler.setEnabled(false);
+                    editHandlerTemp.setText(handlerArray[position]);
                 }
             }
 
@@ -233,6 +317,7 @@ public class EditBeanActivity extends AppCompatActivity {
             }
         });
     }
+
 
     /**
      * 格式化日期
@@ -390,12 +475,7 @@ public class EditBeanActivity extends AppCompatActivity {
         beanInfo.setCountry(country);
 
         // 如果用户没填该项则默认给予一个未知
-        String beanArea = editArea.getText().toString();
-        if ("".equals(beanArea.trim())) {
-            beanInfo.setArea("未知");
-        } else {
-            beanInfo.setArea(beanArea);
-        }
+        beanInfo.setArea(editArea.getText().toString());
 
         beanInfo.setManor(editManor.getText().toString());
         beanInfo.setAltitude(editAltitude.getText().toString());
@@ -412,11 +492,7 @@ public class EditBeanActivity extends AppCompatActivity {
             beanInfo.setName(editCountry.getText() + "" + editSpecies.getText());
         }
 
-        if (currentHandler.equals("其它")) {
-            beanInfo.setProcess(editAnotherHandler.getText().toString());
-        } else {
-            beanInfo.setProcess(currentHandler);
-        }
+        beanInfo.setProcess(currentHandler);
 
         updateBeanInfo(beanInfo);
         Log.i(TAG, "saveBeanInfo: " + beanInfo.toString());
@@ -480,10 +556,24 @@ public class EditBeanActivity extends AppCompatActivity {
         exitToRight();
     }
 
+    /**
+     * 在保存或更新信息之前检测输入栏中的数值是否符合要求
+     *
+     * @return
+     */
     private boolean checkValidation() {
         if ("".equals(editArea.getText().toString().trim())) {
-            mHandler.sendEmptyMessage(AREA_NONE);
-            return false;
+            // mHandler.sendEmptyMessage(AREA_NONE);
+            editArea.setText("未知");
+        }
+        if ("".equals(editPrice.getText().toString().trim())) {
+            editPrice.setText("0.0");
+        }
+        if ("".equals(editWaterContent.getText().toString().trim())) {
+            editWaterContent.setText("0.0");
+        }
+        if ("".equals(editWeight.getText().toString().trim())) {
+            editWeight.setText("0.0");
         }
         if ("".equals(editSpecies.getText().toString().trim())) {
             mHandler.sendEmptyMessage(SPECIES_NONE);
@@ -521,7 +611,7 @@ public class EditBeanActivity extends AppCompatActivity {
                 case SPECIES:
                     str = (String) msg.obj;
                     // 取出除第一个字符之后的小类
-                    activity.editSpecies.setText(str.substring(1, str.length()));
+                    activity.editSpecies.setText(str);
                     // 将这个字符串发给BEAN_ICON进行处理
                     msg = new Message();
                     msg.what = BEAN_ICON;
