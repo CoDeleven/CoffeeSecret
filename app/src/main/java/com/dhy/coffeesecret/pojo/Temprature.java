@@ -107,4 +107,15 @@ public class Temprature implements Serializable {
         this.envTemp = envTemp;
     }
 
+    @Override
+    public String toString() {
+        return "Temprature{" +
+                "beanTemp=" + beanTemp +
+                ", inwindTemp=" + inwindTemp +
+                ", outwindTemp=" + outwindTemp +
+                ", accBeanTemp=" + accBeanTemp +
+                ", accInwindTemp=" + accInwindTemp +
+                ", accOutwindTemp=" + accOutwindTemp +
+                '}';
+    }
 }
