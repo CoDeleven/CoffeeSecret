@@ -207,7 +207,9 @@ public class NewCuppingActivity extends AppCompatActivity
             editToolBar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    showDialog();
+                    final Map<String, Float> data = cuppingInfoFragment.getData();
+                    map2Bean(data, mCuppingInfo);
+                    updateCommit();
                 }
             });
             editToolBar.setTitleClickListener(new EditToolBar.OnTitleClickListener() {
@@ -224,9 +226,37 @@ public class NewCuppingActivity extends AppCompatActivity
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == 4 && (EDIT_INFO.equals(viewType) || NEW_CUPPING.equals(viewType))) {
-            showDialog();
+//            showDialog(); // TODO: 2017/5/9
+            final Map<String, Float> data = cuppingInfoFragment.getData();
+            map2Bean(data, mCuppingInfo);
+            updateCommit();
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    private void updateCommit() {
+        new Thread() {
+            @Override
+            public void run() {
+                mHandler.sendEmptyMessage(UPDATE);
+                HttpUtils.enqueue(URLs.UPDATE_CUPPING, mCuppingInfo, new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        mHandler.sendEmptyMessage(ERROR);
+                        finish();
+                    }
+
+                    @Override
+                    public void onResponse(Call call, final Response response) throws IOException {
+                        mResultCode = CupFragment.RESULT_CODE_UPDATE;
+                        mResultIntent = new Intent();
+                        mResultIntent.putExtra(TARGET, mCuppingInfo);
+                        mHandler.sendEmptyMessage(SUCCESS);
+                        finish();
+                    }
+                });
+            }
+        }.start();
     }
 
     private void initParam() {
@@ -313,8 +343,8 @@ public class NewCuppingActivity extends AppCompatActivity
 
         final Map<String, Float> data = cuppingInfoFragment.getData();
         map2Bean(data, mCuppingInfo);
-
         cuppingInfoFragment.updateProgressBar((int) mCuppingInfo.getFeel(), (int) mCuppingInfo.getFlaw());
+
         if (NEW_CUPPING.equals(viewType) || isNew) {
             mCuppingInfo.setBakeReport(mBakeReport);
             if (mCuppingInfo.getName() == null) {

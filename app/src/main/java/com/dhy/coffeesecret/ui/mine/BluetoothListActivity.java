@@ -4,6 +4,8 @@ import android.bluetooth.BluetoothDevice;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.SystemClock;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,14 +23,22 @@ import com.kyleduo.switchbutton.SwitchButton;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.dhy.coffeesecret.services.BluetoothService.SCAN_TIME;
+
 public class BluetoothListActivity extends AppCompatActivity implements BluetoothListAdapter.OnItemClickListener,
-        CompoundButton.OnCheckedChangeListener, BluetoothService.DeviceChangedListener, BluetoothService.ViewControllerListener {
-    public static final int DEVICE_CONNECTING = 0, DEVICE_CONNECT_FAILED = 1, DEVICE_CONNECTED = 2;
+        CompoundButton.OnCheckedChangeListener, BluetoothService.DeviceChangedListener, BluetoothService.ViewControllerListener, SwipeRefreshLayout.OnRefreshListener {
+
+    public static final int DEVICE_CONNECTING = 0, DEVICE_CONNECT_FAILED = 1, DEVICE_CONNECTED = 2, REFRESH = -1;
+
+    @Bind(R.id.srl)
+    SwipeRefreshLayout refreshLayout;
     @Bind(R.id.id_connecting_bluetooth_list)
     RecyclerView devices;
     @Bind(R.id.id_bluetooth_switch)
@@ -45,6 +55,9 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
     private Handler progressViewHandler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
+            if (msg.what == REFRESH) {
+                refreshLayout.setRefreshing(false);
+            }
             if (tick != null && progressCircle != null) {
                 switch (msg.what) {
                     case DEVICE_CONNECTING:
@@ -58,6 +71,7 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
                     case DEVICE_CONNECTED:
                         progressCircle.setVisibility(View.GONE);
                         tick.setVisibility(View.VISIBLE);
+                        break;
                 }
             }
             return false;
@@ -123,6 +137,7 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
         devices.setLayoutManager(new LinearLayoutManager(this));
         devices.setAdapter(adapter);
         adapter.setOnItemClickListener(this);
+        refreshLayout.setOnRefreshListener(this);
 
         // 获取蓝牙操作对象
         if (mBluetoothOperator == null) {
@@ -134,7 +149,14 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
         mBluetoothOperator.setDeviceChangedListener(this);
         // 设置视图更改器，用于当蓝牙连接成功时，设置勾给相应的条目
         mBluetoothOperator.setViewControllerListener(this);
-
+        mBluetoothOperator.setScanListener(new BluetoothService.ScanListener(){
+            @Override
+            protected void onScanStop() {
+                if(progressViewHandler != null){
+                    progressViewHandler.sendEmptyMessage(REFRESH);
+                }
+            }
+        });
         // 如果蓝牙已经开启
         if (mBluetoothOperator.isEnable()) {
             // 打开连接按钮
@@ -152,6 +174,15 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
                 // 为adapter添加该设备
                 adapter.addDevice(curDevice);
             }
+        }
+    }
+
+    @Override
+    public void onRefresh() {
+        if (mBluetoothOperator != null) {
+            mBluetoothOperator.startScanDevice();
+        } else {
+            progressViewHandler.sendEmptyMessage(REFRESH);
         }
     }
 
@@ -263,5 +294,6 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
         mBluetoothOperator.stopScanDevice();
         progressViewHandler = null;
     }
+
 
 }

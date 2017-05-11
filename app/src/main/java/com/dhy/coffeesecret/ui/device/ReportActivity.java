@@ -86,17 +86,17 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
     @Bind(R.id.id_report_species)
     TextView species;
     @Bind(R.id.id_globalAcc)
-            TextView globalAccTemp;
+    TextView globalAccTemp;
     @Bind(R.id.id_avgDry)
-            TextView avgDry;
+    TextView avgDry;
     @Bind(R.id.id_avgFirbu)
-            TextView avgFirbu;
+    TextView avgFirbu;
     @Bind(R.id.id_avgEnd)
-            TextView avgEnd;
+    TextView avgEnd;
     @Bind(R.id.id_breakPointer_temp)
-            TextView breakPointerTemp;
+    TextView breakPointerTemp;
     @Bind(R.id.id_breakPointer_time)
-            TextView breakPointerTime;
+    TextView breakPointerTime;
     // 校园专用单一豆名
     String _bean_;
     String _species_;
@@ -185,9 +185,9 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
         float cooked = Float.parseFloat(proxy.getBakeReport().getCookedBeanWeight());
         float raw = proxy.getRawBeanWeight();
         // TODO 处理BakeReport中不包含生豆重量属性的替代方案(后续要改)
-        if(raw <= 0.0f){
+        if (raw <= 0.0f) {
             raw = 0f;
-            for(BeanInfoSimple simple: proxy.getBeanInfos()){
+            for (BeanInfoSimple simple : proxy.getBeanInfos()) {
                 raw += Float.parseFloat(simple.getUsage());
             }
         }

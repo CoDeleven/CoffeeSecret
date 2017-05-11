@@ -30,7 +30,8 @@ public class Temprature implements Serializable {
         this.inwindTemp = inwindTemp;
         this.outwindTemp = outwindTemp;
     }
-
+    // 0-》环境温，1-》进风温，2-》出风问，3-》环境温，4->豆温，5-》？
+    // 12，44，55
     public static Temprature parseHex2Temprature(String data) {
         String[] subStr = data.split(",");
         Temprature temp = new Temprature();

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_bluetooth_list"
     android:layout_width="match_parent"
@@ -26,7 +25,7 @@
             android:gravity="center_vertical"
             android:text="设备选择"
             android:textColor="#FFF"
-            android:textSize="20sp"/>
+            android:textSize="20sp" />
 
         <ImageView
             android:id="@+id/id_back"
@@ -36,7 +35,7 @@
             android:background="@android:color/transparent"
             android:src="@drawable/ic_back"
             android:textColor="#FFF"
-            android:textSize="17sp"/>
+            android:textSize="17sp" />
     </android.support.v7.widget.Toolbar>
 
 
@@ -57,7 +56,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
                 android:paddingLeft="29.8125dp"
-                android:text="蓝牙"/>
+                android:text="蓝牙" />
 
             <com.kyleduo.switchbutton.SwitchButton
                 android:id="@+id/id_bluetooth_switch"
@@ -65,7 +64,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:paddingRight="29.8125dp"/>
+                android:paddingRight="29.8125dp" />
         </RelativeLayout>
 
         <LinearLayout
@@ -76,16 +75,23 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
                 android:text="可连接设备"
                 android:textColor="#a29e9b"
-                android:textSize="13.5sp"/>
+                android:textSize="13.5sp" />
         </LinearLayout>
 
     </LinearLayout>
 
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/id_connecting_bluetooth_list"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/srl"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+        android:layout_height="match_parent">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/id_connecting_bluetooth_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </android.support.v7.widget.RecyclerView>
+    </android.support.v4.widget.SwipeRefreshLayout>
+
 </LinearLayout>

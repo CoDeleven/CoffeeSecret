@@ -33,6 +33,7 @@ import butterknife.ButterKnife;
 public class FirstConnectedActivity extends AppCompatActivity implements BluetoothListAdapter.OnItemClickListener,
         BluetoothService.DeviceChangedListener, BluetoothService.ViewControllerListener {
     public static final int DEVICE_CONNECTING = 0, DEVICE_CONNECT_FAILED = 1, DEVICE_CONNECTED = 2;
+
     @Bind(R.id.id_first_bluetooth_list)
     RecyclerView recyclerView;
     @Bind(R.id.id_first_connect_status)

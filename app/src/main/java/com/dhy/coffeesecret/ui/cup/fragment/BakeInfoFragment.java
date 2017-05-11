@@ -123,8 +123,7 @@ public class BakeInfoFragment extends Fragment implements View.OnClickListener {
 
         if (!isNewCupping && mBakeReport == null) {
             mButtonBake.setEnabled(false);
-
-            mChart.setTempratureSet(mBakeReport.getTempratureSet());
+//            mChart.setTempratureSet(mBakeReport.getTempratureSet());
         }
 
         mListView = (ExpandableLayoutListView) mView.findViewById(R.id.beanInfo);

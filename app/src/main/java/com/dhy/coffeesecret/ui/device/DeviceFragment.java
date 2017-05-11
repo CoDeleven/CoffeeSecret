@@ -51,8 +51,10 @@ import butterknife.OnClick;
 // TODO 待重构,重构对象-> 统一符号处理、统一handler处理、统一dialog的生成方式
 
 public class DeviceFragment extends Fragment implements BluetoothService.DeviceChangedListener, BluetoothService.DataChangedListener {
+
     private static String lastAddress = null;
-    public static final int MANUAL = 2, AUTOMATIC = 3;
+    public static final int MANUAL = 2;
+    public static final int AUTOMATIC = 3;
     @Bind(R.id.id_device_prepare_bake)
     Button mPrepareBake;
     boolean hasPrepared = false;
