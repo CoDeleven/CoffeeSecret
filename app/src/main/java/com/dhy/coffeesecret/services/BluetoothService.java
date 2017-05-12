@@ -62,10 +62,6 @@ import static android.bluetooth.BluetoothProfile.STATE_DISCONNECTING;
 //                  不见满街漂亮妹，哪个归得程序员？
 public class BluetoothService extends Service {
 
-    //public static final UUID PRIMARY_SERVICE = UUID.fromString("000018f0-0000-1000-8000-00805f9b34fb");
-//    public static final UUID TAG_WRITE = UUID.fromString("00002af1-0000-1000-8000-00805f9b34fb");
-//    public static final UUID TAG_READ = UUID.fromString("00002af0-0000-1000-8000-00805f9b34fb");
-//    public static final UUID WRITE_DESCRIPTOR = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
     public static final UUID PRIMARY_SERVICE = UUID.fromString("000018f0-0000-1000-8000-00805f9b34fb");
     public static final UUID TAG_WRITE = UUID.fromString("00002af1-0000-1000-8000-00805f9b34fb");
     public static final UUID TAG_READ = UUID.fromString("00002af0-0000-1000-8000-00805f9b34fb");
@@ -74,7 +70,6 @@ public class BluetoothService extends Service {
     private static final String TAG = BluetoothService.class.getSimpleName();
 
     public static final long SCAN_TIME = 12000;
-
     public static String FIRST_CHANNEL = "4348414e3b323130300a";
     public static String SECOND_CHANNEL = "4348414e3b333230300a";
     public static String READ_TEMP_COMMAND = "524541440a";
@@ -593,7 +588,7 @@ public class BluetoothService extends Service {
             @Override
             public synchronized boolean readData(String str) {
                 synchronized (result) {
-                    Log.d(TAG, "第1通道数据:"+Utils.hexString2String(str));
+                    Log.d(TAG, "第2通道数据:"+Utils.hexString2String(str));
                     result += str;
                     if (str.endsWith("0a")) {
                         dataReader = channelListener1;
@@ -657,9 +652,7 @@ public class BluetoothService extends Service {
                     }
                     // 已经成功，则取消timer
                     waitTime.cancel();
-
                     dataReader.setHandling(true);
-
                     Thread.currentThread().sleep(sleepTime);
                 } catch (InterruptedException e) {
                     Log.d(TAG, "已经停止运行该线程");
