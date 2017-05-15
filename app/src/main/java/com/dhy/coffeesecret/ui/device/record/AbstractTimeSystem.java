@@ -21,6 +21,10 @@ public abstract class AbstractTimeSystem {
         return startTime;
     }
 
+    protected void resetEventTime(){
+        this.startEventTime = System.currentTimeMillis();
+    }
+
     /**
      * 当前系统时间减去开始该事件的时间
      * @return
