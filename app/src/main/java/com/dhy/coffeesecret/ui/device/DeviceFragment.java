@@ -436,9 +436,9 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
             }
         } else {
             mTextHandler.sendEmptyMessage(1);
-            while(!mBluetoothOperator.reConnect()){
-
-            }
+//            while(!mBluetoothOperator.reConnect()){
+//
+//            }
             // mShowHandler.sendEmptyMessage(2);
         }
     }

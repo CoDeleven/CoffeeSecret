@@ -87,7 +87,7 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
     private String title = "";
     private int maxPrice = 1005;
     private int maxWeight = 505;
-    private String screenHandler = "";
+    private String screenHandler = "全部";
     private int[] screenPrice = new int[2];
     private int[] screenWeight = new int[2];
     private boolean isPopupWindowShowing = false;
@@ -289,6 +289,7 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
         }
 
         mHandler.sendEmptyMessage(NO_LOADING);
+        mHandler.sendEmptyMessage(START_SCREEN);
         Log.i(TAG, "------------------豆种信息加载结束------------------");
     }
 
@@ -518,7 +519,8 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
         if ((screenPrice[0] > 0 || screenPrice[1] < maxPrice - 1)) {
             coffeeBeanInfos.clear();
             for (BeanInfo beanInfo : beanInfos) {
-                if (beanInfo.getPrice() >= screenPrice[0] && (screenPrice[1] > 1000 ? true : beanInfo.getPrice() <= screenPrice[1])) {
+                if (beanInfo.getPrice() >= screenPrice[0]
+                        && (screenPrice[1] > 1000 ? true : beanInfo.getPrice() <= screenPrice[1])) {
                     coffeeBeanInfos.add(beanInfo);
                 }
             }
@@ -581,7 +583,6 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
                         activity.refreshBeanList.setRefreshing(false);
                     }
                     countryName.setText("全部");
-                    screenHandler = "全部";
                     beanListAdapter.notifyDataSetChanged();
                     break;
                 case INIT_POPUP_WINDOW:

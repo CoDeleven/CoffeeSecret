@@ -19,7 +19,7 @@
             android:background="@color/colorPrimary"
             android:paddingLeft="12dp"
             android:paddingTop="5dp"
-            android:text="处理"
+            android:text="时间"
             android:textColor="@color/white"
             android:textSize="12sp" />
 

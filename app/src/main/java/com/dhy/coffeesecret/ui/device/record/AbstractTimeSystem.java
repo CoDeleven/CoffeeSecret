@@ -36,7 +36,4 @@ public abstract class AbstractTimeSystem {
     public float getTimeIntervalFromNow(){
         return Utils.get2PrecisionFloat((System.currentTimeMillis() - startTime) / 1000f);
     }
-    protected void resetEventTime(){
-               this.startEventTime = System.currentTimeMillis();
-    }
 }
