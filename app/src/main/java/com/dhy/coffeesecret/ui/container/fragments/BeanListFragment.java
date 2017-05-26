@@ -88,6 +88,7 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
     private int maxPrice = 1005;
     private int maxWeight = 505;
     private String screenHandler = "全部";
+    ;
     private int[] screenPrice = new int[2];
     private int[] screenWeight = new int[2];
     private boolean isPopupWindowShowing = false;
@@ -371,17 +372,19 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
         tvSecondPrice.setText("不限");
         tvFirstWeight.setText(0 + "");
         tvSecondWeight.setText("不限");
-        rangePrice.setTickCount(maxPrice);
-        rangeWeight.setTickCount(maxWeight);
-        rangePrice.setThumbIndices(0, maxPrice - 1);
-        rangeWeight.setThumbIndices(0, maxWeight - 1);
+        rangePrice.setTickCount(maxPrice + 50);
+        rangeWeight.setTickCount(maxWeight + 50);
+        rangePrice.setThumbIndices(0, maxPrice + 49);
+        rangeWeight.setThumbIndices(0, maxWeight + 49);
         rangePrice.setOnRangeBarChangeListener(new RangeBar.OnRangeBarChangeListener() {
             @Override
             public void onIndexChangeListener(RangeBar rangeBar, int thumb1, int thumb2) {
+                thumb1 = thumb1 < 50 ? 0 : thumb1 - 50;
+                thumb2 = thumb2 - 50;
                 tvFirstPrice.setText(thumb1 + "");
-                if(thumb2 >= maxPrice - 5){
+                if (thumb2 >= maxPrice - 5) {
                     tvSecondPrice.setText("1000+");
-                }else{
+                } else {
                     tvSecondPrice.setText(thumb2 + "");
                 }
                 screenPrice[0] = thumb1;
@@ -392,11 +395,14 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
         rangeWeight.setOnRangeBarChangeListener(new RangeBar.OnRangeBarChangeListener() {
             @Override
             public void onIndexChangeListener(RangeBar rangeBar, int thumb1, int thumb2) {
+
+                thumb1 = thumb1 < 50 ? 0 : thumb1 - 50;
+                thumb2 = thumb2 - 50;
                 tvFirstWeight.setText(thumb1 + "");
 
-                if(thumb2 > maxWeight -5){
+                if (thumb2 > maxWeight - 5) {
                     tvSecondWeight.setText("500+");
-                }else{
+                } else {
                     tvSecondWeight.setText(thumb2 + "");
                 }
                 screenWeight[0] = thumb1;

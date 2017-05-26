@@ -14,6 +14,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -188,9 +189,9 @@ public class CupFragment extends Fragment implements View.OnClickListener {
         return mCuppingView;
     }
 
-    private void sortList(){
-        if(cuppingInfos != null&& currentComparator != null){
-            Collections.sort(cuppingInfos,currentComparator);
+    private void sortList() {
+        if (cuppingInfos != null && currentComparator != null) {
+            Collections.sort(cuppingInfos, currentComparator);
         }
     }
 
@@ -236,9 +237,12 @@ public class CupFragment extends Fragment implements View.OnClickListener {
         RangeBar rangeBar = (RangeBar) contentView.findViewById(R.id.rb_score);
         rangeBar.setOnRangeBarChangeListener(new RangeBar.OnRangeBarChangeListener() {
             @Override
-            public void onIndexChangeListener(RangeBar rangeBar, int i, int i1) {
-                int leftIndex = rangeBar.getLeftIndex();
-                int rightIndex = rangeBar.getRightIndex();
+            public void onIndexChangeListener(RangeBar rangeBar, int min, int max) {
+//                int leftIndex = rangeBar.getLeftIndex();
+//                int rightIndex = rangeBar.getRightIndex();
+                int leftIndex = min < 3 ? 0: min - 3;
+                int rightIndex = max > 83 ? 80 : max - 3;
+
                 firView.setText(leftIndex + "");
                 secView.setText(rightIndex + "");
                 filter.max = rightIndex;
@@ -387,7 +391,7 @@ public class CupFragment extends Fragment implements View.OnClickListener {
         if (!isAddSearchFragment) {
             searchFragment = new SearchFragment();
             Bundle bundle = new Bundle();
-            bundle.putSerializable("cuppingInfos", (Serializable) (allCuppingInfos == null?cuppingInfos:allCuppingInfos));
+            bundle.putSerializable("cuppingInfos", (Serializable) (allCuppingInfos == null ? cuppingInfos : allCuppingInfos));
             searchFragment.setArguments(bundle);
             tx.add(R.id.activity_main, searchFragment, "search_cupping");
             isAddSearchFragment = true;
@@ -409,12 +413,12 @@ public class CupFragment extends Fragment implements View.OnClickListener {
 
     private void startScreen() {
         List<CuppingInfo> temp = new ArrayList<>();
-        if(allCuppingInfos == null){
+        if (allCuppingInfos == null) {
             allCuppingInfos = new ArrayList<>();
             allCuppingInfos.addAll(cuppingInfos);
         }
         for (CuppingInfo cuppingInfo : allCuppingInfos) {
-            if(filter.doFilter(cuppingInfo)){
+            if (filter.doFilter(cuppingInfo)) {
                 temp.add(cuppingInfo);
             }
         }
@@ -468,8 +472,9 @@ public class CupFragment extends Fragment implements View.OnClickListener {
                     }
                     break;
                 case LOADING_SUCCESS:
-                    sortList();
-                    mAdapter.notifyDataSetChanged();
+//                    sortList();
+//                    mAdapter.notifyDataSetChanged();
+                    startScreen();
                     sendEmptyMessage(NO_LOADING);
                     break;
                 case LOADING_ERROR:
