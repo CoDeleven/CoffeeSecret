@@ -13,6 +13,7 @@ import android.bluetooth.BluetoothProfile;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
+import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -90,6 +91,7 @@ public class BluetoothService extends Service {
     private DeviceChangedListener deviceChangedListener;
     private ViewControllerListener viewControllerListener;
     private boolean scanning = false; //标识当前蓝牙是否在扫描
+    private static final int TRANSPORT_LE = 2;
 
     private Handler mHandler = new Handler() {
         @Override
@@ -161,6 +163,7 @@ public class BluetoothService extends Service {
          */
         @Override
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
+            Log.d(TAG, "newState" + newState);
             Log.d(TAG, "gatt:" + gatt.toString());
             if (mRunThread != null) {
                 mRunThread.clearData();
@@ -179,10 +182,11 @@ public class BluetoothService extends Service {
                 deviceChangedListener.notifyDeviceConnectStatus(true, gatt.getDevice());
             } else if (newState == STATE_DISCONNECTED || newState == STATE_DISCONNECTING) {
                 mConnectionState = STATE_DISCONNECTED;
+                mBluetoothGatt.discoverServices();
                 mCurDevice = null;
                 // 如果连接失败，断开和该资源的链接
-                mBluetoothGatt.disconnect();
-                mBluetoothGatt.close();
+                disconnect();
+                Log.d(TAG, "close");
                 deviceChangedListener.notifyDeviceConnectStatus(false, gatt.getDevice());
             }
         }
@@ -238,7 +242,13 @@ public class BluetoothService extends Service {
         }
 
         // 直接连接设备
-        mBluetoothGatt = device.connectGatt(this, false, mGattCallback);
+//        mBluetoothGatt = device.connectGatt(this, false, mGattCallback);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            device.connectGatt(this, false, mGattCallback, TRANSPORT_LE);
+        } else {
+            mBluetoothGatt = device.connectGatt(this, false, mGattCallback);
+        }
+
         Log.d(TAG, "Trying to create a new connection.:" + mBluetoothGatt.toString());
         mConnectionState = STATE_CONNECTING;
         return true;
@@ -420,30 +430,40 @@ public class BluetoothService extends Service {
             mBluetoothAdapter.enable();
         }
 
+
+        private Handler handler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                // 停止扫描设备
+                stopScanDevice();
+                // 关闭蓝牙时清空当前连接设备
+                mCurDevice = null;
+                if (mRunThread != null) {
+                    mRunThread.clearData();
+                }
+                Log.w(TAG, "关闭蓝牙");
+                mCurDevice = null;
+                if (mBluetoothGatt != null) {
+                    mBluetoothGatt.disconnect();
+                    mBluetoothGatt.close();
+                }
+
+                // READABLE = false;
+                if (mBluetoothAdapter.isEnabled()) {
+                    mBluetoothAdapter.cancelDiscovery();
+                    mBluetoothAdapter.disable();
+                }
+                // 设置当前连接状态为DISCONNECTED
+                mConnectionState = STATE_DISCONNECTED;
+
+            }
+        };
+
         /**
          * 关闭蓝牙
          */
         public void disableBluetooth() {
-            // 停止扫描设备
-            stopScanDevice();
-            // 关闭蓝牙时清空当前连接设备
-            mCurDevice = null;
-
-            if (mRunThread != null) {
-                mRunThread.clearData();
-            }
-            Log.w(TAG, "关闭蓝牙");
-            mCurDevice = null;
-            if (mBluetoothGatt != null) {
-                mBluetoothGatt.close();
-            }
-
-            // READABLE = false;
-            if (mBluetoothAdapter.isEnabled()) {
-                mBluetoothAdapter.disable();
-            }
-            // 设置当前连接状态为DISCONNECTED
-            mConnectionState = STATE_DISCONNECTED;
+            handler.sendEmptyMessage(0);
         }
 
         /**
@@ -538,7 +558,7 @@ public class BluetoothService extends Service {
 
             @Override
             public boolean readData(String str) {
-                Log.d(TAG, "第1通道数据:"+Utils.hexString2String(str));
+                Log.d(TAG, "第1通道数据:" + Utils.hexString2String(str));
                 result += str;
                 if (str.endsWith("0a")) {
                     result += "2c";
@@ -588,7 +608,7 @@ public class BluetoothService extends Service {
             @Override
             public synchronized boolean readData(String str) {
                 synchronized (result) {
-                    Log.d(TAG, "第2通道数据:"+Utils.hexString2String(str));
+                    Log.d(TAG, "第2通道数据:" + Utils.hexString2String(str));
                     result += str;
                     if (str.endsWith("0a")) {
                         dataReader = channelListener1;

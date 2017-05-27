@@ -203,21 +203,21 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
             // 确保连接设备为null
             Log.e("BluetoothListActivity", device.getAddress()+"连接失败");
             adapter.lastConnectedAddress = null;
-            // 设置连接失败状态
+//            // 设置连接失败状态
             progressViewHandler.sendEmptyMessage(DEVICE_CONNECT_FAILED);
-            // 清理devicemap中连接的设备信息
-            canConnectDeviceMap.remove(device.getAddress());
-            // 清理adapter中的设备信息
-            adapter.clearConnectedDevice();
-
-            hasConnected = null;
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    // 每次发现新设备刷新列表
-                    refreshListView();
-                }
-            });
+//            // 清理devicemap中连接的设备信息
+//            canConnectDeviceMap.remove(device.getAddress());
+//            // 清理adapter中的设备信息
+//            adapter.clearConnectedDevice();
+//
+//            hasConnected = null;
+//            runOnUiThread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    // 每次发现新设备刷新列表
+//                    refreshListView();
+//                }
+//            });
         }
 
     }
