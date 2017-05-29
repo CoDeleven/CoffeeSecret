@@ -244,7 +244,7 @@ public class BluetoothService extends Service {
         // 直接连接设备
 //        mBluetoothGatt = device.connectGatt(this, false, mGattCallback);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            device.connectGatt(this, false, mGattCallback, TRANSPORT_LE);
+            mBluetoothGatt = device.connectGatt(this, false, mGattCallback, TRANSPORT_LE);
         } else {
             mBluetoothGatt = device.connectGatt(this, false, mGattCallback);
         }
