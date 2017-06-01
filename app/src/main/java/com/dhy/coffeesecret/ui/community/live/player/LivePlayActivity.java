@@ -65,7 +65,7 @@ public class LivePlayActivity extends AppCompatActivity implements
 
         url = getIntent().getStringExtra("play_url");
         if (url == null) {
-            url = "rtmp://pili-live-rtmp.cloudself.cn/coffeesecret/javasdkexample1489147454866BB";
+            url = "rtmp://rtmp.soyask.top/701studio/javasdktest1489147454866ba";
         }
 
         mVideoView.setVideoPath(url);
