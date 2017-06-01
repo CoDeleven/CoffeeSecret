@@ -194,11 +194,12 @@ public class HistoryLineActivity extends AppCompatActivity implements View.OnCli
                     Collections.sort(bakeReportList, new Comparator<BakeReport>() {
                         @Override
                         public int compare(BakeReport o1, BakeReport o2) {
-                            return (int) (Utils.date2IdWithTimestamp(o2.getDate()) - Utils.date2IdWithTimestamp(o1.getDate()));
+                            return (Utils.date2IdWithTimestamp(o2.getDate()) - Utils.date2IdWithTimestamp(o1.getDate())) > 0 ? 1 : -1;
                             // return -o1.getDate().compareTo(o2.getDate());
 
                         }
                     });
+                    System.out.println(bakeReportList);
                     // 请求成功
                     mHandler.sendEmptyMessage(LOADING_SUCCESS);
                 } catch (Exception e) {

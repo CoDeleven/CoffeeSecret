@@ -153,7 +153,6 @@ public class BaseChart4Coffee extends LineChart {
         leftAxis.setAxisMinimum(0f);
         leftAxis.setAxisMaximum(mConfig.getMaxLeftY());
 
-        Log.e("BaseChart4Coffee", mConfig.getMaxLeftY() + "");
 
         leftAxis.setDrawGridLines(false);
         leftAxis.setGranularityEnabled(true);
@@ -284,7 +283,7 @@ public class BaseChart4Coffee extends LineChart {
      */
     public void addOneDataToLine(Entry beanData, int lineIndex) {
         LinkedList<WeightedObservedPoint> queue = weightedObservedPointsMap.get(lineIndex);
-        if (queue.size() == 50) {
+        if (queue.size() == 5) {
             queue.pop();
         }
         queue.offer(new WeightedObservedPoint(1d, beanData.getX(), beanData.getY()));
@@ -310,11 +309,13 @@ public class BaseChart4Coffee extends LineChart {
         }
 
         // 如果是从烘焙过程里出来的，则进行此方法
-/*        if (beanData.getX() > 1 && set != null && toRefresh) {
+/*
+        if (beanData.getX() > 1 && set != null && toRefresh) {
             float temp = getMockDataImm(lineIndex, beanData.getX());
             // System.out.println(temp);
             beanData.setY(temp);
-        }*/
+        }
+*/
 
         beanLine.addEntry(beanData);
         if (toRefresh) {
