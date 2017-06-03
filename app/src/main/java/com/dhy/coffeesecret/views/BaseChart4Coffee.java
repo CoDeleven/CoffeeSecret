@@ -341,7 +341,7 @@ public class BaseChart4Coffee extends LineChart {
             LinkedList obs = weightedObservedPointsMap.get(lineIndex);
             List<Float> floats = set.getTempratureByIndex(lineIndex);
             List<Float> timex = set.getTimex();
-            for (int i = 0; i < timex.size(); ++i) {
+            for (int i = 0; i < timex.size() && i < floats.size(); ++i) {
                 // 添加观测点
                 obs.add(new WeightedObservedPoint(1d, timex.get(i), floats.get(i)));
             }
