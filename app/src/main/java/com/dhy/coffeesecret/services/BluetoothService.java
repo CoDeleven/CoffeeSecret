@@ -67,7 +67,7 @@ public class BluetoothService extends Service {
     public static final UUID TAG_WRITE = UUID.fromString("00002af1-0000-1000-8000-00805f9b34fb");
     public static final UUID TAG_READ = UUID.fromString("00002af0-0000-1000-8000-00805f9b34fb");
     public static final UUID WRITE_DESCRIPTOR = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
-
+    private static int retryCount = 0;
     private static final String TAG = BluetoothService.class.getSimpleName();
 
     public static final long SCAN_TIME = 12000;
@@ -129,6 +129,15 @@ public class BluetoothService extends Service {
 
         @Override
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
+            if(status == 129){
+                BluetoothDevice device = gatt.getDevice();
+                // 直接断开连接，然后释放资源等待gatt重连，这会导致回调onConnectionStateChange时的空指针异常。因为gatt已经被close了
+                gatt.disconnect();
+                gatt.close();
+                connect(device);
+                Log.d(TAG, "status为129进行重连: retry:" + ++retryCount);
+                return;
+            }
             Log.d(TAG, "发现服务");
 
             BluetoothGattService service = gatt.getService(PRIMARY_SERVICE);
@@ -185,8 +194,10 @@ public class BluetoothService extends Service {
                 mBluetoothGatt.discoverServices();
                 mCurDevice = null;
                 // 如果连接失败，断开和该资源的链接
-                disconnect();
-                Log.d(TAG, "close");
+                if(gatt != null){
+                    gatt.disconnect();
+                    gatt.close();
+                }
                 deviceChangedListener.notifyDeviceConnectStatus(false, gatt.getDevice());
             }
         }
@@ -229,7 +240,7 @@ public class BluetoothService extends Service {
             return false;
         }
 
-        // 如果先前已经连接，尝试重新连接
+/*        // 如果先前已经连接，尝试重新连接
         if (device != null && mCurDevice != null && mCurDevice.getAddress().equals(device.getAddress()) && mBluetoothGatt != null) {
             Log.d(TAG, "BluetoothService 重连");
             if (mBluetoothGatt.connect()) {
@@ -239,7 +250,7 @@ public class BluetoothService extends Service {
             } else {
                 return false;
             }
-        }
+        }*/
 
         // 直接连接设备
 //        mBluetoothGatt = device.connectGatt(this, false, mGattCallback);
