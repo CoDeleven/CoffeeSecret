@@ -17,6 +17,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.os.SystemClock;
 import android.util.Log;
 
 import com.dhy.coffeesecret.pojo.Temprature;
@@ -64,6 +65,7 @@ import static android.bluetooth.BluetoothProfile.STATE_DISCONNECTING;
 public class BluetoothService extends Service {
 
     public static final UUID PRIMARY_SERVICE = UUID.fromString("000018f0-0000-1000-8000-00805f9b34fb");
+    //    public static final UUID PRIMARY_SERVICE = UUID.fromString("e7810a71-73ae-499d-8c15-faa9aef0c3f2");
     public static final UUID TAG_WRITE = UUID.fromString("00002af1-0000-1000-8000-00805f9b34fb");
     public static final UUID TAG_READ = UUID.fromString("00002af0-0000-1000-8000-00805f9b34fb");
     public static final UUID WRITE_DESCRIPTOR = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
@@ -129,23 +131,33 @@ public class BluetoothService extends Service {
 
         @Override
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
-            Log.d(TAG, "发现服务");
 
-            BluetoothGattService service = gatt.getService(PRIMARY_SERVICE);
-            // 获取写特性
-            mWriter = service.getCharacteristic(TAG_WRITE);
-            // 获取读特性
-            mReader = service.getCharacteristic(TAG_READ);
+            if (status == BluetoothGatt.GATT_SUCCESS) {
+                for (BluetoothGattService service : gatt.getServices()) {
+                    System.out.println(service.getUuid().toString());
+                }
 
-            if (mWriter == null || mReader == null) {
-                throw new RuntimeException("特性异常");
+                BluetoothGattService service = gatt.getService(PRIMARY_SERVICE);
+                Log.d(TAG, "发现服务 :" + service);
+
+                // 获取写特性
+                mWriter = service.getCharacteristic(TAG_WRITE);
+                // 获取读特性
+                mReader = service.getCharacteristic(TAG_READ);
+
+                if (mWriter == null || mReader == null) {
+                    throw new RuntimeException("特性异常");
+                }
+                // 设置通知
+                Log.d(TAG, "通知写入状态：" + mBluetoothGatt.setCharacteristicNotification(mReader, true));
+                BluetoothGattDescriptor descriptor = mReader.getDescriptor(WRITE_DESCRIPTOR);
+
+                Log.d(TAG, "监听器状态：" + descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE));
+                Log.d(TAG, "温度写入状态：" + mBluetoothGatt.writeDescriptor(descriptor));
+            } else {
+                Log.e(TAG, "未发现服务，状态码：" + status);
             }
-            // 设置通知
-            Log.d(TAG, "通知写入状态：" + mBluetoothGatt.setCharacteristicNotification(mReader, true));
-            BluetoothGattDescriptor descriptor = mReader.getDescriptor(WRITE_DESCRIPTOR);
 
-            Log.d(TAG, "监听器状态：" + descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE));
-            Log.d(TAG, "温度写入状态：" + mBluetoothGatt.writeDescriptor(descriptor));
         }
 
         @Override
@@ -163,7 +175,7 @@ public class BluetoothService extends Service {
          */
         @Override
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
-            Log.d(TAG, "newState" + newState);
+            Log.d(TAG, "newState：" + newState);
             Log.d(TAG, "gatt:" + gatt.toString());
             if (mRunThread != null) {
                 mRunThread.clearData();
@@ -244,12 +256,13 @@ public class BluetoothService extends Service {
         // 直接连接设备
 //        mBluetoothGatt = device.connectGatt(this, false, mGattCallback);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            device.connectGatt(this, false, mGattCallback, TRANSPORT_LE);
+            System.out.println(Thread.currentThread().getName());
+            mBluetoothGatt = device.connectGatt(BluetoothService.this, false, mGattCallback, TRANSPORT_LE);
         } else {
-            mBluetoothGatt = device.connectGatt(this, false, mGattCallback);
+            mBluetoothGatt = device.connectGatt(BluetoothService.this, false, mGattCallback);
         }
-
         Log.d(TAG, "Trying to create a new connection.:" + mBluetoothGatt.toString());
+
         mConnectionState = STATE_CONNECTING;
         return true;
     }
