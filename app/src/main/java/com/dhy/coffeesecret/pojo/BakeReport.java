@@ -274,4 +274,5 @@ public class BakeReport implements Serializable {
     public void setAvgGlobalBeanTemprature(float avgGlobalBeanTemprature) {
         this.avgGlobalBeanTemprature = avgGlobalBeanTemprature;
     }
+
 }

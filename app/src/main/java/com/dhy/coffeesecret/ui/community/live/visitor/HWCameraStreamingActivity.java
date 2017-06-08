@@ -68,8 +68,8 @@ public class HWCameraStreamingActivity extends Activity implements StreamingStat
 
         String publishurl = getIntent().getStringExtra("video_url");
 
-        if (publishurl == null) {
-            publishurl = "rtmp://pili-publish.cloudself.cn/coffeesecret/testliuliu?e=1489220116&token=P0ExRPaMk_HiTOfYundyC2kQv1B1Cu4TiRSJVBtF:IBG_Vrt8uNybXrfnnePZewYmR0o=";
+        if (publishurl == null || publishurl.isEmpty()) {
+            publishurl = "rtmp://live.soyask.top/701studio/javasdktest1489147454866ba?e=1496287748&token=FRayrq75DnwC4MVtK2LkelTgDyJrkGkWaNXN_fnj:9N-IBlWh9scJjkkV1hEECqVwYpE=";
         }
         streamingProfile = new StreamingProfile();
 

@@ -17,7 +17,6 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
-import android.os.SystemClock;
 import android.util.Log;
 
 import com.dhy.coffeesecret.pojo.Temprature;
@@ -65,11 +64,10 @@ import static android.bluetooth.BluetoothProfile.STATE_DISCONNECTING;
 public class BluetoothService extends Service {
 
     public static final UUID PRIMARY_SERVICE = UUID.fromString("000018f0-0000-1000-8000-00805f9b34fb");
-    //    public static final UUID PRIMARY_SERVICE = UUID.fromString("e7810a71-73ae-499d-8c15-faa9aef0c3f2");
     public static final UUID TAG_WRITE = UUID.fromString("00002af1-0000-1000-8000-00805f9b34fb");
     public static final UUID TAG_READ = UUID.fromString("00002af0-0000-1000-8000-00805f9b34fb");
     public static final UUID WRITE_DESCRIPTOR = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
-
+    private static int retryCount = 0;
     private static final String TAG = BluetoothService.class.getSimpleName();
 
     public static final long SCAN_TIME = 12000;
@@ -131,33 +129,32 @@ public class BluetoothService extends Service {
 
         @Override
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
-
-            if (status == BluetoothGatt.GATT_SUCCESS) {
-                for (BluetoothGattService service : gatt.getServices()) {
-                    System.out.println(service.getUuid().toString());
-                }
-
-                BluetoothGattService service = gatt.getService(PRIMARY_SERVICE);
-                Log.d(TAG, "发现服务 :" + service);
-
-                // 获取写特性
-                mWriter = service.getCharacteristic(TAG_WRITE);
-                // 获取读特性
-                mReader = service.getCharacteristic(TAG_READ);
-
-                if (mWriter == null || mReader == null) {
-                    throw new RuntimeException("特性异常");
-                }
-                // 设置通知
-                Log.d(TAG, "通知写入状态：" + mBluetoothGatt.setCharacteristicNotification(mReader, true));
-                BluetoothGattDescriptor descriptor = mReader.getDescriptor(WRITE_DESCRIPTOR);
-
-                Log.d(TAG, "监听器状态：" + descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE));
-                Log.d(TAG, "温度写入状态：" + mBluetoothGatt.writeDescriptor(descriptor));
-            } else {
-                Log.e(TAG, "未发现服务，状态码：" + status);
+            if(status == 129){
+                BluetoothDevice device = gatt.getDevice();
+                // 直接断开连接，然后释放资源等待gatt重连，这会导致回调onConnectionStateChange时的空指针异常。因为gatt已经被close了
+                gatt.disconnect();
+                gatt.close();
+                connect(device);
+                Log.d(TAG, "status为129进行重连: retry:" + ++retryCount);
+                return;
             }
+            Log.d(TAG, "发现服务");
 
+            BluetoothGattService service = gatt.getService(PRIMARY_SERVICE);
+            // 获取写特性
+            mWriter = service.getCharacteristic(TAG_WRITE);
+            // 获取读特性
+            mReader = service.getCharacteristic(TAG_READ);
+
+            if (mWriter == null || mReader == null) {
+                throw new RuntimeException("特性异常");
+            }
+            // 设置通知
+            Log.d(TAG, "通知写入状态：" + mBluetoothGatt.setCharacteristicNotification(mReader, true));
+            BluetoothGattDescriptor descriptor = mReader.getDescriptor(WRITE_DESCRIPTOR);
+
+            Log.d(TAG, "监听器状态：" + descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE));
+            Log.d(TAG, "温度写入状态：" + mBluetoothGatt.writeDescriptor(descriptor));
         }
 
         @Override
@@ -175,7 +172,7 @@ public class BluetoothService extends Service {
          */
         @Override
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
-            Log.d(TAG, "newState：" + newState);
+            Log.d(TAG, "newState" + newState);
             Log.d(TAG, "gatt:" + gatt.toString());
             if (mRunThread != null) {
                 mRunThread.clearData();
@@ -197,8 +194,10 @@ public class BluetoothService extends Service {
                 mBluetoothGatt.discoverServices();
                 mCurDevice = null;
                 // 如果连接失败，断开和该资源的链接
-                disconnect();
-                Log.d(TAG, "close");
+                if(gatt != null){
+                    gatt.disconnect();
+                    gatt.close();
+                }
                 deviceChangedListener.notifyDeviceConnectStatus(false, gatt.getDevice());
             }
         }
@@ -241,7 +240,7 @@ public class BluetoothService extends Service {
             return false;
         }
 
-        // 如果先前已经连接，尝试重新连接
+/*        // 如果先前已经连接，尝试重新连接
         if (device != null && mCurDevice != null && mCurDevice.getAddress().equals(device.getAddress()) && mBluetoothGatt != null) {
             Log.d(TAG, "BluetoothService 重连");
             if (mBluetoothGatt.connect()) {
@@ -251,18 +250,17 @@ public class BluetoothService extends Service {
             } else {
                 return false;
             }
-        }
+        }*/
 
         // 直接连接设备
 //        mBluetoothGatt = device.connectGatt(this, false, mGattCallback);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            System.out.println(Thread.currentThread().getName());
-            mBluetoothGatt = device.connectGatt(BluetoothService.this, false, mGattCallback, TRANSPORT_LE);
+            mBluetoothGatt = device.connectGatt(this, false, mGattCallback, TRANSPORT_LE);
         } else {
-            mBluetoothGatt = device.connectGatt(BluetoothService.this, false, mGattCallback);
+            mBluetoothGatt = device.connectGatt(this, false, mGattCallback);
         }
-        Log.d(TAG, "Trying to create a new connection.:" + mBluetoothGatt.toString());
 
+        Log.d(TAG, "Trying to create a new connection.:" + mBluetoothGatt.toString());
         mConnectionState = STATE_CONNECTING;
         return true;
     }
