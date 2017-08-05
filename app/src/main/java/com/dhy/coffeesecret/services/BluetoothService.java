@@ -19,7 +19,7 @@ import android.os.IBinder;
 import android.os.Message;
 import android.util.Log;
 
-import com.dhy.coffeesecret.pojo.Temprature;
+import com.dhy.coffeesecret.pojo.Temperature;
 import com.dhy.coffeesecret.utils.Utils;
 
 import java.util.Timer;
@@ -61,23 +61,25 @@ import static android.bluetooth.BluetoothProfile.STATE_DISCONNECTING;
 //                  奔驰宝马贵者趣，公交自行程序员。
 //                  别人笑我忒疯癫，我笑自己命太贱；
 //                  不见满街漂亮妹，哪个归得程序员？
-public class BluetoothService extends Service {
-
+public class BluetoothService extends Service implements IBluetoothOperator {
     public static final UUID PRIMARY_SERVICE = UUID.fromString("000018f0-0000-1000-8000-00805f9b34fb");
     public static final UUID TAG_WRITE = UUID.fromString("00002af1-0000-1000-8000-00805f9b34fb");
     public static final UUID TAG_READ = UUID.fromString("00002af0-0000-1000-8000-00805f9b34fb");
     public static final UUID WRITE_DESCRIPTOR = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
-    private static int retryCount = 0;
-    private static final String TAG = BluetoothService.class.getSimpleName();
-
     public static final long SCAN_TIME = 12000;
+    private static final String TAG = BluetoothService.class.getSimpleName();
+    private static final int TRANSPORT_LE = 2;
     public static String FIRST_CHANNEL = "4348414e3b323130300a";
     public static String SECOND_CHANNEL = "4348414e3b333230300a";
     public static String READ_TEMP_COMMAND = "524541440a";
     public static volatile boolean READABLE = false;
-    public static BluetoothService.BluetoothOperator BLUETOOTH_OPERATOR;
+    public static IBluetoothOperator BLUETOOTH_OPERATOR;
+    private static int retryCount = 0;
     private static ReadTasker mRunThread;
     private final int sleepTime = 750;
+    private volatile IBleTemperatureCallback mTemperatureListener;
+    private IBleScanCallback mScanListener;
+    private IBleConnectionCallback mConnectionListener;
     private BluetoothManager mBluetoothManager;
     private BluetoothAdapter mBluetoothAdapter;
     private BluetoothGatt mBluetoothGatt;
@@ -87,12 +89,10 @@ public class BluetoothService extends Service {
     private String lastAddress;
     private boolean tempStatus = false;
     private int mConnectionState = STATE_DISCONNECTED;
-    private DataChangedListener dataChangedListener;
-    private DeviceChangedListener deviceChangedListener;
+    // private DataChangedListener dataChangedListener;
+    // private DeviceChangedListener deviceChangedListener;
     private ViewControllerListener viewControllerListener;
     private boolean scanning = false; //标识当前蓝牙是否在扫描
-    private static final int TRANSPORT_LE = 2;
-
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -101,7 +101,6 @@ public class BluetoothService extends Service {
             }
         }
     };
-
     /**
      * 扫描到新设备进行回调
      */
@@ -110,11 +109,12 @@ public class BluetoothService extends Service {
         public void onLeScan(BluetoothDevice bluetoothDevice, int i, byte[] bytes) {
             Log.d(TAG, bluetoothDevice.getName() + "-" + bluetoothDevice.getBluetoothClass().getMajorDeviceClass());
             // 回调通知界面有新设备
-            deviceChangedListener.notifyNewDevice(bluetoothDevice, i);
+            // deviceChangedListener.notifyNewDevice(bluetoothDevice, i);
+            mScanListener.onScanning(bluetoothDevice, i);
         }
 
-    };
 
+    };
     private BluetoothGattCallback mGattCallback = new BluetoothGattCallback() {
         @Override
         public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
@@ -129,7 +129,7 @@ public class BluetoothService extends Service {
 
         @Override
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
-            if(status == 129){
+            if (status == 129) {
                 BluetoothDevice device = gatt.getDevice();
                 // 直接断开连接，然后释放资源等待gatt重连，这会导致回调onConnectionStateChange时的空指针异常。因为gatt已经被close了
                 gatt.disconnect();
@@ -180,6 +180,11 @@ public class BluetoothService extends Service {
                 // 阻断
                 mRunThread.interrupt();
             }
+            if (newState == BluetoothProfile.STATE_CONNECTING) {
+                mConnectionListener.toConnected(STATE_CONNECTING);
+            } else if (newState == STATE_DISCONNECTING) {
+                mConnectionListener.toDisconnecting(STATE_DISCONNECTING);
+            }
             // 如果当前状态是已连接
             if (newState == BluetoothProfile.STATE_CONNECTED) {
                 // 设置当前状态
@@ -188,22 +193,75 @@ public class BluetoothService extends Service {
                 // 设置当前设备
                 mCurDevice = gatt.getDevice();
                 lastAddress = mCurDevice.getAddress();
-                deviceChangedListener.notifyDeviceConnectStatus(true, gatt.getDevice());
-            } else if (newState == STATE_DISCONNECTED || newState == STATE_DISCONNECTING) {
+                mConnectionListener.toConnected(STATE_CONNECTED);
+            } else if (newState == STATE_DISCONNECTED) {
                 mConnectionState = STATE_DISCONNECTED;
                 mBluetoothGatt.discoverServices();
                 mCurDevice = null;
                 // 如果连接失败，断开和该资源的链接
-                if(gatt != null){
+                if (gatt != null) {
                     gatt.disconnect();
                     gatt.close();
                 }
-                deviceChangedListener.notifyDeviceConnectStatus(false, gatt.getDevice());
+                mConnectionListener.toDisconnecting(STATE_DISCONNECTED);
             }
+        }
+    };
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            // 停止扫描设备
+            stopScanDevice();
+            // 关闭蓝牙时清空当前连接设备
+            mCurDevice = null;
+            if (mRunThread != null) {
+                mRunThread.clearData();
+            }
+            Log.w(TAG, "关闭蓝牙");
+            mCurDevice = null;
+            if (mBluetoothGatt != null) {
+                mBluetoothGatt.disconnect();
+                mBluetoothGatt.close();
+            }
+
+            // READABLE = false;
+            if (mBluetoothAdapter.isEnabled()) {
+                mBluetoothAdapter.cancelDiscovery();
+                mBluetoothAdapter.disable();
+            }
+            // 设置当前连接状态为DISCONNECTED
+            mConnectionState = STATE_DISCONNECTED;
+
         }
     };
 
     public BluetoothService() {
+    }
+
+    @Override
+    public void setConnectionListener(IBleConnectionCallback connectionListener) {
+        this.mConnectionListener = connectionListener;
+    }
+
+    @Override
+    public void closeBluetooth() {
+        clearInfo();
+        mBluetoothGatt.disconnect();
+        mBluetoothGatt.close();
+    }
+
+    private void clearInfo() {
+        // TODO 清除一些回调接口之类的
+    }
+
+    @Override
+    public void setTemperatureListener(IBleTemperatureCallback temperatureListener) {
+        this.mTemperatureListener = temperatureListener;
+    }
+
+    @Override
+    public void setScanCallbackListener(IBleScanCallback scanCallbackListener) {
+        this.mScanListener = scanCallbackListener;
     }
 
     public boolean initialize() {
@@ -228,7 +286,6 @@ public class BluetoothService extends Service {
         return true;
     }
 
-
     /**
      * 连接设备
      *
@@ -236,6 +293,7 @@ public class BluetoothService extends Service {
      * @return 如果连接成功返回true
      */
     public boolean connect(final BluetoothDevice device) {
+        stopScanDevice();
         if (mBluetoothAdapter == null || device == null) {
             return false;
         }
@@ -265,38 +323,27 @@ public class BluetoothService extends Service {
         return true;
     }
 
-
-    public void disconnect() {
-        if (mBluetoothAdapter == null || mBluetoothGatt == null) {
-            Log.w(TAG, "BluetoothAdapter尚未初始化");
-            return;
-        }
-        mBluetoothGatt.disconnect();
-        mBluetoothGatt.close();
-    }
-
     // 服务绑定返回唯一的操作对象
     @Override
     public IBinder onBind(Intent intent) {
         // TODO: Return the communication channel to the service.
         if (BLUETOOTH_OPERATOR == null) {
-            BLUETOOTH_OPERATOR = new BluetoothOperator();
+            BLUETOOTH_OPERATOR = this;
         }
         initialize();
-        return BLUETOOTH_OPERATOR;
+        return new BluetoothBinder();
     }
 
     /**
      * 开启新线程进行读取
      */
-    public void startRead() {
+    private void startRead() {
         Log.d(TAG, "startRead~~~~");
         while (mRunThread != null && mRunThread.isAlive()) {
             mRunThread.clearData();
         }
         mRunThread = new ReadTasker();
         mRunThread.setReadable(true);
-        mRunThread.setDataChangedListener(dataChangedListener);
         try {
             Thread.currentThread().sleep(300);
         } catch (InterruptedException e) {
@@ -306,12 +353,106 @@ public class BluetoothService extends Service {
     }
 
     /**
+     * 获取当前连接设备
+     *
+     * @return
+     */
+    @Override
+    public BluetoothDevice getConnectedDevice() {
+        return mCurDevice;
+    }
+
+
+/*    public abstract static class ScanListener {
+        protected void onScanStart() {
+        }
+
+        protected void onScanStop() {
+        }
+    }*/
+
+    /**
+     * 当前蓝牙是否启用
+     *
+     * @return
+     */
+    @Override
+    public boolean isEnable() {
+        return mBluetoothAdapter.isEnabled();
+    }
+
+    @Override
+    public void enable() {
+        mBluetoothAdapter.enable();
+    }
+
+    /**
+     * 开启扫描
+     */
+    @Override
+    public void startScanDevice() {
+        if (!scanning) {
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    stopScanDevice();
+                }
+            }, SCAN_TIME);
+            Log.d(TAG, "扫描成功：？" + mBluetoothAdapter.startLeScan(mScanCallback));
+            scanning = true;
+        }
+    }
+
+    /**
+     * 停止扫描
+     */
+    @Override
+    public void stopScanDevice() {
+        if (scanning) {
+            mBluetoothAdapter.stopLeScan(mScanCallback);
+            Log.d(TAG, "停止扫描，scannng = " + scanning);
+        }
+        if (mScanListener != null) {
+            mScanListener.onScanningComplete();
+        }
+        scanning = false;
+    }
+
+    /**
+     * 通过地址进行重连
+     *
+     * @param address
+     * @return
+     */
+    @Override
+    public boolean connect(String address) {
+        BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
+        if (device != null) {
+            mCurDevice = device;
+            return BluetoothService.this.connect(device);
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * 进行判断当前状态是否连接
      *
      * @return 已连接?
      */
+    @Override
     public boolean isConnected() {
         return mConnectionState == STATE_CONNECTED;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mRunThread.clearData();
+        mRunThread.interrupt();
+        mRunThread = null;
+        mBluetoothGatt.disconnect();
+        mBluetoothGatt.close();
     }
 
     /**
@@ -321,31 +462,69 @@ public class BluetoothService extends Service {
         void handleViewBeforeStartRead();
     }
 
-    /**
-     * 数据监听器
-     */
-    public interface DataChangedListener {
-        void notifyDataChanged(Temprature temprature);
-    }
-
-
-    /**
-     * 设备状态监听器
-     */
-    public interface DeviceChangedListener {
-        void notifyDeviceConnectStatus(boolean isConnected, BluetoothDevice device);
-
-        void notifyNewDevice(BluetoothDevice device, int rssi);
-
-    }
-
-    public abstract static class ScanListener {
-        protected void onScanStart() {
-        }
-
-        protected void onScanStop() {
+    public class BluetoothBinder extends Binder {
+        public IBluetoothOperator getBluetoothOperator() {
+            return BluetoothService.this;
         }
     }
+
+    // public class BluetoothOperator extends Binder  {
+    //
+    //     private ScanListener scanListener;
+    //
+    //
+    //     /**
+    //      * 更改当前数据监听器的引用
+    //      *
+    //      * @param dataChangedListener
+    //      */
+    //     public void setDataChangedListener(DataChangedListener dataChangedListener) {
+    //         BluetoothService.this.dataChangedListener = dataChangedListener;
+    //         if (mRunThread != null) {
+    //             mRunThread.setDataChangedListener(dataChangedListener);
+    //         }
+    //     }
+    //
+    //     public void setDeviceChangedListener(DeviceChangedListener deviceChangedListener) {
+    //         BluetoothService.this.deviceChangedListener = deviceChangedListener;
+    //     }
+    //
+    //     public boolean isDataChangedNull() {
+    //         return BluetoothService.this.dataChangedListener == null;
+    //     }
+    //
+    //     public void setViewControllerListener(ViewControllerListener viewControllerListener) {
+    //         BluetoothService.this.viewControllerListener = viewControllerListener;
+    //     }
+    //
+    //     public void setScanListener(ScanListener listener) {
+    //         this.scanListener = listener;
+    //     }
+    //
+    //     /**
+    //      * 获取当前连接设备的名字
+    //      *
+    //      * @return
+    //      */
+    //
+    //     public String getCurDeviceName() {
+    //         return mCurDevice.getName();
+    //     }
+    //
+    //
+    //
+    //
+    //
+    //     /**
+    //      * 关闭蓝牙
+    //      */
+    //     public void disableBluetooth() {
+    //         handler.sendEmptyMessage(0);
+    //     }
+    //
+    //
+    //
+    // }
 
     protected abstract class DataReader {
         private boolean isHandling = true;
@@ -369,216 +548,10 @@ public class BluetoothService extends Service {
         }
     }
 
-    public class BluetoothOperator extends Binder {
-
-        private ScanListener scanListener;
-
-        /**
-         * 提供给用户的借口
-         *
-         * @return
-         */
-        public boolean isConnected() {
-            return BluetoothService.this.isConnected();
-        }
-
-        /**
-         * 更改当前数据监听器的引用
-         *
-         * @param dataChangedListener
-         */
-        public void setDataChangedListener(DataChangedListener dataChangedListener) {
-            BluetoothService.this.dataChangedListener = dataChangedListener;
-            if (mRunThread != null) {
-                mRunThread.setDataChangedListener(dataChangedListener);
-            }
-        }
-
-        public void setDeviceChangedListener(DeviceChangedListener deviceChangedListener) {
-            BluetoothService.this.deviceChangedListener = deviceChangedListener;
-        }
-
-        public boolean isDataChangedNull() {
-            return BluetoothService.this.dataChangedListener == null;
-        }
-
-        public void setViewControllerListener(ViewControllerListener viewControllerListener) {
-            BluetoothService.this.viewControllerListener = viewControllerListener;
-        }
-
-        public void setScanListener(ScanListener listener) {
-            this.scanListener = listener;
-        }
-
-        /**
-         * 获取当前连接设备的名字
-         *
-         * @return
-         */
-        public String getCurDeviceName() {
-            return mCurDevice.getName();
-        }
-
-        /**
-         * 获取当前连接设备
-         *
-         * @return
-         */
-        public BluetoothDevice getBluetoothDevice() {
-            return mCurDevice;
-        }
-
-        /**
-         * 当前蓝牙是否启用
-         *
-         * @return
-         */
-        public boolean isEnable() {
-            return mBluetoothAdapter.isEnabled();
-        }
-
-        public void enable() {
-            mBluetoothAdapter.enable();
-        }
-
-
-        private Handler handler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                // 停止扫描设备
-                stopScanDevice();
-                // 关闭蓝牙时清空当前连接设备
-                mCurDevice = null;
-                if (mRunThread != null) {
-                    mRunThread.clearData();
-                }
-                Log.w(TAG, "关闭蓝牙");
-                mCurDevice = null;
-                if (mBluetoothGatt != null) {
-                    mBluetoothGatt.disconnect();
-                    mBluetoothGatt.close();
-                }
-
-                // READABLE = false;
-                if (mBluetoothAdapter.isEnabled()) {
-                    mBluetoothAdapter.cancelDiscovery();
-                    mBluetoothAdapter.disable();
-                }
-                // 设置当前连接状态为DISCONNECTED
-                mConnectionState = STATE_DISCONNECTED;
-
-            }
-        };
-
-        /**
-         * 关闭蓝牙
-         */
-        public void disableBluetooth() {
-            handler.sendEmptyMessage(0);
-        }
-
-        /**
-         * 开启扫描
-         */
-        public void startScanDevice() {
-            if (!scanning) {
-                new Timer().schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        stopScanDevice();
-                    }
-                }, SCAN_TIME);
-                Log.d(TAG, "扫描成功：？" + mBluetoothAdapter.startLeScan(mScanCallback));
-                scanning = true;
-            }
-        }
-
-        /**
-         * 停止扫描
-         */
-        public void stopScanDevice() {
-            if (scanning) {
-                mBluetoothAdapter.stopLeScan(mScanCallback);
-                Log.d(TAG, "停止扫描，scannng = " + scanning);
-            }
-            if (scanListener != null) {
-                scanListener.onScanStop();
-            }
-            scanning = false;
-        }
-
-        /**
-         * 正常的连接
-         *
-         * @param device 需要连接的设备
-         * @return
-         */
-        public boolean connect(BluetoothDevice device) {
-            stopScanDevice();
-            return BluetoothService.this.connect(device);
-        }
-
-        /**
-         * 通过地址进行重连
-         *
-         * @param address
-         * @return
-         */
-        public boolean connect(String address) {
-            BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
-            if (device != null) {
-                mCurDevice = device;
-                return BluetoothService.this.connect(device);
-            } else {
-                return false;
-            }
-        }
-
-        // FIXME: 17-3-24 三思
-
-        /**
-         * 用于进行重连
-         *
-         * @return
-         */
-        public boolean reConnect() {
-            BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(lastAddress);
-            if (device == null) {
-                return false;
-            } else {
-                return connect(device);
-            }
-        }
-    }
-
     class ReadTasker extends Thread {
 
         private String result = "";
-        private DataChangedListener dataChangedListener;
         private boolean readable = false;
-
-        private DataReader readData1 = new DataReader() {
-            @Override
-            public void setWriteCommand() {
-                boolean state = false;
-                mWriter.setValue(Utils.hexStringToBytes(READ_TEMP_COMMAND));
-                do {
-                    state = mBluetoothGatt.writeCharacteristic(mWriter);
-                } while (!state && readable);
-            }
-
-            @Override
-            public boolean readData(String str) {
-                Log.d(TAG, "第1通道数据:" + Utils.hexString2String(str));
-                result += str;
-                if (str.endsWith("0a")) {
-                    result += "2c";
-                    dataReader = channelListener2;
-                    channelListener2.setWriteCommand();
-                }
-                return false;
-            }
-        };
         private DataReader channelListener1 = new DataReader() {
             @Override
             public void setWriteCommand() {
@@ -604,8 +577,6 @@ public class BluetoothService extends Service {
                 return false;
             }
         };
-        private DataReader dataReader = channelListener1;
-
         private DataReader readData2 = new DataReader() {
             @Override
             public void setWriteCommand() {
@@ -623,9 +594,9 @@ public class BluetoothService extends Service {
                     result += str;
                     if (str.endsWith("0a")) {
                         dataReader = channelListener1;
-                        if (dataChangedListener != null) {
+                        if (mTemperatureListener != null) {
                             try {
-                                dataChangedListener.notifyDataChanged(Temprature.parseHex2Temprature(Utils.hexString2String(result)));
+                                mTemperatureListener.notifyTemperature(Temperature.parseHex2Temprature(Utils.hexString2String(result)));
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -657,6 +628,29 @@ public class BluetoothService extends Service {
                 return false;
             }
         };
+        private DataReader readData1 = new DataReader() {
+            @Override
+            public void setWriteCommand() {
+                boolean state = false;
+                mWriter.setValue(Utils.hexStringToBytes(READ_TEMP_COMMAND));
+                do {
+                    state = mBluetoothGatt.writeCharacteristic(mWriter);
+                } while (!state && readable);
+            }
+
+            @Override
+            public boolean readData(String str) {
+                Log.d(TAG, "第1通道数据:" + Utils.hexString2String(str));
+                result += str;
+                if (str.endsWith("0a")) {
+                    result += "2c";
+                    dataReader = channelListener2;
+                    channelListener2.setWriteCommand();
+                }
+                return false;
+            }
+        };
+        private DataReader dataReader = channelListener1;
 
         @Override
         public void run() {
@@ -695,10 +689,6 @@ public class BluetoothService extends Service {
 
         }
 
-        public void setDataChangedListener(DataChangedListener dataChangedListener) {
-            this.dataChangedListener = dataChangedListener;
-        }
-
         public void setReadable(boolean readable) {
             this.readable = readable;
         }
@@ -712,20 +702,11 @@ public class BluetoothService extends Service {
         }
 
         public void clearData() {
-            dataChangedListener = null;
+            // dataChangedListener = null;
             setHandling(false);
             readable = false;
             dataReader = channelListener1;
         }
-    }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mRunThread.clearData();
-        mRunThread.interrupt();
-        mRunThread = null;
-        mBluetoothGatt.disconnect();
-        mBluetoothGatt.close();
     }
 }

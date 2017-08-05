@@ -8,7 +8,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 
 import com.dhy.coffeesecret.MyApplication;
-import com.dhy.coffeesecret.pojo.TempratureSet;
+import com.dhy.coffeesecret.pojo.TemperatureSet;
 import com.dhy.coffeesecret.pojo.UniversalConfiguration;
 import com.dhy.coffeesecret.ui.device.formatter.XAxisFormatter4Time;
 import com.dhy.coffeesecret.utils.SettingTool;
@@ -54,7 +54,7 @@ public class BaseChart4Coffee extends LineChart {
     private Map<Integer, LinkedList<WeightedObservedPoint>> weightedObservedPointsMap = new HashMap<>();
     private Map<Integer, PolynomialCurveFitter> fitters = new HashMap<>();
     private Map<Integer, List<Double>> params = new HashMap<>();
-    private TempratureSet set;
+    private TemperatureSet set;
     private List<Entry> referEntries;
     private UniversalConfiguration mConfig;
     private Map<Integer, ILineDataSet> lines = new HashMap<>();
@@ -185,11 +185,11 @@ public class BaseChart4Coffee extends LineChart {
      *
      * @param set
      */
-    public void setTempratureSet(TempratureSet set) {
+    public void setTemperatureSet(TemperatureSet set) {
         this.set = set;
     }
 
-    public void addTempratureLine(int lineIndex, boolean isAcc) {
+    public void addTemperatureLine(int lineIndex, boolean isAcc) {
         LineDataSet set = new LineDataSet(new ArrayList<Entry>(), labels.get(lineIndex));
         if (isAcc) {
             set.setAxisDependency(YAxis.AxisDependency.RIGHT);
@@ -247,8 +247,8 @@ public class BaseChart4Coffee extends LineChart {
      *
      * @param lineIndex
      */
-    private void addTempratureLine(int lineIndex) {
-        addTempratureLine(lineIndex, false);
+    private void addTemperatureLine(int lineIndex) {
+        addTemperatureLine(lineIndex, false);
     }
 
     /**
@@ -360,12 +360,12 @@ public class BaseChart4Coffee extends LineChart {
      */
     public void initLine() {
         this.setData(null);
-        addTempratureLine(BaseChart4Coffee.BEANLINE);
-        addTempratureLine(BaseChart4Coffee.INWINDLINE);
-        addTempratureLine(BaseChart4Coffee.OUTWINDLINE);
-        addTempratureLine(BaseChart4Coffee.ACCBEANLINE, true);
-        addTempratureLine(BaseChart4Coffee.ACCINWINDLINE, true);
-        addTempratureLine(BaseChart4Coffee.ACCOUTWINDLINE, true);
+        addTemperatureLine(BaseChart4Coffee.BEANLINE);
+        addTemperatureLine(BaseChart4Coffee.INWINDLINE);
+        addTemperatureLine(BaseChart4Coffee.OUTWINDLINE);
+        addTemperatureLine(BaseChart4Coffee.ACCBEANLINE, true);
+        addTemperatureLine(BaseChart4Coffee.ACCINWINDLINE, true);
+        addTemperatureLine(BaseChart4Coffee.ACCOUTWINDLINE, true);
     }
 
     /**

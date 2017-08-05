@@ -53,7 +53,7 @@ public class BakeReportProxy implements Serializable{
     }
 
     private void deseriData() {
-        TempratureSet set = bakeReport.getTempratureSet();
+        TemperatureSet set = bakeReport.getTemperatureSet();
         List<Float> timex = set.getTimex();
         ILineDataSet beanSet = new LineDataSet(convertTempData2Entry(set.getBeanTemps(), set.getEvents(), timex), getLableByIndex(BEANLINE));
         ILineDataSet inwindSet = new LineDataSet(convertFloatData2Entry(set.getInwindTemps(), timex), getLableByIndex(INWINDLINE));
@@ -69,8 +69,8 @@ public class BakeReportProxy implements Serializable{
         lines.put(ACCOUTWINDLINE, accOutwindSet);
     }
 
-    public void setTempratureSet(TempratureSet tempratureSet) {
-        this.bakeReport.setTempratureSet(tempratureSet);
+    public void setTempratureSet(TemperatureSet temperatureSet) {
+        this.bakeReport.setTemperatureSet(temperatureSet);
         deseriData();
     }
 
@@ -216,7 +216,7 @@ public class BakeReportProxy implements Serializable{
     }
 
     public List<Float> getTimex(){
-        return bakeReport.getTempratureSet().getTimex();
+        return bakeReport.getTemperatureSet().getTimex();
     }
 
     public void setSingleBeanId(long id){
@@ -228,27 +228,27 @@ public class BakeReportProxy implements Serializable{
     }
 
     public List<Float> getAccBeanTempratures(){
-        return bakeReport.getTempratureSet().getAccBeanTemps();
+        return bakeReport.getTemperatureSet().getAccBeanTemps();
     }
     public List<Float> getAccInwindTempratures(){
-        return bakeReport.getTempratureSet().getAccInwindTemps();
+        return bakeReport.getTemperatureSet().getAccInwindTemps();
     }
     public List<Float> getAccOutwindTempratures(){
-        return bakeReport.getTempratureSet().getAccOutwindTemps();
+        return bakeReport.getTemperatureSet().getAccOutwindTemps();
     }
     public List<Float> getTempratureByIndex(int index){
         if(index == BEANLINE){
-            return bakeReport.getTempratureSet().getBeanTemps();
+            return bakeReport.getTemperatureSet().getBeanTemps();
         }else if(index == INWINDLINE){
-            return bakeReport.getTempratureSet().getInwindTemps();
+            return bakeReport.getTemperatureSet().getInwindTemps();
         }else if(index == OUTWINDLINE){
-            return bakeReport.getTempratureSet().getOutwindTemps();
+            return bakeReport.getTemperatureSet().getOutwindTemps();
         }
         return new ArrayList<Float>();
     }
     public Event getEventByX(int x){
         if(events == null){
-            events = bakeReport.getTempratureSet().getEvents();
+            events = bakeReport.getTemperatureSet().getEvents();
         }
         String time = getTimex().get(x) + "";
         String eventStr = events.get(time);
@@ -269,11 +269,11 @@ public class BakeReportProxy implements Serializable{
         bakeReport.setBreakPointerTime(time);
 
     }
-    public void setBreakPointerTemprature(Temprature pointerTemprature){
-        if(pointerTemprature == null){
+    public void setBreakPointerTemprature(Temperature pointerTemperature){
+        if(pointerTemperature == null){
             bakeReport.setBreakPointerTemprature(-1f);
         }else{
-            bakeReport.setBreakPointerTemprature(pointerTemprature.getBeanTemp());
+            bakeReport.setBreakPointerTemprature(pointerTemperature.getBeanTemp());
         }
 
     }

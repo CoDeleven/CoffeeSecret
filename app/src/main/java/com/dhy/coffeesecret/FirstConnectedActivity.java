@@ -12,7 +12,6 @@ import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -20,8 +19,6 @@ import android.widget.TextView;
 
 import com.dhy.coffeesecret.services.BluetoothService;
 import com.dhy.coffeesecret.ui.device.adapter.BluetoothListAdapter;
-import com.dhy.coffeesecret.utils.SPPrivateUtils;
-import com.dhy.coffeesecret.utils.SettingTool;
 import com.dhy.coffeesecret.views.DividerDecoration;
 
 import java.util.HashMap;
@@ -30,8 +27,7 @@ import java.util.Map;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class FirstConnectedActivity extends AppCompatActivity implements BluetoothListAdapter.OnItemClickListener,
-        BluetoothService.DeviceChangedListener, BluetoothService.ViewControllerListener {
+public class FirstConnectedActivity extends AppCompatActivity implements BluetoothListAdapter.OnItemClickListener, BluetoothService.ViewControllerListener {
     public static final int DEVICE_CONNECTING = 0, DEVICE_CONNECT_FAILED = 1, DEVICE_CONNECTED = 2;
 
     @Bind(R.id.id_first_bluetooth_list)
@@ -39,7 +35,7 @@ public class FirstConnectedActivity extends AppCompatActivity implements Bluetoo
     @Bind(R.id.id_first_connect_status)
     TextView connectStatus;
 
-    BluetoothService.BluetoothOperator mBluetoothOperator;
+    // BluetoothService.BluetoothOperator mBluetoothOperator;
     ImageView tick = null;
     private BluetoothListAdapter mAdapter;
     private Map<String, BluetoothDevice> devices = new HashMap<>();
@@ -69,10 +65,10 @@ public class FirstConnectedActivity extends AppCompatActivity implements Bluetoo
     private ServiceConnection conn = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            mBluetoothOperator = (BluetoothService.BluetoothOperator) service;
+/*            mBluetoothOperator = (BluetoothService.BluetoothOperator) service;
             mBluetoothOperator.setDeviceChangedListener(FirstConnectedActivity.this);
             mBluetoothOperator.setViewControllerListener(FirstConnectedActivity.this);
-            mBluetoothOperator.startScanDevice();
+            mBluetoothOperator.startScanDevice();*/
         }
 
         @Override
@@ -98,7 +94,7 @@ public class FirstConnectedActivity extends AppCompatActivity implements Bluetoo
 
     @Override
     public void onItemClick(BluetoothDevice device, View view) {
-        BluetoothDevice hasConnectedDevice = mBluetoothOperator.getBluetoothDevice();
+/*        BluetoothDevice hasConnectedDevice = mBluetoothOperator.getConnectedDevice();
         if (hasConnectedDevice != null && device != null && device.getAddress().equals(hasConnectedDevice.getAddress())) {
             return;
         }
@@ -117,10 +113,10 @@ public class FirstConnectedActivity extends AppCompatActivity implements Bluetoo
         if (!mBluetoothOperator.connect(device)) {
             progressViewHandler.sendEmptyMessage(DEVICE_CONNECT_FAILED);
             return;
-        }
+        }*/
     }
 
-    @Override
+/*    @Override
     public void notifyDeviceConnectStatus(boolean isConnected, BluetoothDevice device) {
         if (isConnected) {
             // 设置已连接设备
@@ -143,9 +139,9 @@ public class FirstConnectedActivity extends AppCompatActivity implements Bluetoo
             progressViewHandler.sendEmptyMessage(DEVICE_CONNECT_FAILED);
         }
 
-    }
+    }*/
 
-    @Override
+/*    @Override
     public void notifyNewDevice(BluetoothDevice device, int rssi) {
         Log.e("codelevex", "发现新设备：" + device.getAddress());
         // 如果可连接设备里包含里新设备，则只更新rssi,而不添加至adapter
@@ -163,7 +159,7 @@ public class FirstConnectedActivity extends AppCompatActivity implements Bluetoo
 
         // 通过设备地址，更新对应设备的rssi
         mAdapter.setRssi(device.getAddress(), rssi);
-    }
+    }*/
 
     @Override
     public void handleViewBeforeStartRead() {

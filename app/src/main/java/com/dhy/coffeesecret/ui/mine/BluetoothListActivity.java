@@ -4,39 +4,30 @@ import android.bluetooth.BluetoothDevice;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.SystemClock;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.dhy.coffeesecret.R;
+import com.dhy.coffeesecret.model.device_list.IScanListView;
+import com.dhy.coffeesecret.model.device_list.Presenter4ScanList;
 import com.dhy.coffeesecret.services.BluetoothService;
 import com.dhy.coffeesecret.ui.device.adapter.BluetoothListAdapter;
-import com.dhy.coffeesecret.utils.SettingTool;
 import com.kyleduo.switchbutton.SwitchButton;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.dhy.coffeesecret.services.BluetoothService.SCAN_TIME;
-
 public class BluetoothListActivity extends AppCompatActivity implements BluetoothListAdapter.OnItemClickListener,
-        CompoundButton.OnCheckedChangeListener, BluetoothService.DeviceChangedListener, BluetoothService.ViewControllerListener, SwipeRefreshLayout.OnRefreshListener {
-
-    public static final int DEVICE_CONNECTING = 0, DEVICE_CONNECT_FAILED = 1, DEVICE_CONNECTED = 2, REFRESH = -1;
-
+        CompoundButton.OnCheckedChangeListener, BluetoothService.ViewControllerListener, SwipeRefreshLayout.OnRefreshListener,
+        IScanListView {
+    public static final int DEVICE_CONNECTING = 0, DEVICE_CONNECT_FAILED = 1, DEVICE_CONNECTED = 2, REFRESH = -1, SCANNING_COMPLETE = -2;
     @Bind(R.id.srl)
     SwipeRefreshLayout refreshLayout;
     @Bind(R.id.id_connecting_bluetooth_list)
@@ -45,12 +36,17 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
     SwitchButton switchButton;
     @Bind(R.id.id_back)
     ImageView back;
+    @Bind(R.id.id_scan_progress)
+    ProgressBar mScanProgress;
+
+
     ImageView tick = null;
-    private Map<String, BluetoothDevice> canConnectDeviceMap = new HashMap<>();
-    private BluetoothService.BluetoothOperator mBluetoothOperator;
+    // private Map<String, BluetoothDevice> canConnectDeviceMap = new HashMap<>();
+    // private BluetoothService.BluetoothOperator mBluetoothOperator;
     private ProgressBar progressCircle = null;
     private BluetoothListAdapter adapter;
-    private BluetoothDevice hasConnected;
+    // private BluetoothDevice hasConnected;
+    private Presenter4ScanList mPresenter;
     // 连接状态视图的处理器
     private Handler progressViewHandler = new Handler(new Handler.Callback() {
         @Override
@@ -74,9 +70,32 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
                         break;
                 }
             }
+            switch (msg.what){
+                case REFRESH:
+                    refreshLayout.setRefreshing(false);
+                    mScanProgress.setVisibility(View.GONE);
+                    break;
+                case SCANNING_COMPLETE:
+                    break;
+            }
             return false;
         }
     });
+
+    /**
+     * 刷新列表
+     */
+    @Override
+    public void updateDeviceList() {
+        adapter.notifyDataSetChanged();
+        devices.invalidate();
+    }
+
+    @Override
+    public void addDevice2List(BluetoothDevice device, int rssi) {
+        adapter.addDevice(device);
+        updateDeviceList();
+    }
 
     @OnClick(R.id.id_back)
     public void back() {
@@ -85,39 +104,39 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        if (!mBluetoothOperator.isEnable() && isChecked) {
-            mBluetoothOperator.enable();
+        if (!mPresenter.isEnable() && isChecked) {
+            mPresenter.enableBluetooth();
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    while (!mBluetoothOperator.isEnable()) {
-                        mBluetoothOperator.enable();
+                    while (!mPresenter.isEnable()) {
+                        mPresenter.enableBluetooth();
                         try {
                             Thread.currentThread().sleep(1000);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
                     }
-                    mBluetoothOperator.startScanDevice();
+                    mPresenter.startScan();
                 }
             }).start();
         } else {
-            mBluetoothOperator.stopScanDevice();
             // 关闭蓝牙后清空adapter内的设备
-            adapter.clearDevices();
+            // adapter.clearDevices();
             // 清空可连接设备
-            canConnectDeviceMap.clear();
+            // canConnectDeviceMap.clear();
 
             // 刷新列表
-            adapter.notifyDataSetChanged();
+            // adapter.notifyDataSetChanged();
             devices.invalidate();
             // 关闭蓝牙初始化状态
-            adapter.lastConnectedAddress = null;
+            // adapter.lastConnectedAddress = null;
             // 请求关闭蓝牙设备
-            mBluetoothOperator.disableBluetooth();
+            // mBluetoothOperator.disableBluetooth();
             // 关闭蓝牙设备后清空已连接的设备状态
-            hasConnected = null;
-            refreshListView();
+            // hasConnected = null;
+            mPresenter.disableBluetooth();
+            updateDeviceList();
         }
     }
 
@@ -140,37 +159,40 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
         refreshLayout.setOnRefreshListener(this);
 
         // 获取蓝牙操作对象
-        if (mBluetoothOperator == null) {
+        if (mPresenter == null) {
             // 获取helper实例
-            mBluetoothOperator = BluetoothService.BLUETOOTH_OPERATOR;
+            mPresenter = Presenter4ScanList.newInstance();
         }
-
+        mPresenter.setView(this);
+        // 初始化监听器到本presenter
+        mPresenter.initBluetoothListener();
         // 设置发现新设备进行回调的对象
-        mBluetoothOperator.setDeviceChangedListener(this);
+        // TODO 视图更新
+        // mBluetoothOperator.setDeviceChangedListener(this);
         // 设置视图更改器，用于当蓝牙连接成功时，设置勾给相应的条目
-        mBluetoothOperator.setViewControllerListener(this);
-        mBluetoothOperator.setScanListener(new BluetoothService.ScanListener(){
+        // mBluetoothOperator.setViewControllerListener(this);
+        /*mBluetoothOperator.setScanListener(new BluetoothService.ScanListener(){
             @Override
             protected void onScanStop() {
                 if(progressViewHandler != null){
                     progressViewHandler.sendEmptyMessage(REFRESH);
                 }
             }
-        });
+        });*/
         // 如果蓝牙已经开启
-        if (mBluetoothOperator.isEnable()) {
+        if (mPresenter.isEnable()) {
             // 打开连接按钮
             switchButton.setChecked(true);
             // 开始扫描
-            mBluetoothOperator.startScanDevice();
+            mPresenter.startScan();
             // 获取当前连接着的设备
-            BluetoothDevice curDevice = mBluetoothOperator.getBluetoothDevice();
+            BluetoothDevice curDevice = mPresenter.getConnectedDevice();
             // 如果当前连接着的设备是空的，即没连接状态
             if (curDevice != null) {
                 // 获取连接着的设备地址并赋给adapter
                 adapter.lastConnectedAddress = curDevice.getAddress();
                 // 为本数据集合添加数据
-                canConnectDeviceMap.put(curDevice.getAddress(), curDevice);
+                // canConnectDeviceMap.put(curDevice.getAddress(), curDevice);
                 // 为adapter添加该设备
                 adapter.addDevice(curDevice);
             }
@@ -179,92 +201,41 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
 
     @Override
     public void onRefresh() {
-        if (mBluetoothOperator != null) {
-            mBluetoothOperator.startScanDevice();
+        if (mPresenter != null) {
+            mPresenter.startScan();
         } else {
             progressViewHandler.sendEmptyMessage(REFRESH);
         }
     }
 
     @Override
-    public void notifyDeviceConnectStatus(boolean isConnected, BluetoothDevice device) {
-        Log.e("BluetoothListActivity", device.getAddress() + ":" + isConnected);
-        if (isConnected) {
-            // 设置已连接设备
-            adapter.lastConnectedAddress = device.getAddress();
-            hasConnected = device;
-            // 设置已经连接状态
-            progressViewHandler.sendEmptyMessage(DEVICE_CONNECTED);
-            // 保存连接设备地址到配置文件,方便启动时读取并直接连接
-            SettingTool.saveAddress(device.getAddress());
-            // 连接成功，结束activity
-            finish();
-        } else {
-            // 确保连接设备为null
-            Log.e("BluetoothListActivity", device.getAddress()+"连接失败");
-            adapter.lastConnectedAddress = null;
-//            // 设置连接失败状态
-            progressViewHandler.sendEmptyMessage(DEVICE_CONNECT_FAILED);
-//            // 清理devicemap中连接的设备信息
-//            canConnectDeviceMap.remove(device.getAddress());
-//            // 清理adapter中的设备信息
-//            adapter.clearConnectedDevice();
-//
-//            hasConnected = null;
-//            runOnUiThread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    // 每次发现新设备刷新列表
-//                    refreshListView();
-//                }
-//            });
-        }
+    public void finishActivity() {
+        finish();
+    }
+
+    @Override
+    public void updateText(int index, String updateContent) {
+        progressViewHandler.sendEmptyMessage(index);
+    }
+
+    @Override
+    public void showToast(int index, String toastContent) {
 
     }
 
     @Override
-    public void notifyNewDevice(final BluetoothDevice device, int rssi) {
-        Log.e("codelevex", "发现新设备：" + device.getAddress());
-        // 如果可连接设备里包含里新设备，则只更新rssi,而不添加至adapter
-        if (!canConnectDeviceMap.containsKey(device.getAddress())) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    adapter.addDevice(device);
-                }
-            });
-            canConnectDeviceMap.put(device.getAddress(), device);
-        }
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // 每次发现新设备刷新列表
-                refreshListView();
-            }
-        });
-
+    public void updateDeviceRssi(BluetoothDevice device, int rssi) {
         // 通过设备地址，更新对应设备的rssi
         adapter.setRssi(device.getAddress(), rssi);
+        updateDeviceList();
     }
 
     @Override
     public void handleViewBeforeStartRead() {
     }
 
-    /**
-     * 刷新列表
-     */
-    public void refreshListView() {
-        adapter.notifyDataSetChanged();
-        devices.invalidate();
-    }
-
     @Override
     public void onItemClick(final BluetoothDevice device, View view) {
-        BluetoothDevice hasConnectedDevice = mBluetoothOperator.getBluetoothDevice();
-        if (hasConnectedDevice != null && device != null && device.getAddress().equals(hasConnectedDevice.getAddress())) {
-            return;
-        }
         // 如果之前存在一个设备在连接,设置上一个视图隐藏
         if (progressCircle != null && progressCircle.isShown()) {
             progressCircle.setVisibility(View.GONE);
@@ -280,7 +251,7 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (!mBluetoothOperator.connect(device)) {
+                if (!mPresenter.connect(device)) {
                     progressViewHandler.sendEmptyMessage(DEVICE_CONNECT_FAILED);
                     return;
                 }
@@ -292,7 +263,10 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
     protected void onDestroy() {
         super.onDestroy();
         adapter.clearDevices();
-        mBluetoothOperator.stopScanDevice();
+        mPresenter.clearScanedDevices();
+        mPresenter.stopScan();
+        // 因为destroy不能及时执行，所以这里去掉了
+        // mPresenter.destroyBluetoothListener();
         progressViewHandler = null;
     }
 

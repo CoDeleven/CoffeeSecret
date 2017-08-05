@@ -123,7 +123,7 @@ public class BakeInfoFragment extends Fragment implements View.OnClickListener {
 
         if (!isNewCupping && mBakeReport == null) {
             mButtonBake.setEnabled(false);
-//            mChart.setTempratureSet(mBakeReport.getTempratureSet());
+//            mChart.setTemperatureSet(mBakeReport.getTemperatureSet());
         }
 
         mListView = (ExpandableLayoutListView) mView.findViewById(R.id.beanInfo);
@@ -203,7 +203,7 @@ public class BakeInfoFragment extends Fragment implements View.OnClickListener {
             mEnvTime.setText(Utils.getCrspTempratureValue(mBakeReport.getAmbientTemperature()) + MyApplication.tempratureUnit);
 
             BakeReportProxy proxy = new BakeReportProxy(mBakeReport);
-            mChart.setTempratureSet(proxy.getBakeReport().getTempratureSet());
+            mChart.setTemperatureSet(proxy.getBakeReport().getTemperatureSet());
 
             int[] temp = {BEANLINE, ACCBEANLINE, INWINDLINE, OUTWINDLINE, ACCINWINDLINE, ACCOUTWINDLINE};
             for (int i : temp) {

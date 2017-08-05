@@ -67,19 +67,30 @@
                 android:paddingRight="29.8125dp" />
         </RelativeLayout>
 
-        <LinearLayout
+        <RelativeLayout
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#ECECEC">
 
             <TextView
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:text="可连接设备"
                 android:textColor="#a29e9b"
                 android:textSize="13.5sp" />
-        </LinearLayout>
+            <ProgressBar
+                android:id="@+id/id_scan_progress"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_width="15dp"
+                android:layout_marginRight="10dp"
+                android:visibility="visible"
+                android:layout_height="15dp"/>
+        </RelativeLayout>
 
     </LinearLayout>
 

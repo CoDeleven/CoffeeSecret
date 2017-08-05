@@ -5,7 +5,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.graphics.Shader;
 import android.graphics.drawable.Drawable;
 
 import com.github.mikephil.charting.animation.ChartAnimator;
@@ -172,10 +171,10 @@ public class LineChartRenderer extends LineRadarRenderer {
         mRenderPaint.setColor(dataSet.getColor());
 
         mRenderPaint.setStyle(Paint.Style.STROKE);
-
+        mRenderPaint.setStrokeWidth(1f);
         trans.pathValueToPixel(cubicPath);
 
-        mRenderPaint.setShadowLayer(2.5f, 0, 10, Color.parseColor("#CCCCCC"));
+        // mRenderPaint.setShadowLayer(2.5f, 0, 10, Color.parseColor("#CCCCCC"));
 
         mBitmapCanvas.drawPath(cubicPath, mRenderPaint);
 

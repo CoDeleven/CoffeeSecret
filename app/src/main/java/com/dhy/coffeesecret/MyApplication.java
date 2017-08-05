@@ -279,7 +279,8 @@ public class MyApplication extends Application {
         super.onTerminate();
         Intent intent = new Intent(this, BluetoothService.class);
         stopService(intent);
-        BluetoothService.BLUETOOTH_OPERATOR.disableBluetooth();
+        // TODO 关闭蓝牙
+        // BluetoothService.BLUETOOTH_OPERATOR.disableBluetooth();
     }
 
     public void initUnit() {

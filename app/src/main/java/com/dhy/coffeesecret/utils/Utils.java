@@ -1,12 +1,8 @@
 package com.dhy.coffeesecret.utils;
 
 
-import android.content.Context;
-import android.util.Log;
-
 import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
-import com.dhy.coffeesecret.pojo.UniversalConfiguration;
 
 import net.sourceforge.pinyin4j.PinyinHelper;
 
@@ -248,5 +244,19 @@ public class Utils {
                 name = "default";
         }
         return name;
+    }
+
+    public static String getCommaBefore(float temperature){
+        // 处理后只剩两位小数,并且转换为当前的温度单位
+        float processValue = Utils.getCrspTempratureValue(temperature + "");
+        int commaBefore = (int)(processValue * 100) / 100;
+        return commaBefore + "";
+    }
+
+    public static String getCommaAfter(float temperature){
+        // 处理后只剩两位小数,并且转换为当前的温度单位
+        float processValue = Utils.getCrspTempratureValue(temperature + "");
+        int commaAfter = (int)(processValue * 100) % 100;
+        return String.format("%02d", Math.abs(commaAfter));
     }
 }
