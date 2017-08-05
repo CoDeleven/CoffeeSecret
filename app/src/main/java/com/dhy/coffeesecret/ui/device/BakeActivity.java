@@ -139,7 +139,7 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
 
             idBakingOutwindTemp.setText(Utils.getCrspTempratureValue(temperature.getOutwindTemp() + "") + tempratureUnit);
 
-            idBakingAccOutwindTempBefore.setText(Utils.getCommaBefore((float)Math.random() * 200 * (float)Math.pow(-1, (int)(Math.random() * 3))));
+            idBakingAccOutwindTempBefore.setText(Utils.getCommaBefore(temperature.getAccOutwindTemp()));
             idBakingAccOutwindTempAfter.setText(Utils.getCommaAfter(temperature.getAccOutwindTemp()));
 
             // switchImage(temperature);
