@@ -7,18 +7,15 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.ui.community.live.player.LiveListActivity;
 import com.dhy.coffeesecret.ui.community.live.visitor.HWCameraStreamingActivity;
 import com.dhy.coffeesecret.utils.HttpUtils;
-import com.dhy.coffeesecret.utils.T;
 import com.dhy.coffeesecret.utils.URLs;
 
 import java.io.IOException;
 
-import cniao5.com.cniao5shop.ShopActivity;
 
 
 public class CommunityFragment extends Fragment implements View.OnClickListener {
@@ -49,7 +46,7 @@ public class CommunityFragment extends Fragment implements View.OnClickListener 
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_customer:
-                intent = new Intent(getActivity(), ShopActivity.class);
+//                intent = new Intent(getActivity(), ShopActivity.class);
                 startActivity(intent);//TODO
                 break;
             case R.id.iv_business:
