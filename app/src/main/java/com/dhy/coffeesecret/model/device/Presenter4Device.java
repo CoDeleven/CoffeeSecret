@@ -1,10 +1,10 @@
-package com.dhy.coffeesecret.model;
+package com.dhy.coffeesecret.model.device;
 
 import android.bluetooth.BluetoothDevice;
 import android.util.Log;
 
-import com.dhy.coffeesecret.model.device.IDeviceView;
-import com.dhy.coffeesecret.model.device.Model4Device;
+import com.dhy.coffeesecret.model.BaseBlePresenter;
+import com.dhy.coffeesecret.model.IBaseView;
 import com.dhy.coffeesecret.pojo.BakeReportProxy;
 import com.dhy.coffeesecret.pojo.Temperature;
 import com.dhy.coffeesecret.services.IBluetoothOperator;
@@ -21,7 +21,8 @@ public class Presenter4Device extends BaseBlePresenter {
     private boolean isStart = false;
 
     private Presenter4Device() {
-
+        // 初始化model
+        super.modelOperator = Model4Device.newInstance();
     }
 
     /**
@@ -63,15 +64,10 @@ public class Presenter4Device extends BaseBlePresenter {
     }
 
     @Override
-    public void setModel(IBaseModel baseModel) {
-        deviceModel = baseModel;
-    }
-
-    @Override
     public void notifyTemperature(Temperature temperature) {
         Log.d(TAG, "presenter4device -> notifyTemperature: 收到温度信息：" + temperature);
         if (!isStart) {
-            ((Model4Device)deviceModel).updateBeginTemperature(temperature);
+            ((Model4Device) modelOperator).updateBeginTemperature(temperature);
             // beginTemp = temperature.getBeanTemp();
             isStart = true;
         }
@@ -81,7 +77,7 @@ public class Presenter4Device extends BaseBlePresenter {
 
     @Override
     public void onScanning(BluetoothDevice bluetoothDevice, int rssi) {
-        if (bluetoothDevice.getAddress().equals(((Model4Device)deviceModel).getLastConnectedAddr())) {
+        if (bluetoothDevice.getAddress().equals(((Model4Device) modelOperator).getLastConnectedAddr())) {
             viewOperator.showToast(DeviceFragment.AUTO_CONNECTION_TIPS, "正在自动重连...");
             // 连接蓝牙设备
             BaseBlePresenter.mBluetoothOperator.connect(bluetoothDevice);

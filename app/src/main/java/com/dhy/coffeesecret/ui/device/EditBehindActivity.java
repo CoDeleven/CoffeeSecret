@@ -24,7 +24,8 @@ import android.widget.TextView;
 
 import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
-import com.dhy.coffeesecret.pojo.BakeReport;
+import com.dhy.coffeesecret.model.report_edit.IEditView;
+import com.dhy.coffeesecret.model.report_edit.Presenter4Editor;
 import com.dhy.coffeesecret.pojo.BakeReportProxy;
 import com.dhy.coffeesecret.pojo.BeanInfo;
 import com.dhy.coffeesecret.pojo.BeanInfoSimple;
@@ -37,7 +38,6 @@ import com.dhy.coffeesecret.views.CircleSeekBar;
 import com.github.mikephil.charting.data.Entry;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -50,11 +50,17 @@ import okhttp3.Response;
 import static android.widget.LinearLayout.HORIZONTAL;
 import static android.widget.LinearLayout.LayoutParams.MATCH_PARENT;
 import static android.widget.LinearLayout.LayoutParams.WRAP_CONTENT;
+import static com.dhy.coffeesecret.ui.device.BakeActivity.I_AM_BAKEACTIVITY;
 import static com.dhy.coffeesecret.ui.device.fragments.BakeDialog.SELECT_BEAN;
 import static com.dhy.coffeesecret.utils.DensityUtils.dp2px;
 
-public class EditBehindActiviy extends AppCompatActivity implements CircleSeekBar.OnSeekBarChangeListener {
-    private static final int RERANGE_BEAN_INFO = 111;
+public class EditBehindActivity extends AppCompatActivity implements CircleSeekBar.OnSeekBarChangeListener, IEditView {
+    public static final int RERANGE_BEAN_INFO = 111;
+    public static final int GENERATE_BEAN_INFO = 222;
+    public static final int GENERATE_ENTRY_EVENTS = 333;
+    public static final int INVALIDATE_COOKED_WEIGHT = 444;
+    public static final int BAKE_DEGREE = 555;
+    public static final int BUTTON_NAME = 666;
     @Bind(R.id.id_bake_degree)
     CircleSeekBar mSeekBar;
     @Bind(R.id.id_bake_behind_save)
@@ -71,16 +77,11 @@ public class EditBehindActiviy extends AppCompatActivity implements CircleSeekBa
     Button reportDelete;
     @Bind(R.id.id_bean_container)
     LinearLayout beanContainer;
-
-    private float mCurValue;
-    private List<String> content = new ArrayList<>();
-    private List<Entry> entries = new ArrayList<>();
-    private List<BeanInfoSimple> beanInfoSimples = new ArrayList<>();
-    private BeanInfoSimple curBeanInfoSimple;
+    private Presenter4Editor mPresenter = Presenter4Editor.newInstance();
     private Button curBeanButton;
-    private BakeReportProxy proxy;
     private String unit;
     private Dialog dialog;
+    private int mEditorMode = I_AM_BAKEACTIVITY;
     private Handler mHandler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
@@ -89,10 +90,59 @@ public class EditBehindActiviy extends AppCompatActivity implements CircleSeekBa
                     String newName = (String) msg.obj;
                     curBeanButton.setText(newName);
                     break;
+                case GENERATE_BEAN_INFO:
+                    List<BeanInfoSimple> simples = (List<BeanInfoSimple>) msg.obj;
+                    generateBeanInfoView(simples);
+                    break;
+                case GENERATE_ENTRY_EVENTS:
+                    List<Entry> entryEvents = (List<Entry>) msg.obj;
+                    generateItemView(entryEvents);
+                    break;
+                case INVALIDATE_COOKED_WEIGHT:
+                    T.showShort(EditBehindActivity.this, (String) msg.obj);
+                    break;
+                case BAKE_DEGREE:
+                    score.setText(msg.obj + "");
+                    break;
+                case BUTTON_NAME:
+                    curBeanButton.setText((String) msg.obj);
+                    break;
             }
             return false;
         }
     });
+
+    @Override
+    public void updateBeanInfos(List<BeanInfoSimple> infoSimples) {
+        Message msg = new Message();
+        msg.what = GENERATE_BEAN_INFO;
+        msg.obj = infoSimples;
+        mHandler.sendMessage(msg);
+    }
+
+    @Override
+    public void updateEntryEvents(List<Entry> entryEevents) {
+        Message msg = new Message();
+        msg.what = GENERATE_ENTRY_EVENTS;
+        msg.obj = entryEevents;
+        mHandler.sendMessage(msg);
+    }
+
+    @Override
+    public void updateText(int index, String updateContent) {
+        Message msg = new Message();
+        msg.obj = updateContent;
+        msg.what = index;
+        mHandler.sendMessage(msg);
+    }
+
+    @Override
+    public void showToast(int index, String toastContent) {
+        Message msg = new Message();
+        msg.what = index;
+        msg.obj = toastContent;
+        mHandler.sendMessage(msg);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,16 +150,43 @@ public class EditBehindActiviy extends AppCompatActivity implements CircleSeekBa
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         setContentView(R.layout.activity_edit_behind_activiy);
         ButterKnife.bind(this);
+        // 设置视图
+        mPresenter.setView(this);
+        // 初始化带有prxoy参数的试图
+        mPresenter.initViewWithProxy();
+        // 设置圆形seekbar
         mSeekBar.setOnSeekBarChangeListener(this);
-        init();
+
         unit = SettingTool.getConfig(this).getWeightUnit();
-        cookedWeight.setHint("当前生豆为"+ proxy.getRawBeanWeight() + MyApplication.weightUnit);
 
-        generateItem();
-        generateBean();
+        mPresenter.generateItem();
+        mPresenter.generateBean();
 
-        int status = getIntent().getIntExtra("status", -1);
-        if (status != BakeActivity.I_AM_BAKEACTIVITY) {
+        mEditorMode = getIntent().getIntExtra("status", -1);
+    }
+
+    /**
+     * 初始化视图，由Presenter进行回调
+     *
+     * @param proxy BakeReportProxy
+     */
+    @Override
+    public void init(final BakeReportProxy proxy) {
+        mSeekBar.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    scrollView.requestDisallowInterceptTouchEvent(false);
+                    ((ViewGroup) scrollView.getChildAt(0)).requestDisallowInterceptTouchEvent(false);
+                } else {
+                    scrollView.requestDisallowInterceptTouchEvent(true);
+                    ((ViewGroup) scrollView.getChildAt(0)).requestDisallowInterceptTouchEvent(true);
+                }
+                return false;
+            }
+        });
+        cookedWeight.setHint("当前生豆为" + proxy.getRawBeanWeight() + MyApplication.weightUnit);
+        if (mEditorMode != I_AM_BAKEACTIVITY) {
             reportDelete.setVisibility(View.VISIBLE);
             cookedWeight.setText(proxy.getBakeReport().getCookedBeanWeight());
             mSeekBar.setCurProcess((int) Float.parseFloat(proxy.getBakeDegree()));
@@ -133,84 +210,31 @@ public class EditBehindActiviy extends AppCompatActivity implements CircleSeekBa
         }
     }
 
-    private void init() {
-        proxy = ((MyApplication) getApplication()).getBakeReport();
-        entries = proxy.getEntriesWithEvents();
-        beanInfoSimples = proxy.getBeanInfos();
-
-
-        mSeekBar.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    scrollView.requestDisallowInterceptTouchEvent(false);
-                    ((ViewGroup) scrollView.getChildAt(0)).requestDisallowInterceptTouchEvent(false);
-                } else {
-                    scrollView.requestDisallowInterceptTouchEvent(true);
-                    ((ViewGroup) scrollView.getChildAt(0)).requestDisallowInterceptTouchEvent(true);
-                }
-                return false;
-            }
-        });
-    }
-
     @OnClick(R.id.id_bake_behind_save)
     protected void onSave() {
-
         String weight = cookedWeight.getText().toString();
-        if (!"".equals(weight) && weight != null) {
-            float defaultWeight = Utils.getReversed2DefaultWeight(Float.parseFloat(weight) + "");
-            if(defaultWeight > proxy.getRawBeanWeight()){
-                T.showShort(this, "填写不大于生豆重量的数值...");
-                return;
-            }
-            proxy.setCookedBeanWeight(defaultWeight);
-        } else {
-            proxy.setCookedBeanWeight(0);
-        }
-        if (proxy.getBeanInfos().size() != 1) {
-            proxy.setSingleBeanId(-1);
-        }
+        mPresenter.setCookedWeight4BakeReport(weight);
 
-        proxy.setBakeDegree(mCurValue);
         Intent other = new Intent(this, ReportActivity.class);
-        sendJsonData(proxy.getBakeReport());
+        // 保存
+        mPresenter.save();
         startActivity(other);
         finish();
-    }
-
-    private void sendJsonData(final BakeReport proxy) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    HttpUtils.execute(URLs.ADD_BAKE_REPORT, proxy);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
     }
 
     @Override
     public void onChanged(CircleSeekBar seekbar, int curValue) {
         Message msg = new Message();
-        Bundle bundle = new Bundle();
-        bundle.putFloat("curValue", curValue);
-        msg.setData(bundle);
-        new Handler(new Handler.Callback() {
-            @Override
-            public boolean handleMessage(Message msg) {
-                score.setText(((int) msg.getData().getFloat("curValue")) + "");
-                return false;
-            }
-        }).sendMessage(msg);
-        mCurValue = curValue;
+        msg.what = BAKE_DEGREE;
+        msg.obj = curValue;
+
+        mHandler.sendMessage(msg);
+
+        // FIXME 这里收到的是int类型，需要变成float类型
+        mPresenter.setBakeDegree(curValue);
     }
 
-    private void generateItem() {
-
-
+    private void generateItemView(List<Entry> entries) {
         for (final Entry entry : entries) {
             // LinearLayout的设置
             LinearLayout linearLayout = new LinearLayout(this);
@@ -250,16 +274,15 @@ public class EditBehindActiviy extends AppCompatActivity implements CircleSeekBa
             linearLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(EditBehindActiviy.this);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(EditBehindActivity.this);
                     builder.setTitle("事件补充");
-                    final EditText editText = new EditText(EditBehindActiviy.this);
+                    final EditText editText = new EditText(EditBehindActivity.this);
                     editText.setHint(entry.getEvent().getDescription());
                     builder.setView(editText);
                     builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            eventView.setText(editText.getText().toString());
-                            entry.getEvent().setDescription(editText.getText().toString());
+                            mPresenter.supplyEventInfo(entry, editText.getText().toString());
                         }
                     });
                     builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -282,9 +305,8 @@ public class EditBehindActiviy extends AppCompatActivity implements CircleSeekBa
 
     }
 
-    private void generateBean() {
+    private void generateBeanInfoView(List<BeanInfoSimple> beanInfoSimples) {
         int beanCount = 1;
-
 
         for (final BeanInfoSimple temp : beanInfoSimples) {
 
@@ -299,7 +321,6 @@ public class EditBehindActiviy extends AppCompatActivity implements CircleSeekBa
             params.gravity = Gravity.CENTER_VERTICAL;
             params.rightMargin = dp2px(this, 12);
             index.setLayoutParams(params);
-
 
             // 设置图片
             ImageView imageView = new ImageView(this);
@@ -322,9 +343,9 @@ public class EditBehindActiviy extends AppCompatActivity implements CircleSeekBa
                 @Override
                 public void onClick(View v) {
                     // 设置当前改变的beanInfo
-                    curBeanInfoSimple = temp;
+                    mPresenter.setCurUpdateBeanInfo(temp);
                     curBeanButton = beanName;
-                    Intent intent = new Intent(EditBehindActiviy.this, DialogBeanSelected.class);
+                    Intent intent = new Intent(EditBehindActivity.this, DialogBeanSelected.class);
                     startActivityForResult(intent, SELECT_BEAN);
                 }
             });
@@ -361,21 +382,12 @@ public class EditBehindActiviy extends AppCompatActivity implements CircleSeekBa
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == SELECT_BEAN && curBeanInfoSimple != null) {
+        if (resultCode == SELECT_BEAN) {
             BeanInfo beanInfo = (BeanInfo) data.getSerializableExtra("beanInfo");
-            curBeanInfoSimple.setBeanName(beanInfo.getName());
-            curBeanInfoSimple.setWaterContent(beanInfo.getWaterContent() + "");
-            curBeanInfoSimple.setManor(beanInfo.getManor());
-            curBeanInfoSimple.setProcess(beanInfo.getProcess());
-            curBeanInfoSimple.setLevel(beanInfo.getLevel());
-            curBeanInfoSimple.setAltitude(beanInfo.getAltitude());
-            curBeanInfoSimple.setCountry(beanInfo.getCountry());
-            curBeanInfoSimple.setArea(beanInfo.getArea());
-            curBeanInfoSimple.setSpecies(beanInfo.getSpecies());
-            Message msg = new Message();
-            msg.obj = beanInfo.getName();
-            msg.what = RERANGE_BEAN_INFO;
-            mHandler.sendMessage(msg);
+            // 更新BeanInfo
+            if (beanInfo != null) {
+                mPresenter.updateBeanInfo(beanInfo);
+            }
         }
     }
 }

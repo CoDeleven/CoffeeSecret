@@ -41,6 +41,7 @@
                 android:layout_below="@id/id_baking_beanTitle"
                 android:text="371℃"/>
             <RelativeLayout
+                android:layout_marginTop="2dp"
                 android:layout_below="@id/id_baking_beanTemp"
                 android:layout_width="101.25dp"
                 android:layout_height="wrap_content">
@@ -60,6 +61,13 @@
                     android:layout_toRightOf="@id/id_baking_comma0"
                     style="@style/bakingAccTemp"
                     android:text="00"/>
+                <TextView
+                    android:layout_toRightOf="@id/id_baking_accBeanTemp_after"
+                    android:id="@+id/id_temp_unit0"
+                    android:layout_marginLeft="2dp"
+                    android:text="F/m"
+                    android:textSize="8sp"
+                    style="@style/bakingAccTemp"/>
             </RelativeLayout>
         </RelativeLayout>
 
@@ -106,6 +114,13 @@
                     android:layout_toRightOf="@id/id_baking_comma1"
                     style="@style/bakingAccTemp"
                     android:text="00"/>
+                <TextView
+                    android:layout_toRightOf="@id/id_baking_accInwindTemp_after"
+                    android:id="@+id/id_temp_unit1"
+                    android:layout_marginLeft="2dp"
+                    android:text="F/m"
+                    android:textSize="8sp"
+                    style="@style/bakingAccTemp"/>
             </RelativeLayout>
         </RelativeLayout>
 
@@ -153,6 +168,13 @@
                     android:layout_toRightOf="@id/id_baking_comma2"
                     style="@style/bakingAccTemp"
                     android:text="00"/>
+                <TextView
+                    android:layout_toRightOf="@id/id_baking_accOutwindTemp_after"
+                    android:id="@+id/id_temp_unit2"
+                    android:layout_marginLeft="2dp"
+                    android:text="F/m"
+                    android:textSize="8sp"
+                    style="@style/bakingAccTemp"/>
             </RelativeLayout>
         </RelativeLayout>
     </LinearLayout>

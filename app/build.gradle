@@ -76,3 +76,6 @@ dependencies {
     compile project(':MPChartLib')
     testCompile 'junit:junit:4.12'
 }
+repositories {
+    mavenCentral()
+}

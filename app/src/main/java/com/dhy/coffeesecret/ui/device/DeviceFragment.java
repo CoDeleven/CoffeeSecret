@@ -22,8 +22,8 @@ import android.widget.TextView;
 
 import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
-import com.dhy.coffeesecret.model.Presenter4Device;
 import com.dhy.coffeesecret.model.device.IDeviceView;
+import com.dhy.coffeesecret.model.device.Presenter4Device;
 import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.pojo.BakeReportProxy;
 import com.dhy.coffeesecret.pojo.BeanInfoSimple;
@@ -96,12 +96,12 @@ public class DeviceFragment extends Fragment implements IDeviceView {
     TextView accInwindunit;
     @Bind(R.id.id_bake_accoutwindUnit)
     TextView accOutwindUnit;
-    @Bind(R.id.id_device_mode)
-    TextView mode;
+/*    @Bind(R.id.id_device_mode)
+    TextView mode;*/
 
     private float beginTemp;
     private boolean isStart = false;
-    private int curMode = MANUAL;
+    // private int curMode = MANUAL;
     private float envTemp;
     private static Presenter4Device mPresenter;
     private BakeReport referTempratures;
@@ -151,11 +151,6 @@ public class DeviceFragment extends Fragment implements IDeviceView {
                     bluetoothStatus.setText(" 未连接");
                     operator.setText("连接");
                     break;
-                case MANUAL:
-                    mode.setText("手动模式");
-                    break;
-                case AUTOMATIC:
-                    mode.setText("自动模式");
             }
             return false;
         }
@@ -344,8 +339,8 @@ public class DeviceFragment extends Fragment implements IDeviceView {
                         mShowHandler.sendEmptyMessage(1);
                         return;
                     }
-                    BakeReportProxy proxy = new BakeReportProxy();
-                    ((MyApplication) getContext().getApplicationContext()).setBakeReport(proxy);
+                    mPresenter.initBakeReport();
+                    BakeReportProxy proxy = mPresenter.getBakeReportProxy();
 
                     Intent intent = new Intent(getContext(), BakeActivity.class);
                     proxy.setBeanInfoSimples(beanInfos);
@@ -360,14 +355,7 @@ public class DeviceFragment extends Fragment implements IDeviceView {
                     if (referTempratures != null) {
                         intent.putExtra(BakeActivity.ENABLE_REFERLINE, referTempratures);
                     }
-                    if (curMode == AUTOMATIC && referTempratures == null) {
-                        T.showShort(getContext(), "自动模式下请选择参考曲线");
-                        hasPrepared = false;
-                        switchStatus();
-                        return;
-                    }
-                    intent.putExtra("mode", curMode);
-                    mPresenter.initBakeReport();
+
                     rerangeBean.setVisibility(View.INVISIBLE);
                     startActivity(intent);
                     mPresenter.destroyBluetoothListener();
@@ -392,17 +380,6 @@ public class DeviceFragment extends Fragment implements IDeviceView {
         showDialogFragment();
     }
 
-    @OnClick(R.id.id_device_mode)
-    public void onModeChange() {
-        if (curMode == MANUAL) {
-            curMode = AUTOMATIC;
-            mTextHandler.sendEmptyMessage(AUTOMATIC);
-        } else {
-            curMode = MANUAL;
-            mTextHandler.sendEmptyMessage(MANUAL);
-
-        }
-    }
 
     private void switchImage(Temperature temperature) {
         float t1 = temperature.getAccBeanTemp();

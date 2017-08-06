@@ -1,5 +1,6 @@
 package com.dhy.coffeesecret.model.bake;
 
+import com.dhy.coffeesecret.model.IBaseModel;
 import com.dhy.coffeesecret.pojo.Temperature;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.Event;
@@ -13,6 +14,11 @@ import java.util.Map;
 
 public class Model4Bake implements IBakeModel {
     private Map<Integer, EventInfo> eventInfoMap = new HashMap<>();
+    private static Model4Bake model4Bake = new Model4Bake();
+
+    private Model4Bake() {
+    }
+
     @Override
     public void notifyTemperatureByManual(Temperature temperature) {
 
@@ -36,6 +42,13 @@ public class Model4Bake implements IBakeModel {
     @Override
     public EventInfo getDryEventInfoByStatus(int status) {
         return eventInfoMap.get(new Integer(status));
+    }
+
+    public static IBaseModel newInstance() {
+        if(model4Bake == null){
+            model4Bake = new Model4Bake();
+        }
+        return model4Bake;
     }
 
     static class EventInfo{
