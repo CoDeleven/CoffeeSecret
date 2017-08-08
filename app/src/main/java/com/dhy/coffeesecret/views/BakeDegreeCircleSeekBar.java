@@ -16,9 +16,9 @@ import com.dhy.coffeesecret.utils.ImageHandler;
  */
 
 public class BakeDegreeCircleSeekBar extends CircleSeekBar {
-    public static int[] colors = {Color.parseColor("#151F1C"), Color.parseColor("#3B3E36"), Color.parseColor("#3F4138"),
-            Color.parseColor("#695C4D"), Color.parseColor("#635548"), Color.parseColor("#69594A"),
-            Color.parseColor("#7C6550"), Color.parseColor("#886F58")};
+    public static int[] colors = {Color.parseColor("#3F4138"), Color.parseColor("#695C4D"), Color.parseColor("#635548"),
+            Color.parseColor("#69594A"), Color.parseColor("#7C6550"), Color.parseColor("#886F58"),
+            Color.parseColor("#B59379"), Color.parseColor("#A59C7F")};
     public static float[] positions = {0, 1 / 7f, 2 / 7f, 3 / 7f, 4/ 7f, 5/7f, 6/7f, 7/7f};
     public BakeDegreeCircleSeekBar(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);

@@ -118,7 +118,7 @@ public class EditBehindActivity extends AppCompatActivity implements CircleSeekB
                     GradientDrawable drawable = (GradientDrawable)getResources().getDrawable(R.drawable.bg_circle_edit_behind);
                     drawable.setColor(Utils.getColor((float)angle / 360));
                     scoreLayout.setBackground(drawable);
-                    score.setText(toastValue == Integer.MAX_VALUE ? "N/A" : (toastValue + ""));
+                    score.setText((toastValue == Integer.MAX_VALUE ? "N/A" : (toastValue + "")));
                     scoreDescriptor.setText(tip);
                     break;
                 case BUTTON_NAME:
@@ -135,21 +135,21 @@ public class EditBehindActivity extends AppCompatActivity implements CircleSeekB
      */
     private String computeColorBlock4Toast(double angle){
         if(angle < 45 && angle >= 0){
-            return "生豆";
+            return "Green";
         }else if(angle >= 45 && angle < 90){
-            return "轻度烘焙";
+            return "Light";
         }else if(angle >= 90 && angle <135){
-            return "肉桂烘焙";
+            return "Cinnamon";
         }else if(angle >= 135 && angle < 180){
-            return "中度烘焙";
+            return "Medium";
         }else if(angle >= 180 && angle < 225){
-            return "中度烘焙";
+            return "High";
         }else if(angle >= 225 && angle < 270){
-            return "中度烘焙";
+            return "City";
         }else if(angle >= 270 && angle < 315){
-            return "深度烘焙";
+            return "Full City";
         }else if(angle >= 315 && angle < 360){
-            return "深度烘焙";
+            return "French";
         }
         return "";
     }

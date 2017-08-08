@@ -62,26 +62,35 @@
                     android:layout_centerInParent="true"
                     android:background="@drawable/bg_circle_edit_behind"
                     android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/id_score"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:paddingBottom="15dp"
-                        android:text="Agtron:N/A"
-                        android:textColor="#FFF"
-                        android:textSize="12sp"/>
-
                     <TextView
                         android:id="@+id/id_score_descriptor"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
-                        android:paddingTop="15dp"
-                        android:text="生豆"
+                        android:text="Green"
+                        android:textStyle="bold"
+                        android:paddingBottom="15dp"
                         android:textColor="#FFF"
-                        android:textSize="10sp"/>
+                        android:textSize="15sp"/>
+                    <TextView
+                        android:id="@+id/id_score"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:paddingTop="15dp"
+                        android:text="N/A"
+                        android:textColor="#FFF"
+                        android:textSize="13sp"/>
+                    <TextView
+                        android:layout_below="@id/id_score"
+                        android:layout_centerHorizontal="true"
+                        android:paddingTop="18dp"
+                        android:textColor="#FFF"
+                        android:textSize="7sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="(Agtron)"/>
+
                 </RelativeLayout>
 
                 <com.dhy.coffeesecret.views.BakeDegreeCircleSeekBar
