@@ -122,7 +122,7 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
     private FragmentTool fragmentTool;
     private boolean isFisrtBurstEnd = false;
     private boolean isSecondBurstEnd = false;
-    private Entry fireWindBeanEntry = null;
+    // private Entry fireWindBeanEntry = null;
     private BakeReportProxy referTempratures;
     // 执行UI操作
     private Handler mHandler = new Handler(new Handler.Callback() {
@@ -535,11 +535,8 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
             mPresenter.resetAwaitEntry();
             return;
         }
-        if (fireWindBeanEntry != null) {
-            // 更新等待结点的事件信息并更新至图标中
-            mPresenter.dynamicUpdateEvent(event);
-        }
-        chart.invalidate();
+        // 更新等待结点的事件信息并更新至图标中
+        mPresenter.dynamicUpdateEvent(event);
     }
 
     @Override

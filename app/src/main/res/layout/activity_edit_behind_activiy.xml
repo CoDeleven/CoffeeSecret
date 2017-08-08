@@ -55,44 +55,49 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <TextView
-                    android:id="@+id/id_score"
-                    android:layout_centerInParent="true"
+                <RelativeLayout
+                    android:id="@+id/id_rl_score"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="0"/>
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/bg_circle_edit_behind"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/id_score"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:paddingBottom="15dp"
+                        android:text="Agtron:N/A"
+                        android:textColor="#FFF"
+                        android:textSize="12sp"/>
+
+                    <TextView
+                        android:id="@+id/id_score_descriptor"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:paddingTop="15dp"
+                        android:text="生豆"
+                        android:textColor="#FFF"
+                        android:textSize="10sp"/>
+                </RelativeLayout>
 
                 <com.dhy.coffeesecret.views.BakeDegreeCircleSeekBar
                     android:id="@+id/id_bake_degree"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
                     android:layout_centerInParent="true"
-                    app:wheel_unreached_color="#969695"
-                    app:wheel_reached_color="#936743"
-                    app:wheel_unreached_width="18dp"
                     android:layout_marginBottom="20dp"
                     android:padding="10dp"
                     app:wheel_max_process="70"
-                    app:wheel_pointer_radius="7dp"
                     app:wheel_pointer_color="#FFF"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"/>
-                <TextView
-                    android:layout_centerVertical="true"
-                    android:layout_toLeftOf="@id/id_bake_degree"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Full City"/>
-                <TextView
-                    android:layout_below="@id/id_bake_degree"
-                    android:layout_centerHorizontal="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="High City"/>
-                <TextView
-                    android:layout_centerVertical="true"
-                    android:layout_toRightOf="@id/id_bake_degree"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Mediam"/>
+                    app:wheel_pointer_radius="7dp"
+                    app:wheel_reached_color="#936743"
+                    app:wheel_unreached_color="#969695"
+                    app:wheel_unreached_width="18dp"/>
+
             </RelativeLayout>
 
             <TextView
@@ -167,6 +172,7 @@
                     android:textSize="12sp"
                     android:hint="重量"/>
             </LinearLayout>
+
 
             <Button
                 android:id="@+id/id_report_delete"

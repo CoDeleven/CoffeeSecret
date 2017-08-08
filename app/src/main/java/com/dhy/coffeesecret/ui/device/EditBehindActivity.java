@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -19,6 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -53,8 +55,10 @@ import static android.widget.LinearLayout.LayoutParams.WRAP_CONTENT;
 import static com.dhy.coffeesecret.ui.device.BakeActivity.I_AM_BAKEACTIVITY;
 import static com.dhy.coffeesecret.ui.device.fragments.BakeDialog.SELECT_BEAN;
 import static com.dhy.coffeesecret.utils.DensityUtils.dp2px;
+import static com.dhy.coffeesecret.views.BakeDegreeCircleSeekBar.positions;
 
 public class EditBehindActivity extends AppCompatActivity implements CircleSeekBar.OnSeekBarChangeListener, IEditView {
+    private static final String TAG = EditBehindActivity.class.getSimpleName();
     public static final int RERANGE_BEAN_INFO = 111;
     public static final int GENERATE_BEAN_INFO = 222;
     public static final int GENERATE_ENTRY_EVENTS = 333;
@@ -67,10 +71,14 @@ public class EditBehindActivity extends AppCompatActivity implements CircleSeekB
     Button save;
     @Bind(R.id.id_bake_behind_cookedWeight)
     EditText cookedWeight;
-    @Bind(R.id.id_score)
-    TextView score;
+    @Bind(R.id.id_rl_score)
+    RelativeLayout scoreLayout;
     @Bind(R.id.id_editor_scroll)
     ScrollView scrollView;
+    @Bind(R.id.id_score)
+    TextView score;
+    @Bind(R.id.id_score_descriptor)
+    TextView scoreDescriptor;
     @Bind(R.id.id_event_container)
     LinearLayout eventContainer;
     @Bind(R.id.id_report_delete)
@@ -102,7 +110,16 @@ public class EditBehindActivity extends AppCompatActivity implements CircleSeekB
                     T.showShort(EditBehindActivity.this, (String) msg.obj);
                     break;
                 case BAKE_DEGREE:
-                    score.setText(msg.obj + "");
+                    Bundle bundle = msg.getData();
+                    double angle = bundle.getDouble("angle");
+                    String tip = computeColorBlock4Toast(angle);
+                    int toastValue = computeToastValue(angle);
+                    // Log.d(TAG, "tip:" + tip + ";color:" + );
+                    GradientDrawable drawable = (GradientDrawable)getResources().getDrawable(R.drawable.bg_circle_edit_behind);
+                    drawable.setColor(Utils.getColor((float)angle / 360));
+                    scoreLayout.setBackground(drawable);
+                    score.setText(toastValue == Integer.MAX_VALUE ? "N/A" : (toastValue + ""));
+                    scoreDescriptor.setText(tip);
                     break;
                 case BUTTON_NAME:
                     curBeanButton.setText((String) msg.obj);
@@ -111,6 +128,56 @@ public class EditBehindActivity extends AppCompatActivity implements CircleSeekB
             return false;
         }
     });
+
+    /**
+     * 用于计算烘焙都颜色块的方法
+     * @param angle
+     */
+    private String computeColorBlock4Toast(double angle){
+        if(angle < 45 && angle >= 0){
+            return "生豆";
+        }else if(angle >= 45 && angle < 90){
+            return "轻度烘焙";
+        }else if(angle >= 90 && angle <135){
+            return "肉桂烘焙";
+        }else if(angle >= 135 && angle < 180){
+            return "中度烘焙";
+        }else if(angle >= 180 && angle < 225){
+            return "中度烘焙";
+        }else if(angle >= 225 && angle < 270){
+            return "中度烘焙";
+        }else if(angle >= 270 && angle < 315){
+            return "深度烘焙";
+        }else if(angle >= 315 && angle < 360){
+            return "深度烘焙";
+        }
+        return "";
+    }
+
+    private int computeToastValue(double angle){
+        int len = positions.length;
+        int index = ((int)angle) / 45;
+        switch (index){
+            case 0:
+                return Integer.MAX_VALUE;
+            case 1:
+                return 80;
+            case 2:
+                return (-(int)Math.floor(angle % 45 / 45f * 10)) + 70;
+            case 3:
+                return (-(int)Math.floor(angle % 45 / 45f * 5)) + 55;
+            case 4:
+                return (-(int)Math.floor(angle % 45 / 45f * 5)) + 50;
+            case 5:
+                return (-(int)Math.floor(angle % 45 / 45f * 5)) + 45;
+            case 6:
+                return (-(int)Math.floor(angle % 45 / 45f * 5)) + 40;
+            case 7:
+                return (-(int)Math.floor(angle % 45 / 45f * 5)) + 35;
+            default:
+                return Integer.MAX_VALUE;
+        }
+    }
 
     @Override
     public void updateBeanInfos(List<BeanInfoSimple> infoSimples) {
@@ -223,11 +290,13 @@ public class EditBehindActivity extends AppCompatActivity implements CircleSeekB
     }
 
     @Override
-    public void onChanged(CircleSeekBar seekbar, int curValue) {
+    public void onChanged(CircleSeekBar seekbar, int curValue, double angle) {
         Message msg = new Message();
         msg.what = BAKE_DEGREE;
-        msg.obj = curValue;
-
+        Bundle bundle = new Bundle();
+        bundle.putDouble("angle", angle);
+        bundle.putFloat("curValue", curValue);
+        msg.setData(bundle);
         mHandler.sendMessage(msg);
 
         // FIXME 这里收到的是int类型，需要变成float类型

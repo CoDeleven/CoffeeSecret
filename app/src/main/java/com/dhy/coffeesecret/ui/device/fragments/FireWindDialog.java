@@ -42,8 +42,8 @@ public class FireWindDialog extends DialogFragment implements CircleSeekBar.OnSe
     Button mCancel;
     // 按客户的需求，需要默认isGroup为true
     private boolean isGroup = true;
-    private String fireValue;
-    private String windValue;
+    private static float fireValue;
+    private static float windValue;
     private OnFireWindAddListener onFireWindAddListener;
 
     /**
@@ -74,6 +74,9 @@ public class FireWindDialog extends DialogFragment implements CircleSeekBar.OnSe
 
         circle1.setOnSeekBarChangeListener(this);
         circle2.setOnSeekBarChangeListener(this);
+
+        circle1.setCurProcess((int)windValue);
+        circle2.setCurProcess((int)fireValue);
         return view;
     }
 
@@ -115,9 +118,6 @@ public class FireWindDialog extends DialogFragment implements CircleSeekBar.OnSe
 
     @OnClick(R.id.id_baking_confirm)
     public void onConfirm() {
-        windValue = text1.getText().toString();
-        fireValue = text2.getText().toString();
-
         dismiss();
     }
 
@@ -139,7 +139,7 @@ public class FireWindDialog extends DialogFragment implements CircleSeekBar.OnSe
     }
 
     @Override
-    public void onChanged(CircleSeekBar seekbar, int curValue) {
+    public void onChanged(CircleSeekBar seekbar, int curValue, double angle) {
         updateText(seekbar, curValue);
     }
 
@@ -168,9 +168,12 @@ public class FireWindDialog extends DialogFragment implements CircleSeekBar.OnSe
         Message msg = new Message();
         Bundle bundle = new Bundle();
         bundle.putInt("curValue", curValue);
+
         if (seekBar == circle1) {
+            windValue = curValue;
             bundle.putInt("curSeek", 1);
         } else {
+            fireValue = curValue;
             bundle.putInt("curSeek", 2);
         }
         msg.setData(bundle);

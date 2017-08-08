@@ -155,19 +155,23 @@ public class Presenter4BakeActivity extends BaseBlePresenter {
         // 更新当前bean
         updateBeanEntryEvent(status, description);
 
-        // 通知图表更新
-        ((IBakeView) super.viewOperator).notifyChartDataChanged();
+
     }
 
     public void updateBeanEntryEvent(int status, String description) {
-        // 更新当前bean
-        ((IBakeModel) super.modelOperator).updateEntry(curBeanEntry, status, description);
-        // 本地记录事件结点
-        mEventList.add(curBeanEntry);
-        // 添加事件修改至temperature set
-        recorderSystem.addEvent(lastTime + "", description + ":" + status);
+        updateBeanEntryEvent(curBeanEntry, status, description);
     }
 
+    private void updateBeanEntryEvent(Entry entry, int status, String description){
+        // 更新当前bean
+        ((IBakeModel) modelOperator).updateEntry(entry, status, description);
+        // 本地记录事件结点
+        mEventList.add(entry);
+        // 添加事件修改至temperature set
+        recorderSystem.addEvent(lastTime + "", description + ":" + status);
+        // 通知图表更新
+        ((IBakeView) BaseBlePresenter.viewOperator).notifyChartDataChanged();
+    }
     /**
      * 延迟添加数据的entry，用于风火、其他等事件设置
      */
@@ -185,8 +189,9 @@ public class Presenter4BakeActivity extends BaseBlePresenter {
     }
 
     public void dynamicUpdateEvent(Event event) {
-        awaitEntry.setEvent(event);
-        recorderSystem.addEvent(awaitEntry.getX() + "", event.getDescription() + ":" + event.getCurStatus());
+        // awaitEntry.setEvent(event);
+        // recorderSystem.addEvent(awaitEntry.getX() + "", event.getDescription() + ":" + event.getCurStatus());
+        updateBeanEntryEvent(awaitEntry, event.getCurStatus(), event.getDescription() + ":" + event.getCurStatus());
     }
 
     /**

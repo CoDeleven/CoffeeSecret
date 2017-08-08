@@ -23,4 +23,20 @@ public class ArrayUtil {
         }
         return null;
     }
+    public static int[] reverseIntArray(int[] array){
+        int[] new_array = new int[array.length];
+        for (int i = 0; i < array.length; i++) {
+            // 反转后数组的第一个元素等于源数组的最后一个元素：
+            new_array[i] = array[array.length - i - 1];
+        }
+        return new_array;
+    }
+    public static float[] reverseFloatArray(float[] array) {
+        float[] new_array = new float[array.length];
+        for (int i = 0; i < array.length; i++) {
+            // 反转后数组的第一个元素等于源数组的最后一个元素：
+            new_array[i] = array[array.length - i - 1];
+        }
+        return new_array;
+    }
 }

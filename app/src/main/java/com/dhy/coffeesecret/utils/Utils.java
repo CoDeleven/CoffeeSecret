@@ -1,8 +1,11 @@
 package com.dhy.coffeesecret.utils;
 
 
+import android.graphics.Color;
+
 import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
+import com.dhy.coffeesecret.views.BakeDegreeCircleSeekBar;
 
 import net.sourceforge.pinyin4j.PinyinHelper;
 
@@ -260,4 +263,57 @@ public class Utils {
         return String.format("%02d", Math.abs(commaAfter));
     }
 
+    /**
+     * 获取某个百分比位置的颜色
+     * @param radio 取值[0,1]
+     * @return
+     */
+    public static int getColor(float radio) {
+        // 反转数组
+        int[] colors = ArrayUtil.reverseIntArray(BakeDegreeCircleSeekBar.colors);
+        float[] positions = BakeDegreeCircleSeekBar.positions;
+
+        int startColor;
+        int endColor;
+        if (radio >= 1) {
+            return colors[colors.length - 1];
+        }
+        for (int i = 0; i < positions.length; i++) {
+            if (radio <= positions[i]) {
+                if (i == 0) {
+                    return colors[0];
+                }
+                startColor = colors[i - 1];
+                endColor = colors[i];
+                float areaRadio = getAreaRadio(radio,positions[i-1],positions[i]);
+                return getColorFrom(startColor,endColor,areaRadio);
+            }
+        }
+        return -1;
+    }
+
+    private static float getAreaRadio(float radio, float startPosition, float endPosition) {
+        return (radio - startPosition) / (endPosition - startPosition);
+    }
+
+    /**
+     *  取两个颜色间的渐变区间 中的某一点的颜色
+     * @param startColor
+     * @param endColor
+     * @param radio
+     * @return
+     */
+    private static int getColorFrom(int startColor, int endColor, float radio) {
+        int redStart = Color.red(startColor);
+        int blueStart = Color.blue(startColor);
+        int greenStart = Color.green(startColor);
+        int redEnd = Color.red(endColor);
+        int blueEnd = Color.blue(endColor);
+        int greenEnd = Color.green(endColor);
+
+        int red = (int) (redStart + ((redEnd - redStart) * radio + 0.5));
+        int greed = (int) (greenStart + ((greenEnd - greenStart) * radio + 0.5));
+        int blue = (int) (blueStart + ((blueEnd - blueStart) * radio + 0.5));
+        return Color.rgb(red, greed, blue);
+    }
 }

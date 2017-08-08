@@ -15,7 +15,6 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -325,7 +324,7 @@ public class CircleSeekBar extends View {
             mCurProcess = getSelectedValue();
             refershWheelCurPosition(cos);
             if (mChangListener != null && (event.getAction() & (MotionEvent.ACTION_MOVE | MotionEvent.ACTION_UP)) > 0) {
-                mChangListener.onChanged(this, mCurProcess);
+                mChangListener.onChanged(this, mCurProcess, mCurAngle);
             }
             invalidate();
             return true;
@@ -432,7 +431,7 @@ public class CircleSeekBar extends View {
         }
 
         if (mChangListener != null) {
-            mChangListener.onChanged(this, mCurProcess);
+            mChangListener.onChanged(this, mCurProcess, mCurAngle);
         }
     }
 
@@ -447,7 +446,7 @@ public class CircleSeekBar extends View {
     public void setCurProcess(int curProcess) {
         this.mCurProcess = curProcess > mMaxProcess ? mMaxProcess : curProcess;
         if (mChangListener != null) {
-            mChangListener.onChanged(this, curProcess);
+            mChangListener.onChanged(this, curProcess, mCurAngle);
         }
         refershPosition();
         invalidate();
@@ -596,6 +595,6 @@ public class CircleSeekBar extends View {
 
 
     public interface OnSeekBarChangeListener {
-        void onChanged(CircleSeekBar seekbar, int curValue);
+        void onChanged(CircleSeekBar seekbar, int curValue, double angle);
     }
 }

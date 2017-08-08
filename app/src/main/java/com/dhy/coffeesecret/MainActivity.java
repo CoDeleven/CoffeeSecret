@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
-import com.dhy.coffeesecret.ui.community.CommunityFragment;
 import com.dhy.coffeesecret.ui.container.ContainerFragment;
 import com.dhy.coffeesecret.ui.cup.CupFragment;
 import com.dhy.coffeesecret.ui.device.DeviceFragment;
@@ -21,8 +20,8 @@ import com.dhy.coffeesecret.utils.UIUtils;
 
 public class MainActivity extends AppCompatActivity {
 
-    // 默认图标id
-    private static final int[] IMG_SELECTOR_IDS = {R.drawable.nav_container_selector, R.drawable.nav_cup_selector, R.drawable.nav_device_selector, R.drawable.nav_community_selector, R.drawable.nav_mine_selector};
+    // 默认图标id  删除R.drawable.nav_community_selector,
+    private static final int[] IMG_SELECTOR_IDS = {R.drawable.nav_container_selector, R.drawable.nav_cup_selector, R.drawable.nav_device_selector,  R.drawable.nav_mine_selector};
     // 标签页
     private TabLayout mTabLayout;
     // 滑动页面视图
@@ -32,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private DeviceFragment deviceFragment;
     private ContainerFragment containerFragment;
     private CupFragment cupFragment;
-    private CommunityFragment communityFragment;
+    // private CommunityFragment communityFragment;
     private MineFragment mineFragment;
 
     @Override
@@ -53,11 +52,11 @@ public class MainActivity extends AppCompatActivity {
         deviceFragment = new DeviceFragment();
         containerFragment = new ContainerFragment();
         cupFragment = new CupFragment();
-        communityFragment = new CommunityFragment();
+        // communityFragment = new CommunityFragment();
         mineFragment = new MineFragment();
 
         // 初始化fragment视图
-        mFragments = new Fragment[]{containerFragment, cupFragment, deviceFragment, communityFragment, mineFragment};
+        mFragments = new Fragment[]{containerFragment, cupFragment, deviceFragment,mineFragment};
 
         // 获取id
         mTabLayout = (TabLayout) findViewById(R.id.id_fragment_tabLayout);
