@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
+import com.dhy.coffeesecret.model.chart.Model4Chart;
 import com.dhy.coffeesecret.model.report.IReportView;
 import com.dhy.coffeesecret.model.report.Presenter4Report;
 import com.dhy.coffeesecret.pojo.BakeReportProxy;
@@ -46,12 +47,12 @@ import butterknife.OnClick;
 import static android.widget.LinearLayout.LayoutParams;
 import static android.widget.LinearLayout.LayoutParams.MATCH_PARENT;
 import static android.widget.LinearLayout.LayoutParams.WRAP_CONTENT;
-import static com.dhy.coffeesecret.views.BaseChart4Coffee.ACCBEANLINE;
-import static com.dhy.coffeesecret.views.BaseChart4Coffee.ACCINWINDLINE;
-import static com.dhy.coffeesecret.views.BaseChart4Coffee.ACCOUTWINDLINE;
-import static com.dhy.coffeesecret.views.BaseChart4Coffee.BEANLINE;
-import static com.dhy.coffeesecret.views.BaseChart4Coffee.INWINDLINE;
-import static com.dhy.coffeesecret.views.BaseChart4Coffee.OUTWINDLINE;
+import static com.dhy.coffeesecret.model.chart.Model4Chart.ACCBEANLINE;
+import static com.dhy.coffeesecret.model.chart.Model4Chart.ACCINWINDLINE;
+import static com.dhy.coffeesecret.model.chart.Model4Chart.ACCOUTWINDLINE;
+import static com.dhy.coffeesecret.model.chart.Model4Chart.BEANLINE;
+import static com.dhy.coffeesecret.model.chart.Model4Chart.INWINDLINE;
+import static com.dhy.coffeesecret.model.chart.Model4Chart.OUTWINDLINE;
 
 
 public class ReportActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener, IReportView {
@@ -89,12 +90,13 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
     TextView species;
     @Bind(R.id.id_globalAcc)
     TextView globalAccTemp;
-    @Bind(R.id.id_avgDry)
+    /*@Bind(R.id.id_avgDry)
     TextView avgDry;
     @Bind(R.id.id_avgFirbu)
     TextView avgFirbu;
     @Bind(R.id.id_avgEnd)
-    TextView avgEnd;
+    TextView avgEnd;*/
+
     @Bind(R.id.id_breakPointer_temp)
     TextView breakPointerTemp;
     @Bind(R.id.id_breakPointer_time)
@@ -105,6 +107,19 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
     String _species_;
     String _bakeDegree_;
     String _developRate_;
+    @Bind(R.id.id_avgDry_temperature)
+    TextView idAvgDryTemperature;
+    @Bind(R.id.id_avgDry_time)
+    TextView idAvgDryTime;
+    @Bind(R.id.id_avgFirbu_temperature)
+    TextView idAvgFirbuTemperature;
+    @Bind(R.id.id_avgFirbu_time)
+    TextView idAvgFirbuTime;
+    @Bind(R.id.id_avgEnd_temperature)
+    TextView idAvgEndTemperature;
+    @Bind(R.id.id_avgEnd_time)
+    TextView idAvgEndTime;
+
     private Presenter4Report mPresenter = Presenter4Report.newInstance();
     private String weightUnit;
     private String tempratureUnit;
@@ -177,9 +192,9 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
                 getPopupwindow().showAsDropDown(v);
             }
         });
-        if(mPresenter.getBakeReportProxy() == null){
-            init(((MyApplication)getApplication()).getBakeReport());
-        }else{
+        if (mPresenter.getBakeReportProxy() == null) {
+            init(((MyApplication) getApplication()).getBakeReport());
+        } else {
             mPresenter.initViewWithProxy();
         }
 
@@ -249,22 +264,22 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
         int curIndex = 0;
         switch (id) {
             case R.id.id_baking_line_bean:
-                curIndex = BaseChart4Coffee.BEANLINE;
+                curIndex = Model4Chart.BEANLINE;
                 break;
             case R.id.id_baking_line_inwind:
-                curIndex = BaseChart4Coffee.INWINDLINE;
+                curIndex = Model4Chart.INWINDLINE;
                 break;
             case R.id.id_baking_line_outwind:
-                curIndex = BaseChart4Coffee.OUTWINDLINE;
+                curIndex = Model4Chart.OUTWINDLINE;
                 break;
             case R.id.id_baking_line_accBean:
-                curIndex = BaseChart4Coffee.ACCBEANLINE;
+                curIndex = Model4Chart.ACCBEANLINE;
                 break;
             case R.id.id_baking_line_accInwind:
-                curIndex = BaseChart4Coffee.ACCINWINDLINE;
+                curIndex = Model4Chart.ACCINWINDLINE;
                 break;
             case R.id.id_baking_line_accOutwind:
-                curIndex = BaseChart4Coffee.ACCOUTWINDLINE;
+                curIndex = Model4Chart.ACCOUTWINDLINE;
                 break;
         }
         final int temp = curIndex;
@@ -427,23 +442,29 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
         mChart.addNewDatas(proxy.getLineDataSetByIndex(ACCINWINDLINE).getValues(), ACCINWINDLINE);
         mChart.addNewDatas(proxy.getLineDataSetByIndex(ACCOUTWINDLINE).getValues(), ACCOUTWINDLINE);
 
-        envTemp.setText("环境温度：" + Utils.getCrspTempratureValue(proxy.getEnvTemp() + "") + tempratureUnit);
-        startTemp.setText("入豆温度：" + Utils.getCrspTempratureValue(proxy.getStartTemp() + "") + tempratureUnit);
-        endTemp.setText("结束温度：" + Utils.getCrspTempratureValue(proxy.getEndTemp()) + tempratureUnit);
-        developTime.setText("发展时间：" + proxy.getDevelopTime());
-        developRate.setText("发展率：" + proxy.getDevelopRate() + "%");
+        envTemp.setText(Utils.getCrspTempratureValue(proxy.getEnvTemp() + "") + tempratureUnit);
+        startTemp.setText(Utils.getCrspTempratureValue(proxy.getStartTemp() + "") + tempratureUnit);
+        endTemp.setText(Utils.getCrspTempratureValue(proxy.getEndTemp()) + tempratureUnit);
+        developTime.setText(proxy.getDevelopTime());
+        developRate.setText(proxy.getDevelopRate() + "%");
         beanInfos = proxy.getBeanInfos();
         date.setText("烘焙日期：" + proxy.getBakeDate());
         device.setText("设备：" + proxy.getDevice());
         Log.d(TAG, "init: deviceName -> " + proxy.getDevice());
         score.setText(proxy.getBakeDegree());
 
-        globalAccTemp.setText("平均升温率：" + Utils.getCrspTempratureValue(proxy.getGlobalAccBeanTemp() + "") + tempratureUnit);
-        avgDry.setText("开始->脱水结束：" + Utils.getCrspTempratureValue(proxy.getAvgDryTemprature() + "") + tempratureUnit + "　　　" + Utils.getTimeWithFormat(proxy.getAvgDryTime()));
-        avgFirbu.setText("脱水结束->一爆开始：" + Utils.getCrspTempratureValue(proxy.getAvgFirstBurstTemprature() + "") + tempratureUnit + "　　　" + Utils.getTimeWithFormat(proxy.getAvgFirstBurstTime()));
-        avgEnd.setText("一爆开始->结束：" + Utils.getCrspTempratureValue(proxy.getAvgEndTemprature() + "") + tempratureUnit + "　　　" + Utils.getTimeWithFormat(proxy.getAvgEndTime()));
-        breakPointerTemp.setText("回温点温度：" + Utils.getCrspTempratureValue(proxy.getBreakPointerTemprature() + "") + tempratureUnit);
-        breakPointerTime.setText("回温点时间：" + Utils.getTimeWithFormat(proxy.getBreakPointerTime()));
+        globalAccTemp.setText(Utils.getCrspTempratureValue(proxy.getGlobalAccBeanTemp() + "") + tempratureUnit);
+        idAvgDryTemperature.setText(Utils.getCrspTempratureValue(proxy.getAvgDryTemprature() + "") + tempratureUnit);
+        idAvgDryTime.setText(Utils.getTimeWithFormat(proxy.getAvgDryTime()));
+
+        idAvgFirbuTemperature.setText(Utils.getCrspTempratureValue(proxy.getAvgFirstBurstTemprature() + "") + tempratureUnit);
+        idAvgFirbuTime.setText(Utils.getTimeWithFormat(proxy.getAvgFirstBurstTime()));
+
+        idAvgEndTemperature.setText(Utils.getCrspTempratureValue(proxy.getAvgEndTemprature() + "") + tempratureUnit);
+        idAvgEndTime.setText(Utils.getTimeWithFormat(proxy.getAvgEndTime()));
+
+        breakPointerTemp.setText(Utils.getCrspTempratureValue(proxy.getBreakPointerTemprature() + "") + tempratureUnit);
+        breakPointerTime.setText(Utils.getTimeWithFormat(proxy.getBreakPointerTime()));
 
         float cooked = Float.parseFloat(proxy.getBakeReport().getCookedBeanWeight());
         float raw = proxy.getRawBeanWeight();

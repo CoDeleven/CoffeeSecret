@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.model.bake.IBakeView;
 import com.dhy.coffeesecret.model.bake.Presenter4BakeActivity;
+import com.dhy.coffeesecret.model.chart.Presenter4Chart;
 import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.pojo.BakeReportProxy;
 import com.dhy.coffeesecret.pojo.Temperature;
@@ -46,12 +47,12 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static com.dhy.coffeesecret.MyApplication.tempratureUnit;
-import static com.dhy.coffeesecret.views.BaseChart4Coffee.ACCBEANLINE;
-import static com.dhy.coffeesecret.views.BaseChart4Coffee.ACCINWINDLINE;
-import static com.dhy.coffeesecret.views.BaseChart4Coffee.ACCOUTWINDLINE;
-import static com.dhy.coffeesecret.views.BaseChart4Coffee.BEANLINE;
-import static com.dhy.coffeesecret.views.BaseChart4Coffee.INWINDLINE;
-import static com.dhy.coffeesecret.views.BaseChart4Coffee.OUTWINDLINE;
+import static com.dhy.coffeesecret.model.chart.Model4Chart.ACCBEANLINE;
+import static com.dhy.coffeesecret.model.chart.Model4Chart.ACCINWINDLINE;
+import static com.dhy.coffeesecret.model.chart.Model4Chart.ACCOUTWINDLINE;
+import static com.dhy.coffeesecret.model.chart.Model4Chart.BEANLINE;
+import static com.dhy.coffeesecret.model.chart.Model4Chart.INWINDLINE;
+import static com.dhy.coffeesecret.model.chart.Model4Chart.OUTWINDLINE;
 
 public class BakeActivity extends AppCompatActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener, Other.OnOtherAddListener, FireWindDialog.OnFireWindAddListener, IBakeView {
     public static final String DEVICE_NAME = "com.dhy.coffeesercret.ui.device.BakeActivity.DEVICE_NAME";
@@ -112,6 +113,7 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
     private PopupWindow popupWindow;
     private View popuoOperator;
     private Presenter4BakeActivity mPresenter = Presenter4BakeActivity.newInstance();
+    private Presenter4Chart mChartPresenter = Presenter4Chart.newInstance();
     /*    private TextView[] beanTemps = new TextView[2];
         private TextView[] inwindTemps = new TextView[2];
         private TextView[] outwindTemps = new TextView[2];*/
@@ -185,6 +187,7 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void updateChart(Entry entry, int lineIndex) {
         chart.addOneDataToLine(entry, lineIndex);
+        mChartPresenter.dynamicAddDataImm(entry, lineIndex, true);
     }
 
     @Override
@@ -291,6 +294,7 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
 
         mPresenter.initBluetoothListener();
         mPresenter.setView(this);
+        mChartPresenter.setView(chart);
         // startTime = System.currentTimeMillis();
 
         mPresenter.init();
@@ -547,6 +551,8 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        // 在烘焙过程中退出 即 视为放弃这次烘焙
+        mPresenter.clearBakeReportProxy();
         finish();
     }
 

@@ -46,18 +46,6 @@ public class Presenter4Device extends BaseBlePresenter {
         return mPresenter;
     }
 
-    /**
-     * 方便调用，第一次设置蓝牙操作接口后即可直接调用
-     *
-     * @return
-     */
-    public static Presenter4Device newInstance() {
-        if (BaseBlePresenter.mBluetoothOperator == null) {
-            throw new RuntimeException("未初始化Presenter4Device");
-        }
-        return mPresenter;
-    }
-
     @Override
     public void setView(IBaseView baseView) {
         viewOperator = baseView;

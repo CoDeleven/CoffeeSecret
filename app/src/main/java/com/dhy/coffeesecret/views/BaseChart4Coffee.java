@@ -8,6 +8,9 @@ import android.util.AttributeSet;
 import android.util.Log;
 
 import com.dhy.coffeesecret.MyApplication;
+import com.dhy.coffeesecret.model.chart.IChartView;
+import com.dhy.coffeesecret.model.chart.Model4Chart;
+import com.dhy.coffeesecret.model.chart.Presenter4Chart;
 import com.dhy.coffeesecret.pojo.TemperatureSet;
 import com.dhy.coffeesecret.pojo.UniversalConfiguration;
 import com.dhy.coffeesecret.ui.device.formatter.XAxisFormatter4Time;
@@ -36,21 +39,116 @@ import java.util.Map;
  * Created by CoDeleven on 17-2-3.
  */
 
-public class BaseChart4Coffee extends LineChart {
+public class BaseChart4Coffee extends LineChart implements IChartView{
+    @Override
+    public void enableReferLine(LineDataSet set) {
+        set.setCircleColor(Color.parseColor("#6774a4"));
+        // set.setCircleColorHole(Color.WHITE);
+        set.setLineWidth(2f);
+        set.setCircleRadius(4f);
+        // set.setCircleHoleRadius(2f);
+        set.setFillAlpha(65);
+        set.setFillColor(ColorTemplate.colorWithAlpha(Color.YELLOW, 200));
+        set.setDrawCircleHole(false);
+        set.setDrawCircles(false);
 
-    public final static int BEANLINE = 1, ACCBEANLINE = 4, INWINDLINE = 2, ACCINWINDLINE = 5, OUTWINDLINE = 3, ACCOUTWINDLINE = 6, REFERLINE = 7;
+        set.setHighLightColor(Color.rgb(244, 117, 117));
+        set.setDrawValues(false);
+        set.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
+        set.setColor(Color.BLACK);
+        setData(new LineData(new ArrayList<>(lines.values())));
+    }
+
+    @Override
+    public void addLine(LineDataSet set, int lineIndex, boolean isAcc) {
+        // 设置依赖y轴
+        if (isAcc) {
+            set.setAxisDependency(YAxis.AxisDependency.RIGHT);
+        } else {
+            set.setAxisDependency(YAxis.AxisDependency.LEFT);
+        }
+        set.setCircleColor(Color.parseColor("#6774a4"));
+        // set.setCircleColorHole(Color.WHITE);
+        set.setLineWidth(1f);
+        set.setCircleRadius(4f);
+        // set.setCircleHoleRadius(2f);
+        set.setFillAlpha(65);
+        set.setFillColor(ColorTemplate.colorWithAlpha(Color.YELLOW, 200));
+        set.setDrawCircleHole(false);
+        set.setDrawCircles(false);
+        if (lineIndex == Model4Chart.BEANLINE) {
+            set.setDrawCircleHole(true);
+            set.setDrawCircles(true);
+        }
+        set.setDrawValues(false);
+        set.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
+
+        switch (lineIndex) {
+            case Model4Chart.BEANLINE:
+                set.setColor(mConfig.getBeanColor());
+                set.setHighLightColor(Color.rgb(244, 117, 117));
+                break;
+            case Model4Chart.ACCBEANLINE:
+                set.setColor(mConfig.getAccBeanColor());
+                break;
+            case Model4Chart.INWINDLINE:
+                set.setColor(mConfig.getInwindColor());
+                break;
+            case Model4Chart.ACCINWINDLINE:
+                set.setColor(mConfig.getAccInwindColor());
+                break;
+            case Model4Chart.OUTWINDLINE:
+                set.setColor(mConfig.getOutwindColor());
+                break;
+            case Model4Chart.ACCOUTWINDLINE:
+                set.setColor(mConfig.getAccOutwindColor());
+                break;
+            case Model4Chart.REFERLINE:
+                set.setColor(Color.BLACK);
+        }
+        setData(new LineData(new ArrayList<>(lines.values())));
+    }
+
+    @Override
+    public void updateText(int index, String updateContent) {
+
+    }
+
+    @Override
+    public void showToast(int index, String toastContent) {
+
+    }
+
+    @Override
+    public void showDialog(int index) {
+
+    }
+
+    @Override
+    public void updateChart(Entry newEntry, int lineIndex, boolean toRefresh) {
+        if (toRefresh) {
+            mHandler.sendMessage(new Message());
+            // 移动viewport
+            if (lineIndex == Model4Chart.BEANLINE) {
+                float afterScaleX = (getXRange() / getScaleX());
+                float curPosition = newEntry.getX() - (afterScaleX - 5);
+                this.moveViewToX(curPosition);
+            }
+        }
+    }
+
     private static Map<Integer, String> labels = new HashMap<>();
 
     static {
-        labels.put(BEANLINE, "豆温");
-        labels.put(ACCBEANLINE, "豆升温");
-        labels.put(INWINDLINE, "进风温");
-        labels.put(ACCINWINDLINE, "进风升温");
-        labels.put(OUTWINDLINE, "出风温");
-        labels.put(ACCOUTWINDLINE, "出风升温");
-        labels.put(REFERLINE, "");
+        labels.put(Model4Chart.BEANLINE, "豆温");
+        labels.put(Model4Chart.ACCBEANLINE, "豆升温");
+        labels.put(Model4Chart.INWINDLINE, "进风温");
+        labels.put(Model4Chart.ACCINWINDLINE, "进风升温");
+        labels.put(Model4Chart.OUTWINDLINE, "出风温");
+        labels.put(Model4Chart.ACCOUTWINDLINE, "出风升温");
+        labels.put(Model4Chart.REFERLINE, "");
     }
-
+    private Presenter4Chart mPresenter;
     private Map<Integer, LinkedList<WeightedObservedPoint>> weightedObservedPointsMap = new HashMap<>();
     private Map<Integer, PolynomialCurveFitter> fitters = new HashMap<>();
     private Map<Integer, List<Double>> params = new HashMap<>();
@@ -71,12 +169,12 @@ public class BaseChart4Coffee extends LineChart {
     {
 
 
-        weightedObservedPointsMap.put(BEANLINE, new LinkedList<WeightedObservedPoint>());
-        weightedObservedPointsMap.put(ACCBEANLINE, new LinkedList<WeightedObservedPoint>());
-        weightedObservedPointsMap.put(INWINDLINE, new LinkedList<WeightedObservedPoint>());
-        weightedObservedPointsMap.put(OUTWINDLINE, new LinkedList<WeightedObservedPoint>());
-        weightedObservedPointsMap.put(ACCOUTWINDLINE, new LinkedList<WeightedObservedPoint>());
-        weightedObservedPointsMap.put(ACCINWINDLINE, new LinkedList<WeightedObservedPoint>());
+        weightedObservedPointsMap.put(Model4Chart.BEANLINE, new LinkedList<WeightedObservedPoint>());
+        weightedObservedPointsMap.put(Model4Chart.ACCBEANLINE, new LinkedList<WeightedObservedPoint>());
+        weightedObservedPointsMap.put(Model4Chart.INWINDLINE, new LinkedList<WeightedObservedPoint>());
+        weightedObservedPointsMap.put(Model4Chart.OUTWINDLINE, new LinkedList<WeightedObservedPoint>());
+        weightedObservedPointsMap.put(Model4Chart.ACCOUTWINDLINE, new LinkedList<WeightedObservedPoint>());
+        weightedObservedPointsMap.put(Model4Chart.ACCINWINDLINE, new LinkedList<WeightedObservedPoint>());
 
 
     }
@@ -172,12 +270,12 @@ public class BaseChart4Coffee extends LineChart {
         tempSmoothNumber = mConfig.getTempratureSmooth();
         accTempSmoothNumber = mConfig.getTempratureAccSmooth();
 
-        fitters.put(BEANLINE, PolynomialCurveFitter.create(mConfig.getTempratureSmooth()));
-        fitters.put(ACCBEANLINE, PolynomialCurveFitter.create(mConfig.getTempratureAccSmooth()));
-        fitters.put(INWINDLINE, PolynomialCurveFitter.create(mConfig.getTempratureSmooth()));
-        fitters.put(ACCINWINDLINE, PolynomialCurveFitter.create(mConfig.getTempratureAccSmooth()));
-        fitters.put(OUTWINDLINE, PolynomialCurveFitter.create(mConfig.getTempratureSmooth()));
-        fitters.put(ACCOUTWINDLINE, PolynomialCurveFitter.create(mConfig.getTempratureAccSmooth()));
+        fitters.put(Model4Chart.BEANLINE, PolynomialCurveFitter.create(mConfig.getTempratureSmooth()));
+        fitters.put(Model4Chart.ACCBEANLINE, PolynomialCurveFitter.create(mConfig.getTempratureAccSmooth()));
+        fitters.put(Model4Chart.INWINDLINE, PolynomialCurveFitter.create(mConfig.getTempratureSmooth()));
+        fitters.put(Model4Chart.ACCINWINDLINE, PolynomialCurveFitter.create(mConfig.getTempratureAccSmooth()));
+        fitters.put(Model4Chart.OUTWINDLINE, PolynomialCurveFitter.create(mConfig.getTempratureSmooth()));
+        fitters.put(Model4Chart.ACCOUTWINDLINE, PolynomialCurveFitter.create(mConfig.getTempratureAccSmooth()));
     }
 
     /**
@@ -206,7 +304,7 @@ public class BaseChart4Coffee extends LineChart {
         set.setFillColor(ColorTemplate.colorWithAlpha(Color.YELLOW, 200));
         set.setDrawCircleHole(false);
         set.setDrawCircles(false);
-        if (lineIndex == BEANLINE) {
+        if (lineIndex == Model4Chart.BEANLINE) {
             set.setDrawCircleHole(true);
             set.setDrawCircles(true);
         }
@@ -216,26 +314,26 @@ public class BaseChart4Coffee extends LineChart {
         set.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
 
         switch (lineIndex) {
-            case BEANLINE:
+            case Model4Chart.BEANLINE:
                 set.setColor(mConfig.getBeanColor());
                 set.setHighLightColor(Color.rgb(244, 117, 117));
                 break;
-            case ACCBEANLINE:
+            case Model4Chart.ACCBEANLINE:
                 set.setColor(mConfig.getAccBeanColor());
                 break;
-            case INWINDLINE:
+            case Model4Chart.INWINDLINE:
                 set.setColor(mConfig.getInwindColor());
                 break;
-            case ACCINWINDLINE:
+            case Model4Chart.ACCINWINDLINE:
                 set.setColor(mConfig.getAccInwindColor());
                 break;
-            case OUTWINDLINE:
+            case Model4Chart.OUTWINDLINE:
                 set.setColor(mConfig.getOutwindColor());
                 break;
-            case ACCOUTWINDLINE:
+            case Model4Chart.ACCOUTWINDLINE:
                 set.setColor(mConfig.getAccOutwindColor());
                 break;
-            case REFERLINE:
+            case Model4Chart.REFERLINE:
                 set.setColor(Color.BLACK);
         }
         lines.put(lineIndex, set);
@@ -283,8 +381,8 @@ public class BaseChart4Coffee extends LineChart {
      */
     public void addOneDataToLine(Entry beanData, int lineIndex) {
         LinkedList<WeightedObservedPoint> queue = weightedObservedPointsMap.get(lineIndex);
-        if (queue.size() == 5) {
-            queue.pop();
+        if (queue.size() == 30) {
+            queue.poll();
         }
         queue.offer(new WeightedObservedPoint(1d, beanData.getX(), beanData.getY()));
         // 此处本应进行set的设置，但是因为引用外界的tempratureSet，则不进行处理
@@ -309,18 +407,16 @@ public class BaseChart4Coffee extends LineChart {
         }
 
         // 如果是从烘焙过程里出来的，则进行此方法
-/*
         if (beanData.getX() > 1 && set != null && toRefresh) {
             float temp = getMockDataImm(lineIndex, beanData.getX());
             // System.out.println(temp);
             beanData.setY(temp);
         }
-*/
 
         beanLine.addEntry(beanData);
         if (toRefresh) {
             mHandler.sendMessage(new Message());
-            if (lineIndex == BEANLINE) {
+            if (lineIndex == Model4Chart.BEANLINE) {
                 float afterScaleX = (getXRange() / getScaleX());
                 float curPosition = beanData.getX() - (afterScaleX - 5);
                 this.moveViewToX(curPosition);
@@ -360,12 +456,12 @@ public class BaseChart4Coffee extends LineChart {
      */
     public void initLine() {
         this.setData(null);
-        addTemperatureLine(BaseChart4Coffee.BEANLINE);
-        addTemperatureLine(BaseChart4Coffee.INWINDLINE);
-        addTemperatureLine(BaseChart4Coffee.OUTWINDLINE);
-        addTemperatureLine(BaseChart4Coffee.ACCBEANLINE, true);
-        addTemperatureLine(BaseChart4Coffee.ACCINWINDLINE, true);
-        addTemperatureLine(BaseChart4Coffee.ACCOUTWINDLINE, true);
+        addTemperatureLine(Model4Chart.BEANLINE);
+        addTemperatureLine(Model4Chart.INWINDLINE);
+        addTemperatureLine(Model4Chart.OUTWINDLINE);
+        addTemperatureLine(Model4Chart.ACCBEANLINE, true);
+        addTemperatureLine(Model4Chart.ACCINWINDLINE, true);
+        addTemperatureLine(Model4Chart.ACCOUTWINDLINE, true);
     }
 
     /**
@@ -376,7 +472,7 @@ public class BaseChart4Coffee extends LineChart {
     public void enableReferLine(List<Entry> entries) {
         this.referEntries = entries;
         LineDataSet set = new LineDataSet(entries, "");
-        lines.put(BaseChart4Coffee.REFERLINE, set);
+        lines.put(Model4Chart.REFERLINE, set);
 
         set.setCircleColor(Color.parseColor("#6774a4"));
         // set.setCircleColorHole(Color.WHITE);

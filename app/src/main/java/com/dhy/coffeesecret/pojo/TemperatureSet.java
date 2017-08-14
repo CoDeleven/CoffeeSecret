@@ -1,11 +1,13 @@
 package com.dhy.coffeesecret.pojo;
 
+import com.dhy.coffeesecret.model.chart.Model4Chart;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import static com.dhy.coffeesecret.views.BaseChart4Coffee.*;
+
 /**
  * Created by CoDeleven on 17-3-8.
  */
@@ -24,17 +26,17 @@ public class TemperatureSet implements Serializable{
 
     public List<Float> getTempratureByIndex(int index){
         switch (index){
-            case BEANLINE:
+            case Model4Chart.BEANLINE:
                 return beanTemps;
-            case INWINDLINE:
+            case Model4Chart.INWINDLINE:
                 return inwindTemps;
-            case OUTWINDLINE:
+            case Model4Chart.OUTWINDLINE:
                 return outwindTemps;
-            case ACCBEANLINE:
+            case Model4Chart.ACCBEANLINE:
                 return accBeanTemps;
-            case ACCINWINDLINE:
+            case Model4Chart.ACCINWINDLINE:
                 return accInwindTemps;
-            case ACCOUTWINDLINE:
+            case Model4Chart.ACCOUTWINDLINE:
                 return accOutwindTemps;
             default:
                 return null;
@@ -139,27 +141,27 @@ public class TemperatureSet implements Serializable{
 
     public void addTempratureByIndex(int lineIndex, List<Float> temps){
         switch (lineIndex){
-            case BEANLINE:
+            case Model4Chart.BEANLINE:
                 beanTemps.clear();
                 beanTemps.addAll(temps);
                 break;
-            case INWINDLINE:
+            case Model4Chart.INWINDLINE:
                 inwindTemps.clear();
                 inwindTemps.addAll(temps);
                 break;
-            case OUTWINDLINE:
+            case Model4Chart.OUTWINDLINE:
                 outwindTemps.clear();
                 outwindTemps.addAll(temps);
                 break;
-            case ACCBEANLINE:
+            case Model4Chart.ACCBEANLINE:
                 accBeanTemps.clear();
                 accBeanTemps.addAll(temps);
                 break;
-            case ACCINWINDLINE:
+            case Model4Chart.ACCINWINDLINE:
                 accInwindTemps.clear();
                 accInwindTemps.addAll(temps);
                 break;
-            case ACCOUTWINDLINE:
+            case Model4Chart.ACCOUTWINDLINE:
                 accOutwindTemps.clear();
                 accOutwindTemps.addAll(temps);
                 break;

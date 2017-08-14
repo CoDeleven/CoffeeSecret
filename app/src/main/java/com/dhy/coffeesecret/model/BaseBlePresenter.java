@@ -41,6 +41,10 @@ public abstract class BaseBlePresenter implements IBasePresenter, IBleScanCallba
         mBluetoothOperator.setScanCallbackListener(null);
     }
 
+    public void clearBakeReportProxy(){
+        bakeReportProxy = null;
+    }
+
     public BakeReportProxy getBakeReportProxy() {
         return bakeReportProxy;
     }

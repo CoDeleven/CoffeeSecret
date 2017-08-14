@@ -89,6 +89,15 @@ public class EditBehindActivity extends AppCompatActivity implements CircleSeekB
     private Button curBeanButton;
     private String unit;
     private Dialog dialog;
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        // 在这个界面点击后退 视为 放弃此次烘焙
+        mPresenter.clearBakeReportProxy();
+        finish();
+    }
+
     private int mEditorMode = I_AM_BAKEACTIVITY;
     private Handler mHandler = new Handler(new Handler.Callback() {
         @Override

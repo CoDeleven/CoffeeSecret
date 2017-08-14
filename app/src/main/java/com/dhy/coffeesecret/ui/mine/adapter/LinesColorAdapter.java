@@ -16,6 +16,7 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.dhy.coffeesecret.R;
+import com.dhy.coffeesecret.model.chart.Model4Chart;
 import com.dhy.coffeesecret.pojo.LinesColor;
 import com.dhy.coffeesecret.pojo.TemperatureSet;
 import com.dhy.coffeesecret.pojo.UniversalConfiguration;
@@ -28,7 +29,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import static com.dhy.coffeesecret.views.BaseChart4Coffee.*;
+
 /**
  * CoffeeSecret
  * Created by Simo on 2017/3/3.
@@ -110,7 +111,7 @@ public class LinesColorAdapter extends FootViewAdapter {
         List<Entry> entries = new ArrayList<>();
         List<Float> foo = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
-            if(line == BEANLINE){
+            if(line == Model4Chart.BEANLINE){
                 temperatureSet.addTimex(i * 50);
             }
             entries.add(new Entry(i * 50, i * line));
@@ -135,19 +136,19 @@ public class LinesColorAdapter extends FootViewAdapter {
 
                     previewChart.setTemperatureSet(temperatureSet);
 
-                    previewChart.changeColorByIndex(linesColor.getBeanColor(), BEANLINE);
-                    previewChart.changeColorByIndex(linesColor.getAccBeanColor(), ACCBEANLINE);
-                    previewChart.changeColorByIndex(linesColor.getInwindColor(), INWINDLINE);
-                    previewChart.changeColorByIndex(linesColor.getOutwindColor(), OUTWINDLINE);
-                    previewChart.changeColorByIndex(linesColor.getAccInwindColor(), ACCINWINDLINE);
-                    previewChart.changeColorByIndex(linesColor.getAccOutwindColor(), ACCOUTWINDLINE);
+                    previewChart.changeColorByIndex(linesColor.getBeanColor(), Model4Chart.BEANLINE);
+                    previewChart.changeColorByIndex(linesColor.getAccBeanColor(), Model4Chart.ACCBEANLINE);
+                    previewChart.changeColorByIndex(linesColor.getInwindColor(), Model4Chart.INWINDLINE);
+                    previewChart.changeColorByIndex(linesColor.getOutwindColor(), Model4Chart.OUTWINDLINE);
+                    previewChart.changeColorByIndex(linesColor.getAccInwindColor(), Model4Chart.ACCINWINDLINE);
+                    previewChart.changeColorByIndex(linesColor.getAccOutwindColor(), Model4Chart.ACCOUTWINDLINE);
 
-                    previewChart.addNewDatas(initVirtualData(BEANLINE), BEANLINE);
-                    previewChart.addNewDatas(initVirtualData(ACCBEANLINE), ACCBEANLINE);
-                    previewChart.addNewDatas(initVirtualData(INWINDLINE), INWINDLINE);
-                    previewChart.addNewDatas(initVirtualData(OUTWINDLINE), OUTWINDLINE);
-                    previewChart.addNewDatas(initVirtualData(ACCINWINDLINE), ACCINWINDLINE);
-                    previewChart.addNewDatas(initVirtualData(ACCOUTWINDLINE), ACCOUTWINDLINE);
+                    previewChart.addNewDatas(initVirtualData(Model4Chart.BEANLINE), Model4Chart.BEANLINE);
+                    previewChart.addNewDatas(initVirtualData(Model4Chart.ACCBEANLINE), Model4Chart.ACCBEANLINE);
+                    previewChart.addNewDatas(initVirtualData(Model4Chart.INWINDLINE), Model4Chart.INWINDLINE);
+                    previewChart.addNewDatas(initVirtualData(Model4Chart.OUTWINDLINE), Model4Chart.OUTWINDLINE);
+                    previewChart.addNewDatas(initVirtualData(Model4Chart.ACCINWINDLINE), Model4Chart.ACCINWINDLINE);
+                    previewChart.addNewDatas(initVirtualData(Model4Chart.ACCOUTWINDLINE), Model4Chart.ACCOUTWINDLINE);
                     final AlertDialog dialog = new AlertDialog.Builder(context)
                             .setTitle(linesColor.getPackageName())
                             .setView(view)

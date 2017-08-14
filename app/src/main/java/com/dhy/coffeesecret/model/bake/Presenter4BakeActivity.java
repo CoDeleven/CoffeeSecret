@@ -16,12 +16,12 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-import static com.dhy.coffeesecret.views.BaseChart4Coffee.ACCBEANLINE;
-import static com.dhy.coffeesecret.views.BaseChart4Coffee.ACCINWINDLINE;
-import static com.dhy.coffeesecret.views.BaseChart4Coffee.ACCOUTWINDLINE;
-import static com.dhy.coffeesecret.views.BaseChart4Coffee.BEANLINE;
-import static com.dhy.coffeesecret.views.BaseChart4Coffee.INWINDLINE;
-import static com.dhy.coffeesecret.views.BaseChart4Coffee.OUTWINDLINE;
+import static com.dhy.coffeesecret.model.chart.Model4Chart.ACCBEANLINE;
+import static com.dhy.coffeesecret.model.chart.Model4Chart.ACCINWINDLINE;
+import static com.dhy.coffeesecret.model.chart.Model4Chart.ACCOUTWINDLINE;
+import static com.dhy.coffeesecret.model.chart.Model4Chart.BEANLINE;
+import static com.dhy.coffeesecret.model.chart.Model4Chart.INWINDLINE;
+import static com.dhy.coffeesecret.model.chart.Model4Chart.OUTWINDLINE;
 import static com.dhy.coffeesecret.views.DevelopBar.AFTER160;
 import static com.dhy.coffeesecret.views.DevelopBar.RAWBEAN;
 
