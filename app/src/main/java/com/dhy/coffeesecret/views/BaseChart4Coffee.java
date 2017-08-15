@@ -25,6 +25,7 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.github.mikephil.charting.utils.ViewPortHandler;
 
 import org.apache.commons.math3.fitting.PolynomialCurveFitter;
 import org.apache.commons.math3.fitting.WeightedObservedPoint;
@@ -39,7 +40,96 @@ import java.util.Map;
  * Created by CoDeleven on 17-2-3.
  */
 
-public class BaseChart4Coffee extends LineChart implements IChartView{
+public class BaseChart4Coffee extends LineChart implements IChartView {
+    private static final String TAG = BaseChart4Coffee.class.getSimpleName();
+    // 剩余留白长度, 用于缩小x轴的触发条件
+    private static final int REMAINDER_SPACE_LEN = 10;
+    private static Map<Integer, String> labels = new HashMap<>();
+    static {
+        labels.put(Model4Chart.BEANLINE, "豆温");
+        labels.put(Model4Chart.ACCBEANLINE, "豆升温");
+        labels.put(Model4Chart.INWINDLINE, "进风温");
+        labels.put(Model4Chart.ACCINWINDLINE, "进风升温");
+        labels.put(Model4Chart.OUTWINDLINE, "出风温");
+        labels.put(Model4Chart.ACCOUTWINDLINE, "出风升温");
+        labels.put(Model4Chart.REFERLINE, "");
+    }
+
+    private Presenter4Chart mPresenter;
+    private Map<Integer, LinkedList<WeightedObservedPoint>> weightedObservedPointsMap = new HashMap<>();
+    private Map<Integer, PolynomialCurveFitter> fitters = new HashMap<>();
+    private Map<Integer, List<Double>> params = new HashMap<>();
+    private TemperatureSet set;
+    private List<Entry> referEntries;
+    private UniversalConfiguration mConfig;
+    private Map<Integer, ILineDataSet> lines = new HashMap<>();
+    private Handler mHandler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            invalidate();
+            return false;
+        }
+    });
+    private int tempSmoothNumber = -1;
+    private int accTempSmoothNumber = -1;
+
+    {
+
+
+        weightedObservedPointsMap.put(Model4Chart.BEANLINE, new LinkedList<WeightedObservedPoint>());
+        weightedObservedPointsMap.put(Model4Chart.ACCBEANLINE, new LinkedList<WeightedObservedPoint>());
+        weightedObservedPointsMap.put(Model4Chart.INWINDLINE, new LinkedList<WeightedObservedPoint>());
+        weightedObservedPointsMap.put(Model4Chart.OUTWINDLINE, new LinkedList<WeightedObservedPoint>());
+        weightedObservedPointsMap.put(Model4Chart.ACCOUTWINDLINE, new LinkedList<WeightedObservedPoint>());
+        weightedObservedPointsMap.put(Model4Chart.ACCINWINDLINE, new LinkedList<WeightedObservedPoint>());
+
+
+    }
+    public BaseChart4Coffee(Context context) {
+        this(context, null);
+    }
+    public BaseChart4Coffee(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
+    public BaseChart4Coffee(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        mConfig = SettingTool.getConfig(context);
+        initConfig();
+    }
+
+    public static String getLableByIndex(int index) {
+        return labels.get(index);
+    }
+
+    @Override
+    public void zoomXAxis(float newEntryX) {
+        ViewPortHandler handler = getViewPortHandler();
+
+        // getTransX是基于分辨率的，除去缩放的干扰，再和实际图表宽度做商获得所占百分比
+        float viewportOffset = getVisibleXRange() - (handler.getTransX() / getScaleX() / getContentRect().width() * getXRange());
+
+        // 在一定缩放比例下，如果曲线填满了视图，这里选择不跳转
+        // 即将视图拉回去看细节的情况下
+        if(newEntryX > viewportOffset){
+            return;
+        }
+
+
+        // 客户需求：当曲线超过可见界面的 2/3 时，缩小x轴
+        // newEntryX的值 不管滑不滑动 图表都是固定的
+        // 图表在一定缩放比例下，可见X轴长度  是固定的，不包含滑动量
+        // 比如newEntryX已经达到500，可见长度是600，但是往左滑动200，x轴可见长度依然是600，但是newEntryX的可见长度是300，不允许缩小
+        // 这里handler.getTransX()就是获取滑动长度,TransX()是负数
+        if (newEntryX + REMAINDER_SPACE_LEN > viewportOffset) {
+            zoomToCenter(0.95f, 1f);
+        }
+
+        /*float afterScaleX = (getXRange() / getScaleX());
+        float curPosition = newEntryX - (afterScaleX - 5);*/
+        // this.moveViewToX(curPosition);
+
+    }
+
     @Override
     public void enableReferLine(LineDataSet set) {
         set.setCircleColor(Color.parseColor("#6774a4"));
@@ -56,7 +146,8 @@ public class BaseChart4Coffee extends LineChart implements IChartView{
         set.setDrawValues(false);
         set.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
         set.setColor(Color.BLACK);
-        setData(new LineData(new ArrayList<>(lines.values())));
+        // setData(new LineData(new ArrayList<>(lines.values())));
+        addLine2Chart(set);
     }
 
     @Override
@@ -106,9 +197,24 @@ public class BaseChart4Coffee extends LineChart implements IChartView{
             case Model4Chart.REFERLINE:
                 set.setColor(Color.BLACK);
         }
-        setData(new LineData(new ArrayList<>(lines.values())));
+        addLine2Chart(set);
     }
 
+    /**
+     * 添加一个曲线到图表内
+     * @param set
+     */
+    private void addLine2Chart(LineDataSet set){
+        // setData(new LineData(new ArrayList<>(lines.values())));
+        // 获取图表的数据 DataLine
+        LineData selfDataLine = getData();
+        // 如果DataLine为null，那么创建一个,并添加一个新的DataSet6
+        if (selfDataLine == null) {
+            selfDataLine = new LineData();
+            setData(selfDataLine);
+        }
+        selfDataLine.addDataSet(set);
+    }
     @Override
     public void updateText(int index, String updateContent) {
 
@@ -125,77 +231,8 @@ public class BaseChart4Coffee extends LineChart implements IChartView{
     }
 
     @Override
-    public void updateChart(Entry newEntry, int lineIndex, boolean toRefresh) {
-        if (toRefresh) {
-            mHandler.sendMessage(new Message());
-            // 移动viewport
-            if (lineIndex == Model4Chart.BEANLINE) {
-                float afterScaleX = (getXRange() / getScaleX());
-                float curPosition = newEntry.getX() - (afterScaleX - 5);
-                this.moveViewToX(curPosition);
-            }
-        }
-    }
-
-    private static Map<Integer, String> labels = new HashMap<>();
-
-    static {
-        labels.put(Model4Chart.BEANLINE, "豆温");
-        labels.put(Model4Chart.ACCBEANLINE, "豆升温");
-        labels.put(Model4Chart.INWINDLINE, "进风温");
-        labels.put(Model4Chart.ACCINWINDLINE, "进风升温");
-        labels.put(Model4Chart.OUTWINDLINE, "出风温");
-        labels.put(Model4Chart.ACCOUTWINDLINE, "出风升温");
-        labels.put(Model4Chart.REFERLINE, "");
-    }
-    private Presenter4Chart mPresenter;
-    private Map<Integer, LinkedList<WeightedObservedPoint>> weightedObservedPointsMap = new HashMap<>();
-    private Map<Integer, PolynomialCurveFitter> fitters = new HashMap<>();
-    private Map<Integer, List<Double>> params = new HashMap<>();
-    private TemperatureSet set;
-    private List<Entry> referEntries;
-    private UniversalConfiguration mConfig;
-    private Map<Integer, ILineDataSet> lines = new HashMap<>();
-    private Handler mHandler = new Handler(new Handler.Callback() {
-        @Override
-        public boolean handleMessage(Message msg) {
-            invalidate();
-            return false;
-        }
-    });
-    private int tempSmoothNumber = -1;
-    private int accTempSmoothNumber = -1;
-
-    {
-
-
-        weightedObservedPointsMap.put(Model4Chart.BEANLINE, new LinkedList<WeightedObservedPoint>());
-        weightedObservedPointsMap.put(Model4Chart.ACCBEANLINE, new LinkedList<WeightedObservedPoint>());
-        weightedObservedPointsMap.put(Model4Chart.INWINDLINE, new LinkedList<WeightedObservedPoint>());
-        weightedObservedPointsMap.put(Model4Chart.OUTWINDLINE, new LinkedList<WeightedObservedPoint>());
-        weightedObservedPointsMap.put(Model4Chart.ACCOUTWINDLINE, new LinkedList<WeightedObservedPoint>());
-        weightedObservedPointsMap.put(Model4Chart.ACCINWINDLINE, new LinkedList<WeightedObservedPoint>());
-
-
-    }
-
-
-    public BaseChart4Coffee(Context context) {
-        this(context, null);
-    }
-
-    public BaseChart4Coffee(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
-    }
-
-    public BaseChart4Coffee(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
-        mConfig = SettingTool.getConfig(context);
-        initConfig();
-    }
-
-    public static String getLableByIndex(int index) {
-        return labels.get(index);
+    public void updateChart() {
+        mHandler.sendMessage(new Message());
     }
 
     /**
@@ -218,6 +255,7 @@ public class BaseChart4Coffee extends LineChart implements IChartView{
         setBackgroundColor(Color.WHITE);
 
         setPinchZoom(true);
+
         Legend l = getLegend();
 
         // modify the legend ...
@@ -283,10 +321,12 @@ public class BaseChart4Coffee extends LineChart implements IChartView{
      *
      * @param set
      */
+    @Deprecated
     public void setTemperatureSet(TemperatureSet set) {
         this.set = set;
     }
 
+    @Deprecated
     public void addTemperatureLine(int lineIndex, boolean isAcc) {
         LineDataSet set = new LineDataSet(new ArrayList<Entry>(), labels.get(lineIndex));
         if (isAcc) {
@@ -345,6 +385,7 @@ public class BaseChart4Coffee extends LineChart implements IChartView{
      *
      * @param lineIndex
      */
+    @Deprecated
     private void addTemperatureLine(int lineIndex) {
         addTemperatureLine(lineIndex, false);
     }
@@ -355,6 +396,7 @@ public class BaseChart4Coffee extends LineChart implements IChartView{
      * @param lineIndex
      * @return
      */
+    @Deprecated
     public boolean showLine(int lineIndex) {
         lines.get(lineIndex).setVisible(true);
         mHandler.sendEmptyMessage(0);
@@ -367,6 +409,7 @@ public class BaseChart4Coffee extends LineChart implements IChartView{
      * @param lineIndex
      * @return
      */
+    @Deprecated
     public boolean hideLine(int lineIndex) {
         lines.get(lineIndex).setVisible(false);
         mHandler.sendEmptyMessage(0);
@@ -379,6 +422,7 @@ public class BaseChart4Coffee extends LineChart implements IChartView{
      * @param beanData  Entry值
      * @param lineIndex 曲线编号
      */
+    @Deprecated
     public void addOneDataToLine(Entry beanData, int lineIndex) {
         LinkedList<WeightedObservedPoint> queue = weightedObservedPointsMap.get(lineIndex);
         if (queue.size() == 30) {
@@ -396,6 +440,7 @@ public class BaseChart4Coffee extends LineChart implements IChartView{
      * @param lineIndex 曲线编号
      * @param toRefresh 是否实时刷新
      */
+    @Deprecated
     public void addOneDataToLine(Entry beanData, int lineIndex, boolean toRefresh) {
         LineDataSet beanLine = (LineDataSet) lines.get(lineIndex);
 
@@ -430,6 +475,7 @@ public class BaseChart4Coffee extends LineChart implements IChartView{
      * @param beanDatas 一组Entry数据
      * @param lineIndex 曲线的编号
      */
+    @Deprecated
     public void addNewDatas(List<Entry> beanDatas, int lineIndex) {
         // 因为是直接添加全部的曲线，那么预先处理拟合的曲线函数
         if (weightedObservedPointsMap.get(lineIndex).size() == 0) {
@@ -454,6 +500,7 @@ public class BaseChart4Coffee extends LineChart implements IChartView{
     /**
      * 按照用户设置，初始化曲线,默认显示全部曲线
      */
+    @Deprecated
     public void initLine() {
         this.setData(null);
         addTemperatureLine(Model4Chart.BEANLINE);
@@ -469,6 +516,7 @@ public class BaseChart4Coffee extends LineChart implements IChartView{
      *
      * @param entries 曲线数据
      */
+    @Deprecated
     public void enableReferLine(List<Entry> entries) {
         this.referEntries = entries;
         LineDataSet set = new LineDataSet(entries, "");
@@ -498,6 +546,7 @@ public class BaseChart4Coffee extends LineChart implements IChartView{
      * @param color 带#的颜色字串
      * @param index 曲线的编号
      */
+    @Deprecated
     public void changeColorByIndex(String color, int index) {
         ((LineDataSet) lines.get(index)).setColor(Color.parseColor(color));
         notifyDataSetChanged();
@@ -505,13 +554,15 @@ public class BaseChart4Coffee extends LineChart implements IChartView{
 
     @Override
     public void clear() {
-        super.clear();
+        /*super.clear();
         initLine();
         if (referEntries != null && referEntries.size() > 0) {
             enableReferLine(referEntries);
-        }
+        }*/
+        setData(null);
     }
 
+    @Deprecated
     public float getMockData(int lineIndex, float x) {
         if (params.get(lineIndex) == null) {
             LinkedList queue = weightedObservedPointsMap.get(lineIndex);
@@ -525,6 +576,7 @@ public class BaseChart4Coffee extends LineChart implements IChartView{
         return getYByXValue(lineIndex, x);
     }
 
+    @Deprecated
     public float getMockDataImm(int lineIndex, float x) {
         LinkedList queue = weightedObservedPointsMap.get(lineIndex);
         double[] param = fitters.get(lineIndex).fit(queue.subList(0, queue.size()));
@@ -532,6 +584,7 @@ public class BaseChart4Coffee extends LineChart implements IChartView{
         return getYByXValue(param, x);
     }
 
+    @Deprecated
     public float getYByXValue(double[] params, float x) {
         float sum = 0;
         for (int i = 0; i < params.length; ++i) {
@@ -540,6 +593,7 @@ public class BaseChart4Coffee extends LineChart implements IChartView{
         return sum;
     }
 
+    @Deprecated
     public float getYByXValue(int lineIndex, float x) {
         float sum = 0;
         List<Double> temp = params.get(lineIndex);

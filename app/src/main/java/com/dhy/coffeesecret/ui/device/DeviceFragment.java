@@ -302,8 +302,8 @@ public class DeviceFragment extends Fragment implements IDeviceView {
             }
 
             @Override
-            public void setTempratures(BakeReport tempratures) {
-                DeviceFragment.this.referTempratures = tempratures;
+            public void setTemperatures(BakeReport temperatures) {
+                DeviceFragment.this.referTempratures = temperatures;
             }
         });
         FragmentTool.getFragmentToolInstance(getContext()).showDialogFragmen("dialogFragment", dialogFragment);

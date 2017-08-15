@@ -1,6 +1,7 @@
 package com.dhy.coffeesecret.model.chart;
 
 import com.dhy.coffeesecret.model.IBaseView;
+import com.dhy.coffeesecret.pojo.TemperatureSet;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
@@ -22,6 +23,14 @@ public class Presenter4Chart {
     private static Map<Integer, String> labels = new HashMap<>();
     // 参考曲线
     private List<Entry> referEntries;
+
+    // 用于记录真实的，需要保存的数据
+    private TemperatureSet temperatureSet;
+
+    public void setTemperatureSet(TemperatureSet temperatureSet) {
+        this.temperatureSet = temperatureSet;
+    }
+
     static {
         labels.put(Model4Chart.BEANLINE, "豆温");
         labels.put(Model4Chart.ACCBEANLINE, "豆升温");
@@ -35,15 +44,13 @@ public class Presenter4Chart {
     public Presenter4Chart(){
         // FIXME 手动设置 -> 读取配置文件
         mModelOperator = new Model4Chart(4, 4);
-        // 初始化曲线
-        initLine();
     }
 
     public void setView(IBaseView baseView){
         mViewOperator = (IChartView)baseView;
     }
 
-    private void initLine(){
+    public void initLine(){
         // 总共6条曲线
         for(int i = 1; i < 7; ++i){
             LineDataSet set = new LineDataSet(new ArrayList<Entry>(), labels.get(new Integer(i)));
@@ -73,6 +80,7 @@ public class Presenter4Chart {
     public void toggleLineVisible(int lineIndex){
         boolean isVisible = lines.get(lineIndex).isVisible();
         lines.get(lineIndex).setVisible(!isVisible);
+        mViewOperator.updateChart();
     }
 
 
@@ -86,9 +94,13 @@ public class Presenter4Chart {
         double mockTemperature = mModelOperator.getMockData(immData, lineIndex);
 
         immData.setY((float) mockTemperature);
-
+        // 设置新的Entry去line里面
+        lines.get(new Integer(lineIndex)).addEntry(immData);
         // 更新图表
-        mViewOperator.updateChart(immData, lineIndex, toRefresh);
+        if(toRefresh){
+            mViewOperator.zoomXAxis(immData.getX());
+            mViewOperator.updateChart();
+        }
     }
 
     /**
@@ -107,6 +119,13 @@ public class Presenter4Chart {
         }
     }
 
+    public void clear(){
+        mViewOperator.clear();
+        initLine();
+        if(referEntries != null && referEntries.size() > 0){
+            enableReferLine(referEntries);
+        }
+    }
 
     public static Presenter4Chart newInstance() {
         if(mPresenter == null){

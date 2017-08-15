@@ -186,7 +186,7 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void updateChart(Entry entry, int lineIndex) {
-        chart.addOneDataToLine(entry, lineIndex);
+        // chart.addOneDataToLine(entry, lineIndex);
         mChartPresenter.dynamicAddDataImm(entry, lineIndex, true);
     }
 
@@ -240,11 +240,12 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
                 curIndex = ACCOUTWINDLINE;
                 break;
         }
-        if (isChecked) {
+/*        if (isChecked) {
             chart.showLine(curIndex);
         } else {
             chart.hideLine(curIndex);
-        }
+        }*/
+        mChartPresenter.toggleLineVisible(curIndex);
     }
 
     @Override
@@ -258,25 +259,35 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_bake);
         ButterKnife.bind(this);
 
-        chart.initLine();
-
         mConfig = SettingTool.getConfig(this);
         enableDoubleConfirm = mConfig.isDoubleClick();
+
+        init();
+        /*initBakePresenter();
+        initChartPresenter();*/
+    }
+
+    private void initChartPresenter() {
+        // 设置chart视图
+        mChartPresenter.setView(chart);
+        // startTime = System.currentTimeMillis();
+        // 初始化曲线
+        mChartPresenter.initLine();
+        // 设置 真实数据记录集合
+        mChartPresenter.setTemperatureSet(mPresenter.getTemperatureSet());
+        // 考虑是否添加参考曲线
         BakeReport bakeReport = (BakeReport) getIntent().getSerializableExtra(ENABLE_REFERLINE);
         if (bakeReport != null) {
             referTempratures = new BakeReportProxy(bakeReport);
             List<Entry> entries = new ArrayList<>();
             int count = 0;
-            for (float temprature : referTempratures.getTempratureByIndex(BEANLINE)) {
-                entries.add(new Entry(count, temprature));
+            for (float temperature : referTempratures.getTempratureByIndex(BEANLINE)) {
+                entries.add(new Entry(count, temperature));
                 count += 1;
             }
-            chart.enableReferLine(entries);
+            mChartPresenter.enableReferLine(entries);
         }
-        init();
-
     }
-
 
     private void afterStartBtnClick() {
         mDry.setVisibility(View.VISIBLE);
@@ -288,21 +299,19 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
         mStart.setVisibility(View.GONE);
     }
 
+    private void initBakePresenter() {
+        mPresenter.initBluetoothListener();
+        mPresenter.setView(this);
+
+        mPresenter.init();
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
-
-        mPresenter.initBluetoothListener();
-        mPresenter.setView(this);
-        mChartPresenter.setView(chart);
-        // startTime = System.currentTimeMillis();
-
-        mPresenter.init();
-
-        // 设置tempraturset
-        chart.setTemperatureSet(mPresenter.getTemperatureSet());
-
- /*       if (timer == null) {
+        initBakePresenter();
+        initChartPresenter();
+        /*       if (timer == null) {
             isReading = true;
             timer = new Thread(new Runnable() {
                 @Override
@@ -436,7 +445,7 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
         // TODO 3-20日，在开始烘焙按钮按下后的操作在这里执行
         afterStartBtnClick();
         mPresenter.init();
-        chart.clear();
+        mChartPresenter.clear();
         if (popuoOperator != null) {
             ((CheckBox) popuoOperator.findViewById(R.id.id_baking_line_bean)).setChecked(true);
             ((CheckBox) popuoOperator.findViewById(R.id.id_baking_line_inwind)).setChecked(true);

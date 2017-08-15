@@ -7,23 +7,19 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BakeReport;
-import com.dhy.coffeesecret.pojo.BakeReportProxy;
 import com.dhy.coffeesecret.pojo.BeanInfo;
 import com.dhy.coffeesecret.pojo.BeanInfoSimple;
 import com.dhy.coffeesecret.ui.device.DialogBeanSelected;
@@ -131,7 +127,7 @@ public class BakeDialog extends DialogFragment implements BeanSelectAdapter.MyBu
                         return;
                     }
                 }
-                beaninfosConfirmListener.setTempratures(referTempratures);
+                beaninfosConfirmListener.setTemperatures(referTempratures);
                 dismiss();
             }
         });
@@ -258,7 +254,7 @@ public class BakeDialog extends DialogFragment implements BeanSelectAdapter.MyBu
     public interface OnBeaninfosConfirmListener {
         void setBeanInfos(List<BeanInfoSimple> beanInfos);
 
-        void setTempratures(BakeReport tempratures);
+        void setTemperatures(BakeReport temperatures);
     }
 
     class ViewHolder {
