@@ -1,5 +1,7 @@
 package com.dhy.coffeesecret.model.chart;
 
+import android.util.Log;
+
 import com.dhy.coffeesecret.model.IBaseView;
 import com.dhy.coffeesecret.pojo.TemperatureSet;
 import com.github.mikephil.charting.data.Entry;
@@ -16,6 +18,7 @@ import java.util.Map;
  */
 
 public class Presenter4Chart {
+    private static final String TAG = Presenter4Chart.class.getSimpleName();
     private IChartView mViewOperator;
     private Model4Chart mModelOperator;
     private static Presenter4Chart mPresenter;
@@ -92,7 +95,7 @@ public class Presenter4Chart {
      */
     public void dynamicAddDataImm(Entry immData, int lineIndex, boolean toRefresh) {
         double mockTemperature = mModelOperator.getMockData(immData, lineIndex);
-
+        Log.d(TAG, "模拟的数据为:" + mockTemperature + ",  真实的数据为：" + immData.getY());
         immData.setY((float) mockTemperature);
         // 设置新的Entry去line里面
         lines.get(new Integer(lineIndex)).addEntry(immData);
