@@ -36,8 +36,10 @@ import com.dhy.coffeesecret.views.BaseChart4Coffee;
 import com.dhy.coffeesecret.views.ReportMarker;
 import com.dhy.coffeesecret.views.ScrollViewContainer;
 import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.Event;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -58,6 +60,8 @@ import static com.dhy.coffeesecret.model.chart.Model4Chart.OUTWINDLINE;
 public class ReportActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener, IReportView {
     private static final String TAG = ReportActivity.class.getSimpleName();
     private static ReportActivity REPORT_ACTIVITY;
+    @Bind(R.id.id_event_list)
+    TableLayout mTlEventList;
     @Bind(R.id.id_report_chart)
     BaseChart4Coffee mChart;
     @Bind(R.id.id_report_lineOperator)
@@ -172,11 +176,7 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
         mChart.initLine();
 
         tableLayout = (TableLayout) findViewById(R.id.id_report_table);
-        beanContainer = (LinearLayout) findViewById(R.id.id_bean_container);
-        beanContent = getNewInstance();
-        for (LinearLayout linearLayout : beanContent) {
-            beanContainer.addView(linearLayout);
-        }
+
 
         home.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -420,6 +420,45 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
         return linearLayouts;
     }
 
+    private List<TableRow> generateEventList(List<Entry> entryWithEvents){
+        List<TableRow> list = new LinkedList<>();
+        for (Entry entry : entryWithEvents) {
+            TableRow tableRow = new TableRow(this);
+            TextView type = new TextView(this);
+            TextView time = new TextView(this);
+            TextView supplyContent = new TextView(this);
+
+            Event event = entry.getEvent();
+
+            String eventDescription = event.getDescription();
+            int colon = eventDescription.indexOf(":");
+
+            if(colon != -1){
+                type.setText(eventDescription.substring(0, colon));
+                supplyContent.setText(eventDescription.substring(colon + 1, eventDescription.length()));
+            }else{
+                type.setText(eventDescription);
+            }
+
+            time.setText("" + Utils.getTimeWithFormat(entry.getX()));
+
+
+            type.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            time.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            supplyContent.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            TableRow.LayoutParams params = new TableRow.LayoutParams(WRAP_CONTENT, WRAP_CONTENT, 1.0f);
+
+            tableRow.addView(type, params);
+
+            tableRow.addView(time, params);
+
+            tableRow.addView(supplyContent, params);
+
+            list.add(tableRow);
+        }
+        return list;
+    }
+
     @Override
     public void updateText(int index, String updateContent) {
 
@@ -478,5 +517,14 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
         species.setText("品种 （" + "熟豆重量：" + Utils.getCrspWeightValue(cooked + "") + weightUnit + "，" + "脱水率：" + Utils.get2PrecisionFloat((cooked * 100) / raw) + "% ）");
 
         generateProxyDetails(proxy);
+
+        beanContainer = (LinearLayout) findViewById(R.id.id_bean_container);
+        beanContent = getNewInstance();
+        for (LinearLayout linearLayout : beanContent) {
+            beanContainer.addView(linearLayout);
+        }
+        for (TableRow tableRow : generateEventList(proxy.getEntriesWithEvents())) {
+            mTlEventList.addView(tableRow);
+        }
     }
 }

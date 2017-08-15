@@ -247,6 +247,7 @@
                             android:layout_centerHorizontal="true"></com.dhy.coffeesecret.views.BaseChart4Coffee>
 
                         <TableLayout
+                            android:id="@+id/id_tl_chart_descriptor"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_below="@id/id_report_chart"
@@ -479,7 +480,61 @@
                                     android:text="00:00"/>
                             </TableRow>
                         </TableLayout>
+                        <TableLayout
+                            android:id="@+id/id_event_list"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/id_tl_chart_descriptor"
+                            android:layout_marginBottom="10dp"
+                            android:layout_marginTop="23dp">
+                            <TableRow>
+                                <TextView
+                                    android:paddingTop="5dp"
+                                    android:paddingBottom="5dp"
+                                    android:textAlignment="center"
+                                    android:layout_weight="10"
+                                    android:text="事件列表"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"/>
+                            </TableRow>
+                            <TableRow>
 
+                                <TextView
+                                    style="@style/report_chart_descriptor"
+                                    android:text="事件类型"/>
+
+                                <TextView
+                                    style="@style/report_chart_descriptor"
+                                    android:text="发生时间"/>
+
+                                <TextView
+                                    style="@style/report_chart_descriptor"
+                                    android:text="补充内容"/>
+                            </TableRow>
+
+<!--                            <TableRow>
+
+                                <TextView
+                                    android:layout_weight="1"
+                                    android:id="@+id/id_event_type"
+                                    android:textAlignment="center"
+                                    android:layout_width="wrap_content"
+                                    android:text="00.00xx"/>
+
+                                <TextView
+                                    android:layout_weight="1"
+                                    android:id="@+id/id_event_time"
+                                    android:textAlignment="center"
+                                    android:text="00.00xx"/>
+
+                                <TextView
+                                    android:layout_weight="1"
+                                    android:id="@+id/id_event_supply_content"
+                                    android:textAlignment="center"
+                                    android:text="00.00xx"/>
+                            </TableRow>-->
+
+                        </TableLayout>
                     </RelativeLayout>
 
                 </LinearLayout>
