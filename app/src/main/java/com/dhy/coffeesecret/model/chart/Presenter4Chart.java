@@ -95,7 +95,6 @@ public class Presenter4Chart {
      */
     public void dynamicAddDataImm(Entry immData, int lineIndex, boolean toRefresh) {
         double mockTemperature = mModelOperator.getMockData(immData, lineIndex);
-        Log.d(TAG, "模拟的数据为:" + mockTemperature + ",  真实的数据为：" + immData.getY());
         immData.setY((float) mockTemperature);
         // 设置新的Entry去line里面
         lines.get(new Integer(lineIndex)).addEntry(immData);

@@ -1,5 +1,7 @@
 package com.dhy.coffeesecret.model.bake;
 
+import android.util.Log;
+
 import com.dhy.coffeesecret.model.BaseBlePresenter;
 import com.dhy.coffeesecret.model.IBaseView;
 import com.dhy.coffeesecret.pojo.BakeReportProxy;
@@ -30,6 +32,7 @@ import static com.dhy.coffeesecret.views.DevelopBar.RAWBEAN;
  */
 
 public class Presenter4BakeActivity extends BaseBlePresenter {
+    private static final String TAG = Presenter4BakeActivity.class.getSimpleName();
     private static final int[] LINE_INDEX = {BEANLINE, INWINDLINE, OUTWINDLINE, ACCBEANLINE, ACCINWINDLINE, ACCOUTWINDLINE};
     private static Presenter4BakeActivity mPresenter;
     // private IBakeView super.viewOperator;
@@ -96,7 +99,10 @@ public class Presenter4BakeActivity extends BaseBlePresenter {
 
     @Override
     public void notifyTemperature(Temperature temperature) {
+        long start = System.currentTimeMillis();
         notifyTemperatureByManual(temperature);
+        long end = System.currentTimeMillis();
+        Log.w(TAG, "notifyTemperature: 经历了 " + (end - start) / 1000.0f + " 秒");
     }
 
     @Override
