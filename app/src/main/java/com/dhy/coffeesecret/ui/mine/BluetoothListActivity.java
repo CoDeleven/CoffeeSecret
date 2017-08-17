@@ -214,7 +214,7 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
     }
 
     @Override
-    public void updateText(int index, String updateContent) {
+    public void updateText(int index, Object updateContent) {
         if(progressViewHandler != null){
             progressViewHandler.sendEmptyMessage(index);
         }

@@ -216,7 +216,7 @@ public class BaseChart4Coffee extends LineChart implements IChartView {
         selfDataLine.addDataSet(set);
     }
     @Override
-    public void updateText(int index, String updateContent) {
+    public void updateText(int index, Object updateContent) {
 
     }
 

@@ -59,7 +59,7 @@ public class Presenter4Device extends BaseBlePresenter {
             // beginTemp = temperature.getBeanTemp();
             isStart = true;
         }
-        ((IDeviceView)viewOperator).updateTemperatureView(temperature);
+        viewOperator.updateText(DeviceFragment.UPDATE_TEMPERATURE_TEXT, temperature);
     }
 
 
@@ -72,21 +72,6 @@ public class Presenter4Device extends BaseBlePresenter {
             // 停止扫描
             BaseBlePresenter.mBluetoothOperator.stopScanDevice();
         }
-    }
-
-    @Override
-    public void onScanningComplete(BluetoothDevice... bluetoothDevice) {
-
-    }
-
-    @Override
-    public void toPreConnect(int status) {
-
-    }
-
-    @Override
-    public void toConnecting(int status) {
-
     }
 
     @Override

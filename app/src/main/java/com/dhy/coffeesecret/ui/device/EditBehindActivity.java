@@ -205,7 +205,7 @@ public class EditBehindActivity extends AppCompatActivity implements CircleSeekB
     }
 
     @Override
-    public void updateText(int index, String updateContent) {
+    public void updateText(int index, Object updateContent) {
         Message msg = new Message();
         msg.obj = updateContent;
         msg.what = index;

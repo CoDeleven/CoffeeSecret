@@ -460,7 +460,7 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
     }
 
     @Override
-    public void updateText(int index, String updateContent) {
+    public void updateText(int index, Object updateContent) {
 
     }
 

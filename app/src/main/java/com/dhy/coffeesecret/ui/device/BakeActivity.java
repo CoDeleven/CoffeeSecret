@@ -175,7 +175,7 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
     });
 
     @Override
-    public void updateText(int index, String updateContent) {
+    public void updateText(int index, Object updateContent) {
 
     }
 

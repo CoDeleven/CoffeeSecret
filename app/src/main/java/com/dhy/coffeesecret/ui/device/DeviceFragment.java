@@ -55,7 +55,9 @@ import static com.dhy.coffeesecret.MyApplication.temperatureUnit;
 public class DeviceFragment extends Fragment implements IDeviceView {
 
     public static final int AUTO_CONNECTION_TIPS = 0x100;
+    public static final int UPDATE_TEMPERATURE_TEXT = 0x111;
     private static String lastAddress = null;
+    private static Presenter4Device mPresenter;
     @Bind(R.id.id_device_prepare_bake)
     Button mPrepareBake;
     boolean hasPrepared = false;
@@ -67,9 +69,9 @@ public class DeviceFragment extends Fragment implements IDeviceView {
     @Bind(R.id.bluetooth_status)
     TextView bluetoothStatus;
     @Bind(R.id.bluetooth_operator)
-    TextView operator;
+    TextView mTvListBluetooth;
     @Bind(R.id.id_rerange_bean)
-    Button rerangeBean;
+    Button mBtModifyBeanInfo;
     @Bind(R.id.id_arcprogress_bean)
     ArcProgress tempratureNeedConvert1;
     @Bind(R.id.id_arcprogress_inwind)
@@ -122,10 +124,38 @@ public class DeviceFragment extends Fragment implements IDeviceView {
     TextView idBakeInwindTemp;
     @Bind(R.id.id_bake_outwindTemp)
     TextView idBakeOutwindTemp;
-
     private float beginTemp;
-    private static Presenter4Device mPresenter;
     private BakeReport referTemperatures;
+    private Handler mToastHandler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            switch (msg.what) {
+                case AUTO_CONNECTION_TIPS:
+                    T.showShort(getContext(), (String) msg.obj);
+                    break;
+            }
+            return false;
+        }
+    });
+    private Handler mTextHandler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            switch (msg.what) {
+                case 0:
+                    bluetoothStatus.setText(" 已连接");
+                    mTvListBluetooth.setText("切换");
+                    break;
+                case 1:
+                    bluetoothStatus.setText(" 未连接");
+                    mTvListBluetooth.setText("连接");
+                    break;
+                case UPDATE_TEMPERATURE_TEXT:
+                    Temperature temperature = (Temperature) msg.obj;
+                    updateTemperatureText(temperature);
+            }
+            return false;
+        }
+    });
     private ServiceConnection conn = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
@@ -147,35 +177,6 @@ public class DeviceFragment extends Fragment implements IDeviceView {
 
         }
     };
-
-    private Handler mToastHandler = new Handler(new Handler.Callback() {
-        @Override
-        public boolean handleMessage(Message msg) {
-            switch (msg.what) {
-                case AUTO_CONNECTION_TIPS:
-                    T.showShort(getContext(), (String) msg.obj);
-                    break;
-            }
-            return false;
-        }
-    });
-
-    private Handler mTextHandler = new Handler(new Handler.Callback() {
-        @Override
-        public boolean handleMessage(Message msg) {
-            switch (msg.what) {
-                case 0:
-                    bluetoothStatus.setText(" 已连接");
-                    operator.setText("切换");
-                    break;
-                case 1:
-                    bluetoothStatus.setText(" 未连接");
-                    operator.setText("连接");
-                    break;
-            }
-            return false;
-        }
-    });
     private Handler mShowHandler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
@@ -226,35 +227,28 @@ public class DeviceFragment extends Fragment implements IDeviceView {
             return false;
         }
     });
-    private Handler mTemperatureHandler = new Handler(new Handler.Callback() {
-        @Override
-        public boolean handleMessage(Message msg) {
-            Temperature temperature = (Temperature) msg.obj;
-            beginTemp = Utils.get2PrecisionFloat(temperature.getBeanTemp());
-            idBakeBeanTemp.setText(Utils.getCrspTempratureValue(temperature.getBeanTemp() + "") + MyApplication.temperatureUnit);
-            idBakingAccBeanTempBefore.setText(Utils.getCommaBefore(temperature.getAccBeanTemp()));
-            idBakingAccBeanTempAfter.setText(Utils.getCommaAfter(temperature.getAccBeanTemp()));
-            idTempUnit0.setText(temperatureUnit + "/m");
 
-            idBakeInwindTemp.setText(Utils.getCrspTempratureValue(temperature.getInwindTemp() + "") + MyApplication.temperatureUnit);
-            idBakingAccInwindTempBefore.setText(Utils.getCommaBefore(temperature.getAccInwindTemp()));
-            idBakingAccInwindTempAfter.setText(Utils.getCommaAfter(temperature.getAccInwindTemp()));
-            idTempUnit1.setText(temperatureUnit + "/m");
+    /**
+     * 用于更新温度显示
+     *
+     * @param temperature 温度
+     */
+    private void updateTemperatureText(Temperature temperature) {
+        beginTemp = Utils.get2PrecisionFloat(temperature.getBeanTemp());
+        idBakeBeanTemp.setText(Utils.getCrspTempratureValue(temperature.getBeanTemp() + "") + MyApplication.temperatureUnit);
+        idBakingAccBeanTempBefore.setText(Utils.getCommaBefore(temperature.getAccBeanTemp()));
+        idBakingAccBeanTempAfter.setText(Utils.getCommaAfter(temperature.getAccBeanTemp()));
+        idTempUnit0.setText(temperatureUnit + "/m");
 
-            idBakeOutwindTemp.setText(Utils.getCrspTempratureValue(temperature.getOutwindTemp() + "") + MyApplication.temperatureUnit);
-            idBakingAccOutwindTempBefore.setText(Utils.getCommaBefore(temperature.getAccOutwindTemp()));
-            idBakingAccOutwindTempAfter.setText(Utils.getCommaAfter(temperature.getAccOutwindTemp()));
-            idTempUnit2.setText(temperatureUnit + "/m");
+        idBakeInwindTemp.setText(Utils.getCrspTempratureValue(temperature.getInwindTemp() + "") + MyApplication.temperatureUnit);
+        idBakingAccInwindTempBefore.setText(Utils.getCommaBefore(temperature.getAccInwindTemp()));
+        idBakingAccInwindTempAfter.setText(Utils.getCommaAfter(temperature.getAccInwindTemp()));
+        idTempUnit1.setText(temperatureUnit + "/m");
 
-            return false;
-        }
-    });
-
-    @Override
-    public void updateTemperatureView(Temperature temperature) {
-        Message msg = new Message();
-        msg.obj = temperature;
-        mTemperatureHandler.sendMessage(msg);
+        idBakeOutwindTemp.setText(Utils.getCrspTempratureValue(temperature.getOutwindTemp() + "") + MyApplication.temperatureUnit);
+        idBakingAccOutwindTempBefore.setText(Utils.getCommaBefore(temperature.getAccOutwindTemp()));
+        idBakingAccOutwindTempAfter.setText(Utils.getCommaAfter(temperature.getAccOutwindTemp()));
+        idTempUnit2.setText(temperatureUnit + "/m");
     }
 
     @Override
@@ -328,11 +322,9 @@ public class DeviceFragment extends Fragment implements IDeviceView {
     }
 
     private void init() {
-
-
         titleText.setText("烘焙");
 
-        operator.setOnClickListener(new View.OnClickListener() {
+        mTvListBluetooth.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), BluetoothListActivity.class);
@@ -345,7 +337,7 @@ public class DeviceFragment extends Fragment implements IDeviceView {
         if (hasPrepared) {
             mPrepareBake.setText("开始烘焙");
             // TODO 省赛
-            rerangeBean.setVisibility(View.VISIBLE);
+            mBtModifyBeanInfo.setVisibility(View.VISIBLE);
             // 生成简要的豆种信息在界面上
             showSimpleBeanInfo2Fragment();
             mPrepareBake.setOnClickListener(new View.OnClickListener() {
@@ -376,14 +368,14 @@ public class DeviceFragment extends Fragment implements IDeviceView {
                         intent.putExtra(BakeActivity.ENABLE_REFERLINE, referTemperatures);
                     }
 
-                    rerangeBean.setVisibility(View.INVISIBLE);
+                    mBtModifyBeanInfo.setVisibility(View.INVISIBLE);
                     startActivity(intent);
                     mPresenter.destroyBluetoothListener();
                     hasPrepared = false;
                 }
             });
         } else {
-            rerangeBean.setVisibility(View.INVISIBLE);
+            mBtModifyBeanInfo.setVisibility(View.INVISIBLE);
             mPrepareBake.setText("准备烘焙");
             mPrepareBake.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -396,12 +388,12 @@ public class DeviceFragment extends Fragment implements IDeviceView {
     }
 
     @OnClick(R.id.id_rerange_bean)
-    public void onRerange(View view) {
+    public void modifyBeanInfo(View view) {
         showDialogFragment();
     }
 
     @Override
-    public void updateText(int index, String updateContent) {
+    public void updateText(int index, Object updateContent) {
         Message msg = new Message();
         msg.what = index;
         msg.obj = updateContent;
