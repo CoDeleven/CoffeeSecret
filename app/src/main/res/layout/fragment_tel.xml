@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f0f0f0"
+    tools:context="com.dhy.coffeesecret.ui.mine.fragments.PasswordFragment">
+
+    <RelativeLayout
+        android:id="@+id/toolBar"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        android:background="?colorPrimary">
+
+        <ImageView
+            android:id="@+id/iv_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_back"
+            android:textColor="#FFF" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="修改绑定电话"
+            android:textColor="@color/white"
+            android:textSize="18.5sp" />
+    </RelativeLayout>
+    <EditText
+        android:id="@+id/et_tel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolBar"
+        android:layout_marginTop="8dp"
+        android:background="#fff"
+        android:hint="输入新的手机号码"
+        android:inputType="number"
+        android:paddingBottom="8dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="8dp"
+        android:singleLine="true"
+        android:textSize="16sp" />
+    <com.dhy.coffeesecret.views.DisableButton
+        android:id="@+id/btn_send_code"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/et_tel"
+        android:layout_margin="8dp"
+        android:background="@drawable/btn_code"
+        android:minHeight="0dp"
+        android:minWidth="0dp"
+        android:paddingBottom="8dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="8dp"
+        android:text="发送验证码"
+        android:ems="8"
+        android:textColor="@android:color/white"
+        android:textSize="16sp" />
+
+    <EditText
+        android:id="@+id/et_code"
+        android:layout_marginBottom="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/et_tel"
+        android:layout_toLeftOf="@id/btn_send_code"
+        android:layout_marginTop="8dp"
+        android:background="#fff"
+        android:hint="输入验证码"
+        android:inputType="number"
+        android:paddingBottom="8dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="8dp"
+        android:singleLine="true"
+        android:textSize="16sp" />
+    <Button
+        android:id="@+id/btn_update"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/et_code"
+        android:layout_margin="8dp"
+        android:background="@drawable/bg_round_pricolor_selector"
+        android:enabled="false"
+        android:minHeight="0dp"
+        android:minWidth="0dp"
+        android:padding="8dp"
+        android:text="验证后绑定新手机"
+        android:textColor="@android:color/white"
+        android:textSize="16sp" />
+</RelativeLayout>

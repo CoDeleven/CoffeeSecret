@@ -18,7 +18,6 @@
 
     <uses-feature android:name="android.hardware.camera.autofocus" />
     <uses-feature android:name="android.hardware.location.gps" />
-
     <uses-feature
         android:glEsVersion="0x00020000"
         android:required="true" />
@@ -127,7 +126,18 @@
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".ConnectedActivity" />
         <activity android:name=".ui.mine.QRCodeActivity" />
-        <activity android:name=".ui.mine.LoginActivity"></activity>
+        <activity android:name=".LoginActivity" />
+        <activity android:name=".ui.mine.UserInfoActivity"></activity>
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.dhy.coffeesecret.fileprovider"
+            android:grantUriPermissions="true"
+            android:exported="false">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/filepaths" />
+        </provider>
     </application>
 
 </manifest>

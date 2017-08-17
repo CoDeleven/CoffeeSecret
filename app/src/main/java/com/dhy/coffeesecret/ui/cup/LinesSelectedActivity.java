@@ -9,26 +9,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ListView;
 
 import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BakeReport;
-import com.dhy.coffeesecret.ui.container.adapters.LinesAdapter;
 import com.dhy.coffeesecret.ui.container.fragments.SearchFragment;
-import com.dhy.coffeesecret.ui.device.ReportActivity;
 import com.dhy.coffeesecret.ui.device.handler.LinesSelectorHandler;
-import com.dhy.coffeesecret.ui.mine.HistoryLineActivity;
 import com.dhy.coffeesecret.ui.mine.adapter.HistoryLineAdapter;
+import com.dhy.coffeesecret.url.UrlBake;
 import com.dhy.coffeesecret.utils.HttpUtils;
 import com.dhy.coffeesecret.utils.UIUtils;
-import com.dhy.coffeesecret.utils.URLs;
 import com.dhy.coffeesecret.utils.Utils;
 import com.dhy.coffeesecret.views.DividerDecoration;
 import com.dhy.coffeesecret.views.SearchEditText;
@@ -44,8 +37,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
-import static android.view.WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION;
-import static android.view.WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
 import static com.dhy.coffeesecret.ui.cup.fragment.BakeInfoFragment.RESULT_CODE_ADD;
 import static com.dhy.coffeesecret.ui.cup.fragment.BakeInfoFragment.RESULT_CODE_EXIT;
 import static com.dhy.coffeesecret.ui.cup.fragment.BakeInfoFragment.RESULT_CODE_NONE;
@@ -66,6 +57,7 @@ public class LinesSelectedActivity extends AppCompatActivity
     private LinesSelectorHandler mHandler;
     SwipeRefreshLayout mRefreshLayout;
     private HistoryLineAdapter mAdapter;
+    private MyApplication application;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -73,6 +65,8 @@ public class LinesSelectedActivity extends AppCompatActivity
         getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         setContentView(R.layout.cupping_lines);
+
+        application = (MyApplication) getApplication();
         listView = (RecyclerView) findViewById(R.id.id_lines_list);
         toolbar = (Toolbar) findViewById(R.id.toolbar_device_activtiy);
         backButton = (ImageView) findViewById(R.id.iv_back);
@@ -200,7 +194,7 @@ public class LinesSelectedActivity extends AppCompatActivity
             @Override
             public void run() {
                 try {
-                    String temp = HttpUtils.getStringFromServer(URLs.GET_ALL_BAKE_REPORT);
+                    String temp = HttpUtils.getStringFromServer(UrlBake.getAll(application.getToken()));
                     Type type = new TypeToken<Map<String, BakeReport>>() {
                     }.getType();
                     Map<String, BakeReport> bakeReports = new Gson().fromJson(temp, type);

@@ -3,7 +3,6 @@ package com.dhy.coffeesecret.ui.cup;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -14,29 +13,27 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import com.dhy.coffeesecret.MainActivity;
+import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.CuppingInfo;
 import com.dhy.coffeesecret.ui.container.adapters.HandlerAdapter;
 import com.dhy.coffeesecret.ui.container.fragments.SearchFragment;
-import com.dhy.coffeesecret.ui.cup.filter.Filter;
 import com.dhy.coffeesecret.ui.cup.adapter.CuppingListAdapter;
 import com.dhy.coffeesecret.ui.cup.comparator.BaseComparator;
 import com.dhy.coffeesecret.ui.cup.comparator.DateComparator;
 import com.dhy.coffeesecret.ui.cup.comparator.OrderBy;
 import com.dhy.coffeesecret.ui.cup.comparator.ScoreComparator;
+import com.dhy.coffeesecret.ui.cup.filter.Filter;
+import com.dhy.coffeesecret.url.UrlCupping;
 import com.dhy.coffeesecret.utils.HttpUtils;
 import com.dhy.coffeesecret.utils.T;
-import com.dhy.coffeesecret.utils.URLs;
 import com.dhy.coffeesecret.views.DividerDecoration;
 import com.edmodo.rangebar.RangeBar;
 import com.google.gson.Gson;
@@ -47,13 +44,15 @@ import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Type;
-import java.util.Collections;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
-import static com.dhy.coffeesecret.ui.cup.NewCuppingActivity.*;
+import static com.dhy.coffeesecret.ui.cup.NewCuppingActivity.NEW_CUPPING;
+import static com.dhy.coffeesecret.ui.cup.NewCuppingActivity.SHOW_INFO;
+import static com.dhy.coffeesecret.ui.cup.NewCuppingActivity.TARGET;
 import static com.dhy.coffeesecret.ui.cup.NewCuppingActivity.VIEW_TYPE;
 
 public class CupFragment extends Fragment implements View.OnClickListener {
@@ -102,6 +101,7 @@ public class CupFragment extends Fragment implements View.OnClickListener {
     private Filter filter;
     private boolean isAddSearchFragment;
     private SearchFragment searchFragment;
+    private MyApplication application;
 
 
     public CupFragment() {
@@ -118,6 +118,8 @@ public class CupFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        application = (MyApplication) getActivity().getApplication();
 
         mRefreshLayout = (SwipeRefreshLayout) mCuppingView.findViewById(R.id.refresh_layout);
         mRecyclerView = (RecyclerView) mCuppingView.findViewById(R.id.rv_cupping);
@@ -329,7 +331,8 @@ public class CupFragment extends Fragment implements View.OnClickListener {
             @Override
             public void run() {
                 try {
-                    String str = HttpUtils.getStringFromServer(URLs.GET_ALL_CUPPING);
+
+                    String str = HttpUtils.getStringFromServer(UrlCupping.getAll(application.getToken()));
                     Type type = new TypeToken<ArrayList<CuppingInfo>>() {
                     }.getType();
                     Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();

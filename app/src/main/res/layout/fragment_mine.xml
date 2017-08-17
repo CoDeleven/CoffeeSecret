@@ -60,7 +60,7 @@
                         android:layout_width="90dp"
                         android:layout_height="90dp"
                         android:scaleType="centerCrop"
-                        android:src="@mipmap/this_year_brave"
+                        android:src="@mipmap/logo"
                         app:riv_corner_radius="30dip"
                         app:riv_oval="true" />
 
@@ -77,76 +77,76 @@
 
             </RelativeLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="62.5dp"
-                android:baselineAligned="false"
-                android:orientation="horizontal">
+            <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="62.5dp"-->
+                <!--android:baselineAligned="false"-->
+                <!--android:orientation="horizontal">-->
 
-                <LinearLayout
-                    android:id="@+id/attention_layout"
-                    style="@style/option_item_horizontal">
+                <!--<LinearLayout-->
+                    <!--android:id="@+id/attention_layout"-->
+                    <!--style="@style/option_item_horizontal">-->
 
-                    <TextView
-                        android:id="@+id/attention_number"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="0"
-                        android:textColor="@color/black"
-                        android:textSize="14.5sp" />
+                    <!--<TextView-->
+                        <!--android:id="@+id/attention_number"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:text="0"-->
+                        <!--android:textColor="@color/black"-->
+                        <!--android:textSize="14.5sp" />-->
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="3dp"
-                        android:text="关注"
-                        android:textColor="@color/list_text_color"
-                        android:textSize="14.5sp" />
-                </LinearLayout>
+                    <!--<TextView-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_marginTop="3dp"-->
+                        <!--android:text="关注"-->
+                        <!--android:textColor="@color/list_text_color"-->
+                        <!--android:textSize="14.5sp" />-->
+                <!--</LinearLayout>-->
 
-                <LinearLayout
-                    android:id="@+id/fans_layout"
-                    style="@style/option_item_horizontal">
+                <!--<LinearLayout-->
+                    <!--android:id="@+id/fans_layout"-->
+                    <!--style="@style/option_item_horizontal">-->
 
-                    <TextView
-                        android:id="@+id/fans_number"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="1000000"
-                        android:textColor="@color/black"
-                        android:textSize="14.5sp" />
+                    <!--<TextView-->
+                        <!--android:id="@+id/fans_number"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:text="1000000"-->
+                        <!--android:textColor="@color/black"-->
+                        <!--android:textSize="14.5sp" />-->
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="3dp"
-                        android:text="粉丝"
-                        android:textColor="@color/list_text_color"
-                        android:textSize="14.5sp" />
-                </LinearLayout>
+                    <!--<TextView-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_marginTop="3dp"-->
+                        <!--android:text="粉丝"-->
+                        <!--android:textColor="@color/list_text_color"-->
+                        <!--android:textSize="14.5sp" />-->
+                <!--</LinearLayout>-->
 
-                <LinearLayout
-                    android:id="@+id/collection_layout"
-                    style="@style/option_item_horizontal">
+                <!--<LinearLayout-->
+                    <!--android:id="@+id/collection_layout"-->
+                    <!--style="@style/option_item_horizontal">-->
 
-                    <TextView
-                        android:id="@+id/collection_number"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="100000"
-                        android:textColor="@color/black"
-                        android:textSize="14.5sp" />
+                    <!--<TextView-->
+                        <!--android:id="@+id/collection_number"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:text="100000"-->
+                        <!--android:textColor="@color/black"-->
+                        <!--android:textSize="14.5sp" />-->
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="3dp"
-                        android:text="收藏"
-                        android:textColor="@color/list_text_color"
-                        android:textSize="14.5sp" />
-                </LinearLayout>
+                    <!--<TextView-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_marginTop="3dp"-->
+                        <!--android:text="收藏"-->
+                        <!--android:textColor="@color/list_text_color"-->
+                        <!--android:textSize="14.5sp" />-->
+                <!--</LinearLayout>-->
 
-            </LinearLayout>
+            <!--</LinearLayout>-->
 
             <View
                 android:layout_width="match_parent"

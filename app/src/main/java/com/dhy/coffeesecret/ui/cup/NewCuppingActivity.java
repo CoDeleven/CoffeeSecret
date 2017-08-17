@@ -25,9 +25,9 @@ import com.dhy.coffeesecret.ui.cup.fragment.CuppingInfoFragment;
 import com.dhy.coffeesecret.ui.cup.fragment.EditToolBar;
 import com.dhy.coffeesecret.ui.cup.fragment.InputNameDialog;
 import com.dhy.coffeesecret.ui.cup.fragment.NormalToolBar;
+import com.dhy.coffeesecret.url.UrlCupping;
 import com.dhy.coffeesecret.utils.HttpUtils;
 import com.dhy.coffeesecret.utils.T;
-import com.dhy.coffeesecret.utils.URLs;
 
 import java.io.IOException;
 import java.util.Date;
@@ -94,12 +94,15 @@ public class NewCuppingActivity extends AppCompatActivity
 
     private int mResultCode = CupFragment.RESULT_CODE_NONE;
     private Intent mResultIntent;
+    private MyApplication application;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_cupping);
+
+        application = (MyApplication) getApplication();
         mHandler = new NewCuppingHandler();
         Intent intent = getIntent();
         viewType = intent.getStringExtra(VIEW_TYPE);
@@ -239,7 +242,9 @@ public class NewCuppingActivity extends AppCompatActivity
             @Override
             public void run() {
                 mHandler.sendEmptyMessage(UPDATE);
-                HttpUtils.enqueue(URLs.UPDATE_CUPPING, mCuppingInfo, new Callback() {
+
+                String update = UrlCupping.update(application.getToken());
+                HttpUtils.enqueue(update, mCuppingInfo, new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
                         mHandler.sendEmptyMessage(ERROR);
@@ -355,7 +360,8 @@ public class NewCuppingActivity extends AppCompatActivity
                     @Override
                     public void run() {
                         mHandler.sendEmptyMessage(SAVING);
-                        HttpUtils.enqueue(URLs.ADD_CUPPING, mCuppingInfo, new Callback() {
+                        String update = UrlCupping.add(application.getToken());
+                        HttpUtils.enqueue(update, mCuppingInfo, new Callback() {
                             @Override
                             public void onFailure(Call call, IOException e) {
                                 mHandler.sendEmptyMessage(ERROR);
@@ -384,7 +390,9 @@ public class NewCuppingActivity extends AppCompatActivity
                 @Override
                 public void run() {
                     mHandler.sendEmptyMessage(UPDATE);
-                    HttpUtils.enqueue(URLs.UPDATE_CUPPING, mCuppingInfo, new Callback() {
+                    String update = UrlCupping.add(application.getToken());
+
+                    HttpUtils.enqueue(update, mCuppingInfo, new Callback() {
                         @Override
                         public void onFailure(Call call, IOException e) {
                             mHandler.sendEmptyMessage(ERROR);
@@ -406,7 +414,8 @@ public class NewCuppingActivity extends AppCompatActivity
     }
 
     private void delete() {
-        String url = URLs.getDeleteCupping(mCuppingInfo.getId());
+
+        String url = UrlCupping.delete(application.getToken(),mCuppingInfo.getId());
         mHandler.sendEmptyMessage(DELETE);
         HttpUtils.enqueue(url, mCuppingInfo, new Callback() {
             @Override

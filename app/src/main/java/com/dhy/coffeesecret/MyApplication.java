@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.bugtags.library.Bugtags;
 import com.bugtags.library.BugtagsOptions;
@@ -13,13 +14,18 @@ import com.dhy.coffeesecret.pojo.BeanInfo;
 import com.dhy.coffeesecret.pojo.CuppingInfo;
 import com.dhy.coffeesecret.pojo.UniversalConfiguration;
 import com.dhy.coffeesecret.services.BluetoothService;
+import com.dhy.coffeesecret.url.UrlBake;
+import com.dhy.coffeesecret.url.UrlBean;
+import com.dhy.coffeesecret.url.UrlCupping;
 import com.dhy.coffeesecret.utils.CacheUtils;
 import com.dhy.coffeesecret.utils.HttpParser;
 import com.dhy.coffeesecret.utils.HttpUtils;
 import com.dhy.coffeesecret.utils.SPPrivateUtils;
 import com.dhy.coffeesecret.utils.SettingTool;
-import com.dhy.coffeesecret.utils.URLs;
 import com.google.gson.Gson;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.qiniu.pili.droid.streaming.StreamingEnv;
 
 import java.io.IOException;
@@ -39,6 +45,10 @@ import static com.dhy.coffeesecret.utils.HttpUtils.getRequest;
  */
 
 public class MyApplication extends Application {
+
+
+    private static final String TAG = "MyApplication";
+
     public static String weightUnit;
     public static String temperatureUnit;
     private static Map<String, BeanInfo> beanInfos = new HashMap<>();
@@ -48,10 +58,30 @@ public class MyApplication extends Application {
     private static CacheUtils cacheUtils;
     private static BakeReportProxy BAKE_REPORT;
     private static SQLiteDatabase country2Continent;
+
+    private String token;
     private String user;
 
     public MyApplication() {
         super();
+    }
+
+    public String getToken() {
+        if(token == null){
+            token = SPPrivateUtils.getString(this,"token",null);
+        }
+        return token;
+    }
+
+    public void setToken(String token){
+        this.token = token;
+        Log.d(TAG,"token:"+token);
+        if(token == null){
+            SPPrivateUtils.remove(this,"token");
+        }else {
+            SPPrivateUtils.put(this,"token",token);
+        }
+
     }
 
     public static void setUrl(String temp) {
@@ -105,6 +135,13 @@ public class MyApplication extends Application {
                 build();
         //在这里初始化
         Bugtags.start("e71c5cd04eea2bf6fd7e179915935981", this, Bugtags.BTGInvocationEventBubble, options);
+
+
+        DisplayImageOptions _options = new DisplayImageOptions.Builder().cacheOnDisk(true).cacheInMemory(true).build();
+        ImageLoaderConfiguration configuration = new ImageLoaderConfiguration.Builder(this)
+                .defaultDisplayImageOptions(_options).build();
+
+        ImageLoader.getInstance().init(configuration);
     }
 
     // 每次进入应用时进行校验
@@ -140,7 +177,7 @@ public class MyApplication extends Application {
     public Map<String, ? extends BakeReport> getBakeReports() {
         if (bakeReports.isEmpty()) {
             // 设置获取所有烘焙报告的url
-            url = URLs.GET_ALL_BAKE_REPORT;
+            url = UrlBake.getAll(token);
             // 进行初始化
             initMap(BakeReport.class);
         }
@@ -154,7 +191,7 @@ public class MyApplication extends Application {
      */
     public Map<String, ? extends BeanInfo> getBeanInfos() {
         if (beanInfos.isEmpty()) {
-            url = URLs.GET_ALL_BEAN_INFO;
+            url = UrlBean.getAll(token);
             initMap(BeanInfo.class);
         }
         return beanInfos;
@@ -167,7 +204,7 @@ public class MyApplication extends Application {
      */
     public Map<String, ? extends CuppingInfo> getCupInfos() {
         if (cupInfos.isEmpty()) {
-            url = URLs.GET_ALL_CUPPING;
+            url = UrlCupping.getAll(token);
             initMap(CuppingInfo.class);
         }
         return cupInfos;
@@ -250,13 +287,13 @@ public class MyApplication extends Application {
      */
     private String getPrefix(Class clazz) {
         if (clazz == BakeReport.class) {
-            url = URLs.GET_ALL_BAKE_REPORT;
+            url = UrlBake.getAll(token);
             return CacheUtils.BAKE_REPORT_PREFIX;
         } else if (clazz == BeanInfo.class) {
-            url = URLs.GET_ALL_BEAN_INFO;
+            url = UrlBean.getAll(token);
             return CacheUtils.BEAN_INFO_PREFIX;
         } else if (clazz == CuppingInfo.class) {
-            url = URLs.GET_ALL_CUPPING;
+            url = UrlCupping.getAll(token);
             return CacheUtils.CUP_INFO_PREFEX;
         }
         return null;

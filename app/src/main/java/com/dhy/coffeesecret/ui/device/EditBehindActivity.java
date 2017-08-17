@@ -31,10 +31,10 @@ import com.dhy.coffeesecret.model.report_edit.Presenter4Editor;
 import com.dhy.coffeesecret.pojo.BakeReportProxy;
 import com.dhy.coffeesecret.pojo.BeanInfo;
 import com.dhy.coffeesecret.pojo.BeanInfoSimple;
+import com.dhy.coffeesecret.url.UrlBake;
 import com.dhy.coffeesecret.utils.HttpUtils;
 import com.dhy.coffeesecret.utils.SettingTool;
 import com.dhy.coffeesecret.utils.T;
-import com.dhy.coffeesecret.utils.URLs;
 import com.dhy.coffeesecret.utils.Utils;
 import com.dhy.coffeesecret.views.CircleSeekBar;
 import com.github.mikephil.charting.data.Entry;
@@ -137,6 +137,7 @@ public class EditBehindActivity extends AppCompatActivity implements CircleSeekB
             return false;
         }
     });
+    private MyApplication application;
 
     /**
      * 用于计算烘焙都颜色块的方法
@@ -225,6 +226,8 @@ public class EditBehindActivity extends AppCompatActivity implements CircleSeekB
         super.onCreate(savedInstanceState);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         setContentView(R.layout.activity_edit_behind_activiy);
+
+        application = (MyApplication) getApplication();
         ButterKnife.bind(this);
         // 设置视图
         mPresenter.setView(this);
@@ -269,7 +272,8 @@ public class EditBehindActivity extends AppCompatActivity implements CircleSeekB
             reportDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    HttpUtils.enqueue(URLs.getDeleteBakeReport(proxy.getBakeReport().getId()), null, new Callback() {
+                    String delete = UrlBake.delete(application.getToken(), proxy.getBakeReport().getId());
+                    HttpUtils.enqueue(delete, null, new Callback() {
                         @Override
                         public void onFailure(Call call, IOException e) {
 
@@ -297,6 +301,20 @@ public class EditBehindActivity extends AppCompatActivity implements CircleSeekB
         startActivity(other);
         finish();
     }
+
+//    private void sendJsonData(final BakeReport proxy) {
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    String add = UrlBake.add(application.getToken());
+//                    HttpUtils.execute(add, proxy);
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }).start();
+//    }
 
     @Override
     public void onChanged(CircleSeekBar seekbar, int curValue, double angle) {

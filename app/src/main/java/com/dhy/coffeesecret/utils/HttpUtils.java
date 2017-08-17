@@ -5,12 +5,15 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.Headers;
 import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -52,6 +55,18 @@ public class HttpUtils {
         Request request = new Request.Builder().url(url).build();
         return request;
     }
+
+    public static Request getRequest(String url, File file) {
+        RequestBody fileBody = RequestBody.create(MediaType.parse("application/octet-stream"), file);
+        RequestBody body = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addPart(Headers.of("Content-Disposition","form-data; name=\"file\"; filename=\"" + file.getName() + "\""), fileBody)
+                .build();
+        Log.d(TAG,"form-data; name=\"file\"; filename=\"" + file.getName() + "\"");
+        Request request = new Request.Builder().url(url).post(body).build();
+        return request;
+    }
+
 
     /**
      * 该不会开启异步线程。
