@@ -1,5 +1,7 @@
 package com.dhy.coffeesecret.pojo;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +23,7 @@ public class BakeReport implements Serializable {
     private String cookedBeanWeight;
     // 烘焙度
     private String roastDegree;
-
+    @SerializedName("tempratureSet")
     private TemperatureSet temperatureSet;
 
     private float breakPointerTime;

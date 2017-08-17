@@ -4,7 +4,6 @@ import android.bluetooth.BluetoothDevice;
 import android.util.Log;
 
 import com.dhy.coffeesecret.model.BaseBlePresenter;
-import com.dhy.coffeesecret.model.IBaseModel;
 import com.dhy.coffeesecret.model.IBaseView;
 import com.dhy.coffeesecret.model.device.IDeviceModel;
 import com.dhy.coffeesecret.utils.SettingTool;
@@ -37,11 +36,6 @@ public class Presenter4ScanList extends BaseBlePresenter {
     @Override
     public void setView(IBaseView baseView) {
         mScanListView = (IScanListView) baseView;
-    }
-
-    @Override
-    public void setModel(IBaseModel baseModel) {
-        mDeviceModel = (IDeviceModel) baseModel;
     }
 
     @Override
@@ -100,6 +94,7 @@ public class Presenter4ScanList extends BaseBlePresenter {
         SettingTool.saveAddress(connectedAddr);
         // 连接成功后结束并跳转回首页
         mScanListView.finishActivity();
+        super.destroyBluetoothListener();
     }
 
     public boolean isEnable() {

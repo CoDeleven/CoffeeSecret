@@ -2,8 +2,6 @@ package com.dhy.coffeesecret.ui.device.record;
 
 import com.dhy.coffeesecret.pojo.Temperature;
 import com.dhy.coffeesecret.pojo.TemperatureSet;
-import com.dhy.coffeesecret.utils.Utils;
-import com.github.mikephil.charting.data.Entry;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -16,7 +14,7 @@ public class RecorderSystem extends AbstractTimeSystem {
     private List<Temperature> temperatureList;
     private int startIndex = 0;
     private TemperatureSet temperatureSet;
-    private Entry curBeanEntry;
+    // private Entry curBeanEntry;
     /**
      * 每次创建新对象的时候都初始化开始时间和温度数据列表
      */
@@ -45,7 +43,7 @@ public class RecorderSystem extends AbstractTimeSystem {
         temperatureSet.addAccOutwindTemp(temperature.getAccOutwindTemp());
         temperatureSet.addTimex(curTime);
 
-        curBeanEntry = new Entry(curTime, Utils.getCrspTempratureValue(temperature.getBeanTemp() + ""));
+        // curBeanEntry = new Entry(curTime, Utils.getCrspTempratureValue(temperature.getBeanTemp() + ""));
         return curTime;
     }
 

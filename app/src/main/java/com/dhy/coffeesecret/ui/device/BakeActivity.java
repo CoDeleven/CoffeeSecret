@@ -61,12 +61,6 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
     BaseChart4Coffee chart;
     @Bind(R.id.id_baking_lineOperator)
     TextView lineOperator;
-/*    @Bind(R.id.ic_baking_accBeanImg)
-    ImageView accBeanImg;
-    @Bind(R.id.ic_baking_accInwindImg)
-    ImageView accInwindImg;
-    @Bind(R.id.ic_baking_accOutwindImg)
-    ImageView accOutwindImg;*/
     @Bind(R.id.id_baking_dry)
     Button mDry;
     @Bind(R.id.id_baking_firstBurst)
@@ -107,6 +101,13 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
     TextView idBakingAccOutwindTempBefore;
     @Bind(R.id.id_baking_accOutwindTemp_after)
     TextView idBakingAccOutwindTempAfter;
+    @Bind(R.id.id_temp_unit0)
+    TextView idTempUnit0;
+    @Bind(R.id.id_temp_unit1)
+    TextView idTempUnit1;
+    @Bind(R.id.id_temp_unit2)
+    TextView idTempUnit2;
+
 
     private PopupWindow popupWindow;
     private View popuoOperator;
@@ -132,15 +133,17 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
             idBakingBeanTemp.setText(Utils.getCrspTempratureValue(temperature.getBeanTemp() + "") + tempratureUnit);
             idBakingAccBeanTempBefore.setText(Utils.getCommaBefore(temperature.getAccBeanTemp()));
             idBakingAccBeanTempAfter.setText(Utils.getCommaAfter(temperature.getAccBeanTemp()));
+            idTempUnit0.setText(tempratureUnit + "/m");
 
             idBakingInwindTemp.setText(Utils.getCrspTempratureValue(temperature.getInwindTemp() + "") + tempratureUnit);
             idBakingAccInwindTempBefore.setText(Utils.getCommaBefore(temperature.getAccInwindTemp()));
             idBakingAccInwindTempAfter.setText(Utils.getCommaAfter(temperature.getAccInwindTemp()));
+            idTempUnit1.setText(tempratureUnit + "/m");
 
             idBakingOutwindTemp.setText(Utils.getCrspTempratureValue(temperature.getOutwindTemp() + "") + tempratureUnit);
-
             idBakingAccOutwindTempBefore.setText(Utils.getCommaBefore(temperature.getAccOutwindTemp()));
             idBakingAccOutwindTempAfter.setText(Utils.getCommaAfter(temperature.getAccOutwindTemp()));
+            idTempUnit2.setText(tempratureUnit + "/m");
 
             // switchImage(temperature);
             chart.notifyDataSetChanged();
@@ -326,15 +329,6 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
-/*        beanTemps[0] = (TextView) findViewById(R.id.id_baking_beanTemp);
-        beanTemps[1] = (TextView) findViewById(R.id.id_baking_accBeantemp);
-
-        inwindTemps[0] = (TextView) findViewById(R.id.id_baking_inwindTemp);
-        inwindTemps[1] = (TextView) findViewById(R.id.id_baking_accInwindTemp);
-
-        outwindTemps[0] = (TextView) findViewById(R.id.id_baking_outwindTemp);
-        outwindTemps[1] = (TextView) findViewById(R.id.id_baking_accOutwindTemp);*/
-
         mDry.setOnClickListener(this);
         mFirstBurst.setOnClickListener(this);
         mSecondBurst.setOnClickListener(this);
@@ -455,7 +449,6 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
         switch (id) {
             case R.id.id_baking_dry:
                 // 先当作脱水结束
-                // avgDryTime = mPresenter.getOneEventTimeInterval();
                 mPresenter.stopOneEvent(Event.DRY, "脱水");
                 // 用于记录脱水结束到一爆开始的记录
                 mPresenter.startNewRecordEvent();
@@ -491,14 +484,15 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.id_baking_end:
                 mPresenter.stopOneEvent(Event.END, "结束");
-                Intent intent = new Intent(BakeActivity.this, EditBehindActiviy.class);
                 // 清除监听器防止后续修改数据
                 mPresenter.destroyBluetoothListener();
+                // 停止烘焙,处理烘焙数据
+                mPresenter.stopBake();
 
+                Intent intent = new Intent(BakeActivity.this, EditBehindActivity.class);
                 // 发送一个bundle来标识是否来自bakeactivity的请求
                 intent.putExtra("status", I_AM_BAKEACTIVITY);
                 startActivity(intent);
-
                 finish();
                 status = true;
                 break;
@@ -565,31 +559,4 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
         mPresenter.destroyBluetoothListener();
     }
 
-/*
-    private void switchImage(Temperature temperature) {
-        float t1 = temperature.getAccBeanTemp();
-        float t2 = temperature.getAccInwindTemp();
-        float t3 = temperature.getAccOutwindTemp();
-        if (t1 > 0) {
-            accBeanImg.setImageResource(R.drawable.ic_bake_acc_up_small);
-        } else if (t1 < 0) {
-            accBeanImg.setImageResource(R.drawable.ic_bake_acc_down_small);
-        } else {
-            accBeanImg.setImageResource(R.drawable.ic_bake_acc_invariant_small);
-        }
-        if (t2 > 0) {
-            accInwindImg.setImageResource(R.drawable.ic_bake_acc_up_small);
-        } else if (t2 < 0) {
-            accInwindImg.setImageResource(R.drawable.ic_bake_acc_down_small);
-        } else {
-            accInwindImg.setImageResource(R.drawable.ic_bake_acc_invariant_small);
-        }
-        if (t3 > 0) {
-            accOutwindImg.setImageResource(R.drawable.ic_bake_acc_up_small);
-        } else if (t3 < 0) {
-            accOutwindImg.setImageResource(R.drawable.ic_bake_acc_down_small);
-        } else {
-            accOutwindImg.setImageResource(R.drawable.ic_bake_acc_invariant_small);
-        }
-    }*/
 }

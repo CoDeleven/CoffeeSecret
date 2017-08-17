@@ -2,7 +2,6 @@ package com.dhy.coffeesecret.model;
 
 import android.bluetooth.BluetoothDevice;
 
-import com.dhy.coffeesecret.model.device.Model4Device;
 import com.dhy.coffeesecret.pojo.BakeReportProxy;
 import com.dhy.coffeesecret.pojo.Temperature;
 import com.dhy.coffeesecret.services.IBleConnectionCallback;
@@ -18,7 +17,7 @@ public abstract class BaseBlePresenter implements IBasePresenter, IBleScanCallba
     protected static IBluetoothOperator mBluetoothOperator;
     protected static BakeReportProxy bakeReportProxy;
     protected static IBaseView viewOperator;
-    protected static IBaseModel deviceModel = Model4Device.newInstance();
+    protected static IBaseModel modelOperator;
     /**
      * 初始化蓝牙操作助手的监听
      *
@@ -42,7 +41,7 @@ public abstract class BaseBlePresenter implements IBasePresenter, IBleScanCallba
         mBluetoothOperator.setScanCallbackListener(null);
     }
 
-    public static BakeReportProxy getBakeReportProxy() {
+    public BakeReportProxy getBakeReportProxy() {
         return bakeReportProxy;
     }
 

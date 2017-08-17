@@ -6,5 +6,4 @@ package com.dhy.coffeesecret.model;
 
 public interface IBasePresenter {
     void setView(IBaseView baseView);
-    void setModel(IBaseModel baseModel);
 }
