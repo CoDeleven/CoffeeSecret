@@ -13,11 +13,13 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.dhy.coffeesecret.MyApplication;
@@ -39,6 +41,7 @@ import com.dhy.coffeesecret.utils.Utils;
 import com.dhy.coffeesecret.views.ArcProgress;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -60,6 +63,8 @@ public class DeviceFragment extends Fragment implements IDeviceView {
     List<BeanInfoSimple> beanInfos;
     @Bind(R.id.title_text)
     TextView titleText;
+    @Bind(R.id.id_bake_beanInfos)
+    LinearLayout beanInfoBoard;
     @Bind(R.id.bluetooth_status)
     TextView bluetoothStatus;
     @Bind(R.id.bluetooth_operator)
@@ -328,6 +333,8 @@ public class DeviceFragment extends Fragment implements IDeviceView {
             mPrepareBake.setText("开始烘焙");
             // TODO 省赛
             rerangeBean.setVisibility(View.VISIBLE);
+            // 生成简要的豆种信息在界面上
+            showSimpleBeanInfo2Fragment();
             mPrepareBake.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -435,5 +442,26 @@ public class DeviceFragment extends Fragment implements IDeviceView {
     @Override
     public void showDialog(int index) {
 
+    }
+
+    private List<TextView> generateSimpleBeanInfo(List<BeanInfoSimple> beanInfoSimples){
+        List<TextView> simpleBeanInfos = new LinkedList<>();
+        for (int i = 0; i < beanInfoSimples.size(); i++) {
+            TextView tvBeanInfo = new TextView(getContext());
+            tvBeanInfo.setText((i + 1) + ".   " + beanInfoSimples.get(i).getBeanName() + ",  " + beanInfoSimples.get(i).getUsage() + MyApplication.weightUnit);
+            tvBeanInfo.setEllipsize(TextUtils.TruncateAt.END);
+            tvBeanInfo.setSingleLine();
+            tvBeanInfo.setMaxLines(1);
+            tvBeanInfo.setLines(1);
+            simpleBeanInfos.add(tvBeanInfo);
+        }
+        return simpleBeanInfos;
+    }
+
+    private void showSimpleBeanInfo2Fragment(){
+        List<TextView> textViews = generateSimpleBeanInfo(beanInfos);
+        for (TextView textView : textViews) {
+            beanInfoBoard.addView(textView);
+        }
     }
 }

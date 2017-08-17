@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:hint="投入重量"
-            android:inputType="numberDecimal"
+            android:inputType="numberDecimal|textNoSuggestions"
             android:textSize="13.5dp"
             android:singleLine="true"
             android:maxWidth="60dp"

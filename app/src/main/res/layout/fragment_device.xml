@@ -191,11 +191,25 @@
 
         <!-- 参考物-->
         <View
-            android:id="@+id/bake_vetical_refer"
+            android:id="@+id/bake_vertical_refer"
             android:layout_width="1dp"
             android:layout_height="match_parent"
             android:layout_centerHorizontal="true"
             android:background="@android:color/transparent"></View>
+
+        <LinearLayout
+            android:layout_centerVertical="true"
+            android:orientation="vertical"
+            android:layout_marginRight="30dp"
+            android:paddingTop="40dp"
+            android:id="@+id/id_bake_beanInfos"
+            android:layout_toLeftOf="@id/bake_vertical_refer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+
+        </LinearLayout>
+
 
         <View
             android:id="@+id/bake_horizontal_refer"
@@ -211,7 +225,7 @@
             android:layout_height="114dp"
             android:layout_below="@id/device_bake_circle1"
             android:layout_marginLeft="20dp"
-            android:layout_toRightOf="@id/bake_vetical_refer">
+            android:layout_toRightOf="@id/bake_vertical_refer">
 
             <com.dhy.coffeesecret.views.ArcProgress
                 android:id="@+id/id_arcprogress_inwind"
@@ -323,7 +337,7 @@
             android:id="@+id/device_bake_circle3"
             android:layout_width="114dp"
             android:layout_height="114dp"
-            android:layout_alignRight="@id/bake_vetical_refer"
+            android:layout_alignRight="@id/bake_vertical_refer"
             android:layout_below="@id/bake_horizontal_refer"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="70dp">

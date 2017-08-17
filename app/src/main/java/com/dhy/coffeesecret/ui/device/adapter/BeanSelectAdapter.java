@@ -33,12 +33,16 @@ public class BeanSelectAdapter extends RecyclerView.Adapter<BeanSelectAdapter.Be
 
     @Override
     public BeanSelectHandler onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.bake_dialog_item, parent, false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.bake_dialog_item, null, false);
         return new BeanSelectHandler(view);
     }
 
+
     @Override
-    public void onBindViewHolder(BeanSelectHandler holder, final int position) {
+    public void onBindViewHolder(final BeanSelectHandler holder, final int position) {
+        if(holder.beanWeight.getTag() == null){
+            holder.beanWeight.setTag(position);
+        }
         final BeanInfoSimple simple = infoSimple.get(position);
         holder.beanName.setText(simple.getBeanName());
         holder.beanName.setOnClickListener(new View.OnClickListener() {
@@ -50,22 +54,23 @@ public class BeanSelectAdapter extends RecyclerView.Adapter<BeanSelectAdapter.Be
         holder.beanWeight.setText(simple.getUsage());
         holder.beanIndex.setText(position + "");
         holder.weightUnit.setText(MyApplication.weightUnit);
-        holder.beanWeight.addTextChangedListener(new TextWatcher() {
+
+        // 因为每次修改一种豆种信息时会引起其他豆种信息的刷新
+        // 并且都调用了onAfterTextChanged()方法。导致数据设置问题
+        // 故在每次获取焦点的时候设置TextWatcher,失去焦点再删除TextWatcher
+        holder.beanWeight.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                simple.setUsage(s.toString());
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus){
+                    TextWatcherListener listener = new TextWatcherListener(simple);
+                    holder.beanWeight.addTextChangedListener(listener);
+                    holder.beanWeight.setTag(listener);
+                }else{
+                    holder.beanWeight.removeTextChangedListener((TextWatcherListener)holder.beanWeight.getTag());
+                }
             }
         });
+
         holder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -102,6 +107,27 @@ public class BeanSelectAdapter extends RecyclerView.Adapter<BeanSelectAdapter.Be
             delete = (ImageView) itemView.findViewById(R.id.id_bake_dialog_delete);
             beanIndex = (TextView)itemView.findViewById(R.id.id_dialog_beanIndex);
             weightUnit = (TextView)itemView.findViewById(R.id.id_bake_dialog_unit);
+        }
+    }
+    class TextWatcherListener implements TextWatcher{
+        private final BeanInfoSimple simple;
+
+        public TextWatcherListener(BeanInfoSimple simple) {
+            this.simple = simple;
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            simple.setUsage(s.toString());
         }
     }
 }
