@@ -268,7 +268,7 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
         mPresenter.clearScanedDevices();
         mPresenter.stopScan();
         // 因为destroy不能及时执行，所以这里去掉了
-        // mPresenter.destroyBluetoothListener();
+        // mPresenter.resetBluetoothListener();
         progressViewHandler = null;
     }
 

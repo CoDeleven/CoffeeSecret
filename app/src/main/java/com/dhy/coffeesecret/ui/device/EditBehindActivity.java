@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -68,7 +69,7 @@ public class EditBehindActivity extends AppCompatActivity implements CircleSeekB
     @Bind(R.id.id_bake_degree)
     CircleSeekBar mSeekBar;
     @Bind(R.id.id_bake_behind_save)
-    Button save;
+    ImageButton save;
     @Bind(R.id.id_bake_behind_cookedWeight)
     EditText cookedWeight;
     @Bind(R.id.id_rl_score)

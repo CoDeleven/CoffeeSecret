@@ -498,7 +498,7 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.id_baking_end:
                 mPresenter.stopOneEvent(Event.END, "结束");
                 // 清除监听器防止后续修改数据
-                mPresenter.destroyBluetoothListener();
+                mPresenter.resetBluetoothListener();
                 // 停止烘焙,处理烘焙数据
                 mPresenter.stopBake();
 
@@ -568,7 +568,7 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mPresenter.destroyBluetoothListener();
+        mPresenter.resetBluetoothListener();
     }
 
 }

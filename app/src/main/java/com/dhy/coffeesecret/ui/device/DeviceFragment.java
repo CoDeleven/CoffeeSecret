@@ -60,17 +60,16 @@ public class DeviceFragment extends Fragment implements IDeviceView {
     private static Presenter4Device mPresenter;
     @Bind(R.id.id_device_prepare_bake)
     Button mPrepareBake;
-    boolean hasPrepared = false;
     List<BeanInfoSimple> beanInfos;
     @Bind(R.id.title_text)
     TextView titleText;
-    @Bind(R.id.id_bake_beanInfos)
+    @Bind(R.id.id_modify_beanInfos)
     LinearLayout beanInfoBoard;
     @Bind(R.id.bluetooth_status)
     TextView bluetoothStatus;
     @Bind(R.id.bluetooth_operator)
     TextView mTvListBluetooth;
-    @Bind(R.id.id_rerange_bean)
+    @Bind(R.id.id_add_bean)
     Button mBtModifyBeanInfo;
     @Bind(R.id.id_arcprogress_bean)
     ArcProgress tempratureNeedConvert1;
@@ -124,7 +123,6 @@ public class DeviceFragment extends Fragment implements IDeviceView {
     TextView idBakeInwindTemp;
     @Bind(R.id.id_bake_outwindTemp)
     TextView idBakeOutwindTemp;
-    private float beginTemp;
     private BakeReport referTemperatures;
     private Handler mToastHandler = new Handler(new Handler.Callback() {
         @Override
@@ -156,27 +154,6 @@ public class DeviceFragment extends Fragment implements IDeviceView {
             return false;
         }
     });
-    private ServiceConnection conn = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            // 获取蓝牙服务
-            IBluetoothOperator mBluetoothOperator = ((BluetoothService.BluetoothBinder) service).getBluetoothOperator();
-            mPresenter = Presenter4Device.newInstance(mBluetoothOperator);
-            setupPresenter();
-
-            // 如果lastaddress不为空，则尝试直接连接该蓝牙;
-            if (!"".equals(lastAddress)) {
-                T.showShort(getContext(), "正在搜索上一次设备:" + lastAddress + "...");
-                // 通过扫描，如果扫描到地址一样的设备，则进行重连
-                mBluetoothOperator.startScanDevice();
-            }
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-
-        }
-    };
     private Handler mShowHandler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
@@ -227,6 +204,27 @@ public class DeviceFragment extends Fragment implements IDeviceView {
             return false;
         }
     });
+    private ServiceConnection conn = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            // 获取蓝牙服务
+            IBluetoothOperator mBluetoothOperator = ((BluetoothService.BluetoothBinder) service).getBluetoothOperator();
+            mPresenter = Presenter4Device.newInstance(mBluetoothOperator);
+            setupPresenter();
+
+            // 如果lastaddress不为空，则尝试直接连接该蓝牙;
+            if (!"".equals(lastAddress)) {
+                T.showShort(getContext(), "正在搜索上一次设备:" + lastAddress + "...");
+                // 通过扫描，如果扫描到地址一样的设备，则进行重连
+                mBluetoothOperator.startScanDevice();
+            }
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
+    };
 
     /**
      * 用于更新温度显示
@@ -234,7 +232,6 @@ public class DeviceFragment extends Fragment implements IDeviceView {
      * @param temperature 温度
      */
     private void updateTemperatureText(Temperature temperature) {
-        beginTemp = Utils.get2PrecisionFloat(temperature.getBeanTemp());
         idBakeBeanTemp.setText(Utils.getCrspTempratureValue(temperature.getBeanTemp() + "") + MyApplication.temperatureUnit);
         idBakingAccBeanTempBefore.setText(Utils.getCommaBefore(temperature.getAccBeanTemp()));
         idBakingAccBeanTempAfter.setText(Utils.getCommaAfter(temperature.getAccBeanTemp()));
@@ -269,17 +266,30 @@ public class DeviceFragment extends Fragment implements IDeviceView {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_device, container, false);
         ButterKnife.bind(this, view);
-        init();
-        switchStatus();
         return view;
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        // 根据是否准备，更换按钮事件
-        switchStatus();
         setupPresenter();
+    }
+
+    @OnClick({R.id.id_modify_beanInfos, R.id.bluetooth_operator, R.id.id_device_prepare_bake, R.id.id_add_bean})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.id_add_bean:
+            case R.id.id_modify_beanInfos:
+                showDialogFragment();
+                break;
+            case R.id.bluetooth_operator:
+                Intent intent = new Intent(getContext(), BluetoothListActivity.class);
+                startActivityForResult(intent, 9);
+                break;
+            case R.id.id_device_prepare_bake:
+                goBake();
+                break;
+        }
     }
 
     /**
@@ -308,9 +318,12 @@ public class DeviceFragment extends Fragment implements IDeviceView {
             @Override
             public void setBeanInfos(List<BeanInfoSimple> beanInfos) {
                 DeviceFragment.this.beanInfos = beanInfos;
-                hasPrepared = true;
-                mPrepareBake.setText("开始烘焙");
-                switchStatus();
+                // 隐藏ModifyBeanInfo的按钮
+                mBtModifyBeanInfo.setVisibility(View.GONE);
+                // 显示豆种信息列表
+                beanInfoBoard.setVisibility(View.VISIBLE);
+                // 生成简要的豆种信息在界面上
+                showSimpleBeanInfo2Fragment();
             }
 
             @Override
@@ -321,76 +334,40 @@ public class DeviceFragment extends Fragment implements IDeviceView {
         FragmentTool.getFragmentToolInstance(getContext()).showDialogFragmen("dialogFragment", dialogFragment);
     }
 
-    private void init() {
-        titleText.setText("烘焙");
-
-        mTvListBluetooth.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getContext(), BluetoothListActivity.class);
-                startActivityForResult(intent, 9);
-            }
-        });
-    }
-
-    private void switchStatus() {
-        if (hasPrepared) {
-            mPrepareBake.setText("开始烘焙");
-            // TODO 省赛
-            mBtModifyBeanInfo.setVisibility(View.VISIBLE);
-            // 生成简要的豆种信息在界面上
-            showSimpleBeanInfo2Fragment();
-            mPrepareBake.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mPresenter == null || !mPresenter.isConnected()) {
-                        mShowHandler.sendEmptyMessage(0);
-                        return;
-                    }
-                    if (!(beanInfos.size() > 0)) {
-                        mShowHandler.sendEmptyMessage(1);
-                        return;
-                    }
-                    mPresenter.initBakeReport();
-                    BakeReportProxy proxy = mPresenter.getBakeReportProxy();
-
-                    Intent intent = new Intent(getContext(), BakeActivity.class);
-                    proxy.setBeanInfoSimples(beanInfos);
-                    if (beanInfos.size() == 1) {
-                        proxy.setSingleBeanId(beanInfos.get(0).getSingleBeanId());
-                    }
-                    for (BeanInfoSimple simple : beanInfos) {
-                        simple.setUsage(Utils.getReversed2DefaultWeight(simple.getUsage()) + "");
-
-                    }
-                    intent.putExtra(BakeActivity.DEVICE_NAME, mPresenter.getConnectedDevice());
-                    if (referTemperatures != null) {
-                        intent.putExtra(BakeActivity.ENABLE_REFERLINE, referTemperatures);
-                    }
-
-                    mBtModifyBeanInfo.setVisibility(View.INVISIBLE);
-                    startActivity(intent);
-                    mPresenter.destroyBluetoothListener();
-                    hasPrepared = false;
-                }
-            });
-        } else {
-            mBtModifyBeanInfo.setVisibility(View.INVISIBLE);
-            mPrepareBake.setText("准备烘焙");
-            mPrepareBake.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // 方便测试烘焙过程界面, 暂时隐藏
-                    showDialogFragment();
-                }
-            });
+    private void goBake() {
+        if (mPresenter == null || !mPresenter.isConnected()) {
+            mShowHandler.sendEmptyMessage(0);
+            return;
         }
+        if(beanInfos == null){
+            beanInfos = new ArrayList<>();
+        }
+        if (!(beanInfos.size() > 0)) {
+            // TODO 理论上是要处理的，但是懒得
+            // return;
+        }
+        mPresenter.initBakeReport();
+        BakeReportProxy proxy = mPresenter.getBakeReportProxy();
+
+        Intent intent = new Intent(getContext(), BakeActivity.class);
+        proxy.setBeanInfoSimples(beanInfos);
+        if (beanInfos.size() == 1) {
+            proxy.setSingleBeanId(beanInfos.get(0).getSingleBeanId());
+        }
+        for (BeanInfoSimple simple : beanInfos) {
+            simple.setUsage(Utils.getReversed2DefaultWeight(simple.getUsage()) + "");
+
+        }
+        intent.putExtra(BakeActivity.DEVICE_NAME, mPresenter.getConnectedDevice());
+        if (referTemperatures != null) {
+            intent.putExtra(BakeActivity.ENABLE_REFERLINE, referTemperatures);
+        }
+
+        mBtModifyBeanInfo.setVisibility(View.INVISIBLE);
+        startActivity(intent);
+        mPresenter.resetBluetoothListener();
     }
 
-    @OnClick(R.id.id_rerange_bean)
-    public void modifyBeanInfo(View view) {
-        showDialogFragment();
-    }
 
     @Override
     public void updateText(int index, Object updateContent) {
@@ -428,9 +405,11 @@ public class DeviceFragment extends Fragment implements IDeviceView {
     }
 
     private void showSimpleBeanInfo2Fragment() {
+        beanInfoBoard.removeAllViews();
         List<TextView> textViews = generateSimpleBeanInfo(beanInfos);
-        for (TextView textView : textViews) {
-            beanInfoBoard.addView(textView);
+        // 最多就显示三列数据
+        for (int i = 0; i < (textViews.size() > 3 ? 3 : textViews.size()); i++) {
+            beanInfoBoard.addView(textViews.get(i));
         }
     }
 

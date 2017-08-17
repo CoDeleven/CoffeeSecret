@@ -94,7 +94,7 @@ public class Presenter4ScanList extends BaseBlePresenter {
         SettingTool.saveAddress(connectedAddr);
         // 连接成功后结束并跳转回首页
         mScanListView.finishActivity();
-        super.destroyBluetoothListener();
+        super.resetBluetoothListener();
     }
 
     public boolean isEnable() {

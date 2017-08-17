@@ -36,7 +36,7 @@ public abstract class BaseBlePresenter implements IBasePresenter, IBleScanCallba
             }
         }
     }
-    public void destroyBluetoothListener() {
+    public void resetBluetoothListener() {
         mBluetoothOperator.setTemperatureListener(null);
         mBluetoothOperator.setScanCallbackListener(null);
     }

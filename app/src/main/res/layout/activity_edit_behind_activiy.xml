@@ -24,13 +24,14 @@
             android:text="@string/title_device_child_activity"
             android:textColor="#FFF"
             android:textSize="20sp"/>
-        <Button
+        <ImageButton
             android:id="@+id/id_bake_behind_save"
             android:layout_gravity="right|center_vertical"
             android:background="@android:color/transparent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="17sp"
+            android:padding="16dp"
+            android:src="@drawable/ic_right_white"
             android:textColor="#FFF"
             android:text="保存"/>
     </android.support.v7.widget.Toolbar>
