@@ -18,8 +18,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.dhy.coffeesecret.MyApplication;
@@ -48,18 +48,17 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.dhy.coffeesecret.MyApplication.temperatureUnit;
+
 // TODO 待重构,重构对象-> 统一符号处理、统一handler处理、统一dialog的生成方式
 
 public class DeviceFragment extends Fragment implements IDeviceView {
 
-    public static final int MANUAL = 2;
-    public static final int AUTOMATIC = 3;
     public static final int AUTO_CONNECTION_TIPS = 0x100;
     private static String lastAddress = null;
     @Bind(R.id.id_device_prepare_bake)
     Button mPrepareBake;
     boolean hasPrepared = false;
-    // List<DialogBeanInfo> dialogBeanInfos;
     List<BeanInfoSimple> beanInfos;
     @Bind(R.id.title_text)
     TextView titleText;
@@ -69,24 +68,6 @@ public class DeviceFragment extends Fragment implements IDeviceView {
     TextView bluetoothStatus;
     @Bind(R.id.bluetooth_operator)
     TextView operator;
-    @Bind(R.id.id_bake_beanTemp)
-    TextView beanTemp;
-    @Bind(R.id.id_bake_inwindTemp)
-    TextView inwindTemp;
-    @Bind(R.id.id_bake_outwindTemp)
-    TextView outwindTemp;
-    @Bind(R.id.id_bake_accBeanTemp)
-    TextView accBeanTemp;
-    @Bind(R.id.id_bake_accInwindTemp)
-    TextView accInwindTemp;
-    @Bind(R.id.id_bake_accOutwindTemp)
-    TextView accOutwindTemp;
-    @Bind(R.id.id_bake_accBeanView)
-    ImageView accBeanView;
-    @Bind(R.id.id_bake_accInwindView)
-    ImageView accInwindView;
-    @Bind(R.id.id_bake_accOutwindView)
-    ImageView accOutwindView;
     @Bind(R.id.id_rerange_bean)
     Button rerangeBean;
     @Bind(R.id.id_arcprogress_bean)
@@ -95,21 +76,56 @@ public class DeviceFragment extends Fragment implements IDeviceView {
     ArcProgress tempratureNeedConvert2;
     @Bind(R.id.id_arcprogress_outwind)
     ArcProgress tempratureNeedConvert3;
-    @Bind(R.id.id_bake_accBeanUnit)
-    TextView accBeanUnit;
-    @Bind(R.id.id_bake_accinwindUnit)
-    TextView accInwindunit;
-    @Bind(R.id.id_bake_accoutwindUnit)
-    TextView accOutwindUnit;
-/*    @Bind(R.id.id_device_mode)
-    TextView mode;*/
+    @Bind(R.id.id_device_mode)
+    Button idDeviceMode;
+    @Bind(R.id.id_baking_comma0)
+    TextView idBakingComma0;
+    @Bind(R.id.id_baking_accBeanTemp_before)
+    TextView idBakingAccBeanTempBefore;
+    @Bind(R.id.id_baking_accBeanTemp_after)
+    TextView idBakingAccBeanTempAfter;
+    @Bind(R.id.id_temp_unit0)
+    TextView idTempUnit0;
+    @Bind(R.id.id_layout_switch)
+    RelativeLayout idLayoutSwitch;
+    @Bind(R.id.device_bake_circle1)
+    RelativeLayout deviceBakeCircle1;
+    @Bind(R.id.bake_vertical_refer)
+    View bakeVerticalRefer;
+    @Bind(R.id.bake_horizontal_refer)
+    View bakeHorizontalRefer;
+    @Bind(R.id.id_baking_comma1)
+    TextView idBakingComma1;
+    @Bind(R.id.id_baking_accInwindTemp_before)
+    TextView idBakingAccInwindTempBefore;
+    @Bind(R.id.id_baking_accInwindTemp_after)
+    TextView idBakingAccInwindTempAfter;
+    @Bind(R.id.id_temp_unit1)
+    TextView idTempUnit1;
+    @Bind(R.id.device_bake_circle2)
+    RelativeLayout deviceBakeCircle2;
+    @Bind(R.id.id_baking_comma2)
+    TextView idBakingComma2;
+    @Bind(R.id.id_baking_accOutwindTemp_before)
+    TextView idBakingAccOutwindTempBefore;
+    @Bind(R.id.id_baking_accOutwindTemp_after)
+    TextView idBakingAccOutwindTempAfter;
+    @Bind(R.id.id_temp_unit2)
+    TextView idTempUnit2;
+    @Bind(R.id.device_bake_circle3)
+    RelativeLayout deviceBakeCircle3;
+    @Bind(R.id.device_content)
+    RelativeLayout deviceContent;
+    @Bind(R.id.id_bake_beanTemp)
+    TextView idBakeBeanTemp;
+    @Bind(R.id.id_bake_inwindTemp)
+    TextView idBakeInwindTemp;
+    @Bind(R.id.id_bake_outwindTemp)
+    TextView idBakeOutwindTemp;
 
     private float beginTemp;
-    private boolean isStart = false;
-    // private int curMode = MANUAL;
-    private float envTemp;
     private static Presenter4Device mPresenter;
-    private BakeReport referTempratures;
+    private BakeReport referTemperatures;
     private ServiceConnection conn = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
@@ -132,12 +148,12 @@ public class DeviceFragment extends Fragment implements IDeviceView {
         }
     };
 
-    private Handler mToastHandler = new Handler(new Handler.Callback(){
+    private Handler mToastHandler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
-            switch (msg.what){
+            switch (msg.what) {
                 case AUTO_CONNECTION_TIPS:
-                    T.showShort(getContext(), (String)msg.obj);
+                    T.showShort(getContext(), (String) msg.obj);
                     break;
             }
             return false;
@@ -210,21 +226,25 @@ public class DeviceFragment extends Fragment implements IDeviceView {
             return false;
         }
     });
-    private Handler mHandler = new Handler(new Handler.Callback() {
+    private Handler mTemperatureHandler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
             Temperature temperature = (Temperature) msg.obj;
-            beanTemp.setText(Utils.getCrspTempratureValue(String.format("%1$.2f", temperature.getBeanTemp())) + MyApplication.tempratureUnit);
-            // 随时保存开始烘焙的温度
             beginTemp = Utils.get2PrecisionFloat(temperature.getBeanTemp());
-            envTemp = Utils.get2PrecisionFloat(temperature.getEnvTemp());
-            inwindTemp.setText(Utils.getCrspTempratureValue(temperature.getInwindTemp() + "") + MyApplication.tempratureUnit);
-            outwindTemp.setText(Utils.getCrspTempratureValue(temperature.getOutwindTemp() + "") + MyApplication.tempratureUnit);
-            accBeanTemp.setText(Utils.getCrspTempratureValue(temperature.getAccBeanTemp() + "") + "");
-            accInwindTemp.setText(Utils.getCrspTempratureValue(temperature.getAccInwindTemp() + "") + "");
-            accOutwindTemp.setText(Utils.getCrspTempratureValue(temperature.getAccOutwindTemp() + "") + "");
+            idBakeBeanTemp.setText(Utils.getCrspTempratureValue(temperature.getBeanTemp() + "") + MyApplication.temperatureUnit);
+            idBakingAccBeanTempBefore.setText(Utils.getCommaBefore(temperature.getAccBeanTemp()));
+            idBakingAccBeanTempAfter.setText(Utils.getCommaAfter(temperature.getAccBeanTemp()));
+            idTempUnit0.setText(temperatureUnit + "/m");
 
-            switchImage(temperature);
+            idBakeInwindTemp.setText(Utils.getCrspTempratureValue(temperature.getInwindTemp() + "") + MyApplication.temperatureUnit);
+            idBakingAccInwindTempBefore.setText(Utils.getCommaBefore(temperature.getAccInwindTemp()));
+            idBakingAccInwindTempAfter.setText(Utils.getCommaAfter(temperature.getAccInwindTemp()));
+            idTempUnit1.setText(temperatureUnit + "/m");
+
+            idBakeOutwindTemp.setText(Utils.getCrspTempratureValue(temperature.getOutwindTemp() + "") + MyApplication.temperatureUnit);
+            idBakingAccOutwindTempBefore.setText(Utils.getCommaBefore(temperature.getAccOutwindTemp()));
+            idBakingAccOutwindTempAfter.setText(Utils.getCommaAfter(temperature.getAccOutwindTemp()));
+            idTempUnit2.setText(temperatureUnit + "/m");
 
             return false;
         }
@@ -234,7 +254,7 @@ public class DeviceFragment extends Fragment implements IDeviceView {
     public void updateTemperatureView(Temperature temperature) {
         Message msg = new Message();
         msg.obj = temperature;
-        mHandler.sendMessage(msg);
+        mTemperatureHandler.sendMessage(msg);
     }
 
     @Override
@@ -263,22 +283,15 @@ public class DeviceFragment extends Fragment implements IDeviceView {
     @Override
     public void onStart() {
         super.onStart();
-
-        /*// 清空上一次的beanInfo
-        if (beanInfos != null) {
-            beanInfos.clear();
-        }*/
         // 根据是否准备，更换按钮事件
         switchStatus();
         setupPresenter();
-        // 转化单位
-        convertUnit();
     }
 
     /**
      * 安装presenter
      */
-    private void setupPresenter(){
+    private void setupPresenter() {
         // 如果操作对象不为null而且是连接着的状态
         if (mPresenter != null) {
             mPresenter.setView(this);
@@ -308,7 +321,7 @@ public class DeviceFragment extends Fragment implements IDeviceView {
 
             @Override
             public void setTemperatures(BakeReport temperatures) {
-                DeviceFragment.this.referTempratures = temperatures;
+                DeviceFragment.this.referTemperatures = temperatures;
             }
         });
         FragmentTool.getFragmentToolInstance(getContext()).showDialogFragmen("dialogFragment", dialogFragment);
@@ -359,8 +372,8 @@ public class DeviceFragment extends Fragment implements IDeviceView {
 
                     }
                     intent.putExtra(BakeActivity.DEVICE_NAME, mPresenter.getConnectedDevice());
-                    if (referTempratures != null) {
-                        intent.putExtra(BakeActivity.ENABLE_REFERLINE, referTempratures);
+                    if (referTemperatures != null) {
+                        intent.putExtra(BakeActivity.ENABLE_REFERLINE, referTemperatures);
                     }
 
                     rerangeBean.setVisibility(View.INVISIBLE);
@@ -387,42 +400,6 @@ public class DeviceFragment extends Fragment implements IDeviceView {
         showDialogFragment();
     }
 
-
-    private void switchImage(Temperature temperature) {
-        float t1 = temperature.getAccBeanTemp();
-        float t2 = temperature.getAccInwindTemp();
-        float t3 = temperature.getAccOutwindTemp();
-        if (t1 > 0) {
-            accBeanView.setImageResource(R.drawable.ic_bake_acc_up_big);
-        } else if (t1 < 0) {
-            accBeanView.setImageResource(R.drawable.ic_bake_acc_down_big);
-        } else {
-            accBeanView.setImageResource(R.drawable.ic_bake_acc_invariant_big);
-        }
-        if (t2 > 0) {
-            accInwindView.setImageResource(R.drawable.ic_bake_acc_up_small);
-        } else if (t2 < 0) {
-            accInwindView.setImageResource(R.drawable.ic_bake_acc_down_small);
-        } else {
-            accInwindView.setImageResource(R.drawable.ic_bake_acc_invariant_small);
-        }
-        if (t3 > 0) {
-            accOutwindView.setImageResource(R.drawable.ic_bake_acc_up_small);
-        } else if (t3 < 0) {
-            accOutwindView.setImageResource(R.drawable.ic_bake_acc_down_small);
-        } else {
-            accOutwindView.setImageResource(R.drawable.ic_bake_acc_invariant_small);
-        }
-    }
-
-    private void convertUnit() {
-        String tempratureUnit = MyApplication.tempratureUnit;
-
-        accBeanUnit.setText(tempratureUnit + "/m");
-        accInwindunit.setText(tempratureUnit + "/m");
-        accOutwindUnit.setText(tempratureUnit + "/m");
-    }
-
     @Override
     public void updateText(int index, String updateContent) {
         Message msg = new Message();
@@ -444,7 +421,7 @@ public class DeviceFragment extends Fragment implements IDeviceView {
 
     }
 
-    private List<TextView> generateSimpleBeanInfo(List<BeanInfoSimple> beanInfoSimples){
+    private List<TextView> generateSimpleBeanInfo(List<BeanInfoSimple> beanInfoSimples) {
         List<TextView> simpleBeanInfos = new LinkedList<>();
         for (int i = 0; i < beanInfoSimples.size(); i++) {
             TextView tvBeanInfo = new TextView(getContext());
@@ -458,10 +435,16 @@ public class DeviceFragment extends Fragment implements IDeviceView {
         return simpleBeanInfos;
     }
 
-    private void showSimpleBeanInfo2Fragment(){
+    private void showSimpleBeanInfo2Fragment() {
         List<TextView> textViews = generateSimpleBeanInfo(beanInfos);
         for (TextView textView : textViews) {
             beanInfoBoard.addView(textView);
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
     }
 }

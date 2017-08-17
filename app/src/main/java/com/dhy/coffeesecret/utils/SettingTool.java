@@ -41,7 +41,7 @@ public class SettingTool {
         sharedPreferences = context.getSharedPreferences("secret", Context.MODE_PRIVATE);
         mConfig = new UniversalConfiguration();
         mConfig.setWeightUnit(sharedPreferences.getString("weightUnit", "kg"));
-        mConfig.setTempratureUnit(sharedPreferences.getString("tempratureUnit", "℃"));
+        mConfig.setTempratureUnit(sharedPreferences.getString("temperatureUnit", "℃"));
         mConfig.setReferDegree(sharedPreferences.getString("referDegree", "Agtron"));
         mConfig.setQuickStart(sharedPreferences.getBoolean("quickStart", false));
         mConfig.setDoubleClick(sharedPreferences.getBoolean("doubleClick", true));
@@ -72,7 +72,7 @@ public class SettingTool {
 
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("weightUnit", config.getWeightUnit());
-        editor.putString("tempratureUnit", config.getTempratureUnit());
+        editor.putString("temperatureUnit", config.getTempratureUnit());
         editor.putString("referDegree", config.getReferDegree());
         editor.putString("quickEvent", config.getQuickEvents());
         editor.putString("colorPackageName", config.getColorPackageName());

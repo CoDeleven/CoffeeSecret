@@ -40,7 +40,7 @@ import static com.dhy.coffeesecret.utils.HttpUtils.getRequest;
 
 public class MyApplication extends Application {
     public static String weightUnit;
-    public static String tempratureUnit;
+    public static String temperatureUnit;
     private static Map<String, BeanInfo> beanInfos = new HashMap<>();
     private static Map<String, CuppingInfo> cupInfos = new HashMap<>();
     private static Map<String, BakeReport> bakeReports = new HashMap<>();
@@ -286,6 +286,6 @@ public class MyApplication extends Application {
     public void initUnit() {
         UniversalConfiguration config = SettingTool.getConfig(this);
         weightUnit = config.getWeightUnit();
-        tempratureUnit = config.getTempratureUnit();
+        temperatureUnit = config.getTempratureUnit();
     }
 }

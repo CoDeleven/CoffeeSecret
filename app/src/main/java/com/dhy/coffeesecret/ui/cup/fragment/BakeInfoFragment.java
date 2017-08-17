@@ -198,9 +198,9 @@ public class BakeInfoFragment extends Fragment implements View.OnClickListener {
         if (mBakeReport != null && mDevTime != null) {
             mDevTime.setText(mBakeReport.getDevelopmentTime());
             mDevRate.setText(mBakeReport.getDevelopmentRate() + "%");
-            mEndTemp.setText(Utils.getCrspTempratureValue(mBakeReport.getEndTemperature()) + MyApplication.tempratureUnit);
-            mStartTemp.setText(Utils.getCrspTempratureValue(mBakeReport.getStartTemperature()) + MyApplication.tempratureUnit);
-            mEnvTime.setText(Utils.getCrspTempratureValue(mBakeReport.getAmbientTemperature()) + MyApplication.tempratureUnit);
+            mEndTemp.setText(Utils.getCrspTempratureValue(mBakeReport.getEndTemperature()) + MyApplication.temperatureUnit);
+            mStartTemp.setText(Utils.getCrspTempratureValue(mBakeReport.getStartTemperature()) + MyApplication.temperatureUnit);
+            mEnvTime.setText(Utils.getCrspTempratureValue(mBakeReport.getAmbientTemperature()) + MyApplication.temperatureUnit);
 
             BakeReportProxy proxy = new BakeReportProxy(mBakeReport);
             mChart.setTemperatureSet(proxy.getBakeReport().getTemperatureSet());

@@ -245,9 +245,11 @@ public class BluetoothService extends Service implements IBluetoothOperator {
 
     @Override
     public void closeBluetooth() {
-        clearInfo();
-        mBluetoothGatt.disconnect();
-        mBluetoothGatt.close();
+        if(mBluetoothGatt != null){
+            clearInfo();
+            mBluetoothGatt.disconnect();
+            mBluetoothGatt.close();
+        }
     }
 
     private void clearInfo() {

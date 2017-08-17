@@ -32,7 +32,7 @@ public class ReportMarker extends MarkerView {
     @Override
     public void refreshContent(Entry e, Highlight highlight) {
         if(!"".equals(e.getEvent().getDescription())){
-            temp.setText("温度:" + Utils.getCrspTempratureValue(Utils.get2PrecisionFloat(e.getY()) + "") + MyApplication.tempratureUnit);
+            temp.setText("温度:" + Utils.getCrspTempratureValue(Utils.get2PrecisionFloat(e.getY()) + "") + MyApplication.temperatureUnit);
             time.setText("时间："+ Utils.getTimeWithFormat(e.getX()));
             event.setText("事件:" + e.getEvent().getDescription());
         }

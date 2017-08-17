@@ -46,7 +46,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.dhy.coffeesecret.MyApplication.tempratureUnit;
+import static com.dhy.coffeesecret.MyApplication.temperatureUnit;
 import static com.dhy.coffeesecret.model.chart.Model4Chart.ACCBEANLINE;
 import static com.dhy.coffeesecret.model.chart.Model4Chart.ACCINWINDLINE;
 import static com.dhy.coffeesecret.model.chart.Model4Chart.ACCOUTWINDLINE;
@@ -132,20 +132,20 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
         public boolean handleMessage(Message msg) {
             Temperature temperature = (Temperature) msg.obj;
             // 所有用户可见性数值均进行转换
-            idBakingBeanTemp.setText(Utils.getCrspTempratureValue(temperature.getBeanTemp() + "") + tempratureUnit);
+            idBakingBeanTemp.setText(Utils.getCrspTempratureValue(temperature.getBeanTemp() + "") + temperatureUnit);
             idBakingAccBeanTempBefore.setText(Utils.getCommaBefore(temperature.getAccBeanTemp()));
             idBakingAccBeanTempAfter.setText(Utils.getCommaAfter(temperature.getAccBeanTemp()));
-            idTempUnit0.setText(tempratureUnit + "/m");
+            idTempUnit0.setText(temperatureUnit + "/m");
 
-            idBakingInwindTemp.setText(Utils.getCrspTempratureValue(temperature.getInwindTemp() + "") + tempratureUnit);
+            idBakingInwindTemp.setText(Utils.getCrspTempratureValue(temperature.getInwindTemp() + "") + temperatureUnit);
             idBakingAccInwindTempBefore.setText(Utils.getCommaBefore(temperature.getAccInwindTemp()));
             idBakingAccInwindTempAfter.setText(Utils.getCommaAfter(temperature.getAccInwindTemp()));
-            idTempUnit1.setText(tempratureUnit + "/m");
+            idTempUnit1.setText(temperatureUnit + "/m");
 
-            idBakingOutwindTemp.setText(Utils.getCrspTempratureValue(temperature.getOutwindTemp() + "") + tempratureUnit);
+            idBakingOutwindTemp.setText(Utils.getCrspTempratureValue(temperature.getOutwindTemp() + "") + temperatureUnit);
             idBakingAccOutwindTempBefore.setText(Utils.getCommaBefore(temperature.getAccOutwindTemp()));
             idBakingAccOutwindTempAfter.setText(Utils.getCommaAfter(temperature.getAccOutwindTemp()));
-            idTempUnit2.setText(tempratureUnit + "/m");
+            idTempUnit2.setText(temperatureUnit + "/m");
 
             // switchImage(temperature);
             chart.notifyDataSetChanged();

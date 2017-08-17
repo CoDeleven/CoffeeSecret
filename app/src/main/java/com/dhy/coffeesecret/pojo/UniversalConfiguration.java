@@ -264,7 +264,7 @@ public class UniversalConfiguration {
     public String toString() {
         return "UniversalConfiguration{" +
                 "weightUnit='" + weightUnit + '\'' +
-                ", tempratureUnit='" + tempratureUnit + '\'' +
+                ", temperatureUnit='" + tempratureUnit + '\'' +
                 ", referDegree='" + referDegree + '\'' +
                 ", quickEvents='" + quickEvents + '\'' +
                 ", quickStart=" + quickStart +

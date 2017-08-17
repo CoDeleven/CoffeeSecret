@@ -302,7 +302,7 @@ public class BaseChart4Coffee extends LineChart implements IChartView {
         // 设置最小值
         rightAxis.setAxisMinimum(0f);
         rightAxis.setDrawGridLines(false);
-        rightAxis.unit = MyApplication.tempratureUnit;
+        rightAxis.unit = MyApplication.temperatureUnit;
         rightAxis.setLabelCount(7, true);
 
         tempSmoothNumber = mConfig.getTempratureSmooth();

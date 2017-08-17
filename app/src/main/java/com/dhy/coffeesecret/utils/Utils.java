@@ -182,7 +182,7 @@ public class Utils {
      * @return
      */
     public static float getCrspTempratureValue(String value) {
-        String curUnit = MyApplication.tempratureUnit;
+        String curUnit = MyApplication.temperatureUnit;
         float result = Float.parseFloat(value);
         if ("℉".equals(curUnit)) {
             return get2PrecisionFloat(result * 1.8f + 32.0f);

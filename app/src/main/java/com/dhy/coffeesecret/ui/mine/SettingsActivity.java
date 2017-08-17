@@ -215,12 +215,12 @@ public class SettingsActivity extends AppCompatActivity {
                                         case "℃":
                                             maxLeftY = (int) ((config.getMaxLeftY() - 32) / 1.8);
                                             maxRightY = (int) ((config.getMaxRightY() - 32) / 1.8);
-                                            ((MyApplication) getApplicationContext()).tempratureUnit = "℃";
+                                            ((MyApplication) getApplicationContext()).temperatureUnit = "℃";
                                             break;
                                         case "℉":
                                             maxLeftY = (int) (config.getMaxLeftY() * 1.8 + 32);
                                             maxRightY = (int) (config.getMaxRightY() * 1.8 + 32);
-                                            ((MyApplication) getApplicationContext()).tempratureUnit = "℉";
+                                            ((MyApplication) getApplicationContext()).temperatureUnit = "℉";
                                             break;
                                     }
                                     textTemperatureShaft.setText("最高" + maxLeftY
