@@ -1,7 +1,5 @@
 package com.dhy.coffeesecret.pojo;
 
-import com.github.mikephil.charting.data.Event;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +22,7 @@ public class BakeReport implements Serializable {
     // 烘焙度
     private String roastDegree;
 
-    private TempratureSet tempratureSet;
+    private TemperatureSet temperatureSet;
 
     private float breakPointerTime;
     private float breakPointerTemprature;
@@ -153,12 +151,12 @@ public class BakeReport implements Serializable {
         this.beanInfoSimples = beanInfoSimples;
     }
 
-    public TempratureSet getTempratureSet() {
-        return tempratureSet;
+    public TemperatureSet getTemperatureSet() {
+        return temperatureSet;
     }
 
-    public void setTempratureSet(TempratureSet tempratureSet) {
-        this.tempratureSet = tempratureSet;
+    public void setTemperatureSet(TemperatureSet temperatureSet) {
+        this.temperatureSet = temperatureSet;
     }
 
     public String getDate() {
@@ -188,7 +186,7 @@ public class BakeReport implements Serializable {
     }
 
     public Map<String, String> getEvents(){
-        return tempratureSet.getEvents();
+        return temperatureSet.getEvents();
     }
 
     public float getBreakPointerTime() {

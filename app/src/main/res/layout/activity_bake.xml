@@ -11,7 +11,7 @@
     tools:context="com.dhy.coffeesecret.ui.device.BakeActivity">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="127dp"
         android:layout_height="match_parent"
         android:layout_marginLeft="5.625dp"
         android:orientation="vertical"
@@ -40,28 +40,27 @@
                 style="@style/bakingTemp"
                 android:layout_below="@id/id_baking_beanTitle"
                 android:text="371℃"/>
-
-            <LinearLayout
-                android:layout_centerHorizontal="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <RelativeLayout
                 android:layout_below="@id/id_baking_beanTemp"
-                android:gravity="center_horizontal"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:id="@+id/ic_baking_accBeanImg"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:src="@drawable/ic_bake_acc_invariant_small"/>
+                android:layout_width="101.25dp"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/id_baking_comma0"
+                    android:layout_centerHorizontal="true"
+                    style="@style/bakingAccTemp"
+                    android:text="."/>
 
                 <TextView
-                    android:id="@+id/id_baking_accBeantemp"
+                    android:id="@+id/id_baking_accBeanTemp_before"
                     style="@style/bakingAccTemp"
-                    android:text="0.1℃/s"/>
-
-            </LinearLayout>
+                    android:layout_toLeftOf="@id/id_baking_comma0"
+                    android:text="00"/>
+                <TextView
+                    android:id="@+id/id_baking_accBeanTemp_after"
+                    android:layout_toRightOf="@id/id_baking_comma0"
+                    style="@style/bakingAccTemp"
+                    android:text="00"/>
+            </RelativeLayout>
         </RelativeLayout>
 
         <RelativeLayout
@@ -87,27 +86,27 @@
                 style="@style/bakingTemp"
                 android:layout_below="@id/id_baking_inwindTitle"
                 android:text="371℃"/>
-
-            <LinearLayout
-                android:layout_centerHorizontal="true"
+            <RelativeLayout
                 android:layout_below="@id/id_baking_inwindTemp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:id="@+id/ic_baking_accInwindImg"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:src="@drawable/ic_bake_acc_invariant_small"/>
+                android:layout_width="101.25dp"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/id_baking_comma1"
+                    android:layout_centerHorizontal="true"
+                    style="@style/bakingAccTemp"
+                    android:text="."/>
 
                 <TextView
-                    android:id="@+id/id_baking_accInwindTemp"
+                    android:id="@+id/id_baking_accInwindTemp_before"
                     style="@style/bakingAccTemp"
-                    android:text="0.1℃/s"/>
-            </LinearLayout>
+                    android:layout_toLeftOf="@id/id_baking_comma1"
+                    android:text="00"/>
+                <TextView
+                    android:id="@+id/id_baking_accInwindTemp_after"
+                    android:layout_toRightOf="@id/id_baking_comma1"
+                    style="@style/bakingAccTemp"
+                    android:text="00"/>
+            </RelativeLayout>
         </RelativeLayout>
 
         <RelativeLayout
@@ -134,27 +133,27 @@
                 android:layout_below="@id/id_baking_outwindTitle"
                 android:text="371℃"/>
 
-            <LinearLayout
-                android:layout_centerHorizontal="true"
+            <RelativeLayout
                 android:layout_below="@id/id_baking_outwindTemp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:id="@+id/ic_baking_accOutwindImg"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:src="@drawable/ic_bake_acc_invariant_small"/>
+                android:layout_width="101.25dp"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/id_baking_comma2"
+                    android:layout_centerHorizontal="true"
+                    style="@style/bakingAccTemp"
+                    android:text="."/>
 
                 <TextView
+                    android:id="@+id/id_baking_accOutwindTemp_before"
                     style="@style/bakingAccTemp"
-                    android:id="@+id/id_baking_accOutwindTemp"
-                    android:text="0.1℃/s"/>
-
-            </LinearLayout>
+                    android:layout_toLeftOf="@id/id_baking_comma2"
+                    android:text="00"/>
+                <TextView
+                    android:id="@+id/id_baking_accOutwindTemp_after"
+                    android:layout_toRightOf="@id/id_baking_comma2"
+                    style="@style/bakingAccTemp"
+                    android:text="00"/>
+            </RelativeLayout>
         </RelativeLayout>
     </LinearLayout>
 
@@ -226,7 +225,7 @@
                     android:id="@+id/id_baking_chart"
                     android:layout_width="344.25dp"
                     android:layout_height="match_parent"
-                    android:layout_below="@id/id_baking_lineOperator" />
+                    android:layout_below="@id/id_baking_lineOperator"/>
             </RelativeLayout>
         </RelativeLayout>
     </RelativeLayout>
@@ -239,61 +238,61 @@
         <Button
             android:id="@+id/id_baking_dry"
             style="@style/bakingOperator"
-            android:visibility="gone"
-            android:text="脱水"/>
+            android:text="脱水"
+            android:visibility="gone"/>
 
         <Button
             android:id="@+id/id_baking_firstBurst"
             style="@style/bakingOperator"
             android:layout_below="@id/id_baking_dry"
             android:layout_marginTop="13dp"
-            android:visibility="gone"
+            android:text="一爆"
 
-            android:text="一爆"/>
+            android:visibility="gone"/>
 
         <Button
             android:id="@+id/id_baking_secondBurst"
             style="@style/bakingOperator"
             android:layout_below="@id/id_baking_firstBurst"
             android:layout_marginTop="13dp"
-            android:visibility="gone"
+            android:text="二爆"
 
-            android:text="二爆"/>
+            android:visibility="gone"/>
 
         <Button
             android:id="@+id/id_baking_end"
             style="@style/bakingOperator"
             android:layout_below="@id/id_baking_secondBurst"
             android:layout_marginTop="13dp"
-            android:visibility="gone"
+            android:text="出豆"
 
-            android:text="出豆"/>
+            android:visibility="gone"/>
 
         <Button
             android:id="@+id/id_baking_wind_fire"
             style="@style/bakingOperator"
             android:layout_below="@+id/id_baking_end"
             android:layout_marginTop="59.625dp"
-            android:visibility="gone"
+            android:text="风门火力"
 
-            android:text="风门火力"/>
+            android:visibility="gone"/>
 
         <Button
             android:id="@+id/id_baking_other"
             style="@style/bakingOperator"
             android:layout_below="@+id/id_baking_wind_fire"
             android:layout_marginTop="13dp"
-            android:visibility="gone"
+            android:text="快捷标注"
 
-            android:text="快捷标注"/>
+            android:visibility="gone"/>
 
         <ImageButton
-            android:background="@android:color/transparent"
-            android:src="@drawable/ic_start_bg"
             android:id="@+id/id_baking_start"
-            android:layout_centerInParent="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_start_bg"
             android:text="开始"/>
     </RelativeLayout>
 </LinearLayout>

@@ -17,7 +17,7 @@ import android.widget.TextView;
 
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.LinesColor;
-import com.dhy.coffeesecret.pojo.TempratureSet;
+import com.dhy.coffeesecret.pojo.TemperatureSet;
 import com.dhy.coffeesecret.pojo.UniversalConfiguration;
 import com.dhy.coffeesecret.utils.SettingTool;
 import com.dhy.coffeesecret.views.BaseChart4Coffee;
@@ -46,7 +46,7 @@ public class LinesColorAdapter extends FootViewAdapter {
     private List<LinesColor> linesColorList;
     private LayoutInflater mLayoutInflater;
     private LCHandler mHandler = new LCHandler();
-    private TempratureSet tempratureSet = new TempratureSet();
+    private TemperatureSet temperatureSet = new TemperatureSet();
     public LinesColorAdapter(Context context, List<LinesColor> linesColorList, View footView) {
         this.context = context;
         this.footView = footView;
@@ -111,12 +111,12 @@ public class LinesColorAdapter extends FootViewAdapter {
         List<Float> foo = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
             if(line == BEANLINE){
-                tempratureSet.addTimex(i * 50);
+                temperatureSet.addTimex(i * 50);
             }
             entries.add(new Entry(i * 50, i * line));
             foo.add(new Float(i * line));
         }
-        tempratureSet.addTempratureByIndex(line, foo);
+        temperatureSet.addTempratureByIndex(line, foo);
         return entries;
     }
 
@@ -133,7 +133,7 @@ public class LinesColorAdapter extends FootViewAdapter {
                     Button btnUseDialog = (Button) view.findViewById(R.id.btn_use_dialog);
                     previewChart.initLine();
 
-                    previewChart.setTempratureSet(tempratureSet);
+                    previewChart.setTemperatureSet(temperatureSet);
 
                     previewChart.changeColorByIndex(linesColor.getBeanColor(), BEANLINE);
                     previewChart.changeColorByIndex(linesColor.getAccBeanColor(), ACCBEANLINE);

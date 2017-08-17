@@ -24,11 +24,11 @@ import com.bigkoo.pickerview.TimePickerView;
 import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BeanInfo;
+import com.dhy.coffeesecret.url.UrlBean;
 import com.dhy.coffeesecret.utils.HttpUtils;
 import com.dhy.coffeesecret.utils.SettingTool;
 import com.dhy.coffeesecret.utils.T;
 import com.dhy.coffeesecret.utils.UIUtils;
-import com.dhy.coffeesecret.utils.URLs;
 import com.dhy.coffeesecret.utils.Utils;
 
 import java.io.IOException;
@@ -127,11 +127,13 @@ public class EditBeanActivity extends AppCompatActivity {
     private EditBeanHandler mHandler = new EditBeanHandler(EditBeanActivity.this);
     private BeanInfo beanInfo;
     private int count = 0;
+    private MyApplication application;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_bean);
-
+        application = ((MyApplication) getApplication());
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         ButterKnife.bind(this);
         UIUtils.steepToolBar(this);
@@ -439,8 +441,9 @@ public class EditBeanActivity extends AppCompatActivity {
         // 单纯添加其id
         beanInfo.setId(id);
 
-        Log.e(TAG, URLs.getDeleteBeanInfo(id));
-        HttpUtils.enqueue(URLs.getDeleteBeanInfo(id), null, new Callback() {
+        String token = application.getToken();
+        Log.e(TAG, UrlBean.delete(token,id));
+        HttpUtils.enqueue(UrlBean.delete(token,id), null, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.e(TAG, "输出错误");
@@ -500,7 +503,7 @@ public class EditBeanActivity extends AppCompatActivity {
 
     private void updateBeanInfo(final BeanInfo beanInfo) {
 
-        HttpUtils.enqueue(URLs.ADD_BEAN_INFO, beanInfo, new Callback() {
+        HttpUtils.enqueue(UrlBean.add(application.getToken()), beanInfo, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 mHandler.sendEmptyMessage(TOAST_2);

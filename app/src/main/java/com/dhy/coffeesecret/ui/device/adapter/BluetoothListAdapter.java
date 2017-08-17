@@ -39,7 +39,6 @@ public class BluetoothListAdapter extends RecyclerView.Adapter<BluetoothListAdap
 
     @Override
     public int getItemCount() {
-        Log.e("BluetoothListAdapter", "获取item" + devices.size());
         return devices.size();
     }
 
@@ -64,7 +63,8 @@ public class BluetoothListAdapter extends RecyclerView.Adapter<BluetoothListAdap
             // 默认设置tick可见
             holder.tick.setVisibility(View.GONE);
         }
-        holder.machine.setText(device.getName() + "(" + device.getAddress() + ")");
+        // 去掉了地址的显示
+        holder.machine.setText(device.getName());
         rssiTextView.put(device.getAddress(), holder.rssi);
         // 从map中获取rssi的值
         Integer rssiValue = rssiMac.get(device.getAddress());

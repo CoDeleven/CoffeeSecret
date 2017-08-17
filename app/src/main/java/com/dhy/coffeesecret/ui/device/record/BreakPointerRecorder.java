@@ -2,7 +2,7 @@ package com.dhy.coffeesecret.ui.device.record;
 
 import android.util.Log;
 
-import com.dhy.coffeesecret.pojo.Temprature;
+import com.dhy.coffeesecret.pojo.Temperature;
 import com.dhy.coffeesecret.utils.Utils;
 
 import java.util.LinkedList;
@@ -12,35 +12,35 @@ import java.util.LinkedList;
  */
 
 public class BreakPointerRecorder extends AbstractTimeSystem {
-    private Temprature lastTemprature;
-    private LinkedList<Temprature> avgTemprature = new LinkedList<>();
+    private Temperature lastTemperature;
+    private LinkedList<Temperature> avgTemperature = new LinkedList<>();
     private boolean isBreakPointer = false;
     private float breakPointerTime;
-    public boolean record(Temprature temprature){
+    public boolean record(Temperature temperature){
         if(isBreakPointer){
             return true;
         }
-        if(lastTemprature == null && temprature.getAccBeanTemp() < 0){
-            this.lastTemprature = temprature;
+        if(lastTemperature == null && temperature.getAccBeanTemp() < 0){
+            this.lastTemperature = temperature;
         }
 
-        if(temprature.getAccBeanTemp() < 0){
+        if(temperature.getAccBeanTemp() < 0){
 
-            if(lastTemprature.getBeanTemp() >= temprature.getBeanTemp()){
-                this.lastTemprature = temprature;
+            if(lastTemperature.getBeanTemp() >= temperature.getBeanTemp()){
+                this.lastTemperature = temperature;
                 return false;
             }
-            if(temprature.getBeanTemp() - lastTemprature.getBeanTemp() > 0.3){
+            if(temperature.getBeanTemp() - lastTemperature.getBeanTemp() > 0.3){
                 breakPointerTime = getTimeIntervalFromNow();
-                Log.e("wrong", lastTemprature.getBeanTemp() + "->" + Utils.getTimeWithFormat(breakPointerTime));
+                Log.e("wrong", lastTemperature.getBeanTemp() + "->" + Utils.getTimeWithFormat(breakPointerTime));
                 return isBreakPointer = true;
             }
         }
         return false;
     }
 
-    public Temprature getBreakPointerTemprature(){
-        return lastTemprature;
+    public Temperature getBreakPointerTemprature(){
+        return lastTemperature;
     }
     public float getbreakPointerTime(){
         return breakPointerTime;

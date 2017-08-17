@@ -12,7 +12,7 @@ import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.ui.community.live.player.LiveListActivity;
 import com.dhy.coffeesecret.ui.community.live.visitor.HWCameraStreamingActivity;
 import com.dhy.coffeesecret.utils.HttpUtils;
-import com.dhy.coffeesecret.utils.URLs;
+import com.dhy.coffeesecret.url.UrlLogin;
 
 import java.io.IOException;
 
@@ -33,7 +33,6 @@ public class CommunityFragment extends Fragment implements View.OnClickListener 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
         mView.findViewById(R.id.iv_business).setOnClickListener(this);
         mView.findViewById(R.id.iv_live).setOnClickListener(this);
         mView.findViewById(R.id.iv_watch).setOnClickListener(this);
@@ -64,7 +63,8 @@ public class CommunityFragment extends Fragment implements View.OnClickListener 
                     public void run() {
                         String videoUrl = "";
                         try {
-                            videoUrl = HttpUtils.getStringFromServer(URLs.GET_LIVE_PUBLISH_PATH);
+
+                            videoUrl = HttpUtils.getStringFromServer(UrlLogin.GET_LIVE_PUBLISH_PATH);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }

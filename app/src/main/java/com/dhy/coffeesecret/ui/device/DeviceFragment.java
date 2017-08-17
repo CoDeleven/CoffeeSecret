@@ -1,7 +1,6 @@
 package com.dhy.coffeesecret.ui.device;
 
 import android.app.ProgressDialog;
-import android.bluetooth.BluetoothDevice;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -10,12 +9,10 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,12 +22,14 @@ import android.widget.TextView;
 
 import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
+import com.dhy.coffeesecret.model.Presenter4Device;
+import com.dhy.coffeesecret.model.device.IDeviceView;
 import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.pojo.BakeReportProxy;
 import com.dhy.coffeesecret.pojo.BeanInfoSimple;
-import com.dhy.coffeesecret.pojo.DialogBeanInfo;
-import com.dhy.coffeesecret.pojo.Temprature;
+import com.dhy.coffeesecret.pojo.Temperature;
 import com.dhy.coffeesecret.services.BluetoothService;
+import com.dhy.coffeesecret.services.IBluetoothOperator;
 import com.dhy.coffeesecret.ui.device.fragments.BakeDialog;
 import com.dhy.coffeesecret.ui.mine.BluetoothListActivity;
 import com.dhy.coffeesecret.utils.FragmentTool;
@@ -41,8 +40,6 @@ import com.dhy.coffeesecret.views.ArcProgress;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -50,11 +47,12 @@ import butterknife.OnClick;
 
 // TODO 待重构,重构对象-> 统一符号处理、统一handler处理、统一dialog的生成方式
 
-public class DeviceFragment extends Fragment implements BluetoothService.DeviceChangedListener, BluetoothService.DataChangedListener {
+public class DeviceFragment extends Fragment implements IDeviceView {
 
-    private static String lastAddress = null;
     public static final int MANUAL = 2;
     public static final int AUTOMATIC = 3;
+    public static final int AUTO_CONNECTION_TIPS = 0x100;
+    private static String lastAddress = null;
     @Bind(R.id.id_device_prepare_bake)
     Button mPrepareBake;
     boolean hasPrepared = false;
@@ -101,19 +99,20 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
     @Bind(R.id.id_device_mode)
     TextView mode;
 
-    private BluetoothService.BluetoothOperator mBluetoothOperator;
     private float beginTemp;
     private boolean isStart = false;
     private int curMode = MANUAL;
     private float envTemp;
+    private static Presenter4Device mPresenter;
     private BakeReport referTempratures;
     private ServiceConnection conn = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             // 获取蓝牙服务
-            mBluetoothOperator = (BluetoothService.BluetoothOperator) service;
-            mBluetoothOperator.setDataChangedListener(DeviceFragment.this);
-            mBluetoothOperator.setDeviceChangedListener(DeviceFragment.this);
+            IBluetoothOperator mBluetoothOperator = ((BluetoothService.BluetoothBinder) service).getBluetoothOperator();
+            mPresenter = Presenter4Device.newInstance(mBluetoothOperator);
+            setupPresenter();
+
             // 如果lastaddress不为空，则尝试直接连接该蓝牙;
             if (!"".equals(lastAddress)) {
                 T.showShort(getContext(), "正在搜索上一次设备:" + lastAddress + "...");
@@ -128,6 +127,18 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
         }
     };
 
+    private Handler mToastHandler = new Handler(new Handler.Callback(){
+        @Override
+        public boolean handleMessage(Message msg) {
+            switch (msg.what){
+                case AUTO_CONNECTION_TIPS:
+                    T.showShort(getContext(), (String)msg.obj);
+                    break;
+            }
+            return false;
+        }
+    });
+
     private Handler mTextHandler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
@@ -137,7 +148,6 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
                     operator.setText("切换");
                     break;
                 case 1:
-
                     bluetoothStatus.setText(" 未连接");
                     operator.setText("连接");
                     break;
@@ -150,7 +160,6 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
             return false;
         }
     });
-
     private Handler mShowHandler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
@@ -204,23 +213,29 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
     private Handler mHandler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
-            Bundle bundle = msg.getData();
-            Temprature temprature = (Temprature) bundle.getSerializable("temprature");
-            beanTemp.setText(Utils.getCrspTempratureValue(String.format("%1$.2f", temprature.getBeanTemp())) + MyApplication.tempratureUnit);
+            Temperature temperature = (Temperature) msg.obj;
+            beanTemp.setText(Utils.getCrspTempratureValue(String.format("%1$.2f", temperature.getBeanTemp())) + MyApplication.tempratureUnit);
             // 随时保存开始烘焙的温度
-            beginTemp = Utils.get2PrecisionFloat(temprature.getBeanTemp());
-            envTemp = Utils.get2PrecisionFloat(temprature.getEnvTemp());
-            inwindTemp.setText(Utils.getCrspTempratureValue(temprature.getInwindTemp() + "") + MyApplication.tempratureUnit);
-            outwindTemp.setText(Utils.getCrspTempratureValue(temprature.getOutwindTemp() + "") + MyApplication.tempratureUnit);
-            accBeanTemp.setText(Utils.getCrspTempratureValue(temprature.getAccBeanTemp() + "") + "");
-            accInwindTemp.setText(Utils.getCrspTempratureValue(temprature.getAccInwindTemp() + "") + "");
-            accOutwindTemp.setText(Utils.getCrspTempratureValue(temprature.getAccOutwindTemp() + "") + "");
+            beginTemp = Utils.get2PrecisionFloat(temperature.getBeanTemp());
+            envTemp = Utils.get2PrecisionFloat(temperature.getEnvTemp());
+            inwindTemp.setText(Utils.getCrspTempratureValue(temperature.getInwindTemp() + "") + MyApplication.tempratureUnit);
+            outwindTemp.setText(Utils.getCrspTempratureValue(temperature.getOutwindTemp() + "") + MyApplication.tempratureUnit);
+            accBeanTemp.setText(Utils.getCrspTempratureValue(temperature.getAccBeanTemp() + "") + "");
+            accInwindTemp.setText(Utils.getCrspTempratureValue(temperature.getAccInwindTemp() + "") + "");
+            accOutwindTemp.setText(Utils.getCrspTempratureValue(temperature.getAccOutwindTemp() + "") + "");
 
-            switchImage(temprature);
+            switchImage(temperature);
 
             return false;
         }
     });
+
+    @Override
+    public void updateTemperatureView(Temperature temperature) {
+        Message msg = new Message();
+        msg.obj = temperature;
+        mHandler.sendMessage(msg);
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -228,7 +243,7 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
         // 获取最后一次连接着的蓝牙设备地址
         lastAddress = SettingTool.getConfig(getContext()).getAddress();
         // 判断是否连接过蓝牙，如果尚未连接过，初始化
-        if (BluetoothService.BLUETOOTH_OPERATOR == null) {
+        if (mPresenter == null) {
             Intent intent = new Intent(getContext().getApplicationContext(), BluetoothService.class);
             getContext().getApplicationContext().bindService(intent, conn, Context.BIND_AUTO_CREATE);
         }
@@ -255,27 +270,29 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
         }*/
         // 根据是否准备，更换按钮事件
         switchStatus();
+        setupPresenter();
+        // 转化单位
+        convertUnit();
+    }
+
+    /**
+     * 安装presenter
+     */
+    private void setupPresenter(){
         // 如果操作对象不为null而且是连接着的状态
-        if (BluetoothService.BLUETOOTH_OPERATOR != null && BluetoothService.BLUETOOTH_OPERATOR.isConnected()) {
-            // 重新赋值当前的操作对象
-            mBluetoothOperator = BluetoothService.BLUETOOTH_OPERATOR;
-            // 更改已连接的视图
-            mTextHandler.sendEmptyMessage(0);
-            // 重新设置回调接口到本对象
-            mBluetoothOperator.setDataChangedListener(DeviceFragment.this);
-            mBluetoothOperator.setDeviceChangedListener(DeviceFragment.this);
+        if (mPresenter != null) {
+            mPresenter.setView(this);
+            // 更改蓝牙监听到该Presenter
+            mPresenter.initBluetoothListener();
         } else {
             mTextHandler.sendEmptyMessage(1);
         }
-
-        // 转化单位
-        convertUnit();
     }
 
     private void showDialogFragment() {
         final BakeDialog dialogFragment = new BakeDialog();
         Bundle bundle = new Bundle();
-        if(beanInfos != null){
+        if (beanInfos != null) {
             bundle.putSerializable("beanInfos", new ArrayList<>(beanInfos));
         }
         dialogFragment.setArguments(bundle);
@@ -319,7 +336,7 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
             mPrepareBake.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (mBluetoothOperator == null || !mBluetoothOperator.isConnected()) {
+                    if (mPresenter == null || !mPresenter.isConnected()) {
                         mShowHandler.sendEmptyMessage(0);
                         return;
                     }
@@ -335,24 +352,25 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
                     if (beanInfos.size() == 1) {
                         proxy.setSingleBeanId(beanInfos.get(0).getSingleBeanId());
                     }
-                    for(BeanInfoSimple simple: beanInfos){
+                    for (BeanInfoSimple simple : beanInfos) {
                         simple.setUsage(Utils.getReversed2DefaultWeight(simple.getUsage()) + "");
 
                     }
-                    intent.putExtra(BakeActivity.DEVICE_NAME, mBluetoothOperator.getCurDeviceName());
+                    intent.putExtra(BakeActivity.DEVICE_NAME, mPresenter.getConnectedDevice());
                     if (referTempratures != null) {
                         intent.putExtra(BakeActivity.ENABLE_REFERLINE, referTempratures);
                     }
-                    if(curMode == AUTOMATIC && referTempratures == null){
+                    if (curMode == AUTOMATIC && referTempratures == null) {
                         T.showShort(getContext(), "自动模式下请选择参考曲线");
                         hasPrepared = false;
                         switchStatus();
                         return;
                     }
                     intent.putExtra("mode", curMode);
+                    mPresenter.initBakeReport();
                     rerangeBean.setVisibility(View.INVISIBLE);
                     startActivity(intent);
-                    mBluetoothOperator.setDataChangedListener(null);
+                    mPresenter.destroyBluetoothListener();
                     hasPrepared = false;
                 }
             });
@@ -375,35 +393,21 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
     }
 
     @OnClick(R.id.id_device_mode)
-    public void onModeChange(){
-        if(curMode == MANUAL){
+    public void onModeChange() {
+        if (curMode == MANUAL) {
             curMode = AUTOMATIC;
             mTextHandler.sendEmptyMessage(AUTOMATIC);
-        }else{
+        } else {
             curMode = MANUAL;
             mTextHandler.sendEmptyMessage(MANUAL);
 
         }
     }
 
-    @Override
-    public void notifyDataChanged(Temprature temprature) {
-        Message message = new Message();
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("temprature", temprature);
-        if (!isStart) {
-            beginTemp = temprature.getBeanTemp();
-            isStart = true;
-        }
-        message.setData(bundle);
-
-        mHandler.sendMessage(message);
-    }
-
-    private void switchImage(Temprature temprature) {
-        float t1 = temprature.getAccBeanTemp();
-        float t2 = temprature.getAccInwindTemp();
-        float t3 = temprature.getAccOutwindTemp();
+    private void switchImage(Temperature temperature) {
+        float t1 = temperature.getAccBeanTemp();
+        float t2 = temperature.getAccInwindTemp();
+        float t3 = temperature.getAccOutwindTemp();
         if (t1 > 0) {
             accBeanView.setImageResource(R.drawable.ic_bake_acc_up_big);
         } else if (t1 < 0) {
@@ -427,38 +431,32 @@ public class DeviceFragment extends Fragment implements BluetoothService.DeviceC
         }
     }
 
-    @Override
-    public void notifyDeviceConnectStatus(boolean isConnected, BluetoothDevice device) {
-        if (isConnected) {
-            mTextHandler.sendEmptyMessage(0);
-            if(mBluetoothOperator.isDataChangedNull()){
-                mBluetoothOperator.setDataChangedListener(this);
-            }
-        } else {
-            mTextHandler.sendEmptyMessage(1);
-//            while(!mBluetoothOperator.reConnect()){
-//
-//            }
-            // mShowHandler.sendEmptyMessage(2);
-        }
-    }
-
-    @Override
-    public void notifyNewDevice(BluetoothDevice device, int rssi) {
-        if (device.getAddress().equals(lastAddress)) {
-            T.showShort(getContext(), "正在尝试自动连接...");
-            // 连接蓝牙设备
-            mBluetoothOperator.connect(device);
-            // 停止扫描
-            mBluetoothOperator.stopScanDevice();
-        }
-    }
-
     private void convertUnit() {
         String tempratureUnit = MyApplication.tempratureUnit;
 
         accBeanUnit.setText(tempratureUnit + "/m");
         accInwindunit.setText(tempratureUnit + "/m");
         accOutwindUnit.setText(tempratureUnit + "/m");
+    }
+
+    @Override
+    public void updateText(int index, String updateContent) {
+        Message msg = new Message();
+        msg.what = index;
+        msg.obj = updateContent;
+        mTextHandler.sendMessage(msg);
+    }
+
+    @Override
+    public void showToast(int index, String toastContent) {
+        Message msg = new Message();
+        msg.what = index;
+        msg.obj = toastContent;
+        mToastHandler.sendMessage(msg);
+    }
+
+    @Override
+    public void showDialog(int index) {
+
     }
 }

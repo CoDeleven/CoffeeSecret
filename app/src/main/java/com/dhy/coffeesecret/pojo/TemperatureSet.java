@@ -10,7 +10,7 @@ import static com.dhy.coffeesecret.views.BaseChart4Coffee.*;
  * Created by CoDeleven on 17-3-8.
  */
 
-public class TempratureSet implements Serializable{
+public class TemperatureSet implements Serializable{
 
     private List<Float> beanTemps = new ArrayList<>();
     private List<Float> inwindTemps = new ArrayList<>();

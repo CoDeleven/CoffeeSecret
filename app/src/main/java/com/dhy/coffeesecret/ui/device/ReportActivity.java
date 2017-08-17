@@ -152,7 +152,7 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
         mChart.setMarker(new ReportMarker(this, R.layout.report_marker));
         mChart.initLine();
         // 设置tempratureset，进行转换
-        mChart.setTempratureSet(proxy.getBakeReport().getTempratureSet());
+        mChart.setTemperatureSet(proxy.getBakeReport().getTemperatureSet());
 
         mChart.addNewDatas(proxy.getLineDataSetByIndex(BEANLINE).getValues(), BEANLINE);
         mChart.addNewDatas(proxy.getLineDataSetByIndex(INWINDLINE).getValues(), INWINDLINE);

@@ -1,9 +1,6 @@
 package com.dhy.coffeesecret.ui.device.record;
 
-import com.dhy.coffeesecret.pojo.Temprature;
 import com.dhy.coffeesecret.utils.Utils;
-
-import java.util.List;
 
 /**
  * Created by CoDeleven on 17-4-21.

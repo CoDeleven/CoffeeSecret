@@ -1,7 +1,7 @@
 package com.dhy.coffeesecret.ui.device.record;
 
-import com.dhy.coffeesecret.pojo.Temprature;
-import com.dhy.coffeesecret.pojo.TempratureSet;
+import com.dhy.coffeesecret.pojo.Temperature;
+import com.dhy.coffeesecret.pojo.TemperatureSet;
 import com.dhy.coffeesecret.utils.Utils;
 import com.github.mikephil.charting.data.Entry;
 
@@ -13,9 +13,9 @@ import java.util.List;
  */
 
 public class RecorderSystem extends AbstractTimeSystem {
-    private List<Temprature> tempratureList;
+    private List<Temperature> temperatureList;
     private int startIndex = 0;
-    private TempratureSet tempratureSet = new TempratureSet();
+    private TemperatureSet temperatureSet;
     private Entry curBeanEntry;
     /**
      * 每次创建新对象的时候都初始化开始时间和温度数据列表
@@ -24,27 +24,28 @@ public class RecorderSystem extends AbstractTimeSystem {
         // 每次新建本对象，相当于 开始烘焙 事件，故需要重置事件时间
         AbstractTimeSystem.startTime = System.currentTimeMillis();
         resetEventTime();
-        tempratureList = new LinkedList<>();
+        temperatureList = new LinkedList<>();
+        temperatureSet = new TemperatureSet();
     }
 
     /**
      * 添加温度
-     * @param temprature
+     * @param temperature
      * @return 返回添加温度时候的时间
      */
-    public float addTemprature(Temprature temprature){
+    public float addTemprature(Temperature temperature){
         float curTime = super.getTimeIntervalFromNow();
-        tempratureList.add(temprature);
+        temperatureList.add(temperature);
 
-        tempratureSet.addBeanTemp(temprature.getBeanTemp());
-        tempratureSet.addInwindTemp(temprature.getInwindTemp());
-        tempratureSet.addOutwindTemp(temprature.getOutwindTemp());
-        tempratureSet.addAccBeanTemp(temprature.getAccBeanTemp());
-        tempratureSet.addAccInwindTemp(temprature.getAccInwindTemp());
-        tempratureSet.addAccOutwindTemp(temprature.getAccOutwindTemp());
-        tempratureSet.addTimex(curTime);
+        temperatureSet.addBeanTemp(temperature.getBeanTemp());
+        temperatureSet.addInwindTemp(temperature.getInwindTemp());
+        temperatureSet.addOutwindTemp(temperature.getOutwindTemp());
+        temperatureSet.addAccBeanTemp(temperature.getAccBeanTemp());
+        temperatureSet.addAccInwindTemp(temperature.getAccInwindTemp());
+        temperatureSet.addAccOutwindTemp(temperature.getAccOutwindTemp());
+        temperatureSet.addTimex(curTime);
 
-        curBeanEntry = new Entry(curTime, Utils.getCrspTempratureValue(temprature.getBeanTemp() + ""));
+        curBeanEntry = new Entry(curTime, Utils.getCrspTempratureValue(temperature.getBeanTemp() + ""));
         return curTime;
     }
 
@@ -53,7 +54,7 @@ public class RecorderSystem extends AbstractTimeSystem {
      * @return
      */
     public float getGlobalAccTemprature(){
-        return getAvgAccBeanTemprature(0, tempratureList.size());
+        return getAvgAccBeanTemprature(0, temperatureList.size());
     }
 
     /**
@@ -62,33 +63,33 @@ public class RecorderSystem extends AbstractTimeSystem {
      * @return
      */
     public int getCurIndex(){
-        return tempratureList.size();
+        return temperatureList.size();
     }
 
     protected float getAvgAccBeanTemprature(int start, int end){
         float total = 0f;
-        for(Temprature temprature : tempratureList.subList(start, end)){
-            total += temprature.getAccBeanTemp();
+        for(Temperature temperature : temperatureList.subList(start, end)){
+            total += temperature.getAccBeanTemp();
         }
         return total / (end - start);
     }
 
     public float getAvgAccBeanTemprature(){
-        return getAvgAccBeanTemprature(startIndex, tempratureList.size());
+        return getAvgAccBeanTemprature(startIndex, temperatureList.size());
     }
 
     public void startNewEvent(){
         // 保存当前的序号
-        startIndex = tempratureList.size();
+        startIndex = temperatureList.size();
         resetEventTime();
     }
 
-    public TempratureSet getTempratureSet(){
-        return tempratureSet;
+    public TemperatureSet getTemperatureSet(){
+        return temperatureSet;
     }
 
     public void addEvent(String s, String s1) {
-        tempratureSet.addEvent(s, s1);
+        temperatureSet.addEvent(s, s1);
     }
 
 }

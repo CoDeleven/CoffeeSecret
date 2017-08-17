@@ -28,10 +28,10 @@ import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.pojo.BakeReportProxy;
 import com.dhy.coffeesecret.pojo.BeanInfo;
 import com.dhy.coffeesecret.pojo.BeanInfoSimple;
+import com.dhy.coffeesecret.url.UrlBake;
 import com.dhy.coffeesecret.utils.HttpUtils;
 import com.dhy.coffeesecret.utils.SettingTool;
 import com.dhy.coffeesecret.utils.T;
-import com.dhy.coffeesecret.utils.URLs;
 import com.dhy.coffeesecret.utils.Utils;
 import com.dhy.coffeesecret.views.CircleSeekBar;
 import com.github.mikephil.charting.data.Entry;
@@ -93,12 +93,15 @@ public class EditBehindActiviy extends AppCompatActivity implements CircleSeekBa
             return false;
         }
     });
+    private MyApplication application;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         setContentView(R.layout.activity_edit_behind_activiy);
+
+        application = (MyApplication) getApplication();
         ButterKnife.bind(this);
         mSeekBar.setOnSeekBarChangeListener(this);
         init();
@@ -116,7 +119,8 @@ public class EditBehindActiviy extends AppCompatActivity implements CircleSeekBa
             reportDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    HttpUtils.enqueue(URLs.getDeleteBakeReport(proxy.getBakeReport().getId()), null, new Callback() {
+                    String delete = UrlBake.delete(application.getToken(), proxy.getBakeReport().getId());
+                    HttpUtils.enqueue(delete, null, new Callback() {
                         @Override
                         public void onFailure(Call call, IOException e) {
 
@@ -184,7 +188,8 @@ public class EditBehindActiviy extends AppCompatActivity implements CircleSeekBa
             @Override
             public void run() {
                 try {
-                    HttpUtils.execute(URLs.ADD_BAKE_REPORT, proxy);
+                    String add = UrlBake.add(application.getToken());
+                    HttpUtils.execute(add, proxy);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

@@ -27,16 +27,17 @@ import android.widget.TextView;
 import com.bigkoo.quicksidebar.QuickSideBarTipsView;
 import com.bigkoo.quicksidebar.QuickSideBarView;
 import com.bigkoo.quicksidebar.listener.OnQuickSideBarTouchListener;
+import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BeanInfo;
 import com.dhy.coffeesecret.ui.container.BeanInfoActivity;
 import com.dhy.coffeesecret.ui.container.adapters.BeanListAdapter;
 import com.dhy.coffeesecret.ui.container.adapters.CountryListAdapter;
 import com.dhy.coffeesecret.ui.container.adapters.HandlerAdapter;
+import com.dhy.coffeesecret.url.UrlBean;
 import com.dhy.coffeesecret.utils.HttpUtils;
 import com.dhy.coffeesecret.utils.T;
 import com.dhy.coffeesecret.utils.TestData;
-import com.dhy.coffeesecret.utils.URLs;
 import com.dhy.coffeesecret.utils.Utils;
 import com.dhy.coffeesecret.views.DividerDecoration;
 import com.edmodo.rangebar.RangeBar;
@@ -252,7 +253,8 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
         Gson gson = new Gson();
         String beanInfoListJson = "";
         try {
-            beanInfoListJson = HttpUtils.getStringFromServer(URLs.GET_ALL_BEAN_INFO);
+            MyApplication application = (MyApplication) getActivity().getApplication();
+            beanInfoListJson = HttpUtils.getStringFromServer(UrlBean.getAll(application.getToken()));
         } catch (IOException e) {
             e.printStackTrace();
             mHandler.sendEmptyMessage(TOAST_3);

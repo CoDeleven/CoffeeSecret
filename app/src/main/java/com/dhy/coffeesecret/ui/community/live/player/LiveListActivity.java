@@ -15,7 +15,7 @@ import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.ui.community.live.player.adapter.LiveListAdapter;
 import com.dhy.coffeesecret.utils.HttpUtils;
 import com.dhy.coffeesecret.utils.SPPrivateUtils;
-import com.dhy.coffeesecret.utils.URLs;
+import com.dhy.coffeesecret.url.UrlLogin;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -70,7 +70,7 @@ public class LiveListActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         try {
-                            String playUrl = HttpUtils.getStringFromServer(URLs.GET_LIVE_PLAY_PATH);
+                            String playUrl = HttpUtils.getStringFromServer(UrlLogin.GET_LIVE_PLAY_PATH);
                             Intent intent = new Intent(context, LivePlayActivity.class);
                             SPPrivateUtils.put(context, "liveName", list.get(position));
                             intent.putExtra("play_url", playUrl);

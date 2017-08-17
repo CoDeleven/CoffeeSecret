@@ -1,0 +1,60 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f0f0f0"
+    tools:context="com.dhy.coffeesecret.ui.mine.fragments.UsernameFragment">
+
+    <RelativeLayout
+        android:id="@+id/toolBar"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        android:background="?colorPrimary">
+
+        <ImageView
+            android:id="@+id/iv_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_back"
+            android:textColor="#FFF" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="修改用户名"
+            android:textColor="@color/white"
+            android:textSize="18.5sp" />
+    </RelativeLayout>
+
+    <EditText
+        android:id="@+id/et_username"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolBar"
+        android:layout_marginTop="8dp"
+        android:hint="用户名"
+        android:background="#fff"
+        android:layout_marginBottom="16dp"
+        android:padding="16dp"
+        android:singleLine="true"
+        android:textSize="16sp" />
+
+    <Button
+        android:id="@+id/btn_update"
+        android:enabled="false"
+        android:textColor="@android:color/white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/et_username"
+        android:layout_margin="8dp"
+        android:background="@drawable/bg_round_pricolor_selector"
+        android:minHeight="0dp"
+        android:textSize="16sp"
+        android:minWidth="0dp"
+        android:padding="8dp"
+        android:text="确认修改" />
+</RelativeLayout>

@@ -1,5 +1,7 @@
 package com.dhy.coffeesecret;
 
+import com.dhy.coffeesecret.url.UrlBake;
+
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -13,5 +15,11 @@ public class ExampleUnitTest {
     @Test
     public void addition_isCorrect() throws Exception {
         assertEquals(4, 2 + 2);
+    }
+
+    @Test
+    public void test(){
+        String all = UrlBake.getAll("1110");
+        System.out.println(all);
     }
 }

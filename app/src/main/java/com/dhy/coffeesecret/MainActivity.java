@@ -21,8 +21,8 @@ import com.dhy.coffeesecret.utils.UIUtils;
 
 public class MainActivity extends AppCompatActivity {
 
-    // 默认图标id
-    private static final int[] IMG_SELECTOR_IDS = {R.drawable.nav_container_selector, R.drawable.nav_cup_selector, R.drawable.nav_device_selector, R.drawable.nav_community_selector, R.drawable.nav_mine_selector};
+    // 默认图标id  R.drawable.nav_community_selector,
+    private static final int[] IMG_SELECTOR_IDS = {R.drawable.nav_container_selector, R.drawable.nav_cup_selector, R.drawable.nav_device_selector, R.drawable.nav_mine_selector};
     // 标签页
     private TabLayout mTabLayout;
     // 滑动页面视图
@@ -41,8 +41,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         initParam();
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-
         UIUtils.steepToolBar(this);
+
     }
 
     /**
@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         mineFragment = new MineFragment();
 
         // 初始化fragment视图
-        mFragments = new Fragment[]{containerFragment, cupFragment, deviceFragment, communityFragment, mineFragment};
+        mFragments = new Fragment[]{containerFragment, cupFragment, deviceFragment, mineFragment};
 
         // 获取id
         mTabLayout = (TabLayout) findViewById(R.id.id_fragment_tabLayout);

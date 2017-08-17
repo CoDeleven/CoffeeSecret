@@ -1,19 +1,15 @@
 package com.dhy.coffeesecret.pojo;
 
-import android.util.Log;
-
-import com.bumptech.glide.util.Util;
 import com.dhy.coffeesecret.utils.Utils;
 
 import java.io.Serializable;
-import java.text.DecimalFormat;
 
 /**
  * Created by CoDeleven on 17-2-12.
  */
 
-public class Temprature implements Serializable {
-    private static Temprature lastTemprature;
+public class Temperature implements Serializable {
+    private static Temperature lastTemperature;
     private float beanTemp;
     private float inwindTemp;
     private float outwindTemp;
@@ -21,20 +17,20 @@ public class Temprature implements Serializable {
     private float accInwindTemp;
     private float accOutwindTemp;
     private static float envTemp;
-    public Temprature() {
+    public Temperature() {
 
     }
 
-    public Temprature(float beanTemp, float inwindTemp, float outwindTemp) {
+    public Temperature(float beanTemp, float inwindTemp, float outwindTemp) {
         this.beanTemp = beanTemp;
         this.inwindTemp = inwindTemp;
         this.outwindTemp = outwindTemp;
     }
     // 0-》环境温，1-》进风温，2-》出风问，3-》环境温，4->豆温，5-》？
     // 12，44，55
-    public static Temprature parseHex2Temprature(String data) {
+    public static Temperature parseHex2Temprature(String data) {
         String[] subStr = data.split(",");
-        Temprature temp = new Temprature();
+        Temperature temp = new Temperature();
         float beanTemp = Float.parseFloat(subStr[4]);
         float inwindTemp = Float.parseFloat(subStr[1]);
         float outwindTemp = Float.parseFloat(subStr[2]);
@@ -43,12 +39,12 @@ public class Temprature implements Serializable {
         temp.setOutwindTemp(outwindTemp);
         temp.setEnvTemp(Float.parseFloat(subStr[0]));
 
-        if (lastTemprature != null) {
-            temp.setAccBeanTemp(Utils.get2PrecisionFloat((beanTemp - lastTemprature.getBeanTemp()) * 60));
-            temp.setAccInwindTemp(Utils.get2PrecisionFloat((inwindTemp - lastTemprature.getInwindTemp()) * 60));
-            temp.setAccOutwindTemp(Utils.get2PrecisionFloat((outwindTemp - lastTemprature.getOutwindTemp()) * 60));
+        if (lastTemperature != null) {
+            temp.setAccBeanTemp(Utils.get2PrecisionFloat((beanTemp - lastTemperature.getBeanTemp()) * 60));
+            temp.setAccInwindTemp(Utils.get2PrecisionFloat((inwindTemp - lastTemperature.getInwindTemp()) * 60));
+            temp.setAccOutwindTemp(Utils.get2PrecisionFloat((outwindTemp - lastTemperature.getOutwindTemp()) * 60));
         }
-        lastTemprature = temp;
+        lastTemperature = temp;
         return temp;
     }
 
@@ -110,7 +106,7 @@ public class Temprature implements Serializable {
 
     @Override
     public String toString() {
-        return "Temprature{" +
+        return "Temperature{" +
                 "beanTemp=" + beanTemp +
                 ", inwindTemp=" + inwindTemp +
                 ", outwindTemp=" + outwindTemp +

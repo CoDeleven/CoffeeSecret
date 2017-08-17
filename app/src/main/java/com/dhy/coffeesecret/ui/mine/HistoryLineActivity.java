@@ -21,9 +21,9 @@ import com.dhy.coffeesecret.ui.container.fragments.SearchFragment;
 import com.dhy.coffeesecret.ui.device.ReportActivity;
 import com.dhy.coffeesecret.ui.device.handler.LinesSelectorHandler;
 import com.dhy.coffeesecret.ui.mine.adapter.HistoryLineAdapter;
+import com.dhy.coffeesecret.url.UrlBake;
 import com.dhy.coffeesecret.utils.HttpUtils;
 import com.dhy.coffeesecret.utils.UIUtils;
-import com.dhy.coffeesecret.utils.URLs;
 import com.dhy.coffeesecret.utils.Utils;
 import com.dhy.coffeesecret.views.DividerDecoration;
 import com.dhy.coffeesecret.views.SearchEditText;
@@ -62,12 +62,16 @@ public class HistoryLineActivity extends AppCompatActivity implements View.OnCli
     private boolean isAddSearchFragment = false;
     private List<BakeReport> bakeReportList = new ArrayList<>();
     private LinesSelectorHandler mHandler;
+    private MyApplication application;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.history_lines);
+
+        application = (MyApplication) getApplication();
         ButterKnife.bind(this);
+
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -182,7 +186,8 @@ public class HistoryLineActivity extends AppCompatActivity implements View.OnCli
             @Override
             public void run() {
                 try {
-                    String temp = HttpUtils.getStringFromServer(URLs.GET_ALL_BAKE_REPORT);
+                    String token = application.getToken();
+                    String temp = HttpUtils.getStringFromServer(UrlBake.getAll(token));
                     Type type = new TypeToken<Map<String, BakeReport>>() {
                     }.getType();
                     Log.e(TAG, temp);
@@ -199,7 +204,6 @@ public class HistoryLineActivity extends AppCompatActivity implements View.OnCli
 
                         }
                     });
-                    System.out.println(bakeReportList);
                     // 请求成功
                     mHandler.sendEmptyMessage(LOADING_SUCCESS);
                 } catch (Exception e) {
