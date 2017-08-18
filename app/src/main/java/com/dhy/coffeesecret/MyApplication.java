@@ -41,6 +41,7 @@ import static com.dhy.coffeesecret.utils.HttpUtils.getRequest;
 public class MyApplication extends Application {
     public static String weightUnit;
     public static String temperatureUnit;
+    public static boolean test4IsMinimize = false;
     private static Map<String, BeanInfo> beanInfos = new HashMap<>();
     private static Map<String, CuppingInfo> cupInfos = new HashMap<>();
     private static Map<String, BakeReport> bakeReports = new HashMap<>();

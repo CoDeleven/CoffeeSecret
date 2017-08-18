@@ -72,10 +72,9 @@ public class BluetoothService extends Service implements IBluetoothOperator {
     public static String FIRST_CHANNEL = "4348414e3b323130300a";
     public static String SECOND_CHANNEL = "4348414e3b333230300a";
     public static String READ_TEMP_COMMAND = "524541440a";
-    public static volatile boolean READABLE = false;
     public static IBluetoothOperator BLUETOOTH_OPERATOR;
     private static int retryCount = 0;
-    private static ReadTasker mRunThread;
+    private static volatile ReadTasker mRunThread;
     private final int sleepTime = 900;
     private volatile IBleTemperatureCallback mTemperatureListener;
     private IBleScanCallback mScanListener;
@@ -89,8 +88,6 @@ public class BluetoothService extends Service implements IBluetoothOperator {
     private String lastAddress;
     private boolean tempStatus = false;
     private int mConnectionState = STATE_DISCONNECTED;
-    // private DataChangedListener dataChangedListener;
-    // private DeviceChangedListener deviceChangedListener;
     private ViewControllerListener viewControllerListener;
     private boolean scanning = false; //标识当前蓝牙是否在扫描
     private Handler mHandler = new Handler() {
@@ -179,6 +176,7 @@ public class BluetoothService extends Service implements IBluetoothOperator {
             if (mRunThread != null) {
                 mRunThread.clearData();
                 mRunThread.setHandling(false);
+                mRunThread.readable = false;
                 // 阻断
                 mRunThread.interrupt();
             }
@@ -198,14 +196,21 @@ public class BluetoothService extends Service implements IBluetoothOperator {
                 mConnectionListener.toConnected(STATE_CONNECTED);
             } else if (newState == STATE_DISCONNECTED) {
                 mConnectionState = STATE_DISCONNECTED;
-                mBluetoothGatt.discoverServices();
+
+                if (mRunThread != null) {
+                    mRunThread.clearData();
+                    // 阻断
+                    mRunThread.interrupt();
+                }
+
+                // mBluetoothGatt.discoverServices();
                 mCurDevice = null;
                 // 如果连接失败，断开和该资源的链接
                 if (gatt != null) {
                     gatt.disconnect();
                     gatt.close();
                 }
-                mConnectionListener.toDisconnecting(STATE_DISCONNECTED);
+                mConnectionListener.toDisconnected(STATE_DISCONNECTED);
             }
         }
     };
@@ -238,6 +243,11 @@ public class BluetoothService extends Service implements IBluetoothOperator {
     };
 
     public BluetoothService() {
+    }
+
+    @Override
+    public String getLatestAddress() {
+        return lastAddress;
     }
 
     @Override
@@ -302,18 +312,6 @@ public class BluetoothService extends Service implements IBluetoothOperator {
             return false;
         }
 
-/*        // 如果先前已经连接，尝试重新连接
-        if (device != null && mCurDevice != null && mCurDevice.getAddress().equals(device.getAddress()) && mBluetoothGatt != null) {
-            Log.d(TAG, "BluetoothService 重连");
-            if (mBluetoothGatt.connect()) {
-                Log.d(TAG, "BluetoothService 重连成功状态");
-                mConnectionState = STATE_CONNECTING;
-                return true;
-            } else {
-                return false;
-            }
-        }*/
-
         // 直接连接设备
 //        mBluetoothGatt = device.connectGatt(this, false, mGattCallback);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -365,15 +363,6 @@ public class BluetoothService extends Service implements IBluetoothOperator {
     public BluetoothDevice getConnectedDevice() {
         return mCurDevice;
     }
-
-
-/*    public abstract static class ScanListener {
-        protected void onScanStart() {
-        }
-
-        protected void onScanStop() {
-        }
-    }*/
 
     /**
      * 当前蓝牙是否启用
@@ -472,68 +461,12 @@ public class BluetoothService extends Service implements IBluetoothOperator {
         }
     }
 
-    // public class BluetoothOperator extends Binder  {
-    //
-    //     private ScanListener scanListener;
-    //
-    //
-    //     /**
-    //      * 更改当前数据监听器的引用
-    //      *
-    //      * @param dataChangedListener
-    //      */
-    //     public void setDataChangedListener(DataChangedListener dataChangedListener) {
-    //         BluetoothService.this.dataChangedListener = dataChangedListener;
-    //         if (mRunThread != null) {
-    //             mRunThread.setDataChangedListener(dataChangedListener);
-    //         }
-    //     }
-    //
-    //     public void setDeviceChangedListener(DeviceChangedListener deviceChangedListener) {
-    //         BluetoothService.this.deviceChangedListener = deviceChangedListener;
-    //     }
-    //
-    //     public boolean isDataChangedNull() {
-    //         return BluetoothService.this.dataChangedListener == null;
-    //     }
-    //
-    //     public void setViewControllerListener(ViewControllerListener viewControllerListener) {
-    //         BluetoothService.this.viewControllerListener = viewControllerListener;
-    //     }
-    //
-    //     public void setScanListener(ScanListener listener) {
-    //         this.scanListener = listener;
-    //     }
-    //
-    //     /**
-    //      * 获取当前连接设备的名字
-    //      *
-    //      * @return
-    //      */
-    //
-    //     public String getCurDeviceName() {
-    //         return mCurDevice.getName();
-    //     }
-    //
-    //
-    //
-    //
-    //
-    //     /**
-    //      * 关闭蓝牙
-    //      */
-    //     public void disableBluetooth() {
-    //         handler.sendEmptyMessage(0);
-    //     }
-    //
-    //
-    //
-    // }
-
     protected abstract class DataReader {
+        protected volatile Timer timer;
+        protected volatile boolean state = false;
         private volatile boolean isHandling = true;
 
-        abstract void setWriteCommand();
+        protected abstract void setWriteCommand();
 
         /**
          * 读取数据，并进行是否结尾的处理
@@ -550,16 +483,68 @@ public class BluetoothService extends Service implements IBluetoothOperator {
         void setHandling(boolean isHandling) {
             this.isHandling = isHandling;
         }
+
+        void doWrite(){
+            timer = new Timer();
+            setWriteCommand();
+        }
     }
 
     class ReadTasker extends Thread {
 
         private String result = "";
-        private boolean readable = false;
+        private Boolean readable = false;
+        // 是否是被强迫取消读取的
+        private volatile boolean isForcedCancel = false;
+        private DataReader readData1 = new DataReader() {
+            @Override
+            public void setWriteCommand() {
+                Log.d(TAG, "readData1 写入...");
+                mWriter.setValue(Utils.hexStringToBytes(READ_TEMP_COMMAND));
+                do {
+                    state = mBluetoothGatt.writeCharacteristic(mWriter);
+                } while (!state && readable);
+            }
+
+            @Override
+            public boolean readData(String str) {
+                result += str;
+                if (str.endsWith("0a")) {
+                    result += "2c";
+                    dataReader = channelListener2;
+                    channelListener2.doWrite();
+                }
+                return false;
+            }
+        };
+        private DataReader channelListener1 = new DataReader() {
+            @Override
+            public void setWriteCommand() {
+                Log.d(TAG, "channelListener1 写入...");
+                if (!"".equals(result)) {
+                    result = "";
+                }
+                mWriter.setValue(Utils.hexStringToBytes(FIRST_CHANNEL));
+                do {
+                    state = mBluetoothGatt.writeCharacteristic(mWriter);
+                } while (!state && readable);
+            }
+
+            @Override
+            public boolean readData(String str) {
+                if (str.endsWith("65") || str.endsWith("0a")) {
+                    // 设置回正常读取
+                    dataReader = readData1;
+                    // 启动温度读取器
+                    dataReader.doWrite();
+                }
+                return false;
+            }
+        };
         private DataReader readData2 = new DataReader() {
             @Override
             public void setWriteCommand() {
-                boolean state = false;
+                Log.d(TAG, "readData2 写入...");
                 mWriter.setValue(Utils.hexStringToBytes(READ_TEMP_COMMAND));
                 do {
                     state = mBluetoothGatt.writeCharacteristic(mWriter);
@@ -590,7 +575,7 @@ public class BluetoothService extends Service implements IBluetoothOperator {
         private DataReader channelListener2 = new DataReader() {
             @Override
             public void setWriteCommand() {
-                boolean state = false;
+                Log.d(TAG, "channelListener2 写入...");
                 mWriter.setValue(Utils.hexStringToBytes(SECOND_CHANNEL));
                 do {
                     state = mBluetoothGatt.writeCharacteristic(mWriter);
@@ -601,74 +586,23 @@ public class BluetoothService extends Service implements IBluetoothOperator {
             public boolean readData(String str) {
                 if (str.endsWith("65") || str.endsWith("0a")) {
                     dataReader = readData2;
-                    dataReader.setWriteCommand();
+                    dataReader.doWrite();
                 }
                 return false;
             }
         };
-        private DataReader readData1 = new DataReader() {
-            @Override
-            public void setWriteCommand() {
-                boolean state = false;
-                mWriter.setValue(Utils.hexStringToBytes(READ_TEMP_COMMAND));
-                do {
-                    state = mBluetoothGatt.writeCharacteristic(mWriter);
-                } while (!state && readable);
-            }
-
-            @Override
-            public boolean readData(String str) {
-                result += str;
-                if (str.endsWith("0a")) {
-                    result += "2c";
-                    dataReader = channelListener2;
-                    channelListener2.setWriteCommand();
-                }
-                return false;
-            }
-        };
-        private DataReader channelListener1 = new DataReader() {
-            @Override
-            public void setWriteCommand() {
-                boolean state = false;
-                if (!"".equals(result)) {
-                    result = "";
-                }
-                mWriter.setValue(Utils.hexStringToBytes(FIRST_CHANNEL));
-                do {
-                    state = mBluetoothGatt.writeCharacteristic(mWriter);
-                } while (!state && readable);
-            }
-
-            @Override
-            public boolean readData(String str) {
-                if (str.endsWith("65") || str.endsWith("0a")) {
-                    // 设置回正常读取
-                    dataReader = readData1;
-                    // 启动温度读取器
-                    dataReader.setWriteCommand();
-                }
-                return false;
-            }
-        };
-        // 是否是被强迫取消读取的
-        private volatile boolean isFocedCancel = false;
         private volatile DataReader dataReader = channelListener1;
 
         @Override
         public void run() {
             while (readable) {
-                // 如果是被强制取消的，那么重新设置为1
-                if (isFocedCancel) {
-                    dataReader = channelListener1;
-                }
                 // 恢复强制状态用于这次数据读取
-                isFocedCancel = false;
-                dataReader.setWriteCommand();
+                isForcedCancel = false;
+                dataReader.doWrite();
                 Timer waitTime = new Timer();
                 // 等待dataRead返回数据
                 try {
-                    Log.d(TAG, "读取");
+                    Log.d(TAG, "读取 readable=" + readable);
                     int count = 1;
                     // 当数据还在读取的路上，isHandling返回true
                     while (dataReader.isHandling()) {
@@ -679,30 +613,32 @@ public class BluetoothService extends Service implements IBluetoothOperator {
                             waitTime.schedule(new TimerTask() {
                                 @Override
                                 public void run() {
-                                    // 如果0.3s以后isHanding依然处于true的状态则断开进行重连
+                                    // 如果0.2s以后isHanding依然处于true的状态则断开进行重连
                                     if (dataReader.isHandling()) {
-                                        Log.d(TAG, "强制取消");
+                                        Log.d(TAG, "超时，放弃本次读取");
+                                        // dataReader = channelListener1;
                                         dataReader.setHandling(false);
-                                        isFocedCancel = true;
+                                        isForcedCancel = true;
                                     }
                                 }
                             }, 200);
                         } else {
                             // 一直while担心有性能问题，故设置为sleep
-                            Thread.currentThread().sleep(20);
+                            Thread.currentThread().sleep(50);
                         }
                     }
                     // 已经成功，则取消timer
                     waitTime.cancel();
                     dataReader.setHandling(true);
                     // 如果不是强制结束的，说明是正常读取的，完成了整个流程，给它睡眠一会
-                    if (!isFocedCancel) {
+                    if (!isForcedCancel) {
                         Thread.currentThread().sleep(sleepTime);
                     }
                 } catch (InterruptedException e) {
                     Log.d(TAG, "已经停止运行该线程");
                     setHandling(false);
                     readable = false;
+                    return;
                 }
             }
             Log.d(TAG, "已经停止运行该线程-------------" + Thread.currentThread());
@@ -710,7 +646,10 @@ public class BluetoothService extends Service implements IBluetoothOperator {
         }
 
         public void setReadable(boolean readable) {
-            this.readable = readable;
+            synchronized (this.readable) {
+                this.readable = readable;
+            }
+
         }
 
         public void setHandling(boolean isHandling) {
@@ -722,10 +661,10 @@ public class BluetoothService extends Service implements IBluetoothOperator {
         }
 
         public void clearData() {
-            // dataChangedListener = null;
-            setHandling(false);
             readable = false;
+            setHandling(false);
             dataReader = channelListener1;
+            interrupt();
         }
 
     }

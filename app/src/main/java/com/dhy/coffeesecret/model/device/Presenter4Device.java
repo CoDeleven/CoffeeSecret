@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.dhy.coffeesecret.model.BaseBlePresenter;
 import com.dhy.coffeesecret.model.IBaseView;
+import com.dhy.coffeesecret.model.bake.developbar.IDevelopBarView;
 import com.dhy.coffeesecret.pojo.BakeReportProxy;
 import com.dhy.coffeesecret.pojo.Temperature;
 import com.dhy.coffeesecret.services.IBluetoothOperator;

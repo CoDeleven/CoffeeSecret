@@ -5,4 +5,5 @@ package com.dhy.coffeesecret.model;
  */
 
 public interface IBaseModel {
+
 }

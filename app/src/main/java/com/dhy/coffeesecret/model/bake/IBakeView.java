@@ -18,6 +18,4 @@ public interface IBakeView extends IBaseView{
      */
     void updateTimer(int developStatus);
     void notifyChartDataChanged();
-    String getDevelopTime();
-    String getDevelopRate();
 }

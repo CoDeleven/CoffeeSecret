@@ -1,9 +1,6 @@
 package com.dhy.coffeesecret.model.chart;
 
-import android.util.Log;
-
 import com.dhy.coffeesecret.model.IBaseView;
-import com.dhy.coffeesecret.pojo.TemperatureSet;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
@@ -27,12 +24,12 @@ public class Presenter4Chart {
     // 参考曲线
     private List<Entry> referEntries;
 
-    // 用于记录真实的，需要保存的数据
-    private TemperatureSet temperatureSet;
+    // 用于记录真实的，需要保存的数据,貌似没用
+    // private TemperatureSet temperatureSet;
 
-    public void setTemperatureSet(TemperatureSet temperatureSet) {
+    /*public void setTemperatureSet(TemperatureSet temperatureSet) {
         this.temperatureSet = temperatureSet;
-    }
+    }*/
 
     static {
         labels.put(Model4Chart.BEANLINE, "豆温");
@@ -53,11 +50,18 @@ public class Presenter4Chart {
         mViewOperator = (IChartView)baseView;
     }
 
-    public void initLine(){
+    public void initLines(){
         // 总共6条曲线
         for(int i = 1; i < 7; ++i){
             LineDataSet set = new LineDataSet(new ArrayList<Entry>(), labels.get(new Integer(i)));
             lines.put(new Integer(i), set);
+            mViewOperator.addLine(set, i, i >= 4 && i < 7);
+        }
+    }
+
+    public void continueLastLines(){
+        for(int i = 1; i < 7; ++i){
+            LineDataSet set = (LineDataSet)lines.get(new Integer(i));
             mViewOperator.addLine(set, i, i >= 4 && i < 7);
         }
     }
@@ -123,7 +127,7 @@ public class Presenter4Chart {
 
     public void clear(){
         mViewOperator.clear();
-        initLine();
+        initLines();
         if(referEntries != null && referEntries.size() > 0){
             enableReferLine(referEntries);
         }

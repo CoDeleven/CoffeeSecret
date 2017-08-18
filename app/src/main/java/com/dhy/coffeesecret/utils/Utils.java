@@ -19,7 +19,9 @@ import java.util.Date;
 
 public class Utils {
     public static final String KG = "kg", G = "g", LB = "lb";
-
+    public static float get1PrecisionFloat(double val){
+        return (int)(val * 10) / 10.0f;
+    }
     public static String bytesToHexString(byte[] src) {
         StringBuilder stringBuilder = new StringBuilder("");
         if (src == null || src.length <= 0) {

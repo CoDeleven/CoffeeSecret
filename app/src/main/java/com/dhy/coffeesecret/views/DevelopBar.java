@@ -8,25 +8,46 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
+import android.os.Handler;
+import android.os.Message;
 import android.util.AttributeSet;
 import android.view.View;
+
+import com.dhy.coffeesecret.model.bake.developbar.IDevelopBarView;
 
 /**
  * Created by CoDeleven on 17-1-21.
  */
 
-public class DevelopBar extends View {
-    public static final int RAWBEAN = 1, AFTER160 = 2, FIRST_BURST = 3;
-    private float rawBeanTime;
-    private float after160Time;
-    private float firstBurstTime;
-    private float totalTime;
-    private int curStatus = 1;
+public class DevelopBar extends View implements IDevelopBarView{
+    public static final int RAW_BEAN = 1, AFTER160 = 2, FIRST_BURST = 3;
     private float greenLength;
     private float yellowLength;
     private float orangeLength;
     private int width;
     private int height;
+    private Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            DevelopBar.this.invalidate();
+
+        }
+    };
+    @Override
+    public void updateText(int index, Object updateContent) {
+
+    }
+
+    @Override
+    public void showToast(int index, String toastContent) {
+
+    }
+
+    @Override
+    public void showDialog(int index) {
+
+    }
 
     public DevelopBar(Context context) {
         this(context, null);
@@ -76,7 +97,7 @@ public class DevelopBar extends View {
     public Bitmap drawBarRect() {
         Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
-        calculate();
+        // calculate();
         Paint paint = new Paint();
 
         RectF rectF1 = new RectF();
@@ -97,9 +118,9 @@ public class DevelopBar extends View {
         return bitmap;
     }
 
-    public void calculate() {
+/*    public void calculate() {
         switch (curStatus) {
-            case RAWBEAN:
+            case RAW_BEAN:
                 rawBeanTime++;
                 break;
             case AFTER160:
@@ -109,38 +130,19 @@ public class DevelopBar extends View {
                 firstBurstTime++;
                 break;
         }
-        // 计算总时间
-        totalTime = rawBeanTime + after160Time + firstBurstTime;
 
+    }*/
+
+    @Override
+    public void updateDevelopBar(float rawLen, float after160Len, float firstLen) {
         // 绿条
-        greenLength = (rawBeanTime / totalTime) * width;
+        greenLength = rawLen * width;
         // 黄条
-        yellowLength = (after160Time / totalTime) * width;
+        yellowLength = after160Len * width;
         // 橙条
-        orangeLength = (firstBurstTime / totalTime) * width;
-
+        orangeLength = firstLen * width;
+        mHandler.sendEmptyMessage(0);
     }
 
-    public void setCurStatus(int curStatus) {
-        this.curStatus = curStatus;
-        this.invalidate();
-    }
 
-    public String getDevelopRate() {
-        return String.format("%1$.2f", (firstBurstTime * 100) / totalTime);
-    }
-
-    public float getDevelopRateWithoutFormat(){
-        return (firstBurstTime) / totalTime;
-    }
-
-    public String getDevelopTime() {
-        int minutes = (int) (firstBurstTime / 60);
-        int seconds = (int) (firstBurstTime % 60);
-        return String.format("%1$02d", minutes) + ":" + String.format("%1$02d", seconds);
-    }
-
-    public Integer getDevelopTimeWithoutFormat(){
-        return (int)totalTime;
-    }
 }

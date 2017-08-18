@@ -14,8 +14,7 @@
         android:layout_width="127dp"
         android:layout_height="match_parent"
         android:layout_marginLeft="5.625dp"
-        android:orientation="vertical"
-        android:paddingRight="5.625dp">
+        android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -255,7 +254,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="32.0625dp">
+        android:layout_marginTop="19.0625dp">
 
         <Button
             android:id="@+id/id_baking_dry"
@@ -269,7 +268,6 @@
             android:layout_below="@id/id_baking_dry"
             android:layout_marginTop="13dp"
             android:text="一爆"
-
             android:visibility="gone"/>
 
         <Button
@@ -278,7 +276,6 @@
             android:layout_below="@id/id_baking_firstBurst"
             android:layout_marginTop="13dp"
             android:text="二爆"
-
             android:visibility="gone"/>
 
         <Button
@@ -287,16 +284,14 @@
             android:layout_below="@id/id_baking_secondBurst"
             android:layout_marginTop="13dp"
             android:text="出豆"
-
             android:visibility="gone"/>
 
         <Button
             android:id="@+id/id_baking_wind_fire"
             style="@style/bakingOperator"
             android:layout_below="@+id/id_baking_end"
-            android:layout_marginTop="59.625dp"
+            android:layout_marginTop="46.625dp"
             android:text="风门火力"
-
             android:visibility="gone"/>
 
         <Button
@@ -305,8 +300,15 @@
             android:layout_below="@+id/id_baking_wind_fire"
             android:layout_marginTop="13dp"
             android:text="快捷标注"
-
             android:visibility="gone"/>
+
+        <Button
+            android:id="@+id/id_baking_exit"
+            style="@style/bakingOperator"
+            android:text="隐藏/退出"
+            android:visibility="gone"
+            android:layout_marginTop="13dp"
+            android:layout_below="@id/id_baking_other"/>
 
         <ImageButton
             android:id="@+id/id_baking_start"

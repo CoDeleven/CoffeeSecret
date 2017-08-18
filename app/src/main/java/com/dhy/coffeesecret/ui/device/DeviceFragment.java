@@ -14,6 +14,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,7 +54,7 @@ import static com.dhy.coffeesecret.MyApplication.temperatureUnit;
 // TODO 待重构,重构对象-> 统一符号处理、统一handler处理、统一dialog的生成方式
 
 public class DeviceFragment extends Fragment implements IDeviceView {
-
+    private static final String TAG = DeviceFragment.class.getSimpleName();
     public static final int AUTO_CONNECTION_TIPS = 0x100;
     public static final int UPDATE_TEMPERATURE_TEXT = 0x111;
     private static String lastAddress = null;
@@ -255,6 +256,7 @@ public class DeviceFragment extends Fragment implements IDeviceView {
         lastAddress = SettingTool.getConfig(getContext()).getAddress();
         // 判断是否连接过蓝牙，如果尚未连接过，初始化
         if (mPresenter == null) {
+            Log.d(TAG, "onCreate: 创建BluetoothService");
             Intent intent = new Intent(getContext().getApplicationContext(), BluetoothService.class);
             getContext().getApplicationContext().bindService(intent, conn, Context.BIND_AUTO_CREATE);
         }
@@ -272,7 +274,11 @@ public class DeviceFragment extends Fragment implements IDeviceView {
     @Override
     public void onStart() {
         super.onStart();
-        setupPresenter();
+        if(MyApplication.test4IsMinimize){
+
+        }else{
+            setupPresenter();
+        }
     }
 
     @OnClick({R.id.id_modify_beanInfos, R.id.bluetooth_operator, R.id.id_device_prepare_bake, R.id.id_add_bean})
@@ -335,6 +341,11 @@ public class DeviceFragment extends Fragment implements IDeviceView {
     }
 
     private void goBake() {
+        if(MyApplication.test4IsMinimize){
+            Intent intent = new Intent(getContext(), BakeActivity.class);
+            startActivity(intent);
+            return;
+        }
         if (mPresenter == null || !mPresenter.isConnected()) {
             mShowHandler.sendEmptyMessage(0);
             return;

@@ -22,5 +22,8 @@ public interface IBluetoothOperator extends IBluetoothOperatorListener{
     boolean connect(BluetoothDevice device);
 
     boolean connect(String address);
+
+    String getLatestAddress();
+
     void closeBluetooth();
 }

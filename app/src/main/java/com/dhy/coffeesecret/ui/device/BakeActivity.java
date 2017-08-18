@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -17,9 +18,11 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.model.bake.IBakeView;
 import com.dhy.coffeesecret.model.bake.Presenter4BakeActivity;
+import com.dhy.coffeesecret.model.bake.developbar.Presenter4DevelopBar;
 import com.dhy.coffeesecret.model.chart.Presenter4Chart;
 import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.pojo.BakeReportProxy;
@@ -45,6 +48,7 @@ import java.util.TimerTask;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnLongClick;
 
 import static com.dhy.coffeesecret.MyApplication.temperatureUnit;
 import static com.dhy.coffeesecret.model.chart.Model4Chart.ACCBEANLINE;
@@ -53,11 +57,18 @@ import static com.dhy.coffeesecret.model.chart.Model4Chart.ACCOUTWINDLINE;
 import static com.dhy.coffeesecret.model.chart.Model4Chart.BEANLINE;
 import static com.dhy.coffeesecret.model.chart.Model4Chart.INWINDLINE;
 import static com.dhy.coffeesecret.model.chart.Model4Chart.OUTWINDLINE;
+import static com.github.mikephil.charting.data.Event.DRY;
+import static com.github.mikephil.charting.data.Event.END;
+import static com.github.mikephil.charting.data.Event.FIRST_BURST;
+import static com.github.mikephil.charting.data.Event.FIRST_BURST_END;
+import static com.github.mikephil.charting.data.Event.SECOND_BURST;
+import static com.github.mikephil.charting.data.Event.SECOND_BURST_END;
 
 public class BakeActivity extends AppCompatActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener, Other.OnOtherAddListener, FireWindDialog.OnFireWindAddListener, IBakeView {
     public static final String DEVICE_NAME = "com.dhy.coffeesercret.ui.device.BakeActivity.DEVICE_NAME";
     public static final String ENABLE_REFERLINE = "com.dhy.coffeesercret.ui.device.BakeActivity.REFER_LINE";
     public static final int I_AM_BAKEACTIVITY = 123;
+    private static final String TAG = BakeActivity.class.getSimpleName();
     @Bind(R.id.id_baking_chart)
     BaseChart4Coffee chart;
     @Bind(R.id.id_baking_lineOperator)
@@ -108,23 +119,19 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
     TextView idTempUnit1;
     @Bind(R.id.id_temp_unit2)
     TextView idTempUnit2;
-
+    @Bind(R.id.id_baking_exit)
+    Button mExit;
 
     private PopupWindow popupWindow;
-    private View popuoOperator;
+    private View popupOperator;
     private Presenter4BakeActivity mPresenter = Presenter4BakeActivity.newInstance();
     private Presenter4Chart mChartPresenter = Presenter4Chart.newInstance();
-    /*    private TextView[] beanTemps = new TextView[2];
-        private TextView[] inwindTemps = new TextView[2];
-        private TextView[] outwindTemps = new TextView[2];*/
+    private Presenter4DevelopBar mDevelopBarPresenter = Presenter4DevelopBar.newInstance();
     private boolean enableDoubleConfirm;
     private boolean isDoubleClick;
     private View curStatusView;
     private UniversalConfiguration mConfig;
     private FragmentTool fragmentTool;
-    private boolean isFisrtBurstEnd = false;
-    private boolean isSecondBurstEnd = false;
-    // private Entry fireWindBeanEntry = null;
     private BakeReportProxy referTempratures;
     // 执行UI操作
     private Handler mHandler = new Handler(new Handler.Callback() {
@@ -153,23 +160,28 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
             return false;
         }
     });
+    private Handler mToast = new Handler(new Handler.Callback(){
+        @Override
+        public boolean handleMessage(Message msg) {
+            Toast.makeText(BakeActivity.this, (String)msg.obj, Toast.LENGTH_SHORT);
+            return false;
+        }
+    });
     private Handler mTimer = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
             int curStatus = (int) msg.obj;
             // 转换成秒
             int now = ((int) (System.currentTimeMillis() - RecorderSystem.getStartTime()) / 1000);
-            int minutes = now / 60;
-            int seconds = now % 60;
             untilTime.setText(Utils.getTimeWithFormat(now));
             /*if (!isOverBottom && minutes > 1 && seconds > 30) {
                 isOverBottom = true;
             }*/
             if (curStatus == DevelopBar.FIRST_BURST) {
-                developTime.setText(developBar.getDevelopTime());
-                developRate.setText("发展率：" + developBar.getDevelopRate() + "%");
+
+                developTime.setText(mDevelopBarPresenter.getDevelopTimeString());
+                developRate.setText("发展率：" + mDevelopBarPresenter.getDevelopRateString() + "%");
             }
-            developBar.setCurStatus(curStatus);
             return false;
         }
     });
@@ -182,12 +194,16 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void showToast(int index, String toastContent) {
 
+        Message msg = new Message();
+        msg.what = index;
+        msg.obj = toastContent;
+        mToast.sendMessage(msg);
     }
 
     @Override
     public void updateChart(Entry entry, int lineIndex) {
         // chart.addOneDataToLine(entry, lineIndex);
-        mChartPresenter.dynamicAddDataImm(entry, lineIndex, true);
+        // mChartPresenter.dynamicAddDataImm(entry, lineIndex, true);
     }
 
     @Override
@@ -240,17 +256,13 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
                 curIndex = ACCOUTWINDLINE;
                 break;
         }
-/*        if (isChecked) {
-            chart.showLine(curIndex);
-        } else {
-            chart.hideLine(curIndex);
-        }*/
         mChartPresenter.toggleLineVisible(curIndex);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.e(TAG, "onCreate: 被调用" + this.toString());
         // 设置该界面在前台是不允许黑屏
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         // 设置横屏和隐藏状态栏
@@ -263,8 +275,23 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
         enableDoubleConfirm = mConfig.isDoubleClick();
 
         init();
-        /*initBakePresenter();
-        initChartPresenter();*/
+        // 测试用
+        if (MyApplication.test4IsMinimize) {
+            // 因为可以退出的都是正在烘焙中的，故恢复也恢复到烘焙中的状态
+            afterStartBtnClick();
+            // 继续刚刚的烘焙
+            continueBaking();
+        } else {
+            initChartPresenter();
+            initBakePresenter();
+            initDevelopBarPresenter();
+        }
+
+    }
+
+    private void initDevelopBarPresenter() {
+        mDevelopBarPresenter.init();
+        mDevelopBarPresenter.setView(developBar);
     }
 
     private void initChartPresenter() {
@@ -272,9 +299,9 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
         mChartPresenter.setView(chart);
         // startTime = System.currentTimeMillis();
         // 初始化曲线
-        mChartPresenter.initLine();
-        // 设置 真实数据记录集合
-        mChartPresenter.setTemperatureSet(mPresenter.getTemperatureSet());
+        mChartPresenter.initLines();
+        // 设置 真实数据记录集合,貌似没用
+        // mChartPresenter.setTemperatureSet(mPresenter.getTemperatureSet());
         // 考虑是否添加参考曲线
         BakeReport bakeReport = (BakeReport) getIntent().getSerializableExtra(ENABLE_REFERLINE);
         if (bakeReport != null) {
@@ -289,6 +316,25 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    /**
+     * 恢复烘焙视图
+     */
+    private void continueBaking() {
+        // 设置图表视图
+        mChartPresenter.setView(chart);
+        // 添加曲线
+        mChartPresenter.continueLastLines();
+        mPresenter.setView(this);
+        mDevelopBarPresenter.setView(developBar);
+        // 获取事件列表，进行恢复
+        List<Entry> events = mPresenter.getEventList();
+        for (Entry entry : events) {
+            Event event = entry.getEvent();
+            switchBtnStatus(event.getCurStatus());
+        }
+    }
+
+
     private void afterStartBtnClick() {
         mDry.setVisibility(View.VISIBLE);
         mEnd.setVisibility(View.VISIBLE);
@@ -296,21 +342,23 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
         mFirstBurst.setVisibility(View.VISIBLE);
         mSecondBurst.setVisibility(View.VISIBLE);
         mOther.setVisibility(View.VISIBLE);
+        mExit.setVisibility(View.VISIBLE);
         mStart.setVisibility(View.GONE);
     }
 
     private void initBakePresenter() {
         mPresenter.initBluetoothListener();
         mPresenter.setView(this);
-
+        mPresenter.setChartPresenter(mChartPresenter);
+        mPresenter.setDevelopBarPresenter(mDevelopBarPresenter);
         mPresenter.init();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        initBakePresenter();
-        initChartPresenter();
+        Log.e(TAG, "onStart: 设置minimize为false");
+        MyApplication.test4IsMinimize = false;
         /*       if (timer == null) {
             isReading = true;
             timer = new Thread(new Runnable() {
@@ -361,26 +409,26 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
      */
     private PopupWindow getPopupwindow() {
         if (popupWindow == null) {
-            popuoOperator = getLayoutInflater().inflate(R.layout.bake_lines_operator, null, false);
-            popupWindow = new PopupWindow(popuoOperator, UnitConvert.dp2px(getResources(), 86), UnitConvert.dp2px(getResources(), 150), true);
+            popupOperator = getLayoutInflater().inflate(R.layout.bake_lines_operator, null, false);
+            popupWindow = new PopupWindow(popupOperator, UnitConvert.dp2px(getResources(), 86), UnitConvert.dp2px(getResources(), 150), true);
             popupWindow.setAnimationStyle(R.style.PopupWindowAnimation);
-            popuoOperator.setOnTouchListener(new View.OnTouchListener() {
+            popupOperator.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
-                    if (popuoOperator != null && popuoOperator.isShown()) {
+                    if (popupOperator != null && popupOperator.isShown()) {
                         popupWindow.dismiss();
                     }
                     return false;
                 }
             });
-            popuoOperator.setBackgroundResource(R.drawable.bg_round_black_border);
+            popupOperator.setBackgroundResource(R.drawable.bg_round_black_border);
 
-            ((CheckBox) popuoOperator.findViewById(R.id.id_baking_line_bean)).setOnCheckedChangeListener(this);
-            ((CheckBox) popuoOperator.findViewById(R.id.id_baking_line_inwind)).setOnCheckedChangeListener(this);
-            ((CheckBox) popuoOperator.findViewById(R.id.id_baking_line_outwind)).setOnCheckedChangeListener(this);
-            ((CheckBox) popuoOperator.findViewById(R.id.id_baking_line_accBean)).setOnCheckedChangeListener(this);
-            ((CheckBox) popuoOperator.findViewById(R.id.id_baking_line_accInwind)).setOnCheckedChangeListener(this);
-            ((CheckBox) popuoOperator.findViewById(R.id.id_baking_line_accOutwind)).setOnCheckedChangeListener(this);
+            ((CheckBox) popupOperator.findViewById(R.id.id_baking_line_bean)).setOnCheckedChangeListener(this);
+            ((CheckBox) popupOperator.findViewById(R.id.id_baking_line_inwind)).setOnCheckedChangeListener(this);
+            ((CheckBox) popupOperator.findViewById(R.id.id_baking_line_outwind)).setOnCheckedChangeListener(this);
+            ((CheckBox) popupOperator.findViewById(R.id.id_baking_line_accBean)).setOnCheckedChangeListener(this);
+            ((CheckBox) popupOperator.findViewById(R.id.id_baking_line_accInwind)).setOnCheckedChangeListener(this);
+            ((CheckBox) popupOperator.findViewById(R.id.id_baking_line_accOutwind)).setOnCheckedChangeListener(this);
 
         }
         return popupWindow;
@@ -446,57 +494,58 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
         afterStartBtnClick();
         mPresenter.init();
         mChartPresenter.clear();
-        if (popuoOperator != null) {
-            ((CheckBox) popuoOperator.findViewById(R.id.id_baking_line_bean)).setChecked(true);
-            ((CheckBox) popuoOperator.findViewById(R.id.id_baking_line_inwind)).setChecked(true);
-            ((CheckBox) popuoOperator.findViewById(R.id.id_baking_line_outwind)).setChecked(true);
-            ((CheckBox) popuoOperator.findViewById(R.id.id_baking_line_accBean)).setChecked(true);
-            ((CheckBox) popuoOperator.findViewById(R.id.id_baking_line_accInwind)).setChecked(true);
-            ((CheckBox) popuoOperator.findViewById(R.id.id_baking_line_accOutwind)).setChecked(true);
+        if (popupOperator != null) {
+            ((CheckBox) popupOperator.findViewById(R.id.id_baking_line_bean)).setChecked(true);
+            ((CheckBox) popupOperator.findViewById(R.id.id_baking_line_inwind)).setChecked(true);
+            ((CheckBox) popupOperator.findViewById(R.id.id_baking_line_outwind)).setChecked(true);
+            ((CheckBox) popupOperator.findViewById(R.id.id_baking_line_accBean)).setChecked(true);
+            ((CheckBox) popupOperator.findViewById(R.id.id_baking_line_accInwind)).setChecked(true);
+            ((CheckBox) popupOperator.findViewById(R.id.id_baking_line_accOutwind)).setChecked(true);
         }
     }
 
-    private void addEvent(View v) {
+    @OnClick({R.id.id_baking_dry, R.id.id_baking_firstBurst,
+            R.id.id_baking_secondBurst, R.id.id_baking_end, R.id.id_baking_wind_fire,
+            R.id.id_baking_other, R.id.id_baking_exit})
+    public void addEvent(View v) {
         int id = v.getId();
-        boolean status = false;
         switch (id) {
             case R.id.id_baking_dry:
                 // 先当作脱水结束
                 mPresenter.stopOneEvent(Event.DRY, "脱水");
                 // 用于记录脱水结束到一爆开始的记录
                 mPresenter.startNewRecordEvent();
-                status = true;
+                // 切换按钮状态为 不可用状态
+                switchBtnStatus(Event.DRY);
                 break;
             case R.id.id_baking_firstBurst:
-                if (isFisrtBurstEnd) {
-                    mPresenter.stopOneEvent(Event.FIRST_BURST, "一爆结束");
+                if (mPresenter.isEnabledFirstBurst()) {
+                    mPresenter.stopOneEvent(FIRST_BURST_END, "一爆结束");
                     mPresenter.updateDevelopStatus(DevelopBar.FIRST_BURST);
-                    v.setEnabled(false);
+                    // 切换按钮状态为不可用
+                    switchBtnStatus(FIRST_BURST_END);
                 } else {
-                    mPresenter.stopOneEvent(Event.FIRST_BURST, "一爆");
+                    mPresenter.stopOneEvent(FIRST_BURST, "一爆");
                     mPresenter.updateDevelopStatus(DevelopBar.FIRST_BURST);
-                    isFisrtBurstEnd = true;
-                    ((TextView) v).setText("一爆结束");
+                    // 切换按钮文本为 一爆结束
+                    switchBtnStatus(Event.FIRST_BURST);
                     // 准备记录一爆开始到结束的记录
                     mPresenter.startNewRecordEvent();
-                    return;
                 }
-                status = true;
                 break;
             case R.id.id_baking_secondBurst:
-                if (isSecondBurstEnd) {
-                    mPresenter.updateBeanEntryEvent(Event.SECOND_BURST, "二爆结束");
-                    v.setEnabled(false);
+                if (mPresenter.isEnabledSecondBurst()) {
+                    mPresenter.updateBeanEntryEvent(SECOND_BURST_END, "二爆结束");
+                    // 切换状态为 不可用
+                    switchBtnStatus(SECOND_BURST_END);
                 } else {
-                    mPresenter.updateBeanEntryEvent(Event.SECOND_BURST, "二爆");
-                    isSecondBurstEnd = true;
-                    ((TextView) v).setText("二爆结束");
-                    return;
+                    mPresenter.updateBeanEntryEvent(SECOND_BURST, "二爆");
+                    // 切换状态为 二爆结束 状态
+                    switchBtnStatus(SECOND_BURST);
                 }
-                status = true;
                 break;
             case R.id.id_baking_end:
-                mPresenter.stopOneEvent(Event.END, "结束");
+                mPresenter.stopOneEvent(END, "结束");
                 // 清除监听器防止后续修改数据
                 mPresenter.resetBluetoothListener();
                 // 停止烘焙,处理烘焙数据
@@ -507,7 +556,8 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
                 intent.putExtra("status", I_AM_BAKEACTIVITY);
                 startActivity(intent);
                 finish();
-                status = true;
+                // 切换状态为 不可用
+                switchBtnStatus(END);
                 break;
             case R.id.id_baking_wind_fire:
                 FireWindDialog fireWind = new FireWindDialog();
@@ -523,22 +573,19 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
                 mPresenter.setAwaitEntry();
                 fragmentTool.showDialogFragmen("otherFragment", other);
                 break;
+            case R.id.id_baking_exit:
+                onBackPressed();
+                break;
         }
-        if (id != R.id.id_baking_wind_fire & id != R.id.id_baking_other & id != R.id.id_baking_firstBurst & id != R.id.id_baking_secondBurst) {
-            if (status) {
-                v.setEnabled(false);
-            }
-        }
+
     }
 
-    @Override
-    public String getDevelopTime() {
-        return developBar.getDevelopTime();
-    }
-
-    @Override
-    public String getDevelopRate() {
-        return developBar.getDevelopRate();
+    @OnLongClick(R.id.id_baking_exit)
+    public boolean discardThisBake(View view) {
+        mPresenter.clearBakeReportProxy();
+        mPresenter.resetBluetoothListener();
+        finish();
+        return true;
     }
 
     @Override
@@ -560,15 +607,59 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        // 按回退不做任何事
+        /*super.onBackPressed();
         // 在烘焙过程中退出 即 视为放弃这次烘焙
-        mPresenter.clearBakeReportProxy();
+        mPresenter.clearBakeReportProxy();*/
+        minimizeActivity();
         finish();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mPresenter.resetBluetoothListener();
+        Log.e(TAG, "onDestroy: BakeActivity被销毁:" + this.toString());
+        if (!MyApplication.test4IsMinimize) {
+            if (this == mPresenter.getCurOperatorView()) {
+                mPresenter.resetBluetoothListener();
+            }
+        }
     }
 
+    /**
+     * 用于最小化烘焙界面
+     * 便于烘焙过程中查看其他数据
+     */
+    private void minimizeActivity() {
+        // 保存引用？让BluetoothService仍然能传递数据过来，只是不再刷新界面？
+        MyApplication.test4IsMinimize = true;
+    }
+
+    /**
+     * 改变事件操作状态的方法
+     *
+     * @param btnStatus 按钮状态
+     */
+    private void switchBtnStatus(int btnStatus) {
+        switch (btnStatus) {
+            case DRY:
+                mDry.setEnabled(false);
+                break;
+            case FIRST_BURST:
+                mFirstBurst.setText("一爆结束");
+                break;
+            case FIRST_BURST_END:
+                mFirstBurst.setEnabled(false);
+                break;
+            case SECOND_BURST:
+                mSecondBurst.setText("二爆结束");
+                break;
+            case SECOND_BURST_END:
+                mSecondBurst.setEnabled(false);
+                break;
+            case END:
+                mEnd.setEnabled(false);
+                break;
+        }
+    }
 }

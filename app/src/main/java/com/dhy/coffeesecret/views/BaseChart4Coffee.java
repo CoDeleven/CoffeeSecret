@@ -555,7 +555,7 @@ public class BaseChart4Coffee extends LineChart implements IChartView {
     @Override
     public void clear() {
         /*super.clear();
-        initLine();
+        initLines();
         if (referEntries != null && referEntries.size() > 0) {
             enableReferLine(referEntries);
         }*/

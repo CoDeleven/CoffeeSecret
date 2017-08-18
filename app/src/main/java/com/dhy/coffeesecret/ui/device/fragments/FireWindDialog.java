@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.utils.UnitConvert;
+import com.dhy.coffeesecret.utils.Utils;
 import com.dhy.coffeesecret.views.CircleSeekBar;
 import com.github.mikephil.charting.data.Event;
 
@@ -53,7 +54,7 @@ public class FireWindDialog extends DialogFragment implements CircleSeekBar.OnSe
         @Override
         public boolean handleMessage(Message msg) {
             Bundle bundle = msg.getData();
-            int curValue = bundle.getInt("curValue");
+            float curValue = bundle.getFloat("curValue");
             int curSeek = bundle.getInt("curSeek");
             if (1 == curSeek) {
                 text1.setText("" + curValue);
@@ -140,7 +141,10 @@ public class FireWindDialog extends DialogFragment implements CircleSeekBar.OnSe
 
     @Override
     public void onChanged(CircleSeekBar seekbar, int curValue, double angle) {
-        updateText(seekbar, curValue);
+        // Log.d("GG", "onChanged: curValue" + curValue + ", angle:" + angle);
+        // 因为客户需求，需要精确到0.1，故再传入angle自行根据 半分比获取相应的数值
+        double processVal = angle / 360 * seekbar.getMaxProcess();
+        updateText(seekbar, Utils.get1PrecisionFloat(processVal));
     }
 
     /**
@@ -164,10 +168,10 @@ public class FireWindDialog extends DialogFragment implements CircleSeekBar.OnSe
      * @param seekBar
      * @param curValue
      */
-    private void updateText(CircleSeekBar seekBar, int curValue) {
+    private void updateText(CircleSeekBar seekBar, float curValue) {
         Message msg = new Message();
         Bundle bundle = new Bundle();
-        bundle.putInt("curValue", curValue);
+        bundle.putFloat("curValue", curValue);
 
         if (seekBar == circle1) {
             windValue = curValue;
