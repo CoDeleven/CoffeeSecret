@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.ui.cup.listener.GridViewItemClickListener;
 import com.dhy.coffeesecret.utils.ArrayUtil;
+import com.dhy.coffeesecret.views.BakeDegreeShowBar;
 import com.dinuscxj.progressbar.CircleProgressBar;
 
 import java.util.HashMap;
@@ -68,7 +69,7 @@ public class CuppingInfoFragment extends Fragment implements InputDialogFragment
     private View mScoresCircles;
 
     private View cuppingInfoView;
-
+    private BakeDegreeShowBar mShowBar;
     private float[] flawScores;
     private float[] feelScores;
     private int roastDegree;
@@ -110,8 +111,11 @@ public class CuppingInfoFragment extends Fragment implements InputDialogFragment
         flawProgressBar = (CircleProgressBar) cuppingInfoView.findViewById(R.id.cpb_flaw);
         finalProgressBar = (CircleProgressBar) cuppingInfoView.findViewById(R.id.cpb_final);
         mDeleteButton = (Button) cuppingInfoView.findViewById(R.id.btn_delete);
+        mShowBar = (BakeDegreeShowBar) cuppingInfoView.findViewById(R.id.id_show_bake_degree);
+        mShowBar.setCurProcess(roastDegree);
 
         mScoresCircles = cuppingInfoView.findViewById(R.id.line_result);
+
 
         mFeelAdapter = new InfoGridViewAdapter(FEEL_ICONS, mData, FEEL_TITLES);
         mFlawAdapter = new InfoGridViewAdapter(FLAW_ICONS, mData, FLAW_TITLES);
@@ -213,6 +217,7 @@ public class CuppingInfoFragment extends Fragment implements InputDialogFragment
         for (int i = 0; i < FLAW_TITLES.length; i++) {
             mData.put(FLAW_TITLES[i], flawScores[i]);
         }
+
         // TODO 显示烘焙都在界面上
     }
 

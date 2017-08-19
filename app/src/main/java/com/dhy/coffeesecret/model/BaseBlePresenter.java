@@ -18,6 +18,7 @@ public abstract class BaseBlePresenter implements IBasePresenter, IBleScanCallba
     protected static BakeReportProxy bakeReportProxy;
     protected static IBaseView viewOperator;
     protected static IBaseModel modelOperator;
+
     /**
      * 初始化蓝牙操作助手的监听
      *

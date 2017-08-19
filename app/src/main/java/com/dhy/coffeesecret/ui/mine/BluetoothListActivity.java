@@ -250,15 +250,16 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
         // 当前状态是处于正在连接的状态
         progressViewHandler.sendEmptyMessage(DEVICE_CONNECTING);
         // 开始正式请求连接,因为连接是异步回调，不是及时消息,如果此时false，一定不能连接成功
-        runOnUiThread(new Runnable() {
+        mPresenter.connect(device);
+        /*runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (!mPresenter.connect(device)) {
+                if (!) {
                     progressViewHandler.sendEmptyMessage(DEVICE_CONNECT_FAILED);
                     return;
                 }
             }
-        });
+        });*/
     }
 
     @Override

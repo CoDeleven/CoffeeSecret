@@ -13,7 +13,6 @@ import android.bluetooth.BluetoothProfile;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
-import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -183,6 +182,11 @@ public class BluetoothService extends Service implements IBluetoothOperator {
             if (newState == BluetoothProfile.STATE_CONNECTING) {
                 mConnectionListener.toConnected(STATE_CONNECTING);
             } else if (newState == STATE_DISCONNECTING) {
+/*                if (mRunThread != null) {
+                    mRunThread.clearData();
+                    // 阻断
+                    mRunThread.interrupt();
+                }*/
                 mConnectionListener.toDisconnecting(STATE_DISCONNECTING);
             }
             // 如果当前状态是已连接
@@ -312,13 +316,13 @@ public class BluetoothService extends Service implements IBluetoothOperator {
             return false;
         }
 
-        // 直接连接设备
+        // 直接连接设备，如果配对了需要加上下面这个
 //        mBluetoothGatt = device.connectGatt(this, false, mGattCallback);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            mBluetoothGatt = device.connectGatt(this, false, mGattCallback, TRANSPORT_LE);
-        } else {
-            mBluetoothGatt = device.connectGatt(this, false, mGattCallback);
-        }
+//         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//             mBluetoothGatt = device.connectGatt(this, false, mGattCallback, TRANSPORT_LE);
+//         } else {
+        mBluetoothGatt = device.connectGatt(this, false, mGattCallback);
+        // }
 
         Log.d(TAG, "Trying to create a new connection.:" + mBluetoothGatt.toString());
         mConnectionState = STATE_CONNECTING;
@@ -484,8 +488,8 @@ public class BluetoothService extends Service implements IBluetoothOperator {
             this.isHandling = isHandling;
         }
 
-        void doWrite(){
-            timer = new Timer();
+        void doWrite() {
+            // timer = new Timer();
             setWriteCommand();
         }
     }
@@ -496,27 +500,6 @@ public class BluetoothService extends Service implements IBluetoothOperator {
         private Boolean readable = false;
         // 是否是被强迫取消读取的
         private volatile boolean isForcedCancel = false;
-        private DataReader readData1 = new DataReader() {
-            @Override
-            public void setWriteCommand() {
-                Log.d(TAG, "readData1 写入...");
-                mWriter.setValue(Utils.hexStringToBytes(READ_TEMP_COMMAND));
-                do {
-                    state = mBluetoothGatt.writeCharacteristic(mWriter);
-                } while (!state && readable);
-            }
-
-            @Override
-            public boolean readData(String str) {
-                result += str;
-                if (str.endsWith("0a")) {
-                    result += "2c";
-                    dataReader = channelListener2;
-                    channelListener2.doWrite();
-                }
-                return false;
-            }
-        };
         private DataReader channelListener1 = new DataReader() {
             @Override
             public void setWriteCommand() {
@@ -587,6 +570,27 @@ public class BluetoothService extends Service implements IBluetoothOperator {
                 if (str.endsWith("65") || str.endsWith("0a")) {
                     dataReader = readData2;
                     dataReader.doWrite();
+                }
+                return false;
+            }
+        };
+        private DataReader readData1 = new DataReader() {
+            @Override
+            public void setWriteCommand() {
+                Log.d(TAG, "readData1 写入...");
+                mWriter.setValue(Utils.hexStringToBytes(READ_TEMP_COMMAND));
+                do {
+                    state = mBluetoothGatt.writeCharacteristic(mWriter);
+                } while (!state && readable);
+            }
+
+            @Override
+            public boolean readData(String str) {
+                result += str;
+                if (str.endsWith("0a")) {
+                    result += "2c";
+                    dataReader = channelListener2;
+                    channelListener2.doWrite();
                 }
                 return false;
             }

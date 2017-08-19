@@ -2,7 +2,6 @@ package com.dhy.coffeesecret.ui.device;
 
 import android.app.ProgressDialog;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
@@ -14,7 +13,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +31,7 @@ import com.dhy.coffeesecret.pojo.BeanInfoSimple;
 import com.dhy.coffeesecret.pojo.Temperature;
 import com.dhy.coffeesecret.services.BluetoothService;
 import com.dhy.coffeesecret.services.IBluetoothOperator;
+import com.dhy.coffeesecret.services.NewBleService;
 import com.dhy.coffeesecret.ui.device.fragments.BakeDialog;
 import com.dhy.coffeesecret.ui.mine.BluetoothListActivity;
 import com.dhy.coffeesecret.utils.FragmentTool;
@@ -54,9 +53,9 @@ import static com.dhy.coffeesecret.MyApplication.temperatureUnit;
 // TODO 待重构,重构对象-> 统一符号处理、统一handler处理、统一dialog的生成方式
 
 public class DeviceFragment extends Fragment implements IDeviceView {
-    private static final String TAG = DeviceFragment.class.getSimpleName();
     public static final int AUTO_CONNECTION_TIPS = 0x100;
     public static final int UPDATE_TEMPERATURE_TEXT = 0x111;
+    private static final String TAG = DeviceFragment.class.getSimpleName();
     private static String lastAddress = null;
     private static Presenter4Device mPresenter;
     @Bind(R.id.id_device_prepare_bake)
@@ -256,10 +255,14 @@ public class DeviceFragment extends Fragment implements IDeviceView {
         lastAddress = SettingTool.getConfig(getContext()).getAddress();
         // 判断是否连接过蓝牙，如果尚未连接过，初始化
         if (mPresenter == null) {
-            Log.d(TAG, "onCreate: 创建BluetoothService");
-            Intent intent = new Intent(getContext().getApplicationContext(), BluetoothService.class);
-            getContext().getApplicationContext().bindService(intent, conn, Context.BIND_AUTO_CREATE);
+            // Log.d(TAG, "onCreate: 创建BluetoothService");
+            // Intent intent = new Intent(getContext().getApplicationContext(), BluetoothService.class);
+            // getContext().getApplicationContext().bindService(intent, conn, Context.BIND_AUTO_CREATE);
+
+            mPresenter = Presenter4Device.newInstance(new NewBleService(getContext()));
         }
+
+
     }
 
     @Override
@@ -274,9 +277,9 @@ public class DeviceFragment extends Fragment implements IDeviceView {
     @Override
     public void onStart() {
         super.onStart();
-        if(MyApplication.test4IsMinimize){
+        if (MyApplication.test4IsMinimize) {
 
-        }else{
+        } else {
             setupPresenter();
         }
     }
@@ -341,7 +344,7 @@ public class DeviceFragment extends Fragment implements IDeviceView {
     }
 
     private void goBake() {
-        if(MyApplication.test4IsMinimize){
+        if (MyApplication.test4IsMinimize) {
             Intent intent = new Intent(getContext(), BakeActivity.class);
             startActivity(intent);
             return;
@@ -350,7 +353,7 @@ public class DeviceFragment extends Fragment implements IDeviceView {
             mShowHandler.sendEmptyMessage(0);
             return;
         }
-        if(beanInfos == null){
+        if (beanInfos == null) {
             beanInfos = new ArrayList<>();
         }
         if (!(beanInfos.size() > 0)) {

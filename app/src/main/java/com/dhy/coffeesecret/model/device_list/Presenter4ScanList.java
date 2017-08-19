@@ -85,11 +85,11 @@ public class Presenter4ScanList extends BaseBlePresenter {
 
     @Override
     public void toConnected(int status) {
+        // 设置已经连接状态
+        mScanListView.updateText(DEVICE_CONNECTED, null);
         // 设置已连接设备
         String connectedAddr = mBluetoothOperator.getConnectedDevice().getAddress();
         // adapter.lastConnectedAddress = device.getAddress();
-        // 设置已经连接状态
-        mScanListView.updateText(DEVICE_CONNECTED, null);
         // 保存连接设备地址到配置文件,方便启动时读取并直接连接
         SettingTool.saveAddress(connectedAddr);
         // 连接成功后结束并跳转回首页

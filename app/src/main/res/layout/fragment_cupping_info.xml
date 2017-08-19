@@ -26,129 +26,180 @@
                 android:textSize="@dimen/font_size_primary" />
 
             <View style="@style/HorizontalLine" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:paddingTop="20dp">
-
-                <com.dinuscxj.progressbar.CircleProgressBar
-                    android:id="@+id/cpb_feel"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:max="120"
-                    app:progress_background_color="@color/bg_progress_norml"
-                    app:progress_end_color="@color/colorPrimary"
-                    app:progress_start_color="@color/colorPrimary"
-                    app:progress_stroke_width="5dp"
-                    app:progress_text_color="@android:color/black"
-                    app:progress_text_format_pattern="@string/progress_text_format_pattern"
-                    app:progress_text_size="@dimen/font_size_primary"
-                    app:style="solid_line" />
-
-                <View
-                    android:layout_width="26dp"
-                    android:layout_height="4dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="6dp"
-                    android:layout_marginRight="6dp"
-                    android:background="@drawable/bg_round_pricolor" />
-
-                <com.dinuscxj.progressbar.CircleProgressBar
-                    android:id="@+id/cpb_flaw"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    app:progress_background_color="@color/bg_progress_norml"
-                    app:progress_end_color="@color/colorPrimary"
-                    app:progress_start_color="@color/colorPrimary"
-                    app:progress_stroke_width="5dp"
-                    app:progress_text_color="@android:color/black"
-                    app:progress_text_format_pattern="@string/progress_text_format_pattern"
-                    app:progress_text_size="@dimen/font_size_primary"
-                    app:style="solid_line" />
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:orientation="vertical">
-
-                    <View
-                        android:layout_width="26dp"
-                        android:layout_height="4dp"
-                        android:layout_marginBottom="2dp"
-                        android:layout_marginLeft="6dp"
-                        android:layout_marginRight="6dp"
-                        android:background="@drawable/bg_round_pricolor" />
-
-                    <View
-                        android:layout_width="26dp"
-                        android:layout_height="4dp"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="6dp"
-                        android:layout_marginRight="6dp"
-                        android:layout_marginTop="2dp"
-                        android:background="@drawable/bg_round_pricolor" />
-                </LinearLayout>
-
-
-                <com.dinuscxj.progressbar.CircleProgressBar
-                    android:id="@+id/cpb_final"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    app:progress_background_color="@color/bg_progress_norml"
-                    app:progress_end_color="@color/colorPrimary"
-                    app:progress_start_color="@color/colorPrimary"
-                    app:progress_stroke_width="5dp"
-                    app:progress_text_color="@android:color/black"
-                    app:progress_text_format_pattern="@string/progress_text_format_pattern"
-                    app:progress_text_size="@dimen/font_size_primary"
-                    app:style="solid_line" />
-
-            </LinearLayout>
-
-            <LinearLayout
+            <!--<LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:paddingBottom="10dp"
                 android:paddingTop="10dp">
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="left"
-                    android:paddingLeft="10dp"
-                    android:text="烘焙评分"
-                    android:textSize="@dimen/font_size_primary" />
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="left"
-                    android:paddingLeft="10dp"
-                    android:text="烘焙度"
-                    android:textSize="@dimen/font_size_primary" />
+            </LinearLayout>-->
+            <com.dhy.coffeesecret.views.BakeDegreeShowBar
+                android:id="@+id/id_show_bake_degree"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:paddingTop="10dp">
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="烘焙瑕疵"
-                    android:textSize="@dimen/font_size_primary" />
+                <LinearLayout
+                    android:layout_centerHorizontal="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+                        <LinearLayout
+                            android:id="@+id/id_cpb_feel_container"
+                            android:layout_width="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_height="wrap_content">
+                            <com.dinuscxj.progressbar.CircleProgressBar
+                                android:id="@+id/cpb_feel"
+                                android:layout_width="75dp"
+                                android:layout_height="75dp"
+                                android:max="120"
+                                app:progress_background_color="@color/bg_progress_norml"
+                                app:progress_end_color="@color/colorPrimary"
+                                app:progress_start_color="@color/colorPrimary"
+                                app:progress_stroke_width="5dp"
+                                app:progress_text_color="@android:color/black"
+                                app:progress_text_format_pattern="@string/progress_text_format_pattern"
+                                app:progress_text_size="@dimen/font_size_primary"
+                                app:style="solid_line" />
+                            <TextView
+                                android:gravity="center"
+                                android:textAlignment="center"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:paddingTop="10dp"
+                                android:layout_weight="1"
+                                android:text="烘焙评分"
+                                android:textSize="@dimen/font_size_primary" />
+                        </LinearLayout>
+                        <LinearLayout
+                            android:orientation="horizontal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+                            <View
+                                android:id="@+id/cpb_feel_refer"
+                                android:layout_width="75dp"
+                                android:layout_height="75dp"
+                                android:max="120"
+                                android:visibility="invisible"/>
+                            <TextView
+                                android:layout_width="26dp"
+                                android:layout_height="4dp"
+                                android:paddingBottom="10dp"
+                                android:layout_marginLeft="6dp"
+                                android:layout_gravity="center_vertical"
+                                android:layout_toRightOf="@id/cpb_feel_refer"
+                                android:layout_marginRight="6dp"
+                                android:background="@drawable/bg_round_pricolor" />
+                        </LinearLayout>
+                    </RelativeLayout>
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="right"
-                    android:paddingRight="10dp"
-                    android:text="最终结果"
-                    android:textSize="@dimen/font_size_primary" />
-            </LinearLayout>
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_height="wrap_content">
+                            <com.dinuscxj.progressbar.CircleProgressBar
+                                android:id="@+id/cpb_flaw"
+                                android:layout_width="75dp"
+                                android:layout_height="75dp"
+                                app:progress_background_color="@color/bg_progress_norml"
+                                app:progress_end_color="@color/colorPrimary"
+                                app:progress_start_color="@color/colorPrimary"
+                                app:progress_stroke_width="5dp"
+                                app:progress_text_color="@android:color/black"
+                                app:progress_text_format_pattern="@string/progress_text_format_pattern"
+                                app:progress_text_size="@dimen/font_size_primary"
+                                app:style="solid_line" />
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:paddingTop="10dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:textAlignment="center"
+                                android:gravity="center"
+                                android:text="烘焙瑕疵"
+                                android:textSize="@dimen/font_size_primary" />
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+                            <View
+                                android:id="@+id/cpb_flaw_refer"
+                                android:layout_width="75dp"
+                                android:layout_height="75dp"
+                                android:max="120"
+                                android:visibility="invisible"/>
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:orientation="vertical">
+
+                                <View
+                                    android:layout_width="26dp"
+                                    android:layout_height="4dp"
+                                    android:layout_marginBottom="2dp"
+                                    android:layout_marginLeft="6dp"
+                                    android:layout_marginRight="6dp"
+                                    android:background="@drawable/bg_round_pricolor" />
+
+                                <View
+                                    android:layout_width="26dp"
+                                    android:layout_height="4dp"
+                                    android:layout_gravity="center_vertical"
+                                    android:layout_marginLeft="6dp"
+                                    android:layout_marginRight="6dp"
+                                    android:layout_marginTop="2dp"
+                                    android:background="@drawable/bg_round_pricolor" />
+                            </LinearLayout>
+                        </LinearLayout>
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+                            <com.dinuscxj.progressbar.CircleProgressBar
+                                android:id="@+id/cpb_final"
+                                android:layout_width="75dp"
+                                android:layout_height="75dp"
+                                app:progress_background_color="@color/bg_progress_norml"
+                                app:progress_end_color="@color/colorPrimary"
+                                app:progress_start_color="@color/colorPrimary"
+                                app:progress_stroke_width="5dp"
+                                app:progress_text_color="@android:color/black"
+                                app:progress_text_format_pattern="@string/progress_text_format_pattern"
+                                app:progress_text_size="@dimen/font_size_primary"
+                                app:style="solid_line" />
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="最终结果"
+                                android:paddingTop="10dp"
+                                android:textSize="@dimen/font_size_primary" />
+                        </LinearLayout>
+                    </RelativeLayout>
+                </LinearLayout>
+
+
+            </RelativeLayout>
+
+
         </LinearLayout>
 
         <TextView
