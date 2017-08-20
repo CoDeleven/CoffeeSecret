@@ -1,10 +1,12 @@
 package com.dhy.coffeesecret.ui.device;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -18,7 +20,6 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.model.bake.IBakeView;
 import com.dhy.coffeesecret.model.bake.Presenter4BakeActivity;
@@ -68,6 +69,7 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
     public static final String DEVICE_NAME = "com.dhy.coffeesercret.ui.device.BakeActivity.DEVICE_NAME";
     public static final String ENABLE_REFERLINE = "com.dhy.coffeesercret.ui.device.BakeActivity.REFER_LINE";
     public static final int I_AM_BAKEACTIVITY = 123;
+    public static final int UPDATE_TEMPERATURE_TEXT = 0x123, WARN_DISCONNECTED = 0x456, UPDATE_TIME_TEXT = 0x112;
     private static final String TAG = BakeActivity.class.getSimpleName();
     @Bind(R.id.id_baking_chart)
     BaseChart4Coffee chart;
@@ -134,96 +136,78 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
     private FragmentTool fragmentTool;
     private BakeReportProxy referTempratures;
     // 执行UI操作
-    private Handler mHandler = new Handler(new Handler.Callback() {
+    private Handler mTextHandler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
-            Temperature temperature = (Temperature) msg.obj;
-            // 所有用户可见性数值均进行转换
-            idBakingBeanTemp.setText(Utils.getCrspTempratureValue(temperature.getBeanTemp() + "") + temperatureUnit);
-            idBakingAccBeanTempBefore.setText(Utils.getCommaBefore(temperature.getAccBeanTemp()));
-            idBakingAccBeanTempAfter.setText(Utils.getCommaAfter(temperature.getAccBeanTemp()));
-            idTempUnit0.setText(temperatureUnit + "/m");
 
-            idBakingInwindTemp.setText(Utils.getCrspTempratureValue(temperature.getInwindTemp() + "") + temperatureUnit);
-            idBakingAccInwindTempBefore.setText(Utils.getCommaBefore(temperature.getAccInwindTemp()));
-            idBakingAccInwindTempAfter.setText(Utils.getCommaAfter(temperature.getAccInwindTemp()));
-            idTempUnit1.setText(temperatureUnit + "/m");
-
-            idBakingOutwindTemp.setText(Utils.getCrspTempratureValue(temperature.getOutwindTemp() + "") + temperatureUnit);
-            idBakingAccOutwindTempBefore.setText(Utils.getCommaBefore(temperature.getAccOutwindTemp()));
-            idBakingAccOutwindTempAfter.setText(Utils.getCommaAfter(temperature.getAccOutwindTemp()));
-            idTempUnit2.setText(temperatureUnit + "/m");
-
-            // switchImage(temperature);
-            chart.notifyDataSetChanged();
-
-            return false;
-        }
-    });
-    private Handler mToast = new Handler(new Handler.Callback(){
-        @Override
-        public boolean handleMessage(Message msg) {
-            Toast.makeText(BakeActivity.this, (String)msg.obj, Toast.LENGTH_SHORT);
-            return false;
-        }
-    });
-    private Handler mTimer = new Handler(new Handler.Callback() {
-        @Override
-        public boolean handleMessage(Message msg) {
-            int curStatus = (int) msg.obj;
-            // 转换成秒
-            int now = ((int) (System.currentTimeMillis() - RecorderSystem.getStartTime()) / 1000);
-            untilTime.setText(Utils.getTimeWithFormat(now));
-            /*if (!isOverBottom && minutes > 1 && seconds > 30) {
-                isOverBottom = true;
-            }*/
-            if (curStatus == DevelopBar.FIRST_BURST) {
-
-                developTime.setText(mDevelopBarPresenter.getDevelopTimeString());
-                developRate.setText("发展率：" + mDevelopBarPresenter.getDevelopRateString() + "%");
+            switch (msg.what) {
+                case UPDATE_TEMPERATURE_TEXT:
+                    Temperature temperature = (Temperature) msg.obj;
+                    updateTemperatureText(temperature);
+                    break;
+                case WARN_DISCONNECTED:
+                    showDisconnectedDialog();
+                    break;
+                case UPDATE_TIME_TEXT:
+                    updateTimeText((int) msg.obj);
             }
+
             return false;
         }
     });
+    private Handler mToast = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            Toast.makeText(BakeActivity.this, (String) msg.obj, Toast.LENGTH_SHORT);
+            return false;
+        }
+    });
+
+    private void updateTemperatureText(Temperature temperature) {
+        // 所有用户可见性数值均进行转换
+        idBakingBeanTemp.setText(Utils.getCrspTempratureValue(temperature.getBeanTemp() + "") + temperatureUnit);
+        idBakingAccBeanTempBefore.setText(Utils.getCommaBefore(temperature.getAccBeanTemp()));
+        idBakingAccBeanTempAfter.setText(Utils.getCommaAfter(temperature.getAccBeanTemp()));
+        idTempUnit0.setText(temperatureUnit + "/m");
+
+        idBakingInwindTemp.setText(Utils.getCrspTempratureValue(temperature.getInwindTemp() + "") + temperatureUnit);
+        idBakingAccInwindTempBefore.setText(Utils.getCommaBefore(temperature.getAccInwindTemp()));
+        idBakingAccInwindTempAfter.setText(Utils.getCommaAfter(temperature.getAccInwindTemp()));
+        idTempUnit1.setText(temperatureUnit + "/m");
+
+        idBakingOutwindTemp.setText(Utils.getCrspTempratureValue(temperature.getOutwindTemp() + "") + temperatureUnit);
+        idBakingAccOutwindTempBefore.setText(Utils.getCommaBefore(temperature.getAccOutwindTemp()));
+        idBakingAccOutwindTempAfter.setText(Utils.getCommaAfter(temperature.getAccOutwindTemp()));
+        idTempUnit2.setText(temperatureUnit + "/m");
+
+        // switchImage(temperature);
+        chart.notifyDataSetChanged();
+    }
+
+    private void updateTimeText(int curStatus) {
+        // 转换成秒
+        int now = ((int) (System.currentTimeMillis() - RecorderSystem.getStartTime()) / 1000);
+        untilTime.setText(Utils.getTimeWithFormat(now));
+        if (curStatus == DevelopBar.FIRST_BURST) {
+            developTime.setText(mDevelopBarPresenter.getDevelopTimeString());
+            developRate.setText("发展率：" + mDevelopBarPresenter.getDevelopRateString() + "%");
+        }
+    }
 
     @Override
     public void updateText(int index, Object updateContent) {
-
+        Message msg = new Message();
+        msg.obj = updateContent;
+        msg.what = index;
+        mTextHandler.sendMessage(msg);
     }
 
     @Override
     public void showToast(int index, String toastContent) {
-
         Message msg = new Message();
         msg.what = index;
         msg.obj = toastContent;
         mToast.sendMessage(msg);
-    }
-
-    @Override
-    public void updateChart(Entry entry, int lineIndex) {
-        // chart.addOneDataToLine(entry, lineIndex);
-        // mChartPresenter.dynamicAddDataImm(entry, lineIndex, true);
-    }
-
-    @Override
-    public void updateTemperatureText(Temperature temperature) {
-        Message msg = new Message();
-        msg.obj = temperature;
-        mHandler.sendMessage(msg);
-    }
-
-    @Override
-    public void updateTimer(int developStatus) {
-        Message msg = new Message();
-        msg.what = 0;
-        msg.obj = developStatus;
-        mTimer.sendMessage(msg);
-    }
-
-    @Override
-    public void notifyChartDataChanged() {
-        chart.invalidate();
     }
 
     /**
@@ -276,7 +260,7 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
 
         init();
         // 测试用
-        if (MyApplication.test4IsMinimize) {
+        if (mPresenter.isMinimized()) {
             // 因为可以退出的都是正在烘焙中的，故恢复也恢复到烘焙中的状态
             afterStartBtnClick();
             // 继续刚刚的烘焙
@@ -325,6 +309,7 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
         // 添加曲线
         mChartPresenter.continueLastLines();
         mPresenter.setView(this);
+        mPresenter.setMinimize(false);
         mDevelopBarPresenter.setView(developBar);
         // 获取事件列表，进行恢复
         List<Entry> events = mPresenter.getEventList();
@@ -347,8 +332,8 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void initBakePresenter() {
-        mPresenter.initBluetoothListener();
         mPresenter.setView(this);
+        mPresenter.initBluetoothListener();
         mPresenter.setChartPresenter(mChartPresenter);
         mPresenter.setDevelopBarPresenter(mDevelopBarPresenter);
         mPresenter.init();
@@ -357,8 +342,6 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onStart() {
         super.onStart();
-        Log.e(TAG, "onStart: 设置minimize为false");
-        MyApplication.test4IsMinimize = false;
         /*       if (timer == null) {
             isReading = true;
             timer = new Thread(new Runnable() {
@@ -494,6 +477,8 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
         afterStartBtnClick();
         mPresenter.init();
         mChartPresenter.clear();
+        // 设置开始烘焙
+        mPresenter.startBaking();
         if (popupOperator != null) {
             ((CheckBox) popupOperator.findViewById(R.id.id_baking_line_bean)).setChecked(true);
             ((CheckBox) popupOperator.findViewById(R.id.id_baking_line_inwind)).setChecked(true);
@@ -619,7 +604,7 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
     protected void onDestroy() {
         super.onDestroy();
         Log.e(TAG, "onDestroy: BakeActivity被销毁:" + this.toString());
-        if (!MyApplication.test4IsMinimize) {
+        if (!mPresenter.isMinimized()) {
             if (this == mPresenter.getCurOperatorView()) {
                 mPresenter.resetBluetoothListener();
             }
@@ -632,7 +617,7 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
      */
     private void minimizeActivity() {
         // 保存引用？让BluetoothService仍然能传递数据过来，只是不再刷新界面？
-        MyApplication.test4IsMinimize = true;
+        mPresenter.setMinimize(true);
     }
 
     /**
@@ -661,5 +646,24 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
                 mEnd.setEnabled(false);
                 break;
         }
+    }
+
+    private void showDisconnectedDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("QAQ 断开连接了...")
+                .setNegativeButton("重连", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        mPresenter.reconnect();
+                    }
+                })
+                .setPositiveButton("退出", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        BakeActivity.this.discardThisBake(null);
+                    }
+                })
+                .setMessage("重连成功后会丢失部分数据.../(ㄒoㄒ)/~~");
+        builder.create().show();
     }
 }

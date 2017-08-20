@@ -43,8 +43,11 @@ public class NewBleService implements IBluetoothOperator, DataDigger4Ble.IBleWRO
     private String periodData = "";
     private Handler threadHandler = new Handler(Looper.getMainLooper());
     private IBleDataCallback mTemperatureCallback;
+    private String mLastConnectedDevice;
+    // 这里自己加这个字段，因为框架的有问题
+    private boolean isConnected;
     // 自行检测的是否断开连接
-    private boolean mSelfDetectedDisconned = false;
+    // private boolean mSelfDetectedDisconned = false;
     private BleGattCallback mGattCallback4Conn = new BleGattCallback() {
 
         @Override
@@ -52,23 +55,24 @@ public class NewBleService implements IBluetoothOperator, DataDigger4Ble.IBleWRO
             Log.e(TAG, "onConnectError: 扫描不到对应设备");
             // 按照未连接来处理
             mConnStatusCallback.toDisconnected();
+            isConnected = false;
         }
 
         @Override
         public void onConnectSuccess(BluetoothGatt gatt, int status) {
             NewBleService.this.mCurConnectedDevice = gatt.getDevice();
+            isConnected = true;
             mConnStatusCallback.toConnected();
+            // 保存这次连接的地址，便于下次重连
+            mLastConnectedDevice = mCurConnectedDevice.getAddress();
             // 内部直接实现了discoverServices
         }
 
         @Override
         public void onDisConnected(BluetoothGatt gatt, int status, BleException exception) {
-            if (!mSelfDetectedDisconned) {
-                mConnStatusCallback.toDisconnected();
-                Log.e(TAG, "onDisConnected: " + exception.getDescription());
-            }
-            // 已经没有利用价值了，系统已经认为断开连接了
-            mSelfDetectedDisconned = false;
+            mConnStatusCallback.toDisconnected();
+            isConnected = false;
+            Log.e(TAG, "onDisConnected: " + exception.getDescription());
         }
 
         @Override
@@ -118,11 +122,7 @@ public class NewBleService implements IBluetoothOperator, DataDigger4Ble.IBleWRO
 
     @Override
     public boolean isConnected() {
-        if (mSelfDetectedDisconned) {
-            return false;
-        } else {
-            return mBleOperator.isConnected();
-        }
+        return isConnected;
     }
 
     @Override
@@ -196,10 +196,7 @@ public class NewBleService implements IBluetoothOperator, DataDigger4Ble.IBleWRO
 
     @Override
     public String getLatestAddress() {
-        if (mCurConnectedDevice != null) {
-            return mCurConnectedDevice.getAddress();
-        }
-        return "";
+        return this.mLastConnectedDevice;
     }
 
     @Override
@@ -208,6 +205,7 @@ public class NewBleService implements IBluetoothOperator, DataDigger4Ble.IBleWRO
         mBleOperator.disableBluetooth();
         mConnStatusCallback.toDisable();
         clearInfoAfterDisconnected();
+        isConnected = false;
     }
 
     private void startRead() {
@@ -295,9 +293,10 @@ public class NewBleService implements IBluetoothOperator, DataDigger4Ble.IBleWRO
 
     @Override
     public void occurDisconnectedBySelfDetect() {
-        // 自检到断开连接, 屏蔽系统的断开连接回调
-        mSelfDetectedDisconned = true;
-        Log.e(TAG, "紧急停止线程...");
+        isConnected = false;
+        Log.e(TAG, "紧急停止线程...通知监听器");
+        mConnStatusCallback.toDisconnected();
+        mBleOperator.closeBluetoothGatt();
         // 清除这些线程
         clearInfoAfterDisconnected();
 

@@ -3,7 +3,6 @@ package com.dhy.coffeesecret.model;
 import android.bluetooth.BluetoothProfile;
 
 import com.clj.fastble.data.ScanResult;
-
 import com.dhy.coffeesecret.pojo.Temperature;
 import com.dhy.coffeesecret.services.interfaces.IBleConnCallback;
 import com.dhy.coffeesecret.services.interfaces.IBleDataCallback;
@@ -88,4 +87,6 @@ public abstract class BaseBlePresenter extends BasePresenter implements IBasePre
     public void toDisable() {
 
     }
+
+
 }

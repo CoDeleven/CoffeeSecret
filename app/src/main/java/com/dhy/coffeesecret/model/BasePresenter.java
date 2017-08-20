@@ -9,11 +9,11 @@ import com.dhy.coffeesecret.pojo.BakeReportProxy;
 
 public abstract class BasePresenter implements IBasePresenter {
     // 表示是否最小化
-    protected boolean isMinimized = false;
+    protected static boolean isMinimized = false;
     // 表示是否正在烘焙
-    protected boolean isBakingNow = false;
+    protected static boolean isBakingNow = false;
     // 当前正在烘焙的报告
-    protected BakeReportProxy mCurBakingProxy = null;
+    protected static BakeReportProxy mCurBakingProxy = null;
 
     protected IBaseView mViewOperator;
     // 这玩意大多情况都是由presenter创建的。就不给方法设置了
@@ -38,5 +38,8 @@ public abstract class BasePresenter implements IBasePresenter {
 
     public boolean isMinimized() {
         return isMinimized;
+    }
+    public boolean isBakingNow(){
+        return isBakingNow;
     }
 }

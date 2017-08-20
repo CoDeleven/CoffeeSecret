@@ -139,4 +139,8 @@ public class Presenter4Chart {
         }
         return mPresenter;
     }
+
+    public void refreshChart(){
+        mViewOperator.updateChart();
+    }
 }

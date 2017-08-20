@@ -11,6 +11,7 @@ public class Presenter4Report extends BaseBlePresenter {
     private static Presenter4Report mPresenter;
     @Override
     public void setView(IBaseView baseView) {
+        super.setView(baseView);
         super.mViewOperator = baseView;
     }
 

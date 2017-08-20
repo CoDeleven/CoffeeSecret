@@ -44,6 +44,10 @@ public class MainActivity extends AppCompatActivity {
         UIUtils.steepToolBar(this);
     }
 
+    public void setCurPage(int curPage){
+        mViewPager.setCurrentItem(curPage);
+    }
+
     /**
      * 初始化默认参数
      */

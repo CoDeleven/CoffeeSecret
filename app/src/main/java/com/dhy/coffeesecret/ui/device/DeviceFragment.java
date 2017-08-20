@@ -22,6 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.dhy.coffeesecret.MainActivity;
 import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.model.device.IDeviceView;
@@ -31,8 +32,8 @@ import com.dhy.coffeesecret.pojo.BakeReportProxy;
 import com.dhy.coffeesecret.pojo.BeanInfoSimple;
 import com.dhy.coffeesecret.pojo.Temperature;
 import com.dhy.coffeesecret.services.BluetoothService;
-import com.dhy.coffeesecret.services.interfaces.IBluetoothOperator;
 import com.dhy.coffeesecret.services.NewBleService;
+import com.dhy.coffeesecret.services.interfaces.IBluetoothOperator;
 import com.dhy.coffeesecret.ui.device.fragments.BakeDialog;
 import com.dhy.coffeesecret.ui.mine.BluetoothListActivity;
 import com.dhy.coffeesecret.utils.FragmentTool;
@@ -263,7 +264,6 @@ public class DeviceFragment extends Fragment implements IDeviceView {
             mPresenter = Presenter4Device.newInstance(new NewBleService(getContext()));
         }
 
-
     }
 
     @Override
@@ -272,13 +272,18 @@ public class DeviceFragment extends Fragment implements IDeviceView {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_device, container, false);
         ButterKnife.bind(this, view);
+
         return view;
     }
 
     @Override
     public void onStart() {
+        // 判断一手是否时缩小状态
+        if (mPresenter != null && mPresenter.isMinimized()) {
+            ((MainActivity) getActivity()).setCurPage(0);
+        }
         super.onStart();
-        if (MyApplication.test4IsMinimize) {
+        if (mPresenter != null && mPresenter.isMinimized()) {
 
         } else {
             setupPresenter();
@@ -345,7 +350,7 @@ public class DeviceFragment extends Fragment implements IDeviceView {
     }
 
     private void goBake() {
-        if (MyApplication.test4IsMinimize) {
+        if (mPresenter.isMinimized()) {
             Intent intent = new Intent(getContext(), BakeActivity.class);
             startActivity(intent);
             return;

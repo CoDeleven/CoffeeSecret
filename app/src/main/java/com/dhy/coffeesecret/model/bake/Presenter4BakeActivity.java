@@ -3,7 +3,6 @@ package com.dhy.coffeesecret.model.bake;
 import android.bluetooth.BluetoothProfile;
 import android.util.Log;
 
-import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.model.BaseBlePresenter;
 import com.dhy.coffeesecret.model.IBaseView;
 import com.dhy.coffeesecret.model.bake.developbar.Presenter4DevelopBar;
@@ -11,6 +10,7 @@ import com.dhy.coffeesecret.model.chart.Presenter4Chart;
 import com.dhy.coffeesecret.pojo.BakeReportProxy;
 import com.dhy.coffeesecret.pojo.Temperature;
 import com.dhy.coffeesecret.pojo.TemperatureSet;
+import com.dhy.coffeesecret.ui.device.BakeActivity;
 import com.dhy.coffeesecret.ui.device.record.BreakPointerRecorder;
 import com.dhy.coffeesecret.ui.device.record.RecorderSystem;
 import com.dhy.coffeesecret.utils.Utils;
@@ -88,9 +88,11 @@ public class Presenter4BakeActivity extends BaseBlePresenter {
     public void setChartPresenter(Presenter4Chart presenter) {
         this.mChartPresenter = presenter;
     }
-    public void setDevelopBarPresenter(Presenter4DevelopBar presenter){
+
+    public void setDevelopBarPresenter(Presenter4DevelopBar presenter) {
         this.mDevelopBarPresenter = presenter;
     }
+
     public void init() {
         mCurStatus = RAW_BEAN;
         mEventList = new LinkedList<>();
@@ -105,6 +107,10 @@ public class Presenter4BakeActivity extends BaseBlePresenter {
         }
     }
 
+    public void reconnect() {
+        String latestAddress = mBluetoothOperator.getLatestAddress();
+        mBluetoothOperator.connect(latestAddress);
+    }
 
     /**
      * 先初始化RecorderSystem和BreakPointerRecorder再使用
@@ -120,6 +126,7 @@ public class Presenter4BakeActivity extends BaseBlePresenter {
 
     @Override
     public void setView(IBaseView baseView) {
+        super.setView(baseView);
         super.mViewOperator = baseView;
     }
 
@@ -135,8 +142,7 @@ public class Presenter4BakeActivity extends BaseBlePresenter {
     public void toDisconnected() {
         // TODO 不断进行重连...
         super.mViewOperator.showToast(BluetoothProfile.STATE_DISCONNECTED, "蓝牙已断开，请勿远离...");
-        String latestAddress = mBluetoothOperator.getLatestAddress();
-        mBluetoothOperator.connect(latestAddress);
+        super.mViewOperator.updateText(BakeActivity.WARN_DISCONNECTED, null);
         /*while(!mBluetoothOperator.connect()){
             try {
                 Thread.currentThread().sleep(1000);
@@ -161,17 +167,18 @@ public class Presenter4BakeActivity extends BaseBlePresenter {
         curBeanEntry = new Entry(lastTime, Utils.getCrspTempratureValue(tempratures[0] + ""));
 
         // ((IBakeView) (super.mViewOperator)).updateChart(curBeanEntry, BEANLINE);
-        mChartPresenter.dynamicAddDataImm(curBeanEntry, BEANLINE, !MyApplication.test4IsMinimize);
+        mChartPresenter.dynamicAddDataImm(curBeanEntry, BEANLINE, !super.isMinimized());
         for (int i = 1; i < 6; ++i) {
             // ((IBakeView) (super.mViewOperator)).updateChart();
-            mChartPresenter.dynamicAddDataImm(new Entry(lastTime, Utils.getCrspTempratureValue(tempratures[i] + "")), LINE_INDEX[i], !MyApplication.test4IsMinimize);
+            mChartPresenter.dynamicAddDataImm(new Entry(lastTime, Utils.getCrspTempratureValue(tempratures[i] + "")), LINE_INDEX[i], !super.isMinimized());
         }
-        if (!MyApplication.test4IsMinimize) {
+        // 更新发展率条的数据
+        updateDevelopStatus(mCurStatus);
+        if (!mPresenter.isMinimized()) {
             // 更新发展率条的颜色
-            ((IBakeView) (super.mViewOperator)).updateTimer(mCurStatus);
-            updateDevelopStatus(mCurStatus);
-            // 更新时间文本
-            ((IBakeView) (super.mViewOperator)).updateTemperatureText(temperature);
+            (super.mViewOperator).updateText(BakeActivity.UPDATE_TIME_TEXT, mCurStatus);
+            // 更新温度文本
+            (super.mViewOperator).updateText(BakeActivity.UPDATE_TEMPERATURE_TEXT, temperature);
         }
     }
 
@@ -231,7 +238,8 @@ public class Presenter4BakeActivity extends BaseBlePresenter {
         // 添加事件修改至temperature set
         recorderSystem.addEvent(lastTime + "", description + ":" + status);
         // 通知图表更新
-        ((IBakeView) super.mViewOperator).notifyChartDataChanged();
+        mChartPresenter.refreshChart();
+        // ((IBakeView) super.mViewOperator).notifyChartDataChanged();
     }
 
     /**
@@ -305,11 +313,15 @@ public class Presenter4BakeActivity extends BaseBlePresenter {
 
     public void stopBake() {
         handlerData2BakeReport();
-
+        super.isBakingNow = false;
     }
 
     @Override
     public void toConnected() {
         mViewOperator.showToast(BluetoothProfile.STATE_CONNECTED, "蓝牙连接已恢复...");
+    }
+
+    public void startBaking() {
+        super.isBakingNow = true;
     }
 }

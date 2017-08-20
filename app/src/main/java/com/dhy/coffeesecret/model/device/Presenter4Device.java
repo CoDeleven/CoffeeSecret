@@ -49,6 +49,7 @@ public class Presenter4Device extends BaseBlePresenter {
 
     @Override
     public void setView(IBaseView baseView) {
+        super.setView(baseView);
         mViewOperator = baseView;
     }
 

@@ -63,6 +63,7 @@
             android:screenOrientation="portrait" />
         <activity android:name=".ui.device.BakeActivity"
                   android:launchMode="singleInstance"
+                  android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:screenOrientation="landscape"/>
         <activity
             android:name=".ui.device.ReportActivity"
