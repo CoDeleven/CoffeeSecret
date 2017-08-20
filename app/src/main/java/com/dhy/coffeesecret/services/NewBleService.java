@@ -3,7 +3,6 @@ package com.dhy.coffeesecret.services;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCharacteristic;
-import android.bluetooth.BluetoothProfile;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
@@ -15,7 +14,12 @@ import com.clj.fastble.conn.BleGattCallback;
 import com.clj.fastble.data.ScanResult;
 import com.clj.fastble.exception.BleException;
 import com.clj.fastble.scan.ListScanCallback;
+import com.dhy.coffeesecret.services.data.DataDigger4Ble;
 import com.dhy.coffeesecret.services.data.TransferControllerTask;
+import com.dhy.coffeesecret.services.interfaces.IBleConnCallback;
+import com.dhy.coffeesecret.services.interfaces.IBleDataCallback;
+import com.dhy.coffeesecret.services.interfaces.IBleScanCallback;
+import com.dhy.coffeesecret.services.interfaces.IBluetoothOperator;
 import com.dhy.coffeesecret.utils.Utils;
 
 import static com.dhy.coffeesecret.services.BluetoothService.PRIMARY_SERVICE;
@@ -26,19 +30,77 @@ import static com.dhy.coffeesecret.services.BluetoothService.TAG_WRITE;
  * Created by CoDeleven on 17-8-19.
  */
 
-public class NewBleService implements IBluetoothOperator, IBleWROperator {
+public class NewBleService implements IBluetoothOperator, DataDigger4Ble.IBleWROperator, TransferControllerTask.IConnEmergencyListener {
 
     private static final String TAG = NewBleService.class.getSimpleName();
     private Context context;
     private IBleScanCallback mScanCallback;
-    private IBleConnectionCallback mConnStatusCallback;
+    private IBleConnCallback mConnStatusCallback;
     private BleManager mBleOperator;
     private BluetoothDevice mCurConnectedDevice;
     private Thread mRunningThread;
     private TransferControllerTask mCurTask;
     private String periodData = "";
     private Handler threadHandler = new Handler(Looper.getMainLooper());
-    private IBleTemperatureCallback mTemperatureCallback;
+    private IBleDataCallback mTemperatureCallback;
+    // 自行检测的是否断开连接
+    private boolean mSelfDetectedDisconned = false;
+    private BleGattCallback mGattCallback4Conn = new BleGattCallback() {
+
+        @Override
+        public void onConnectError(BleException exception) {
+            Log.e(TAG, "onConnectError: 扫描不到对应设备");
+            // 按照未连接来处理
+            mConnStatusCallback.toDisconnected();
+        }
+
+        @Override
+        public void onConnectSuccess(BluetoothGatt gatt, int status) {
+            NewBleService.this.mCurConnectedDevice = gatt.getDevice();
+            mConnStatusCallback.toConnected();
+            // 内部直接实现了discoverServices
+        }
+
+        @Override
+        public void onDisConnected(BluetoothGatt gatt, int status, BleException exception) {
+            if (!mSelfDetectedDisconned) {
+                mConnStatusCallback.toDisconnected();
+                Log.e(TAG, "onDisConnected: " + exception.getDescription());
+            }
+            // 已经没有利用价值了，系统已经认为断开连接了
+            mSelfDetectedDisconned = false;
+        }
+
+        @Override
+        public void onServicesDiscovered(BluetoothGatt gatt, int status) {
+            if (status == 129) {
+                String targetDeviceMac = gatt.getDevice().getAddress();
+                // 如果遇到129状态，那么一直重连，直到成功
+                mBleOperator.closeBluetoothGatt();
+                connect(targetDeviceMac);
+                return;
+            }
+            enableListener();
+        }
+
+        @Override
+        public void onConnecting(BluetoothGatt gatt, int status) {
+            mConnStatusCallback.toDisconnecting();
+        }
+
+        @Override
+        public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
+            String hexData = Utils.bytesToHexString(characteristic.getValue());
+            periodData += hexData;
+            // 判断一个周期是否结束
+            if (hexData.endsWith("0a") || hexData.endsWith("65")) {
+                mCurTask.acknowledgeData(periodData);
+                periodData = "";
+            }
+        }
+
+    };
+
     public NewBleService(Context context) {
         this.context = context;
         if (mBleOperator == null) {
@@ -47,16 +109,20 @@ public class NewBleService implements IBluetoothOperator, IBleWROperator {
     }
 
     @Override
-    public void setTemperatureListener(IBleTemperatureCallback temperatureListener) {
+    public void setTemperatureListener(IBleDataCallback temperatureListener) {
         this.mTemperatureCallback = temperatureListener;
-        if(mRunningThread != null && mCurTask != null){
+        if (mRunningThread != null && mCurTask != null) {
             mCurTask.setTemperatureCallback(temperatureListener);
         }
     }
 
     @Override
     public boolean isConnected() {
-        return mBleOperator.isConnected();
+        if (mSelfDetectedDisconned) {
+            return false;
+        } else {
+            return mBleOperator.isConnected();
+        }
     }
 
     @Override
@@ -75,12 +141,12 @@ public class NewBleService implements IBluetoothOperator, IBleWROperator {
     }
 
     @Override
-    public void setConnectionListener(IBleConnectionCallback connectionListener) {
+    public void setConnectionListener(IBleConnCallback connectionListener) {
         this.mConnStatusCallback = connectionListener;
     }
 
     @Override
-    public void enable() {
+    public void enableBle() {
         Log.d(TAG, "启用蓝牙...");
         if (!mBleOperator.isBlueEnable()) {
             mBleOperator.enableBluetooth();
@@ -92,12 +158,14 @@ public class NewBleService implements IBluetoothOperator, IBleWROperator {
         mBleOperator.scanDevice(new ListScanCallback(10000) {
             @Override
             public void onScanning(ScanResult result) {
-                mScanCallback.onScanning(result.getDevice(), result.getRssi());
+                mScanCallback.onScanning(result);
             }
 
             @Override
             public void onScanComplete(ScanResult[] results) {
-                mScanCallback.onScanningComplete();
+                if (mScanCallback != null) {
+                    mScanCallback.onScanningComplete();
+                }
             }
         });
     }
@@ -108,87 +176,49 @@ public class NewBleService implements IBluetoothOperator, IBleWROperator {
     }
 
     @Override
-    public boolean connect(BluetoothDevice device) {
-        return connect(device.getAddress());
+    public boolean connect(ScanResult device) {
+        mBleOperator.connectDevice(device, false, mGattCallback4Conn);
+        return false;
     }
 
     /**
      * 返回值不可信，保留布尔值以便兼容旧服务
+     *
      * @param address
      * @return
      */
     @Override
     public boolean connect(String address) {
         mBleOperator.scanMacAndConnect(address,
-                5000, false, new BleGattCallback() {
-
-                    @Override
-                    public void onConnectError(BleException exception) {
-
-                    }
-
-                    @Override
-                    public void onConnectSuccess(BluetoothGatt gatt, int status) {
-                        NewBleService.this.mCurConnectedDevice = gatt.getDevice();
-                        mConnStatusCallback.toConnected(BluetoothProfile.STATE_DISCONNECTED);
-                        // 内部直接实现了discoverServices
-                    }
-
-                    @Override
-                    public void onDisConnected(BluetoothGatt gatt, int status, BleException exception) {
-                        mConnStatusCallback.toDisconnected(BluetoothProfile.STATE_DISCONNECTED);
-                        Log.e(TAG, "onDisConnected: " + exception.getDescription());
-                    }
-
-                    @Override
-                    public void onServicesDiscovered(BluetoothGatt gatt, int status) {
-                        if (status == 129) {
-                            // TODO 处理一些事情
-                        }
-                        enableListener();
-                    }
-
-                    @Override
-                    public void onConnecting(BluetoothGatt gatt, int status) {
-                        mConnStatusCallback.toDisconnecting(BluetoothProfile.STATE_CONNECTING);
-                    }
-
-                    @Override
-                    public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
-                        String hexData = Utils.bytesToHexString(characteristic.getValue());
-                        periodData += hexData;
-                        // 判断一个周期是否结束
-                        if (hexData.endsWith("0a") || hexData.endsWith("65")) {
-                            mCurTask.acknowledgeData(periodData);
-                            periodData = "";
-                        }
-                    }
-
-                });
+                5000, false, mGattCallback4Conn);
         return false;
     }
 
     @Override
     public String getLatestAddress() {
-        if(mCurConnectedDevice != null){
+        if (mCurConnectedDevice != null) {
             return mCurConnectedDevice.getAddress();
         }
         return "";
     }
 
     @Override
-    public void closeBluetooth() {
+    public void disableBle() {
         mBleOperator.closeBluetoothGatt();
+        mBleOperator.disableBluetooth();
+        mConnStatusCallback.toDisable();
+        clearInfoAfterDisconnected();
     }
 
     private void startRead() {
         mCurTask = new TransferControllerTask(this);
         mCurTask.setTemperatureCallback(mTemperatureCallback);
+        mCurTask.setEmergencyAccess(this);
         mRunningThread = new Thread(mCurTask);
         mRunningThread.start();
     }
 
-    private boolean enableListener(){
+    private boolean enableListener() {
         runOnMainThread(new Runnable() {
             @Override
             public void run() {
@@ -231,12 +261,19 @@ public class NewBleService implements IBluetoothOperator, IBleWROperator {
                             @Override
                             public void onFailure(BleException exception) {
                                 Log.e(TAG, "onFailure: " + exception);
-                                try {
-                                    Thread.sleep(100);
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
+                                switch (exception.getCode()) {
+                                    case BleException.ERROR_CODE_GATT:
+                                        mConnStatusCallback.toDisconnected();
+                                        break;
+                                    case BleException.ERROR_CODE_OTHER:
+                                        try {
+                                            Thread.sleep(100);
+                                        } catch (InterruptedException e) {
+                                            e.printStackTrace();
+                                        }
+                                        writeData2Device(command);
+                                        break;
                                 }
-                                writeData2Device(command);
                             }
 
                             @Override
@@ -247,11 +284,36 @@ public class NewBleService implements IBluetoothOperator, IBleWROperator {
             }
         });
     }
+
     private void runOnMainThread(Runnable runnable) {
         if (Looper.myLooper() == Looper.getMainLooper()) {
             runnable.run();
         } else {
             threadHandler.post(runnable);
         }
+    }
+
+    @Override
+    public void occurDisconnectedBySelfDetect() {
+        // 自检到断开连接, 屏蔽系统的断开连接回调
+        mSelfDetectedDisconned = true;
+        Log.e(TAG, "紧急停止线程...");
+        // 清除这些线程
+        clearInfoAfterDisconnected();
+
+    }
+
+    private void clearInfoAfterDisconnected() {
+        if (mRunningThread != null && mRunningThread.isAlive()) {
+            // 线程只有在写的时候才是非阻塞的，其余时间均阻塞
+            if (!mCurTask.isWriting()) {
+                mRunningThread.interrupt();
+            }
+            Log.e(TAG, "mRunningThread: isAlive:" + mRunningThread.isAlive());
+        }
+        mRunningThread = null;
+        mCurTask = null;
+        mCurConnectedDevice = null;
+        periodData = "";
     }
 }

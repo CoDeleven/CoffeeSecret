@@ -1,29 +1,32 @@
-package com.dhy.coffeesecret.services;
+package com.dhy.coffeesecret.services.interfaces;
 
 import android.bluetooth.BluetoothDevice;
+import com.clj.fastble.data.ScanResult;
 
 /**
  * Created by CoDeleven on 17-8-2.
  */
 
-public interface IBluetoothOperator extends IBluetoothOperatorListener{
+public interface IBluetoothOperator extends IBleListenerAware {
     boolean isConnected();
 
     BluetoothDevice getConnectedDevice();
 
     boolean isEnable();
 
-    void enable();
+    void enableBle();
 
     void startScanDevice();
 
     void stopScanDevice();
 
-    boolean connect(BluetoothDevice device);
+    boolean connect(ScanResult device);
 
     boolean connect(String address);
 
     String getLatestAddress();
 
-    void closeBluetooth();
+    void disableBle();
+
+
 }

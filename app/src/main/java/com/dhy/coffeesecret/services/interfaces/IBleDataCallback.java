@@ -1,4 +1,4 @@
-package com.dhy.coffeesecret.services;
+package com.dhy.coffeesecret.services.interfaces;
 
 import com.dhy.coffeesecret.pojo.Temperature;
 
@@ -6,6 +6,6 @@ import com.dhy.coffeesecret.pojo.Temperature;
  * Created by CoDeleven on 17-8-2.
  */
 
-public interface IBleTemperatureCallback {
+public interface IBleDataCallback {
     void notifyTemperature(Temperature temperature);
 }

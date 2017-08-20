@@ -1,6 +1,7 @@
 package com.dhy.coffeesecret.ui.device;
 
 import android.app.ProgressDialog;
+import android.bluetooth.BluetoothProfile;
 import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -30,7 +31,7 @@ import com.dhy.coffeesecret.pojo.BakeReportProxy;
 import com.dhy.coffeesecret.pojo.BeanInfoSimple;
 import com.dhy.coffeesecret.pojo.Temperature;
 import com.dhy.coffeesecret.services.BluetoothService;
-import com.dhy.coffeesecret.services.IBluetoothOperator;
+import com.dhy.coffeesecret.services.interfaces.IBluetoothOperator;
 import com.dhy.coffeesecret.services.NewBleService;
 import com.dhy.coffeesecret.ui.device.fragments.BakeDialog;
 import com.dhy.coffeesecret.ui.mine.BluetoothListActivity;
@@ -139,11 +140,11 @@ public class DeviceFragment extends Fragment implements IDeviceView {
         @Override
         public boolean handleMessage(Message msg) {
             switch (msg.what) {
-                case 0:
+                case BluetoothProfile.STATE_CONNECTED:
                     bluetoothStatus.setText(" 已连接");
                     mTvListBluetooth.setText("切换");
                     break;
-                case 1:
+                case BluetoothProfile.STATE_DISCONNECTED:
                     bluetoothStatus.setText(" 未连接");
                     mTvListBluetooth.setText("连接");
                     break;
@@ -361,7 +362,7 @@ public class DeviceFragment extends Fragment implements IDeviceView {
             // return;
         }
         mPresenter.initBakeReport();
-        BakeReportProxy proxy = mPresenter.getBakeReportProxy();
+        BakeReportProxy proxy = mPresenter.getCurBakingReport();
 
         Intent intent = new Intent(getContext(), BakeActivity.class);
         proxy.setBeanInfoSimples(beanInfos);

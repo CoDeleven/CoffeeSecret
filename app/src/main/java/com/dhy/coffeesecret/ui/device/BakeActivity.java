@@ -582,7 +582,7 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
 
     @OnLongClick(R.id.id_baking_exit)
     public boolean discardThisBake(View view) {
-        mPresenter.clearBakeReportProxy();
+        mPresenter.clearBakeReport();
         mPresenter.resetBluetoothListener();
         finish();
         return true;

@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.clj.fastble.data.ScanResult;
 import com.dhy.coffeesecret.services.BluetoothService;
 import com.dhy.coffeesecret.ui.device.adapter.BluetoothListAdapter;
 import com.dhy.coffeesecret.views.DividerDecoration;
@@ -93,7 +94,7 @@ public class FirstConnectedActivity extends AppCompatActivity implements Bluetoo
     }
 
     @Override
-    public void onItemClick(BluetoothDevice device, View view) {
+    public void onItemClick(ScanResult device, View view) {
 /*        BluetoothDevice hasConnectedDevice = mBluetoothOperator.getConnectedDevice();
         if (hasConnectedDevice != null && device != null && device.getAddress().equals(hasConnectedDevice.getAddress())) {
             return;

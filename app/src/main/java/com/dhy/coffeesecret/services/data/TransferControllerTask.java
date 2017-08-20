@@ -3,8 +3,7 @@ package com.dhy.coffeesecret.services.data;
 import android.util.Log;
 
 import com.dhy.coffeesecret.pojo.Temperature;
-import com.dhy.coffeesecret.services.IBleTemperatureCallback;
-import com.dhy.coffeesecret.services.IBleWROperator;
+import com.dhy.coffeesecret.services.interfaces.IBleDataCallback;
 import com.dhy.coffeesecret.utils.Utils;
 
 import java.util.Timer;
@@ -18,31 +17,45 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 
 public class TransferControllerTask implements Runnable {
+    // 同个读取者最大强制取消次数，如果达到这个次数视为断开连接
+    private static final int SAME_DIGGER_MAX_CANCEL_NUM = 5;
     private static final String TAG = TransferControllerTask.class.getSimpleName();
     private final Lock lock = new ReentrantLock();
     private final Condition mReceiveCondition = lock.newCondition();
-    private IBleWROperator mOperator;
+    private DataDigger4Ble.IBleWROperator mOperator;
     private DataDigger4Ble mCurDigger;
     // 芯片所想要的下一个序号,参考计算机网络ack
     private volatile int mAck;
     // 当前的序号
     private volatile int mSeq;
+    // 紧急通道
+    private IConnEmergencyListener mEmergencyAccess;
+
+    public void setEmergencyAccess(IConnEmergencyListener mEmergencyAccess) {
+        this.mEmergencyAccess = mEmergencyAccess;
+    }
+    private boolean isWriting = false;
+    private boolean continueToWrite = true;
     private DataDigger4Ble mToFirstChannel = new SwitchChannelToOne();
     private DataDigger4Ble mToSecondChannel = new SwitchChannelToTwo();
     private DataDigger4Ble mReadDataFromFirst = new ReadDataFromChannelOne();
     private DataDigger4Ble mReadDataFromSecond = new ReadDataFromChannelTwo();
     private StringBuilder mData = new StringBuilder();
     private Timer mHistoryTimer = new Timer();
-    private IBleTemperatureCallback mTemperatureCallback;
+    private IBleDataCallback mTemperatureCallback;
     // 记录强制取消的次数
-    private int forcedCancelCount = 0;
+    private int mForcedCancelCount = 0;
+    // 记录连续的次数
+    private int forcedCancelCombo = 0;
+
+    private Class<? extends DataDigger4Ble> mLatestDataDiggerClazz;
     private long mStartOnePeriodTime;
 
-    public TransferControllerTask(IBleWROperator operator) {
+    public TransferControllerTask(DataDigger4Ble.IBleWROperator operator) {
         this.mOperator = operator;
     }
 
-    public void setTemperatureCallback(IBleTemperatureCallback callback) {
+    public void setTemperatureCallback(IBleDataCallback callback) {
         this.mTemperatureCallback = callback;
     }
 
@@ -50,10 +63,13 @@ public class TransferControllerTask implements Runnable {
      * 确认已经收到,让控制器进行下一个写入
      */
     public void acknowledgeData(String temperatureStr) {
-        // 停止旧的计时器
+        // 停止旧的计时
         stopOldTimer();
 
         lock.lock();
+        // 因为收到了消息，表示还连接着,清0
+        forcedCancelCombo = 0;
+
         Log.d(TAG, "收到新数据:" + temperatureStr);
         try {
             // 收到新数据，将期望ack递增
@@ -61,7 +77,7 @@ public class TransferControllerTask implements Runnable {
             // 处理新的数据
             handlePiggyBackingAck(mAck, temperatureStr);
 
-            // 开启一个新计时器,从写入到收到吓一条信息如果时间超过1s，重新发起
+            // 开启一个新计时器,从写入到收到下一条信息如果时间超过1s，重新发起
             startNewTimer();
 
             // 唤醒线程，按照ack进行处理
@@ -111,10 +127,14 @@ public class TransferControllerTask implements Runnable {
         if (mSeq == 0 && mAck == 0) {
             try {
                 lock.lock();
+                isWriting = true;
                 dispatchWrite(mAck);
                 // 因为第一次是从这里开始，所以这里记录一次；
                 // 以后都是acknowledgeData()来记录时间
                 mStartOnePeriodTime = System.currentTimeMillis();
+                // 保存这次读写的类
+                mLatestDataDiggerClazz = mCurDigger.getClass();
+                isWriting = false;
                 try {
                     mReceiveCondition.await();
                 } catch (InterruptedException e) {
@@ -125,19 +145,25 @@ public class TransferControllerTask implements Runnable {
             }
 
         }
-        while (true) {
+        while (continueToWrite) {
             // 以后会由mAck驱动mSeq
             if (mSeq != mAck) {
                 try {
                     lock.lock();
+                    isWriting = true;
                     dispatchWrite(mAck);
                     // 递增seqNum
                     mSeq = incrementSequenceNum(mSeq);
+                    // 保存这次读写的类，用于超时判断
+                    mLatestDataDiggerClazz = mCurDigger.getClass();
                     // 经过上一步，mSeq应该等于mAck
+                    isWriting = false;
                     try {
                         mReceiveCondition.await();
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        // e.printStackTrace();
+                        Log.w(TAG, "等待中的线程被中断...即将退出run方法");
+                        return;
                     }
                 } finally {
                     lock.unlock();
@@ -177,15 +203,23 @@ public class TransferControllerTask implements Runnable {
         mHistoryTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                Log.e(TAG, "半天write不进去，只好重新发一遍楼");
-                lock.lock();
-                try {
-                    mSeq = decrementSequenceNum(mSeq);
-                    ++forcedCancelCount;
-                    mStartOnePeriodTime = System.currentTimeMillis();
-                    mReceiveCondition.signal();
-                } finally {
-                    lock.unlock();
+                if(continueToWrite){
+                    Log.e(TAG, "半天write不进去，只好重新发一遍...");
+                    // 清除一下旧的计时器
+                    stopOldTimer();
+                    lock.lock();
+                    try {
+                        mSeq = decrementSequenceNum(mSeq);
+                        // 记录强制结束的次数
+                        recordForcedCancelCount();
+                        // 重新计时
+                        mStartOnePeriodTime = System.currentTimeMillis();
+                        // 开启新的计时器
+                        startNewTimer();
+                        mReceiveCondition.signal();
+                    } finally {
+                        lock.unlock();
+                    }
                 }
             }
         }, 1000 - (System.currentTimeMillis() - mStartOnePeriodTime));
@@ -200,5 +234,38 @@ public class TransferControllerTask implements Runnable {
     private void startNewPeriodData() {
         mData = new StringBuilder();
         mStartOnePeriodTime = System.currentTimeMillis();
+    }
+
+    private void recordForcedCancelCount(){
+        // 记录被强制结束的次数
+        ++mForcedCancelCount;
+
+        // 这里的作用是为了检测是否断开连接，系统回调速度过慢，需要自己进行处理
+        // 如果和上一次的相同，那么++combo；否则清0
+        if(mLatestDataDiggerClazz == mCurDigger.getClass()){
+            Log.e(TAG, "连续combo" + ++forcedCancelCombo);
+            if(forcedCancelCombo == SAME_DIGGER_MAX_CANCEL_NUM){
+                Log.e(TAG, "达到5次强制断开combo,判断为断开连接");
+                // 设置不可读了，让线程结束循环，再signal之后会先判断一下，直接在那里结束
+                continueToWrite = false;
+                if(mEmergencyAccess != null){
+                    // 通知断开连接了
+                    mEmergencyAccess.occurDisconnectedBySelfDetect();
+                }
+            }
+        }else{
+            forcedCancelCombo = 0;
+        }
+    }
+
+    public static interface IConnEmergencyListener {
+        /**
+         * 发生紧急断开，调用紧急通道
+         */
+        void occurDisconnectedBySelfDetect();
+    }
+
+    public boolean isWriting(){
+        return isWriting;
     }
 }

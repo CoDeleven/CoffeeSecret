@@ -11,7 +11,7 @@ public class Presenter4Report extends BaseBlePresenter {
     private static Presenter4Report mPresenter;
     @Override
     public void setView(IBaseView baseView) {
-        super.viewOperator = baseView;
+        super.mViewOperator = baseView;
     }
 
     private Presenter4Report() {
@@ -25,6 +25,6 @@ public class Presenter4Report extends BaseBlePresenter {
     }
 
     public void initViewWithProxy(){
-        ((IReportView)super.viewOperator).init(super.bakeReportProxy);
+        ((IReportView)super.mViewOperator).init(super.mCurBakingProxy);
     }
 }

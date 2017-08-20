@@ -192,7 +192,7 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
                 getPopupwindow().showAsDropDown(v);
             }
         });
-        if (mPresenter.getBakeReportProxy() == null) {
+        if (mPresenter.getCurBakingReport() == null) {
             init(((MyApplication) getApplication()).getBakeReport());
         } else {
             mPresenter.initViewWithProxy();

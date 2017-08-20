@@ -17,8 +17,12 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.util.Log;
-
+import com.clj.fastble.data.ScanResult;
 import com.dhy.coffeesecret.pojo.Temperature;
+import com.dhy.coffeesecret.services.interfaces.IBleConnCallback;
+import com.dhy.coffeesecret.services.interfaces.IBleDataCallback;
+import com.dhy.coffeesecret.services.interfaces.IBleScanCallback;
+import com.dhy.coffeesecret.services.interfaces.IBluetoothOperator;
 import com.dhy.coffeesecret.utils.Utils;
 
 import java.util.Timer;
@@ -75,9 +79,9 @@ public class BluetoothService extends Service implements IBluetoothOperator {
     private static int retryCount = 0;
     private static volatile ReadTasker mRunThread;
     private final int sleepTime = 900;
-    private volatile IBleTemperatureCallback mTemperatureListener;
+    private volatile IBleDataCallback mTemperatureListener;
     private IBleScanCallback mScanListener;
-    private IBleConnectionCallback mConnectionListener;
+    private IBleConnCallback mConnectionListener;
     private BluetoothManager mBluetoothManager;
     private BluetoothAdapter mBluetoothAdapter;
     private BluetoothGatt mBluetoothGatt;
@@ -103,14 +107,14 @@ public class BluetoothService extends Service implements IBluetoothOperator {
     private BluetoothAdapter.LeScanCallback mScanCallback = new BluetoothAdapter.LeScanCallback() {
         @Override
         public void onLeScan(BluetoothDevice bluetoothDevice, int i, byte[] bytes) {
+            ScanResult scanResult = new ScanResult(bluetoothDevice, i, bytes, System.currentTimeMillis());
             Log.d(TAG, bluetoothDevice.getName() + "-" + bluetoothDevice.getBluetoothClass().getMajorDeviceClass());
             // 回调通知界面有新设备
             // deviceChangedListener.notifyNewDevice(bluetoothDevice, i);
             if (mScanListener != null) {
-                mScanListener.onScanning(bluetoothDevice, i);
+                mScanListener.onScanning(scanResult);
             }
         }
-
 
     };
     private BluetoothGattCallback mGattCallback = new BluetoothGattCallback() {
@@ -132,7 +136,7 @@ public class BluetoothService extends Service implements IBluetoothOperator {
                 // 直接断开连接，然后释放资源等待gatt重连，这会导致回调onConnectionStateChange时的空指针异常。因为gatt已经被close了
                 gatt.disconnect();
                 gatt.close();
-                connect(device);
+                connect(device.getAddress());
                 Log.d(TAG, "status为129进行重连: retry:" + ++retryCount);
                 return;
             }
@@ -180,14 +184,14 @@ public class BluetoothService extends Service implements IBluetoothOperator {
                 mRunThread.interrupt();
             }
             if (newState == BluetoothProfile.STATE_CONNECTING) {
-                mConnectionListener.toConnected(STATE_CONNECTING);
+                mConnectionListener.toConnected();
             } else if (newState == STATE_DISCONNECTING) {
 /*                if (mRunThread != null) {
                     mRunThread.clearData();
                     // 阻断
                     mRunThread.interrupt();
                 }*/
-                mConnectionListener.toDisconnecting(STATE_DISCONNECTING);
+                mConnectionListener.toDisconnecting();
             }
             // 如果当前状态是已连接
             if (newState == BluetoothProfile.STATE_CONNECTED) {
@@ -197,7 +201,7 @@ public class BluetoothService extends Service implements IBluetoothOperator {
                 // 设置当前设备
                 mCurDevice = gatt.getDevice();
                 lastAddress = mCurDevice.getAddress();
-                mConnectionListener.toConnected(STATE_CONNECTED);
+                mConnectionListener.toConnected();
             } else if (newState == STATE_DISCONNECTED) {
                 mConnectionState = STATE_DISCONNECTED;
 
@@ -214,7 +218,7 @@ public class BluetoothService extends Service implements IBluetoothOperator {
                     gatt.disconnect();
                     gatt.close();
                 }
-                mConnectionListener.toDisconnected(STATE_DISCONNECTED);
+                mConnectionListener.toDisconnected();
             }
         }
     };
@@ -255,12 +259,12 @@ public class BluetoothService extends Service implements IBluetoothOperator {
     }
 
     @Override
-    public void setConnectionListener(IBleConnectionCallback connectionListener) {
+    public void setConnectionListener(IBleConnCallback connectionListener) {
         this.mConnectionListener = connectionListener;
     }
 
     @Override
-    public void closeBluetooth() {
+    public void disableBle() {
         if (mBluetoothGatt != null) {
             clearInfo();
             mBluetoothGatt.disconnect();
@@ -273,7 +277,7 @@ public class BluetoothService extends Service implements IBluetoothOperator {
     }
 
     @Override
-    public void setTemperatureListener(IBleTemperatureCallback temperatureListener) {
+    public void setTemperatureListener(IBleDataCallback temperatureListener) {
         this.mTemperatureListener = temperatureListener;
     }
 
@@ -310,7 +314,7 @@ public class BluetoothService extends Service implements IBluetoothOperator {
      * @param device 想连接的设备
      * @return 如果连接成功返回true
      */
-    public boolean connect(final BluetoothDevice device) {
+    public boolean connect(final ScanResult device) {
         stopScanDevice();
         if (mBluetoothAdapter == null || device == null) {
             return false;
@@ -321,7 +325,7 @@ public class BluetoothService extends Service implements IBluetoothOperator {
 //         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 //             mBluetoothGatt = device.connectGatt(this, false, mGattCallback, TRANSPORT_LE);
 //         } else {
-        mBluetoothGatt = device.connectGatt(this, false, mGattCallback);
+        mBluetoothGatt = device.getDevice().connectGatt(this, false, mGattCallback);
         // }
 
         Log.d(TAG, "Trying to create a new connection.:" + mBluetoothGatt.toString());
@@ -379,7 +383,7 @@ public class BluetoothService extends Service implements IBluetoothOperator {
     }
 
     @Override
-    public void enable() {
+    public void enableBle() {
         mBluetoothAdapter.enable();
     }
 
@@ -426,7 +430,7 @@ public class BluetoothService extends Service implements IBluetoothOperator {
         BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
         if (device != null) {
             mCurDevice = device;
-            return BluetoothService.this.connect(device);
+            return BluetoothService.this.connect(new ScanResult(device, 0, new byte[]{}, System.currentTimeMillis()));
         } else {
             return false;
         }

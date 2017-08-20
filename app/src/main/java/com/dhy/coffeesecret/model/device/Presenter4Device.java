@@ -3,12 +3,12 @@ package com.dhy.coffeesecret.model.device;
 import android.bluetooth.BluetoothDevice;
 import android.util.Log;
 
+import com.clj.fastble.data.ScanResult;
 import com.dhy.coffeesecret.model.BaseBlePresenter;
 import com.dhy.coffeesecret.model.IBaseView;
-import com.dhy.coffeesecret.model.bake.developbar.IDevelopBarView;
 import com.dhy.coffeesecret.pojo.BakeReportProxy;
 import com.dhy.coffeesecret.pojo.Temperature;
-import com.dhy.coffeesecret.services.IBluetoothOperator;
+import com.dhy.coffeesecret.services.interfaces.IBluetoothOperator;
 import com.dhy.coffeesecret.ui.device.DeviceFragment;
 
 /**
@@ -23,14 +23,14 @@ public class Presenter4Device extends BaseBlePresenter {
 
     private Presenter4Device() {
         // 初始化model
-        super.modelOperator = Model4Device.newInstance();
+        super.mModelOperator = Model4Device.newInstance();
     }
 
     /**
      * 只能在DeviceFragment重新进行bakeReport的生成
      */
     public void initBakeReport(){
-        super.bakeReportProxy = new BakeReportProxy();
+        super.mCurBakingProxy = new BakeReportProxy();
     }
 
     /**
@@ -49,47 +49,49 @@ public class Presenter4Device extends BaseBlePresenter {
 
     @Override
     public void setView(IBaseView baseView) {
-        viewOperator = baseView;
+        mViewOperator = baseView;
     }
 
     @Override
     public void notifyTemperature(Temperature temperature) {
         Log.d(TAG, "presenter4device -> notifyTemperature: 收到温度信息：" + temperature);
         if (!isStart) {
-            ((Model4Device) modelOperator).updateBeginTemperature(temperature);
+            ((Model4Device) mModelOperator).updateBeginTemperature(temperature);
             // beginTemp = temperature.getBeanTemp();
             isStart = true;
         }
-        viewOperator.updateText(DeviceFragment.UPDATE_TEMPERATURE_TEXT, temperature);
+        mViewOperator.updateText(DeviceFragment.UPDATE_TEMPERATURE_TEXT, temperature);
     }
 
 
     @Override
-    public void onScanning(BluetoothDevice bluetoothDevice, int rssi) {
-        if (bluetoothDevice.getAddress().equals(((Model4Device) modelOperator).getLastConnectedAddr())) {
-            viewOperator.showToast(DeviceFragment.AUTO_CONNECTION_TIPS, "正在自动重连...");
+    public void onScanning(ScanResult result) {
+        if (result.getDevice().getAddress().equals(((Model4Device) mModelOperator).getLastConnectedAddr())) {
+            mViewOperator.showToast(DeviceFragment.AUTO_CONNECTION_TIPS, "正在自动重连...");
             // 连接蓝牙设备
-            BaseBlePresenter.mBluetoothOperator.connect(bluetoothDevice);
+            BaseBlePresenter.mBluetoothOperator.connect(result);
             // 停止扫描
             BaseBlePresenter.mBluetoothOperator.stopScanDevice();
         }
     }
 
     @Override
-    public void toConnected(int status) {
+    public void toConnected() {
         // 更新连接状态
-        viewOperator.updateText(0, "");
+        mViewOperator.updateText(0, "");
     }
 
     @Override
-    public void toDisconnected(int status) {
+    public void toDisconnected() {
+        // 用于父类做一些基础的判断
+        super.toDisconnected();
         // 更新连接状态为未连接
-        viewOperator.updateText(1, "");
+        mViewOperator.updateText(1, "");
     }
 
     @Override
-    public void toDisconnecting(int status) {
-        toDisconnected(status);
+    public void toDisconnecting() {
+        toDisconnected();
     }
 
     public boolean isConnected() {
@@ -104,7 +106,7 @@ public class Presenter4Device extends BaseBlePresenter {
         return BaseBlePresenter.mBluetoothOperator.isEnable();
     }
     public void enableBluetooth(){
-        BaseBlePresenter.mBluetoothOperator.enable();
+        BaseBlePresenter.mBluetoothOperator.enableBle();
     }
     public void startScan(){
         BaseBlePresenter.mBluetoothOperator.startScanDevice();

@@ -1,7 +1,6 @@
 package com.dhy.coffeesecret.services.data;
 
 import com.dhy.coffeesecret.services.BluetoothService;
-import com.dhy.coffeesecret.services.IBleWROperator;
 
 /**
  * Created by CoDeleven on 17-8-19.
@@ -9,6 +8,16 @@ import com.dhy.coffeesecret.services.IBleWROperator;
 
 public abstract class DataDigger4Ble {
     abstract void doWrite(IBleWROperator mOperator);
+
+    /**
+     * Created by CoDeleven on 17-8-19.
+     * 用于读写的接口类，用于NewBleService
+     */
+
+    public static interface IBleWROperator {
+        void writeData2Device(String command);
+
+    }
 }
 class SwitchChannelToOne extends DataDigger4Ble{
 

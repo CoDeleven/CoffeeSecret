@@ -41,23 +41,23 @@ public class Presenter4Editor extends BaseBlePresenter {
 
     @Override
     public void setView(IBaseView baseView) {
-        super.viewOperator = baseView;
+        super.mViewOperator = baseView;
     }
 
     /**
      * 从BakeReport获取带事件的节点
      */
     public void generateItem() {
-        entries = super.bakeReportProxy.getEntriesWithEvents();
-        ((IEditView)(super.viewOperator)).updateEntryEvents(entries);
+        entries = super.mCurBakingProxy.getEntriesWithEvents();
+        ((IEditView)(super.mViewOperator)).updateEntryEvents(entries);
     }
 
     /**
      * 从BakeReport获取BeanInfos
      */
     public void generateBean() {
-        beanInfoSimples = super.bakeReportProxy.getBeanInfos();
-        ((IEditView) super.viewOperator).updateBeanInfos(beanInfoSimples);
+        beanInfoSimples = super.mCurBakingProxy.getBeanInfos();
+        ((IEditView) super.mViewOperator).updateBeanInfos(beanInfoSimples);
     }
 
     /**
@@ -82,7 +82,7 @@ public class Presenter4Editor extends BaseBlePresenter {
         mCurBeanInfo.setCountry(beanInfo.getCountry());
         mCurBeanInfo.setArea(beanInfo.getArea());
         mCurBeanInfo.setSpecies(beanInfo.getSpecies());
-        super.viewOperator.updateText(RERANGE_BEAN_INFO, beanInfo.getName());
+        super.mViewOperator.updateText(RERANGE_BEAN_INFO, beanInfo.getName());
     }
 
     /**
@@ -94,16 +94,16 @@ public class Presenter4Editor extends BaseBlePresenter {
         if (!"".equals(weight) && weight != null) {
             float defaultWeight = Utils.getReversed2DefaultWeight(Float.parseFloat(weight) + "");
             // 填写的熟豆重量大于生豆重量时进行提示
-            if (defaultWeight > super.bakeReportProxy.getRawBeanWeight()) {
-                super.viewOperator.showToast(INVALIDATE_COOKED_WEIGHT, "填写不大于生豆重量的数值...");
+            if (defaultWeight > super.mCurBakingProxy.getRawBeanWeight()) {
+                super.mViewOperator.showToast(INVALIDATE_COOKED_WEIGHT, "填写不大于生豆重量的数值...");
                 return;
             }
-            super.bakeReportProxy.setCookedBeanWeight(defaultWeight);
+            super.mCurBakingProxy.setCookedBeanWeight(defaultWeight);
         } else {
-            super.bakeReportProxy.setCookedBeanWeight(0);
+            super.mCurBakingProxy.setCookedBeanWeight(0);
         }
-        if (super.bakeReportProxy.getBeanInfos().size() != 1) {
-            super.bakeReportProxy.setSingleBeanId(-1);
+        if (super.mCurBakingProxy.getBeanInfos().size() != 1) {
+            super.mCurBakingProxy.setSingleBeanId(-1);
         }
     }
 
@@ -113,7 +113,7 @@ public class Presenter4Editor extends BaseBlePresenter {
      * @param bakeDegree
      */
     public void setBakeDegree(float bakeDegree) {
-        super.bakeReportProxy.setBakeDegree(bakeDegree);
+        super.mCurBakingProxy.setBakeDegree(bakeDegree);
     }
 
     /**
@@ -121,9 +121,9 @@ public class Presenter4Editor extends BaseBlePresenter {
      */
     public void save() {
         // TODO 测试用隐藏
-        // mModel4Editor.sendJsonData(super.bakeReportProxy.getBakeReport());
+        // mModel4Editor.sendJsonData(super.mCurBakingProxy.getBakeReport());
 
-        Log.d(TAG, "save-data -> " + new Gson().toJson(super.bakeReportProxy.getBakeReport()));
+        Log.d(TAG, "save-data -> " + new Gson().toJson(super.mCurBakingProxy.getBakeReport()));
     }
 
     /**
@@ -133,10 +133,10 @@ public class Presenter4Editor extends BaseBlePresenter {
      */
     public void supplyEventInfo(Entry entry, String supplement){
         entry.getEvent().setDescription(supplement);
-        super.viewOperator.updateText(BUTTON_NAME, supplement);
+        super.mViewOperator.updateText(BUTTON_NAME, supplement);
     }
 
     public void initViewWithProxy(){
-        ((IEditView)(super.viewOperator)).init(super.bakeReportProxy);
+        ((IEditView)(super.mViewOperator)).init(super.mCurBakingProxy);
     }
 }

@@ -95,7 +95,7 @@ public class EditBehindActivity extends AppCompatActivity implements CircleSeekB
     public void onBackPressed() {
         super.onBackPressed();
         // 在这个界面点击后退 视为 放弃此次烘焙
-        mPresenter.clearBakeReportProxy();
+        mPresenter.clearBakeReport();
         finish();
     }
 
