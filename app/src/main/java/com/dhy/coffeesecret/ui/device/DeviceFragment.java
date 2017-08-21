@@ -49,6 +49,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.jesse.nativelogger.NLogger;
 
 import static com.dhy.coffeesecret.MyApplication.temperatureUnit;
 
@@ -258,9 +259,9 @@ public class DeviceFragment extends Fragment implements IDeviceView {
         // 判断是否连接过蓝牙，如果尚未连接过，初始化
         if (mPresenter == null) {
             // Log.d(TAG, "onCreate: 创建BluetoothService");
-            // Intent intent = new Intent(getContext().getApplicationContext(), BluetoothService.class);
+            // Intent intent = new Intent(getCo ntext().getApplicationContext(), BluetoothService.class);
             // getContext().getApplicationContext().bindService(intent, conn, Context.BIND_AUTO_CREATE);
-
+            NLogger.i(TAG, "OnCreate():首次连接，创建Presenter4DeviceFragment...");
             mPresenter = Presenter4Device.newInstance(new NewBleService(getContext()));
         }
 
@@ -280,14 +281,13 @@ public class DeviceFragment extends Fragment implements IDeviceView {
     public void onStart() {
         // 判断一手是否时缩小状态
         if (mPresenter != null && mPresenter.isMinimized()) {
+            NLogger.i(TAG, "OnStart():烘焙中途界面最小化...");
             ((MainActivity) getActivity()).setCurPage(0);
-        }
-        super.onStart();
-        if (mPresenter != null && mPresenter.isMinimized()) {
-
         } else {
+            NLogger.i(TAG, "OnStart():正常安装Presenter...");
             setupPresenter();
         }
+        super.onStart();
     }
 
     @OnClick({R.id.id_modify_beanInfos, R.id.bluetooth_operator, R.id.id_device_prepare_bake, R.id.id_add_bean})
@@ -350,6 +350,7 @@ public class DeviceFragment extends Fragment implements IDeviceView {
     }
 
     private void goBake() {
+        NLogger.i(TAG, "goBake():开始烘焙...");
         if (mPresenter.isMinimized()) {
             Intent intent = new Intent(getContext(), BakeActivity.class);
             startActivity(intent);

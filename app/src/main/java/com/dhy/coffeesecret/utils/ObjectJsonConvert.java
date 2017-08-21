@@ -21,7 +21,6 @@ public class ObjectJsonConvert {
 
     public static String bakereport2Json(BakeReport imm) {
         String jsonStr = new Gson().toJson(imm);
-        Log.e("codelevex", jsonStr);
         return jsonStr;
     }
 

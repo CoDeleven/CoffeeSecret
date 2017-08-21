@@ -18,6 +18,7 @@
             android:id="@+id/mine_qr_code"
             android:layout_width="?attr/actionBarSize"
             android:layout_height="?attr/actionBarSize"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:clickable="true"
             android:background="@drawable/image_selector"
@@ -161,6 +162,7 @@
                     android:layout_width="20dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="18dp"
+                    android:layout_marginStart="18dp"
                     android:contentDescription="@null"
                     android:src="@drawable/ic_mine_history_line" />
 
@@ -168,6 +170,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="16dp"
+                    android:layout_marginStart="16dp"
                     android:text="历史曲线"
                     android:textColor="@color/text_mine"
                     android:textSize="14.5sp" />
@@ -182,6 +185,7 @@
                         android:layout_width="13dp"
                         android:layout_height="13dp"
                         android:layout_marginRight="14dp"
+                        android:layout_marginEnd="14dp"
                         android:contentDescription="@null"
                         android:src="@drawable/ic_right" />
                 </LinearLayout>
@@ -191,6 +195,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginLeft="18.2dp"
+                android:layout_marginStart="18.2dp"
                 android:background="@color/color_gray_c9" />
 
             <LinearLayout
@@ -201,6 +206,7 @@
                     android:layout_width="20dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="18dp"
+                    android:layout_marginStart="18dp"
                     android:contentDescription="@null"
                     android:src="@drawable/ic_mine_privacy" />
 
@@ -208,6 +214,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="16dp"
+                    android:layout_marginStart="16dp"
                     android:text="我的隐私"
                     android:textColor="@color/text_mine"
                     android:textSize="14.5sp" />
@@ -215,13 +222,14 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:gravity="right|center_vertical"
+                    android:gravity="right|center_vertical|end"
                     android:orientation="horizontal">
 
                     <ImageView
                         android:layout_width="13dp"
                         android:layout_height="13dp"
                         android:layout_marginRight="14dp"
+                        android:layout_marginEnd="14dp"
                         android:contentDescription="@null"
                         android:src="@drawable/ic_right" />
                 </LinearLayout>
@@ -240,6 +248,7 @@
                     android:layout_width="20dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="18dp"
+                    android:layout_marginStart="18dp"
                     android:contentDescription="@null"
                     android:src="@drawable/ic_mine_my_device" />
 
@@ -247,6 +256,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="16dp"
+                    android:layout_marginStart="16dp"
                     android:text="我的设备"
                     android:textColor="@color/text_mine"
                     android:textSize="14.5sp" />
@@ -264,13 +274,13 @@
                         android:contentDescription="@null"
                         android:src="@drawable/ic_right" />
                 </LinearLayout>
-            </LinearLayout>
 
+            </LinearLayout>
             <View
                 android:layout_width="match_parent"
-                android:layout_height="20dp"
-                android:background="@color/bg_reportinfo" />
-
+                android:layout_height="1dp"
+                android:layout_marginLeft="18.2dp"
+                android:background="@color/color_gray_c9" />
             <LinearLayout
                 android:id="@+id/mine_settings"
                 style="@style/option_item_vertical">
@@ -287,6 +297,46 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="16dp"
                     android:text="通用设置"
+                    android:textColor="@color/text_mine"
+                    android:textSize="14.5sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="right|center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="13dp"
+                        android:layout_height="13dp"
+                        android:layout_marginRight="14dp"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_right" />
+                </LinearLayout>
+
+            </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:background="@color/bg_reportinfo" />
+
+
+            <LinearLayout
+                android:id="@+id/mine_feedback"
+                style="@style/option_item_vertical">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="18dp"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_feedback" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:text="我要反馈"
                     android:textColor="@color/text_mine"
                     android:textSize="14.5sp" />
 

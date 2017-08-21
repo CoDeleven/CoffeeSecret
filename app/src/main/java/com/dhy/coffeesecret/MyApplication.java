@@ -26,6 +26,11 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import cn.jesse.nativelogger.Logger;
+import cn.jesse.nativelogger.NLogger;
+import cn.jesse.nativelogger.formatter.SimpleFormatter;
+import cn.jesse.nativelogger.logger.LoggerLevel;
+import cn.jesse.nativelogger.util.CrashWatcher;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Request;
@@ -37,7 +42,7 @@ import static com.dhy.coffeesecret.utils.HttpUtils.getRequest;
 /**
  * Created by CoDeleven on 17-3-6.
  */
-
+@Logger(tag = "coffeesecret", level = Logger.INFO)
 public class MyApplication extends Application {
     public static String weightUnit;
     public static String temperatureUnit;
@@ -77,6 +82,25 @@ public class MyApplication extends Application {
         return str;
     }
 
+    private void initLogger(){
+        NLogger.getInstance()
+                .builder()
+                .tag("CoffeeSecret")
+                .loggerLevel(LoggerLevel.DEBUG)
+                .fileLogger(true)
+                .fileDirectory(getApplicationContext().getFilesDir().getPath() + "/logs")
+                .fileFormatter(new SimpleFormatter())
+                .expiredPeriod(3)
+                .catchException(true, new CrashWatcher.UncaughtExceptionListener() {
+                    @Override
+                    public void uncaughtException(Thread thread, Throwable ex) {
+                        NLogger.e("uncaughtException", ex);
+                        android.os.Process.killProcess(android.os.Process.myPid());
+                    }
+                })
+                .build();
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -104,7 +128,9 @@ public class MyApplication extends Application {
                 extraOptions(Bugtags.BTGConsoleLogCapacityKey, 500).                //设置 log 记录的行数，详见下文
                 build();
         //在这里初始化
-        // Bugtags.start("e71c5cd04eea2bf6fd7e179915935981", this, Bugtags.BTGInvocationEventBubble, options);
+        Bugtags.start("e71c5cd04eea2bf6fd7e179915935981", this, Bugtags.BTGInvocationEventBubble, options);
+
+        initLogger();
     }
 
     // 每次进入应用时进行校验
@@ -209,7 +235,7 @@ public class MyApplication extends Application {
     /**
      * 从服务器获取对应类型的信息
      *
-     * @param clazz
+     * @param clazz 类型
      */
     public void initMapFromServer(final Class clazz) {
         HttpUtils.enqueue(getRequest(url), new Callback() {
@@ -245,8 +271,8 @@ public class MyApplication extends Application {
     /**
      * 获取该类的前缀
      *
-     * @param clazz
-     * @return
+     * @param clazz 类
+     * @return 对应Clazz的前缀
      */
     private String getPrefix(Class clazz) {
         if (clazz == BakeReport.class) {
@@ -271,7 +297,7 @@ public class MyApplication extends Application {
     }
 
     public void setBakeReport(BakeReportProxy bakeReport) {
-        this.BAKE_REPORT = bakeReport;
+        MyApplication.BAKE_REPORT = bakeReport;
     }
 
     @Override

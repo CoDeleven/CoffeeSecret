@@ -13,11 +13,20 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.dhy.coffeesecret.R;
+import com.dhy.coffeesecret.utils.T;
 import com.makeramen.roundedimageview.RoundedImageView;
+
+import java.io.IOException;
+
+import javax.mail.MessagingException;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.jesse.nativelogger.NLogger;
+import cn.jesse.nativelogger.logger.base.IFileLogger;
+
+import static com.dhy.coffeesecret.utils.MailUtilsKt.sendMessageByLogPath;
 
 
 public class MineFragment extends Fragment {
@@ -54,6 +63,8 @@ public class MineFragment extends Fragment {
     TextView mineNickName;
     @Bind(R.id.mine_qr_code)
     ImageView qrCode;
+    @Bind(R.id.mine_feedback)
+    LinearLayout mine_feedback;
 
     private Context mContext;
 
@@ -79,7 +90,7 @@ public class MineFragment extends Fragment {
         ButterKnife.unbind(this);
     }
 
-    @OnClick({R.id.attention_layout, R.id.fans_layout, R.id.collection_layout, R.id.mine_my_privacy, R.id.mine_history_line, R.id.mine_settings, R.id.mine_my_device, R.id.mine_about_us,R.id.mine_qr_code,R.id.mine_head_img})
+    @OnClick({R.id.attention_layout, R.id.fans_layout, R.id.collection_layout, R.id.mine_my_privacy, R.id.mine_history_line, R.id.mine_settings, R.id.mine_my_device, R.id.mine_about_us,R.id.mine_qr_code,R.id.mine_head_img, R.id.mine_feedback})
     public void onClick(View view) {
         Intent intent;
         switch (view.getId()) {
@@ -112,7 +123,27 @@ public class MineFragment extends Fragment {
             case R.id.mine_head_img:
                 intent = new Intent(mContext,LoginActivity.class);
                 startActivity(intent);
+                break;
+            case R.id.mine_feedback:
+                uploadLogFile();
+                break;
         }
         getActivity().overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
+    }
+
+    private void uploadLogFile(){
+        NLogger.zipLogs(new IFileLogger.OnZipListener() {
+            @Override
+            public void onZip(boolean succeed, String target) {
+                if(succeed){
+                    try {
+                        sendMessageByLogPath(target);
+                    } catch (MessagingException | IOException e) {
+                        e.printStackTrace();
+                    }
+                    T.showLong(getContext(), "日志发送成功!");
+                }
+            }
+        });
     }
 }

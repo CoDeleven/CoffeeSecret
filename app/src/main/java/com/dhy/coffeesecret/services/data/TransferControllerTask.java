@@ -1,7 +1,5 @@
 package com.dhy.coffeesecret.services.data;
 
-import android.util.Log;
-
 import com.dhy.coffeesecret.pojo.Temperature;
 import com.dhy.coffeesecret.services.interfaces.IBleDataCallback;
 import com.dhy.coffeesecret.utils.Utils;
@@ -11,6 +9,8 @@ import java.util.TimerTask;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+
+import cn.jesse.nativelogger.NLogger;
 
 /**
  * Created by CoDeleven on 17-8-19.
@@ -70,7 +70,7 @@ public class TransferControllerTask implements Runnable {
         // 因为收到了消息，表示还连接着,清0
         forcedCancelCombo = 0;
 
-        Log.d(TAG, "收到新数据:" + temperatureStr);
+        NLogger.i(TAG, "acknowledgeData():收到新数据:" + temperatureStr);
         try {
             // 收到新数据，将期望ack递增
             mAck = ++mAck % 4;
@@ -107,7 +107,7 @@ public class TransferControllerTask implements Runnable {
         if (ack == 0) {
             long durationTimeUntilNow = (System.currentTimeMillis() - mStartOnePeriodTime);
             // TODO 通知消息给监听器
-            Log.e(TAG, "历经: " + durationTimeUntilNow + "ms ----> " + mData);
+            NLogger.i(TAG, "历经: " + durationTimeUntilNow + "ms ----> " + mData);
             if (mTemperatureCallback != null) {
                 mTemperatureCallback.notifyTemperature(Temperature.parseHex2Temprature(Utils.hexString2String(mData.toString())));
             }
@@ -162,7 +162,7 @@ public class TransferControllerTask implements Runnable {
                         mReceiveCondition.await();
                     } catch (InterruptedException e) {
                         // e.printStackTrace();
-                        Log.w(TAG, "等待中的线程被中断...即将退出run方法");
+                        NLogger.w(TAG, "等待中的线程被中断...即将退出run方法");
                         return;
                     }
                 } finally {
@@ -204,7 +204,7 @@ public class TransferControllerTask implements Runnable {
             @Override
             public void run() {
                 if(continueToWrite){
-                    Log.e(TAG, "半天write不进去，只好重新发一遍...");
+                    NLogger.e(TAG, "半天write不进去，只好重新发一遍...");
                     // 清除一下旧的计时器
                     stopOldTimer();
                     lock.lock();
@@ -243,9 +243,9 @@ public class TransferControllerTask implements Runnable {
         // 这里的作用是为了检测是否断开连接，系统回调速度过慢，需要自己进行处理
         // 如果和上一次的相同，那么++combo；否则清0
         if(mLatestDataDiggerClazz == mCurDigger.getClass()){
-            Log.e(TAG, "连续combo" + ++forcedCancelCombo);
+            NLogger.e(TAG, "连续combo" + ++forcedCancelCombo);
             if(forcedCancelCombo == SAME_DIGGER_MAX_CANCEL_NUM){
-                Log.e(TAG, "达到5次强制断开combo,判断为断开连接");
+                NLogger.e(TAG, "达到5次强制断开combo,判断为断开连接");
                 // 设置不可读了，让线程结束循环，再signal之后会先判断一下，直接在那里结束
                 continueToWrite = false;
                 if(mEmergencyAccess != null){
