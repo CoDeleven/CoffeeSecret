@@ -1,7 +1,6 @@
 package com.dhy.coffeesecret.model.bake.developbar;
 
-import com.dhy.coffeesecret.model.IBasePresenter;
-import com.dhy.coffeesecret.model.IBaseView;
+import com.dhy.coffeesecret.model.base.BasePresenter;
 import com.dhy.coffeesecret.utils.Utils;
 import com.dhy.coffeesecret.views.DevelopBar;
 
@@ -9,15 +8,13 @@ import com.dhy.coffeesecret.views.DevelopBar;
  * Created by CoDeleven on 17-8-18.
  */
 
-public class Presenter4DevelopBar implements IBasePresenter{
-    private IDevelopBarView mOperatorView;
-    private IDevelopBarModel mOperatorModel;
+public class Presenter4DevelopBar extends BasePresenter<IDevelopBarView, Model4DevelopBar> {
     private static Presenter4DevelopBar mSelfPresenter;
 
     private Presenter4DevelopBar(){
-        mOperatorModel = new Model4DevelopBar();
+        super(Model4DevelopBar.newInstance());
+        // mOperatorModel = new Model4DevelopBar();
     }
-
     public static Presenter4DevelopBar newInstance(){
         if(mSelfPresenter == null){
             mSelfPresenter = new Presenter4DevelopBar();
@@ -26,29 +23,25 @@ public class Presenter4DevelopBar implements IBasePresenter{
     }
 
     public void init(){
-        mOperatorModel.clearData();
+        getModel().clearData();
     }
 
-    @Override
-    public void setView(IBaseView baseView) {
-        this.mOperatorView = (IDevelopBarView)baseView;
-    }
     public void updateDevelopBar(int status){
         switch (status){
             case DevelopBar.RAW_BEAN:
-                mOperatorModel.incrementRawBeanTime();
+                getModel().incrementRawBeanTime();
                 break;
             case DevelopBar.AFTER160:
-                mOperatorModel.incrementAfter160Time();
+                getModel().incrementAfter160Time();
                 break;
             case DevelopBar.FIRST_BURST:
-                mOperatorModel.incrementFirstBurstTime();
+                getModel().incrementFirstBurstTime();
                 break;
             default:
-                mOperatorModel.incrementRawBeanTime();
+                getModel().incrementRawBeanTime();
         }
-        mOperatorView.updateDevelopBar(mOperatorModel.getRawTime() / mOperatorModel.getTotalTime(),
-                mOperatorModel.getAfter160Time() / mOperatorModel.getTotalTime(), mOperatorModel.getFirstBurstTime() / mOperatorModel.getTotalTime());
+        getView().updateDevelopBar(getModel().getRawTime() / getModel().getTotalTime(),
+                getModel().getAfter160Time() / getModel().getTotalTime(), getModel().getFirstBurstTime() / getModel().getTotalTime());
     }
 
     /**
@@ -57,7 +50,7 @@ public class Presenter4DevelopBar implements IBasePresenter{
      * @return
      */
     public String getDevelopRateString(){
-        return String.format("%1$.2f", (mOperatorModel.getFirstBurstTime() * 100) / mOperatorModel.getTotalTime());
+        return String.format("%1$.2f", (getModel().getFirstBurstTime() * 100) / getModel().getTotalTime());
     }
 
     /**
@@ -65,7 +58,7 @@ public class Presenter4DevelopBar implements IBasePresenter{
      * @return
      */
     public float getDevelopRateFloat(){
-        return (mOperatorModel.getFirstBurstTime()) / mOperatorModel.getTotalTime();
+        return (getModel().getFirstBurstTime()) / getModel().getTotalTime();
     }
 
     /**
@@ -73,7 +66,7 @@ public class Presenter4DevelopBar implements IBasePresenter{
      * @return
      */
     public String getDevelopTimeString() {
-        return Utils.getTimeWithFormat(mOperatorModel.getFirstBurstTime());
+        return Utils.getTimeWithFormat(getModel().getFirstBurstTime());
     }
 
     /**
@@ -81,6 +74,6 @@ public class Presenter4DevelopBar implements IBasePresenter{
      * @return
      */
     public Integer getDevelopTimeFloat(){
-        return (int)mOperatorModel.getTotalTime();
+        return (int)getModel().getTotalTime();
     }
 }

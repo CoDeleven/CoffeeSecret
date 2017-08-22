@@ -1,12 +1,11 @@
 package com.dhy.coffeesecret.model.device;
 
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothProfile;
 import android.util.Log;
 
 import com.clj.fastble.data.ScanResult;
 import com.dhy.coffeesecret.model.BaseBlePresenter;
-import com.dhy.coffeesecret.model.IBaseView;
-import com.dhy.coffeesecret.pojo.BakeReportProxy;
 import com.dhy.coffeesecret.pojo.Temperature;
 import com.dhy.coffeesecret.services.interfaces.IBluetoothOperator;
 import com.dhy.coffeesecret.ui.device.DeviceFragment;
@@ -15,22 +14,22 @@ import com.dhy.coffeesecret.ui.device.DeviceFragment;
  * Created by CoDeleven on 17-8-1.
  */
 
-public class Presenter4Device extends BaseBlePresenter {
+public class Presenter4Device extends BaseBlePresenter<IDeviceView, Model4Device> {
     private static final String TAG = Presenter4Device.class.getSimpleName();
 
     private static Presenter4Device mPresenter;
     private boolean isStart = false;
 
     private Presenter4Device() {
-        // 初始化model
-        super.mModelOperator = Model4Device.newInstance();
+        super(Model4Device.newInstance());
     }
 
     /**
      * 只能在DeviceFragment重新进行bakeReport的生成
      */
     public void initBakeReport(){
-        super.mCurBakingProxy = new BakeReportProxy();
+        initPrepareBakeReport();
+        // super.mCurBakingProxy = new BakeReportProxy();
     }
 
     /**
@@ -45,12 +44,6 @@ public class Presenter4Device extends BaseBlePresenter {
             BaseBlePresenter.mBluetoothOperator = bluetoothOperator;
         }
         return mPresenter;
-    }
-
-    @Override
-    public void setView(IBaseView baseView) {
-        super.setView(baseView);
-        mViewOperator = baseView;
     }
 
     @Override
@@ -79,7 +72,7 @@ public class Presenter4Device extends BaseBlePresenter {
     @Override
     public void toConnected() {
         // 更新连接状态
-        mViewOperator.updateText(0, "");
+        mViewOperator.updateText(BluetoothProfile.STATE_CONNECTED, "");
     }
 
     @Override
@@ -87,7 +80,7 @@ public class Presenter4Device extends BaseBlePresenter {
         // 用于父类做一些基础的判断
         super.toDisconnected();
         // 更新连接状态为未连接
-        mViewOperator.updateText(1, "");
+        mViewOperator.updateText(BluetoothProfile.STATE_DISCONNECTED, "");
     }
 
     @Override

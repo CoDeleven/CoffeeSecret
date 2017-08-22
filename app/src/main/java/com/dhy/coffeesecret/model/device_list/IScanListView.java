@@ -3,7 +3,7 @@ package com.dhy.coffeesecret.model.device_list;
 import android.bluetooth.BluetoothDevice;
 
 import com.clj.fastble.data.ScanResult;
-import com.dhy.coffeesecret.model.IBaseView;
+import com.dhy.coffeesecret.model.base.IBaseView;
 
 /**
  * Created by CoDeleven on 17-8-2.

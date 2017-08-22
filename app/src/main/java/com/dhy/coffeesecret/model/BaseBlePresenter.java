@@ -3,6 +3,9 @@ package com.dhy.coffeesecret.model;
 import android.bluetooth.BluetoothProfile;
 
 import com.clj.fastble.data.ScanResult;
+import com.dhy.coffeesecret.model.base.BaseModel;
+import com.dhy.coffeesecret.model.base.BasePresenter;
+import com.dhy.coffeesecret.model.base.IBaseView;
 import com.dhy.coffeesecret.pojo.Temperature;
 import com.dhy.coffeesecret.services.interfaces.IBleConnCallback;
 import com.dhy.coffeesecret.services.interfaces.IBleDataCallback;
@@ -13,7 +16,11 @@ import com.dhy.coffeesecret.services.interfaces.IBluetoothOperator;
  * Created by CoDeleven on 17-8-2.
  */
 
-public abstract class BaseBlePresenter extends BasePresenter implements IBasePresenter, IBleScanCallback, IBleConnCallback, IBleDataCallback {
+public abstract class BaseBlePresenter<V extends IBaseView, M extends BaseModel> extends BasePresenter<V, M> implements IBleScanCallback, IBleConnCallback, IBleDataCallback {
+    public BaseBlePresenter(M mModelOperator) {
+        super(mModelOperator);
+    }
+
     protected static IBluetoothOperator mBluetoothOperator;
     /**
      * 初始化蓝牙操作助手的监听
@@ -38,6 +45,7 @@ public abstract class BaseBlePresenter extends BasePresenter implements IBasePre
     public void resetBluetoothListener() {
         mBluetoothOperator.setTemperatureListener(null);
         mBluetoothOperator.setScanCallbackListener(null);
+        BaseBlePresenter.mBluetoothOperator.setConnectionListener(null);
     }
 
     @Override

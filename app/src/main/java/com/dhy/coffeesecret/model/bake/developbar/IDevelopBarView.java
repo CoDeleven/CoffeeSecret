@@ -1,6 +1,6 @@
 package com.dhy.coffeesecret.model.bake.developbar;
 
-import com.dhy.coffeesecret.model.IBaseView;
+import com.dhy.coffeesecret.model.base.IBaseView;
 
 /**
  * Created by CoDeleven on 17-8-18.

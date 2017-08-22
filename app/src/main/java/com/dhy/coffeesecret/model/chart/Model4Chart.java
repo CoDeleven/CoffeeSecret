@@ -1,5 +1,6 @@
 package com.dhy.coffeesecret.model.chart;
 
+import com.dhy.coffeesecret.model.base.BaseModel;
 import com.github.mikephil.charting.data.Entry;
 
 import org.apache.commons.math3.analysis.polynomials.PolynomialFunction;
@@ -15,7 +16,7 @@ import java.util.Queue;
  * Created by CoDeleven on 17-8-14.
  */
 
-public class Model4Chart implements IChartModel {
+public class Model4Chart extends BaseModel implements IChartModel {
     public final static int BEANLINE = 1;
     public final static int ACCBEANLINE = 4;
     public final static int INWINDLINE = 2;
@@ -26,7 +27,6 @@ public class Model4Chart implements IChartModel {
     private static final int MAX_QUEUE_SIZE = 10;
     private Map<Integer, LinkedList<WeightedObservedPoint>> weightedObservedPointsMap = new HashMap<>();
     private Map<Integer, PolynomialCurveFitter> fitters = new HashMap<>();
-
 
     {
         for (int i = 1; i < 8; ++i) {

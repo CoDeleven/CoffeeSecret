@@ -3,7 +3,6 @@ package com.dhy.coffeesecret.model.report_edit;
 import android.util.Log;
 
 import com.dhy.coffeesecret.model.BaseBlePresenter;
-import com.dhy.coffeesecret.model.IBaseView;
 import com.dhy.coffeesecret.pojo.BeanInfo;
 import com.dhy.coffeesecret.pojo.BeanInfoSimple;
 import com.dhy.coffeesecret.utils.Utils;
@@ -20,16 +19,13 @@ import static com.dhy.coffeesecret.ui.device.EditBehindActivity.RERANGE_BEAN_INF
  * Created by CoDeleven on 17-8-5.
  */
 
-public class Presenter4Editor extends BaseBlePresenter {
+public class Presenter4Editor extends BaseBlePresenter<IEditView, Model4Editor> {
     private static final String TAG = Presenter4Editor.class.getSimpleName();
     private static Presenter4Editor mPresenter;
-    private List<Entry> entries = null;
-    private List<BeanInfoSimple> beanInfoSimples;
     private BeanInfoSimple mCurBeanInfo;
-    private Model4Editor mModel4Editor;
 
     private Presenter4Editor() {
-        this.mModel4Editor = Model4Editor.newInstance();
+        super(Model4Editor.newInstance());
     }
 
     public static Presenter4Editor newInstance() {
@@ -39,26 +35,23 @@ public class Presenter4Editor extends BaseBlePresenter {
         return mPresenter;
     }
 
-    @Override
-    public void setView(IBaseView baseView) {
-        super.setView(baseView);
-        super.mViewOperator = baseView;
-    }
-
     /**
      * 从BakeReport获取带事件的节点
      */
     public void generateItem() {
-        entries = super.mCurBakingProxy.getEntriesWithEvents();
-        ((IEditView)(super.mViewOperator)).updateEntryEvents(entries);
+        List<Entry> entries = getModel().getCurBakingReport().getEntriesWithEvents();
+        getModel().setEntriesWithEvent(entries);
+        getView().updateEntryEvents(entries);
     }
 
     /**
      * 从BakeReport获取BeanInfos
      */
     public void generateBean() {
-        beanInfoSimples = super.mCurBakingProxy.getBeanInfos();
-        ((IEditView) super.mViewOperator).updateBeanInfos(beanInfoSimples);
+
+        List<BeanInfoSimple> simpleBeanInfo = getModel().getCurBakingReport().getBeanInfos();
+        getModel().setBeanInfo(simpleBeanInfo);
+        getView().updateBeanInfos(simpleBeanInfo);
     }
 
     /**
@@ -70,8 +63,10 @@ public class Presenter4Editor extends BaseBlePresenter {
 
     /**
      * 更新BeanInfo
+     * 当补充完豆种时，会调用updateBeanInfo更新豆种信息
+     * 字段有冗余
      *
-     * @param beanInfo
+     * @param beanInfo 新补充的豆种信息
      */
     public void updateBeanInfo(BeanInfo beanInfo) {
         mCurBeanInfo.setBeanName(beanInfo.getName());
@@ -83,38 +78,38 @@ public class Presenter4Editor extends BaseBlePresenter {
         mCurBeanInfo.setCountry(beanInfo.getCountry());
         mCurBeanInfo.setArea(beanInfo.getArea());
         mCurBeanInfo.setSpecies(beanInfo.getSpecies());
-        super.mViewOperator.updateText(RERANGE_BEAN_INFO, beanInfo.getName());
+        getView().updateText(RERANGE_BEAN_INFO, beanInfo.getName());
     }
 
     /**
      * 设置熟豆重量
      *
-     * @param weight
+     * @param weight 重量字符串
      */
     public void setCookedWeight4BakeReport(String weight) {
         if (!"".equals(weight) && weight != null) {
             float defaultWeight = Utils.getReversed2DefaultWeight(Float.parseFloat(weight) + "");
             // 填写的熟豆重量大于生豆重量时进行提示
-            if (defaultWeight > super.mCurBakingProxy.getRawBeanWeight()) {
+            if (defaultWeight > getModel().getCurBakingReport().getRawBeanWeight()) {
                 super.mViewOperator.showToast(INVALIDATE_COOKED_WEIGHT, "填写不大于生豆重量的数值...");
                 return;
             }
-            super.mCurBakingProxy.setCookedBeanWeight(defaultWeight);
+            getModel().getCurBakingReport().setCookedBeanWeight(defaultWeight);
         } else {
-            super.mCurBakingProxy.setCookedBeanWeight(0);
+            getModel().getCurBakingReport().setCookedBeanWeight(0);
         }
-        if (super.mCurBakingProxy.getBeanInfos().size() != 1) {
-            super.mCurBakingProxy.setSingleBeanId(-1);
+        if (getModel().getCurBakingReport().getBeanInfos().size() != 1) {
+            getModel().getCurBakingReport().setSingleBeanId(-1);
         }
     }
 
     /**
      * 设置烘焙程度
      *
-     * @param bakeDegree
+     * @param bakeDegree 烘焙度
      */
     public void setBakeDegree(float bakeDegree) {
-        super.mCurBakingProxy.setBakeDegree(bakeDegree);
+        getModel().getCurBakingReport().setBakeDegree(bakeDegree);
     }
 
     /**
@@ -122,22 +117,23 @@ public class Presenter4Editor extends BaseBlePresenter {
      */
     public void save() {
         // TODO 测试用隐藏
-        // mModel4Editor.sendJsonData(super.mCurBakingProxy.getBakeReport());
+        // getModel().sendJsonData(super.mCurBakingProxy.getBakeReport());
 
-        Log.d(TAG, "save-data -> " + new Gson().toJson(super.mCurBakingProxy.getBakeReport()));
+        Log.d(TAG, "save-data -> " + new Gson().toJson(getModel().getCurBakingReport().getBakeReport()));
     }
 
     /**
      * 补充事件
-     * @param entry 发生事件的节点
+     *
+     * @param entry      发生事件的节点
      * @param supplement 要补充的内容
      */
-    public void supplyEventInfo(Entry entry, String supplement){
+    public void supplyEventInfo(Entry entry, String supplement) {
         entry.getEvent().setDescription(supplement);
         super.mViewOperator.updateText(BUTTON_NAME, supplement);
     }
 
-    public void initViewWithProxy(){
-        ((IEditView)(super.mViewOperator)).init(super.mCurBakingProxy);
+    public void initViewWithProxy() {
+        getView().init(getModel().getCurBakingReport());
     }
 }

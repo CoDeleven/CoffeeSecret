@@ -50,6 +50,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnLongClick;
+import cn.jesse.nativelogger.NLogger;
 
 import static com.dhy.coffeesecret.MyApplication.temperatureUnit;
 import static com.dhy.coffeesecret.model.chart.Model4Chart.ACCBEANLINE;
@@ -538,7 +539,7 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
 
                 Intent intent = new Intent(BakeActivity.this, EditBehindActivity.class);
                 // 发送一个bundle来标识是否来自bakeactivity的请求
-                intent.putExtra("status", I_AM_BAKEACTIVITY);
+                intent.putExtra(EditBehindActivity.MODE_KEY, EditBehindActivity.MODE_GENERATE);
                 startActivity(intent);
                 finish();
                 // 切换状态为 不可用
@@ -597,6 +598,7 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
         // 在烘焙过程中退出 即 视为放弃这次烘焙
         mPresenter.clearBakeReportProxy();*/
         minimizeActivity();
+        NLogger.i(TAG, "最小化界面");
         finish();
     }
 
@@ -617,6 +619,7 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
      */
     private void minimizeActivity() {
         // 保存引用？让BluetoothService仍然能传递数据过来，只是不再刷新界面？
+
         mPresenter.setMinimize(true);
     }
 

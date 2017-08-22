@@ -1,6 +1,6 @@
 package com.dhy.coffeesecret.model.chart;
 
-import com.dhy.coffeesecret.model.IBaseView;
+import com.dhy.coffeesecret.model.base.BasePresenter;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
@@ -14,10 +14,10 @@ import java.util.Map;
  * Created by CoDeleven on 17-8-14.
  */
 
-public class Presenter4Chart {
+public class Presenter4Chart extends BasePresenter<IChartView, Model4Chart>{
     private static final String TAG = Presenter4Chart.class.getSimpleName();
-    private IChartView mViewOperator;
-    private Model4Chart mModelOperator;
+    // private IChartView mViewOperator;
+    // private Model4Chart mModelOperator;
     private static Presenter4Chart mPresenter;
     private Map<Integer, ILineDataSet> lines = new HashMap<>();
     private static Map<Integer, String> labels = new HashMap<>();
@@ -42,12 +42,8 @@ public class Presenter4Chart {
     }
 
     public Presenter4Chart(){
+        super(new Model4Chart(4, 4));
         // FIXME 手动设置 -> 读取配置文件
-        mModelOperator = new Model4Chart(4, 4);
-    }
-
-    public void setView(IBaseView baseView){
-        mViewOperator = (IChartView)baseView;
     }
 
     public void initLines(){

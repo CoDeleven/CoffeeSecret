@@ -53,7 +53,6 @@ import okhttp3.Response;
 import static android.widget.LinearLayout.HORIZONTAL;
 import static android.widget.LinearLayout.LayoutParams.MATCH_PARENT;
 import static android.widget.LinearLayout.LayoutParams.WRAP_CONTENT;
-import static com.dhy.coffeesecret.ui.device.BakeActivity.I_AM_BAKEACTIVITY;
 import static com.dhy.coffeesecret.ui.device.fragments.BakeDialog.SELECT_BEAN;
 import static com.dhy.coffeesecret.utils.DensityUtils.dp2px;
 import static com.dhy.coffeesecret.views.BakeDegreeCircleSeekBar.positions;
@@ -66,6 +65,8 @@ public class EditBehindActivity extends AppCompatActivity implements CircleSeekB
     public static final int INVALIDATE_COOKED_WEIGHT = 444;
     public static final int BAKE_DEGREE = 555;
     public static final int BUTTON_NAME = 666;
+    public static final String MODE_KEY = "mEditorMode";
+    public static final int MODE_EDITOR = 0x123, MODE_GENERATE = 0x456;
     @Bind(R.id.id_bake_degree)
     CircleSeekBar mSeekBar;
     @Bind(R.id.id_bake_behind_save)
@@ -99,7 +100,7 @@ public class EditBehindActivity extends AppCompatActivity implements CircleSeekB
         finish();
     }
 
-    private int mEditorMode = I_AM_BAKEACTIVITY;
+    private int mEditorMode;
     private Handler mHandler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
@@ -121,15 +122,17 @@ public class EditBehindActivity extends AppCompatActivity implements CircleSeekB
                     break;
                 case BAKE_DEGREE:
                     Bundle bundle = msg.getData();
-                    double angle = bundle.getDouble("angle");
-                    String tip = computeColorBlock4Toast(angle);
-                    int toastValue = computeToastValue(angle);
-                    // Log.d(TAG, "tip:" + tip + ";color:" + );
+                    int toastValue = bundle.getInt("toast_value");
+                    String colorBlock = bundle.getString("color_block_str");
+                    int colorValue = bundle.getInt("color_block_val");
+
                     GradientDrawable drawable = (GradientDrawable)getResources().getDrawable(R.drawable.bg_circle_edit_behind);
-                    drawable.setColor(Utils.getColor((float)angle / 360));
+                    drawable.setColor(colorValue);
                     scoreLayout.setBackground(drawable);
+
                     score.setText((toastValue == Integer.MAX_VALUE ? "N/A" : (toastValue + "")));
-                    scoreDescriptor.setText(tip);
+
+                    scoreDescriptor.setText(colorBlock);
                     break;
                 case BUTTON_NAME:
                     curBeanButton.setText((String) msg.obj);
@@ -227,19 +230,23 @@ public class EditBehindActivity extends AppCompatActivity implements CircleSeekB
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         setContentView(R.layout.activity_edit_behind_activiy);
         ButterKnife.bind(this);
+        unit = SettingTool.getConfig(this).getWeightUnit();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mEditorMode = getIntent().getIntExtra(MODE_KEY, MODE_GENERATE);
+
         // 设置视图
         mPresenter.setView(this);
         // 初始化带有prxoy参数的试图
         mPresenter.initViewWithProxy();
         // 设置圆形seekbar
         mSeekBar.setOnSeekBarChangeListener(this);
-
-        unit = SettingTool.getConfig(this).getWeightUnit();
-
         mPresenter.generateItem();
         mPresenter.generateBean();
 
-        mEditorMode = getIntent().getIntExtra("status", -1);
     }
 
     /**
@@ -249,6 +256,7 @@ public class EditBehindActivity extends AppCompatActivity implements CircleSeekB
      */
     @Override
     public void init(final BakeReportProxy proxy) {
+
         mSeekBar.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -263,10 +271,13 @@ public class EditBehindActivity extends AppCompatActivity implements CircleSeekB
             }
         });
         cookedWeight.setHint("当前生豆为" + proxy.getRawBeanWeight() + MyApplication.weightUnit);
-        if (mEditorMode != I_AM_BAKEACTIVITY) {
+        if (mEditorMode == MODE_EDITOR) {
             reportDelete.setVisibility(View.VISIBLE);
             cookedWeight.setText(proxy.getBakeReport().getCookedBeanWeight());
-            mSeekBar.setCurProcess((int) Float.parseFloat(proxy.getBakeDegree()));
+            // 因为实际上就40的区间，保存是保存30-70的值
+            mSeekBar.setCurProcess((int) Float.parseFloat(proxy.getBakeDegree()) - 30);
+            // TODO 需要设置颜色块的内容
+
             reportDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -292,9 +303,10 @@ public class EditBehindActivity extends AppCompatActivity implements CircleSeekB
         String weight = cookedWeight.getText().toString();
         mPresenter.setCookedWeight4BakeReport(weight);
 
-        Intent other = new Intent(this, ReportActivity.class);
         // 保存
         mPresenter.save();
+
+        Intent other = new Intent(this, ReportActivity.class);
         startActivity(other);
         finish();
     }
@@ -303,14 +315,20 @@ public class EditBehindActivity extends AppCompatActivity implements CircleSeekB
     public void onChanged(CircleSeekBar seekbar, int curValue, double angle) {
         Message msg = new Message();
         msg.what = BAKE_DEGREE;
+        String tip = computeColorBlock4Toast(angle);
+        int toastValue = computeToastValue(angle);
+        int colorValue = Utils.getColor((float)angle);
+
         Bundle bundle = new Bundle();
-        bundle.putDouble("angle", angle);
-        bundle.putFloat("curValue", curValue);
+        bundle.putInt("toast_value", toastValue);
+        bundle.putString("color_block_str", tip);
+        bundle.putInt("color_block_val", colorValue);
+
         msg.setData(bundle);
         mHandler.sendMessage(msg);
 
         // FIXME 这里收到的是int类型，需要变成float类型
-        mPresenter.setBakeDegree(curValue);
+        mPresenter.setBakeDegree(toastValue);
     }
 
     private void generateItemView(List<Entry> entries) {

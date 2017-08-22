@@ -112,6 +112,8 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         if (!mPresenter.isEnable() && isChecked) {
             mPresenter.enableBluetooth();
+            // 因为启动蓝牙需要一段时间，先设置为不可点击
+            switchButton.setEnabled(false);
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -120,6 +122,13 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
                     }
                     mPresenter.startScan();
                     mTextHandler.sendEmptyMessage(REFRESH);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            // 现在成功启动了，开启按钮
+                            switchButton.setEnabled(true);
+                        }
+                    });
                 }
             }).start();
 

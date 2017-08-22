@@ -86,7 +86,7 @@ public class MyApplication extends Application {
         NLogger.getInstance()
                 .builder()
                 .tag("CoffeeSecret")
-                .loggerLevel(LoggerLevel.DEBUG)
+                .loggerLevel(LoggerLevel.INFO)
                 .fileLogger(true)
                 .fileDirectory(getApplicationContext().getFilesDir().getPath() + "/logs")
                 .fileFormatter(new SimpleFormatter())

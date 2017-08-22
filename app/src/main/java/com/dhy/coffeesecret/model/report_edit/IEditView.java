@@ -1,6 +1,6 @@
 package com.dhy.coffeesecret.model.report_edit;
 
-import com.dhy.coffeesecret.model.IBaseView;
+import com.dhy.coffeesecret.model.base.IBaseView;
 import com.dhy.coffeesecret.pojo.BakeReportProxy;
 import com.dhy.coffeesecret.pojo.BeanInfoSimple;
 import com.github.mikephil.charting.data.Entry;

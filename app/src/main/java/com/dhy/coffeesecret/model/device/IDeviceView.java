@@ -1,6 +1,6 @@
 package com.dhy.coffeesecret.model.device;
 
-import com.dhy.coffeesecret.model.IBaseView;
+import com.dhy.coffeesecret.model.base.IBaseView;
 
 /**
  * Created by CoDeleven on 17-8-1.

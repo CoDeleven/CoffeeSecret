@@ -1,5 +1,6 @@
 package com.dhy.coffeesecret;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -13,6 +14,7 @@ import android.widget.ImageView;
 
 import com.dhy.coffeesecret.ui.container.ContainerFragment;
 import com.dhy.coffeesecret.ui.cup.CupFragment;
+import com.dhy.coffeesecret.ui.device.BakeActivity;
 import com.dhy.coffeesecret.ui.device.DeviceFragment;
 import com.dhy.coffeesecret.ui.mine.MineFragment;
 import com.dhy.coffeesecret.utils.T;
@@ -21,7 +23,7 @@ import com.dhy.coffeesecret.utils.UIUtils;
 public class MainActivity extends AppCompatActivity {
 
     // 默认图标id  删除R.drawable.nav_community_selector,
-    private static final int[] IMG_SELECTOR_IDS = {R.drawable.nav_container_selector, R.drawable.nav_cup_selector, R.drawable.nav_device_selector,  R.drawable.nav_mine_selector};
+    private static final int[] IMG_SELECTOR_IDS = {R.drawable.nav_container_selector, R.drawable.nav_cup_selector, R.drawable.nav_device_selector, R.drawable.nav_mine_selector};
     // 标签页
     private TabLayout mTabLayout;
     // 滑动页面视图
@@ -33,6 +35,9 @@ public class MainActivity extends AppCompatActivity {
     private CupFragment cupFragment;
     // private CommunityFragment communityFragment;
     private MineFragment mineFragment;
+    private ImageView mBakingNow;
+    // 上一次点击推退出的时间
+    private long exitTime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,8 +49,14 @@ public class MainActivity extends AppCompatActivity {
         UIUtils.steepToolBar(this);
     }
 
-    public void setCurPage(int curPage){
-        mViewPager.setCurrentItem(curPage);
+    public void changeBakingTab() {
+        mViewPager.setCurrentItem(0);
+        mBakingNow.setVisibility(View.VISIBLE);
+    }
+
+    public void revertBakingTab(){
+        mViewPager.setCurrentItem(2);
+        mBakingNow.setVisibility(View.GONE);
     }
 
     /**
@@ -60,11 +71,24 @@ public class MainActivity extends AppCompatActivity {
         mineFragment = new MineFragment();
 
         // 初始化fragment视图
-        mFragments = new Fragment[]{containerFragment, cupFragment, deviceFragment,mineFragment};
+        mFragments = new Fragment[]{containerFragment, cupFragment, deviceFragment, mineFragment};
 
         // 获取id
         mTabLayout = (TabLayout) findViewById(R.id.id_fragment_tabLayout);
         mViewPager = (ViewPager) findViewById(R.id.id_fragment_viewPager);
+        mBakingNow = (ImageView) findViewById(R.id.id_baking_now);
+
+        mBakingNow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, BakeActivity.class);
+                startActivity(intent);
+                return;
+            }
+        });
+        mBakingNow.setVisibility(View.GONE);
+
+
         mViewPager.setOffscreenPageLimit(4);
         // 为viewPager设置Adapter
         mViewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
@@ -106,6 +130,7 @@ public class MainActivity extends AppCompatActivity {
     private View getCustomerView(int position) {
         View view = getLayoutInflater().inflate(R.layout.tab_view, null);
         ImageView imageView = (ImageView) view.findViewById(R.id.id_tab_img);
+
         imageView.setImageResource(IMG_SELECTOR_IDS[position]);
         return view;
     }
@@ -115,11 +140,11 @@ public class MainActivity extends AppCompatActivity {
         if ((containerFragment != null && containerFragment.isAddSearch())
                 || (cupFragment != null && cupFragment.isAddSearch())) {
 
-            if (containerFragment.isAddSearch()){
+            if (containerFragment.isAddSearch()) {
                 containerFragment.onBackPressed();
             }
 
-            if (cupFragment.isAddSearch()){
+            if (cupFragment.isAddSearch()) {
                 cupFragment.onBackPressed();
             }
 
@@ -127,9 +152,6 @@ public class MainActivity extends AppCompatActivity {
             exitApp();
         }
     }
-
-    // 上一次点击推退出的时间
-    private long exitTime = 0;
 
     /**
      * 双击退出事件

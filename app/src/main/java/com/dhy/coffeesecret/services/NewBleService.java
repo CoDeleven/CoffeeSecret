@@ -21,6 +21,8 @@ import com.dhy.coffeesecret.services.interfaces.IBleScanCallback;
 import com.dhy.coffeesecret.services.interfaces.IBluetoothOperator;
 import com.dhy.coffeesecret.utils.Utils;
 
+import java.util.concurrent.locks.ReentrantLock;
+
 import cn.jesse.nativelogger.NLogger;
 
 import static com.dhy.coffeesecret.services.BluetoothService.PRIMARY_SERVICE;
@@ -32,18 +34,18 @@ import static com.dhy.coffeesecret.services.BluetoothService.TAG_WRITE;
  */
 
 public class NewBleService implements IBluetoothOperator, DataDigger4Ble.IBleWROperator, TransferControllerTask.IConnEmergencyListener {
-
+    private ReentrantLock lock = new ReentrantLock();
     private static final String TAG = NewBleService.class.getSimpleName();
     private Context context;
-    private IBleScanCallback mScanCallback;
-    private IBleConnCallback mConnStatusCallback;
+    private volatile IBleScanCallback mScanCallback;
+    private volatile IBleConnCallback mConnStatusCallback;
     private BleManager mBleOperator;
     private BluetoothDevice mCurConnectedDevice;
     private Thread mRunningThread;
     private TransferControllerTask mCurTask;
     private String periodData = "";
     private Handler threadHandler = new Handler(Looper.getMainLooper());
-    private IBleDataCallback mTemperatureCallback;
+    private volatile IBleDataCallback mTemperatureCallback;
     private String mLastConnectedDevice;
     // 这里自己加这个字段，因为框架的有问题
     private boolean isConnected;
@@ -120,7 +122,7 @@ public class NewBleService implements IBluetoothOperator, DataDigger4Ble.IBleWRO
     }
 
     @Override
-    public void setTemperatureListener(IBleDataCallback temperatureListener) {
+    public synchronized void setTemperatureListener(IBleDataCallback temperatureListener) {
         this.mTemperatureCallback = temperatureListener;
         if (mRunningThread != null && mCurTask != null) {
             mCurTask.setTemperatureCallback(temperatureListener);
@@ -133,7 +135,7 @@ public class NewBleService implements IBluetoothOperator, DataDigger4Ble.IBleWRO
     }
 
     @Override
-    public void setScanCallbackListener(IBleScanCallback scanCallbackListener) {
+    public synchronized void setScanCallbackListener(IBleScanCallback scanCallbackListener) {
         this.mScanCallback = scanCallbackListener;
     }
 
@@ -148,7 +150,8 @@ public class NewBleService implements IBluetoothOperator, DataDigger4Ble.IBleWRO
     }
 
     @Override
-    public void setConnectionListener(IBleConnCallback connectionListener) {
+    public synchronized void setConnectionListener(IBleConnCallback connectionListener) {
+
         this.mConnStatusCallback = connectionListener;
     }
 

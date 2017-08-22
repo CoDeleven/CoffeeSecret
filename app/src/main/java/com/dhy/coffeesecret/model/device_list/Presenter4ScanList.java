@@ -6,8 +6,6 @@ import android.util.Log;
 
 import com.clj.fastble.data.ScanResult;
 import com.dhy.coffeesecret.model.BaseBlePresenter;
-import com.dhy.coffeesecret.model.IBaseView;
-import com.dhy.coffeesecret.model.device.IDeviceModel;
 import com.dhy.coffeesecret.ui.device.adapter.BluetoothListAdapter;
 import com.dhy.coffeesecret.utils.SettingTool;
 
@@ -21,11 +19,10 @@ import static com.dhy.coffeesecret.ui.mine.BluetoothListActivity.DEVICE_CONNECTE
  * Created by CoDeleven on 17-8-2.
  */
 
-public class Presenter4ScanList extends BaseBlePresenter {
+public class Presenter4ScanList extends BaseBlePresenter<IScanListView, Model4ScanList> {
     private static final String TAG = Presenter4ScanList.class.getSimpleName();
     private static Presenter4ScanList mSelf;
-    private IScanListView mScanListView;
-    private IDeviceModel mDeviceModel;
+    // private IScanListView mScanListView;
     private BluetoothListAdapter mAdapter;
     private Map<String, ScanResult> mBeScanedDevice = new LinkedHashMap<>();
 
@@ -37,6 +34,10 @@ public class Presenter4ScanList extends BaseBlePresenter {
         }
     }
 
+    public Presenter4ScanList() {
+        super(Model4ScanList.newInstance());
+    }
+
     public static Presenter4ScanList newInstance() {
         if (mSelf == null) {
             mSelf = new Presenter4ScanList();
@@ -44,11 +45,6 @@ public class Presenter4ScanList extends BaseBlePresenter {
         return mSelf;
     }
 
-    @Override
-    public void setView(IBaseView baseView) {
-        super.setView(baseView);
-        mScanListView = (IScanListView) baseView;
-    }
 
     @Override
     public void onScanning(ScanResult result) {
@@ -68,7 +64,8 @@ public class Presenter4ScanList extends BaseBlePresenter {
             return;
         }
         // 更新对应设备的rssi
-        mScanListView.updateDeviceRssi(device, result.getRssi());
+        getView().updateDeviceRssi(device, result.getRssi());
+
     }
 
     @Override
@@ -79,7 +76,7 @@ public class Presenter4ScanList extends BaseBlePresenter {
     @Override
     public void onScanningComplete(ScanResult... results) {
         Log.d(TAG, "onScanningComplete -> 扫描完成");
-        mScanListView.updateText(CANCEL_REFRESH, null);
+        getView().updateText(CANCEL_REFRESH, null);
     }
 
     @Override
@@ -91,8 +88,8 @@ public class Presenter4ScanList extends BaseBlePresenter {
     public void toDisconnected() {
         Log.e("BluetoothListActivity", "连接失败");
         //  设置连接失败状态
-        mScanListView.updateText(BluetoothProfile.STATE_DISCONNECTED, null);
-        mScanListView.showToast(BluetoothProfile.STATE_DISCONNECTED, "连接失败，请重新尝试...");
+        getView().updateText(BluetoothProfile.STATE_DISCONNECTED, null);
+        getView().showToast(BluetoothProfile.STATE_DISCONNECTED, "连接失败，请重新尝试...");
     }
 
     @Override
@@ -103,15 +100,16 @@ public class Presenter4ScanList extends BaseBlePresenter {
     @Override
     public void toConnected() {
         // 设置已经连接状态
-        mScanListView.updateText(DEVICE_CONNECTED, null);
+        getView().updateText(DEVICE_CONNECTED, null);
         // 设置已连接设备
         String connectedAddr = mBluetoothOperator.getConnectedDevice().getAddress();
         // adapter.lastConnectedAddress = device.getAddress();
         // 保存连接设备地址到配置文件,方便启动时读取并直接连接
         SettingTool.saveAddress(connectedAddr);
-        // 连接成功后结束并跳转回首页
-        mScanListView.finishActivity();
         super.resetBluetoothListener();
+        // 连接成功后结束并跳转回首页
+        getView().finishActivity();
+
     }
 
     public boolean isEnable() {
@@ -156,7 +154,7 @@ public class Presenter4ScanList extends BaseBlePresenter {
     public void toDisable() {
         mBeScanedDevice.clear();
         mBluetoothOperator.stopScanDevice();
-        mScanListView.updateText(CANCEL_REFRESH, null);
+        getView().updateText(CANCEL_REFRESH, null);
     }
 
 }

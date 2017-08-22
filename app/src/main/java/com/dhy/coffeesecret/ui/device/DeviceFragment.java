@@ -278,16 +278,18 @@ public class DeviceFragment extends Fragment implements IDeviceView {
     }
 
     @Override
-    public void onStart() {
+    public void onResume() {
+        super.onResume();
         // 判断一手是否时缩小状态
         if (mPresenter != null && mPresenter.isMinimized()) {
             NLogger.i(TAG, "OnStart():烘焙中途界面最小化...");
-            ((MainActivity) getActivity()).setCurPage(0);
+            ((MainActivity) getActivity()).changeBakingTab();
         } else {
             NLogger.i(TAG, "OnStart():正常安装Presenter...");
+            ((MainActivity) getActivity()).revertBakingTab();
+            mBtModifyBeanInfo.setVisibility(View.VISIBLE);
             setupPresenter();
         }
-        super.onStart();
     }
 
     @OnClick({R.id.id_modify_beanInfos, R.id.bluetooth_operator, R.id.id_device_prepare_bake, R.id.id_add_bean})
@@ -351,11 +353,7 @@ public class DeviceFragment extends Fragment implements IDeviceView {
 
     private void goBake() {
         NLogger.i(TAG, "goBake():开始烘焙...");
-        if (mPresenter.isMinimized()) {
-            Intent intent = new Intent(getContext(), BakeActivity.class);
-            startActivity(intent);
-            return;
-        }
+
         if (mPresenter == null || !mPresenter.isConnected()) {
             mShowHandler.sendEmptyMessage(0);
             return;

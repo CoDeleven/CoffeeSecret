@@ -30,10 +30,6 @@ public class TransferControllerTask implements Runnable {
     private volatile int mSeq;
     // 紧急通道
     private IConnEmergencyListener mEmergencyAccess;
-
-    public void setEmergencyAccess(IConnEmergencyListener mEmergencyAccess) {
-        this.mEmergencyAccess = mEmergencyAccess;
-    }
     private boolean isWriting = false;
     private boolean continueToWrite = true;
     private DataDigger4Ble mToFirstChannel = new SwitchChannelToOne();
@@ -47,12 +43,14 @@ public class TransferControllerTask implements Runnable {
     private int mForcedCancelCount = 0;
     // 记录连续的次数
     private int forcedCancelCombo = 0;
-
     private Class<? extends DataDigger4Ble> mLatestDataDiggerClazz;
     private long mStartOnePeriodTime;
-
     public TransferControllerTask(DataDigger4Ble.IBleWROperator operator) {
         this.mOperator = operator;
+    }
+
+    public void setEmergencyAccess(IConnEmergencyListener mEmergencyAccess) {
+        this.mEmergencyAccess = mEmergencyAccess;
     }
 
     public void setTemperatureCallback(IBleDataCallback callback) {
@@ -63,6 +61,10 @@ public class TransferControllerTask implements Runnable {
      * 确认已经收到,让控制器进行下一个写入
      */
     public void acknowledgeData(String temperatureStr) {
+        // 判断字符串前是否含有# 号，如果有井号就跳过
+        if (temperatureStr.startsWith("23") && (mSeq == 1 || mAck == 3)) {
+            return;
+        }
         // 停止旧的计时
         stopOldTimer();
 
@@ -70,7 +72,7 @@ public class TransferControllerTask implements Runnable {
         // 因为收到了消息，表示还连接着,清0
         forcedCancelCombo = 0;
 
-        NLogger.i(TAG, "acknowledgeData():收到新数据:" + temperatureStr);
+        NLogger.i(TAG, Thread.currentThread().toString() + "->acknowledgeData():收到新数据:" + temperatureStr);
         try {
             // 收到新数据，将期望ack递增
             mAck = ++mAck % 4;
@@ -98,6 +100,7 @@ public class TransferControllerTask implements Runnable {
      */
     private void handlePiggyBackingAck(int ack, String temperatureStr) {
         if (ack == 2 || ack == 0) {
+
             if (ack == 0) {
                 // 相当于添加一个逗号
                 mData.append("2c");
@@ -203,7 +206,7 @@ public class TransferControllerTask implements Runnable {
         mHistoryTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                if(continueToWrite){
+                if (continueToWrite) {
                     NLogger.e(TAG, "半天write不进去，只好重新发一遍...");
                     // 清除一下旧的计时器
                     stopOldTimer();
@@ -236,26 +239,30 @@ public class TransferControllerTask implements Runnable {
         mStartOnePeriodTime = System.currentTimeMillis();
     }
 
-    private void recordForcedCancelCount(){
+    private void recordForcedCancelCount() {
         // 记录被强制结束的次数
         ++mForcedCancelCount;
 
         // 这里的作用是为了检测是否断开连接，系统回调速度过慢，需要自己进行处理
         // 如果和上一次的相同，那么++combo；否则清0
-        if(mLatestDataDiggerClazz == mCurDigger.getClass()){
+        if (mLatestDataDiggerClazz == mCurDigger.getClass()) {
             NLogger.e(TAG, "连续combo" + ++forcedCancelCombo);
-            if(forcedCancelCombo == SAME_DIGGER_MAX_CANCEL_NUM){
+            if (forcedCancelCombo == SAME_DIGGER_MAX_CANCEL_NUM) {
                 NLogger.e(TAG, "达到5次强制断开combo,判断为断开连接");
                 // 设置不可读了，让线程结束循环，再signal之后会先判断一下，直接在那里结束
                 continueToWrite = false;
-                if(mEmergencyAccess != null){
+                if (mEmergencyAccess != null) {
                     // 通知断开连接了
                     mEmergencyAccess.occurDisconnectedBySelfDetect();
                 }
             }
-        }else{
+        } else {
             forcedCancelCombo = 0;
         }
+    }
+
+    public boolean isWriting() {
+        return isWriting;
     }
 
     public static interface IConnEmergencyListener {
@@ -263,9 +270,5 @@ public class TransferControllerTask implements Runnable {
          * 发生紧急断开，调用紧急通道
          */
         void occurDisconnectedBySelfDetect();
-    }
-
-    public boolean isWriting(){
-        return isWriting;
     }
 }

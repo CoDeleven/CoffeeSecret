@@ -1,15 +1,26 @@
 package com.dhy.coffeesecret.model.bake.developbar;
 
-import com.dhy.coffeesecret.model.IBaseModel;
+import com.dhy.coffeesecret.model.base.BaseModel;
 
 /**
  * Created by CoDeleven on 17-8-18.
  */
 
-public class Model4DevelopBar implements IBaseModel, IDevelopBarModel {
+public class Model4DevelopBar extends BaseModel implements IDevelopBarModel {
     private float rawBeanTime;
     private float after160Time;
     private float firstBurstTime;
+    private static Model4DevelopBar mSelf;
+
+    private Model4DevelopBar() {
+    }
+
+    public static Model4DevelopBar newInstance(){
+        if(mSelf == null){
+            mSelf = new Model4DevelopBar();
+        }
+        return mSelf;
+    }
 
     @Override
     public void incrementRawBeanTime() {

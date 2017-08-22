@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:drawable="@drawable/ic_navbar_bake_selected" android:state_selected="true"/>
-    <item android:drawable="@drawable/ic_navbar_bake"/>
+    <item android:drawable="@drawable/ic_navbar_bake" android:state_selected="false"/>
+    <item android:drawable="@drawable/ic_baking" android:state_active="true"/>
+    <item android:drawable="@drawable/ic_baking" android:state_activated="true"/>
 </selector>

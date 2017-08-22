@@ -1,4 +1,4 @@
-package com.dhy.coffeesecret.model;
+package com.dhy.coffeesecret.model.base;
 
 /**
  * Created by CoDeleven on 17-8-1.

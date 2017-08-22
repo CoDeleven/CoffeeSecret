@@ -181,14 +181,13 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
         home.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                onBackPressed();
             }
         });
 
         mLineOperator.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e("codelevex", "被点击了");
                 getPopupwindow().showAsDropDown(v);
             }
         });
@@ -207,6 +206,10 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
         // TODO 校赛专用
         // ((MyApplication) getApplication()).setBakeReport((BakeReport) null);
         // TestData.setBakeReport((BakeReport) null);
+        // 不好意思，用完即删
+        if(mPresenter != null){
+            mPresenter.clearBakeReport();
+        }
         finish();
     }
 
@@ -254,6 +257,7 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
     @OnClick(R.id.id_edit)
     public void onMoreClick() {
         Intent intent = new Intent(this, EditBehindActivity.class);
+        intent.putExtra(EditBehindActivity.MODE_KEY, EditBehindActivity.MODE_EDITOR);
         startActivity(intent);
         finish();
     }

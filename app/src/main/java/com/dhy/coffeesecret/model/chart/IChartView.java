@@ -1,6 +1,6 @@
 package com.dhy.coffeesecret.model.chart;
 
-import com.dhy.coffeesecret.model.IBaseView;
+import com.dhy.coffeesecret.model.base.IBaseView;
 import com.github.mikephil.charting.data.LineDataSet;
 
 /**

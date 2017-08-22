@@ -1,12 +1,13 @@
 package com.dhy.coffeesecret.model.device;
 
+import com.dhy.coffeesecret.model.base.BaseModel;
 import com.dhy.coffeesecret.pojo.Temperature;
 
 /**
  * Created by CoDeleven on 17-8-2.
  */
 
-public class Model4Device implements IDeviceModel {
+public class Model4Device extends BaseModel implements IDeviceModel {
     private Temperature mBeginTemperature;
     private static String mLastAddress;
     private static Model4Device mModel4Device;

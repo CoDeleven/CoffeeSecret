@@ -1,6 +1,6 @@
 package com.dhy.coffeesecret.model.report;
 
-import com.dhy.coffeesecret.model.IBaseView;
+import com.dhy.coffeesecret.model.base.IBaseView;
 import com.dhy.coffeesecret.pojo.BakeReportProxy;
 
 /**

@@ -49,6 +49,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
@@ -70,8 +71,8 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
     private static final int TOAST_3 = 777;
     private static final int START_SCREEN = 888;
     private HashMap<String, Integer> letters = new HashMap<>();
-    private ArrayList<BeanInfo> coffeeBeanInfos;
-    private ArrayList<BeanInfo> coffeeBeanInfoTemp;
+    private List<BeanInfo> coffeeBeanInfos;
+    private List<BeanInfo> coffeeBeanInfoTemp;
     private View beanListView;
     private LinearLayout btnCountryChoose = null;
     private LinearLayout btnScreen = null;
@@ -274,7 +275,11 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
         } else {
             beanInfoss = sortByArea(beanInfoss);
             getLetters(beanInfoss);
-            coffeeBeanInfoTemp.clear();
+            if(coffeeBeanInfoTemp != null){
+                coffeeBeanInfoTemp.clear();
+            }else{
+                coffeeBeanInfoTemp = new LinkedList<>();
+            }
             for (BeanInfo b : beanInfoss) {
                 if (b.getContinent().equals(title)) {
                     coffeeBeanInfoTemp.add(b);
@@ -588,7 +593,10 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
                     if (refreshBeanList != null && refreshBeanList.isRefreshing()) {
                         activity.refreshBeanList.setRefreshing(false);
                     }
-                    countryName.setText("全部");
+                    if(countryName != null){
+                        countryName.setText("全部");
+                    }
+
                     beanListAdapter.notifyDataSetChanged();
                     break;
                 case INIT_POPUP_WINDOW:

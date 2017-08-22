@@ -1,21 +1,16 @@
 package com.dhy.coffeesecret.model.report;
 
 import com.dhy.coffeesecret.model.BaseBlePresenter;
-import com.dhy.coffeesecret.model.IBaseView;
 
 /**
  * Created by CoDeleven on 17-8-6.
  */
 
-public class Presenter4Report extends BaseBlePresenter {
+public class Presenter4Report extends BaseBlePresenter<IReportView, Model4Report> {
     private static Presenter4Report mPresenter;
-    @Override
-    public void setView(IBaseView baseView) {
-        super.setView(baseView);
-        super.mViewOperator = baseView;
-    }
 
     private Presenter4Report() {
+        super(Model4Report.newInstance());
     }
 
     public static Presenter4Report newInstance(){
@@ -26,6 +21,6 @@ public class Presenter4Report extends BaseBlePresenter {
     }
 
     public void initViewWithProxy(){
-        ((IReportView)super.mViewOperator).init(super.mCurBakingProxy);
+        getView().init(getCurBakingReport());
     }
 }
