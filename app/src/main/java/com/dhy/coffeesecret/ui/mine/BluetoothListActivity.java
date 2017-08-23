@@ -43,6 +43,10 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
     @Bind(R.id.id_scan_progress)
     ProgressBar mScanProgress;
 
+    @Override
+    public void showWarnDialog(int index) {
+
+    }
 
     ImageView tick = null;
     // private Map<String, BluetoothDevice> canConnectDeviceMap = new HashMap<>();

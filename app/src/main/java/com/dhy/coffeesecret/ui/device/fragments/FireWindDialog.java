@@ -140,7 +140,7 @@ public class FireWindDialog extends DialogFragment implements CircleSeekBar.OnSe
     }
 
     @Override
-    public void onChanged(CircleSeekBar seekbar, int curValue, double angle) {
+    public void onChanged(CircleSeekBar seekbar, float curValue, double angle) {
         // Log.d("GG", "onChanged: curValue" + curValue + ", angle:" + angle);
         // 因为客户需求，需要精确到0.1，故再传入angle自行根据 半分比获取相应的数值
         double processVal = angle / 360 * seekbar.getMaxProcess();

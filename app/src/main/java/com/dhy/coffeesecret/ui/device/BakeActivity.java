@@ -1,5 +1,6 @@
 package com.dhy.coffeesecret.ui.device;
 
+import android.bluetooth.BluetoothProfile;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -66,11 +67,10 @@ import static com.github.mikephil.charting.data.Event.FIRST_BURST_END;
 import static com.github.mikephil.charting.data.Event.SECOND_BURST;
 import static com.github.mikephil.charting.data.Event.SECOND_BURST_END;
 
-public class BakeActivity extends AppCompatActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener, Other.OnOtherAddListener, FireWindDialog.OnFireWindAddListener, IBakeView {
-    public static final String DEVICE_NAME = "com.dhy.coffeesercret.ui.device.BakeActivity.DEVICE_NAME";
+public class BakeActivity extends AppCompatActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener,
+        Other.OnOtherAddListener, FireWindDialog.OnFireWindAddListener, IBakeView {
     public static final String ENABLE_REFERLINE = "com.dhy.coffeesercret.ui.device.BakeActivity.REFER_LINE";
-    public static final int I_AM_BAKEACTIVITY = 123;
-    public static final int UPDATE_TEMPERATURE_TEXT = 0x123, WARN_DISCONNECTED = 0x456, UPDATE_TIME_TEXT = 0x112;
+    public static final int UPDATE_TEMPERATURE_TEXT = 0x123, UPDATE_TIME_TEXT = 0x112;
     private static final String TAG = BakeActivity.class.getSimpleName();
     @Bind(R.id.id_baking_chart)
     BaseChart4Coffee chart;
@@ -146,9 +146,6 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
                     Temperature temperature = (Temperature) msg.obj;
                     updateTemperatureText(temperature);
                     break;
-                case WARN_DISCONNECTED:
-                    showDisconnectedDialog();
-                    break;
                 case UPDATE_TIME_TEXT:
                     updateTimeText((int) msg.obj);
             }
@@ -163,6 +160,16 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
             return false;
         }
     });
+    private Handler mDialogHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what){
+                case BluetoothProfile.STATE_DISCONNECTED:
+                    showDisconnectedDialog();
+                    break;
+            }
+        }
+    };
 
     private void updateTemperatureText(Temperature temperature) {
         // 所有用户可见性数值均进行转换
@@ -196,6 +203,11 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
+    public void showWarnDialog(int index) {
+        mDialogHandler.sendEmptyMessage(index);
+    }
+
+    @Override
     public void updateText(int index, Object updateContent) {
         Message msg = new Message();
         msg.obj = updateContent;
@@ -210,6 +222,7 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
         msg.obj = toastContent;
         mToast.sendMessage(msg);
     }
+
 
     /**
      * 选中显示，不选中隐藏
@@ -282,13 +295,11 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
     private void initChartPresenter() {
         // 设置chart视图
         mChartPresenter.setView(chart);
-        // startTime = System.currentTimeMillis();
         // 初始化曲线
         mChartPresenter.initLines();
-        // 设置 真实数据记录集合,貌似没用
-        // mChartPresenter.setTemperatureSet(mPresenter.getTemperatureSet());
         // 考虑是否添加参考曲线
         BakeReport bakeReport = (BakeReport) getIntent().getSerializableExtra(ENABLE_REFERLINE);
+        
         if (bakeReport != null) {
             referTempratures = new BakeReportProxy(bakeReport);
             List<Entry> entries = new ArrayList<>();
@@ -340,28 +351,6 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
         mPresenter.init();
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        /*       if (timer == null) {
-            isReading = true;
-            timer = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    while (isReading) {
-                        mTimer.sendEmptyMessage(0);
-                        try {
-                            Thread.currentThread().sleep(1250);
-                        } catch (InterruptedException e) {
-                            Log.e("BakeActivity", "已经中断");
-                            break;
-                        }
-                    }
-                }
-            });
-            timer.start();
-        }*/
-    }
 
     /**
      * 初始化属性
@@ -595,11 +584,11 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
     public void onBackPressed() {
         super.onBackPressed();
         // 烘焙中的时候默认最小化
-        if(mPresenter.isBakingNow()){
+        if (mPresenter.isBakingNow()) {
             minimizeActivity();
             NLogger.i(TAG, "最小化界面");
             finish();
-        }else{
+        } else {
             discardThisBake();
         }
 

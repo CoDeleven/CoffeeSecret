@@ -241,6 +241,30 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
 
     }
 
+    private int computeToastValue(double angle){
+        int index = ((int)angle) / 45;
+        switch (index){
+            case 0:
+                return Integer.MAX_VALUE;
+            case 1:
+                return 80;
+            case 2:
+                return (-(int)Math.floor(angle % 45 / 45f * 10)) + 70;
+            case 3:
+                return (-(int)Math.floor(angle % 45 / 45f * 5)) + 55;
+            case 4:
+                return (-(int)Math.floor(angle % 45 / 45f * 5)) + 50;
+            case 5:
+                return (-(int)Math.floor(angle % 45 / 45f * 5)) + 45;
+            case 6:
+                return (-(int)Math.floor(angle % 45 / 45f * 5)) + 40;
+            case 7:
+                return (-(int)Math.floor(angle % 45 / 45f * 5)) + 35;
+            default:
+                return Integer.MAX_VALUE;
+        }
+    }
+
     @OnClick(R.id.id_share)
     public void onBarcodeClick() {
         Bundle bundle = new Bundle();
@@ -474,6 +498,11 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
     }
 
     @Override
+    public void showWarnDialog(int index) {
+
+    }
+
+    @Override
     public void init(final BakeReportProxy proxy) {
         // 设置tempratureset，进行转换
         mChart.setTemperatureSet(proxy.getBakeReport().getTemperatureSet());
@@ -494,7 +523,9 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
         date.setText("烘焙日期：" + proxy.getBakeDate());
         device.setText("设备：" + proxy.getDevice());
         Log.d(TAG, "init: deviceName -> " + proxy.getDevice());
-        score.setText(proxy.getBakeDegree());
+        // FIXME
+        int toastValue = computeToastValue(Float.parseFloat(proxy.getBakeDegree()) / 50f * 360);
+        score.setText((toastValue == Integer.MAX_VALUE ? "N/A" : (toastValue + "")));
 
         globalAccTemp.setText(Utils.getCrspTempratureValue(proxy.getGlobalAccBeanTemp() + "") + tempratureUnit);
         idAvgDryTemperature.setText(Utils.getCrspTempratureValue(proxy.getAvgDryTemprature() + "") + tempratureUnit);

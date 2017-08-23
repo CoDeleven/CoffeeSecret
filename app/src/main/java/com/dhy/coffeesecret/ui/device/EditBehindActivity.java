@@ -55,7 +55,6 @@ import static android.widget.LinearLayout.LayoutParams.MATCH_PARENT;
 import static android.widget.LinearLayout.LayoutParams.WRAP_CONTENT;
 import static com.dhy.coffeesecret.ui.device.fragments.BakeDialog.SELECT_BEAN;
 import static com.dhy.coffeesecret.utils.DensityUtils.dp2px;
-import static com.dhy.coffeesecret.views.BakeDegreeCircleSeekBar.positions;
 
 public class EditBehindActivity extends AppCompatActivity implements CircleSeekBar.OnSeekBarChangeListener, IEditView {
     private static final String TAG = EditBehindActivity.class.getSimpleName();
@@ -125,14 +124,7 @@ public class EditBehindActivity extends AppCompatActivity implements CircleSeekB
                     int toastValue = bundle.getInt("toast_value");
                     String colorBlock = bundle.getString("color_block_str");
                     int colorValue = bundle.getInt("color_block_val");
-
-                    GradientDrawable drawable = (GradientDrawable)getResources().getDrawable(R.drawable.bg_circle_edit_behind);
-                    drawable.setColor(colorValue);
-                    scoreLayout.setBackground(drawable);
-
-                    score.setText((toastValue == Integer.MAX_VALUE ? "N/A" : (toastValue + "")));
-
-                    scoreDescriptor.setText(colorBlock);
+                    adjustSeekbarView(colorValue, toastValue, colorBlock);
                     break;
                 case BUTTON_NAME:
                     curBeanButton.setText((String) msg.obj);
@@ -168,7 +160,6 @@ public class EditBehindActivity extends AppCompatActivity implements CircleSeekB
     }
 
     private int computeToastValue(double angle){
-        int len = positions.length;
         int index = ((int)angle) / 45;
         switch (index){
             case 0:
@@ -191,6 +182,7 @@ public class EditBehindActivity extends AppCompatActivity implements CircleSeekB
                 return Integer.MAX_VALUE;
         }
     }
+
 
     @Override
     public void updateBeanInfos(List<BeanInfoSimple> infoSimples) {
@@ -222,6 +214,11 @@ public class EditBehindActivity extends AppCompatActivity implements CircleSeekB
         msg.what = index;
         msg.obj = toastContent;
         mHandler.sendMessage(msg);
+    }
+
+    @Override
+    public void showWarnDialog(int index) {
+
     }
 
     @Override
@@ -274,10 +271,12 @@ public class EditBehindActivity extends AppCompatActivity implements CircleSeekB
         if (mEditorMode == MODE_EDITOR) {
             reportDelete.setVisibility(View.VISIBLE);
             cookedWeight.setText(proxy.getBakeReport().getCookedBeanWeight());
-            // 因为实际上就40的区间，保存是保存30-70的值
-            mSeekBar.setCurProcess((int) Float.parseFloat(proxy.getBakeDegree()) - 30);
-            // TODO 需要设置颜色块的内容
+            float seekbarValue = Float.parseFloat(proxy.getBakeDegree());
+            float angle = seekbarValue / mSeekBar.getMaxProcess() * 360;
+            // 因为实际上就40的区间，保存是保存30-80的值
+            mSeekBar.setCurProcess(seekbarValue);
 
+            adjustSeekbarView(Utils.getColor(angle / 360f), computeToastValue(angle), computeColorBlock4Toast(angle));
             reportDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -298,6 +297,16 @@ public class EditBehindActivity extends AppCompatActivity implements CircleSeekB
         }
     }
 
+    private void adjustSeekbarView(int colorValue, int toastValue, String colorBlock){
+        GradientDrawable drawable = (GradientDrawable)getResources().getDrawable(R.drawable.bg_circle_edit_behind);
+        drawable.setColor(colorValue);
+        scoreLayout.setBackground(drawable);
+
+        score.setText((toastValue == Integer.MAX_VALUE ? "N/A" : (toastValue + "")));
+
+        scoreDescriptor.setText(colorBlock);
+    }
+
     @OnClick(R.id.id_bake_behind_save)
     protected void onSave() {
         String weight = cookedWeight.getText().toString();
@@ -312,7 +321,7 @@ public class EditBehindActivity extends AppCompatActivity implements CircleSeekB
     }
 
     @Override
-    public void onChanged(CircleSeekBar seekbar, int curValue, double angle) {
+    public void onChanged(CircleSeekBar seekbar, float curValue, double angle) {
         Message msg = new Message();
         msg.what = BAKE_DEGREE;
         String tip = computeColorBlock4Toast(angle);
@@ -327,7 +336,7 @@ public class EditBehindActivity extends AppCompatActivity implements CircleSeekB
         mHandler.sendMessage(msg);
 
         // FIXME 这里收到的是int类型，需要变成float类型
-        mPresenter.setBakeDegree(toastValue);
+        mPresenter.setBakeDegree(curValue);
     }
 
     private void generateItemView(List<Entry> entries) {

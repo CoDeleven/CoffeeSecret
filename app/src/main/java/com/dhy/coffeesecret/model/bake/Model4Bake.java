@@ -1,7 +1,6 @@
 package com.dhy.coffeesecret.model.bake;
 
 import com.dhy.coffeesecret.model.base.BaseModel;
-import com.dhy.coffeesecret.pojo.Temperature;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.Event;
 
@@ -17,16 +16,6 @@ public class Model4Bake extends BaseModel implements IBakeModel {
     private static Model4Bake model4Bake = new Model4Bake();
 
     private Model4Bake() {
-    }
-
-    @Override
-    public void notifyTemperatureByManual(Temperature temperature) {
-
-    }
-
-    @Override
-    public void notifyTemperatureByAtuo(Temperature temperature) {
-
     }
 
     @Override

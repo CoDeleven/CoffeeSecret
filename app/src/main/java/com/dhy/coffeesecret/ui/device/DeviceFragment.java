@@ -28,7 +28,6 @@ import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.model.device.IDeviceView;
 import com.dhy.coffeesecret.model.device.Presenter4Device;
 import com.dhy.coffeesecret.pojo.BakeReport;
-import com.dhy.coffeesecret.pojo.BakeReportProxy;
 import com.dhy.coffeesecret.pojo.BeanInfoSimple;
 import com.dhy.coffeesecret.pojo.Temperature;
 import com.dhy.coffeesecret.services.BluetoothService;
@@ -58,12 +57,13 @@ import static com.dhy.coffeesecret.MyApplication.temperatureUnit;
 public class DeviceFragment extends Fragment implements IDeviceView {
     public static final int AUTO_CONNECTION_TIPS = 0x100;
     public static final int UPDATE_TEMPERATURE_TEXT = 0x111;
+    public static final int FINISH_DEVICE_FRAGMENT_TASK = 0x123;
+    public static final int NO_BLUETOOTH_CONNECTED = 0x232;
     private static final String TAG = DeviceFragment.class.getSimpleName();
     private static String lastAddress = null;
     private static Presenter4Device mPresenter;
     @Bind(R.id.id_device_prepare_bake)
     Button mPrepareBake;
-    List<BeanInfoSimple> beanInfos;
     @Bind(R.id.title_text)
     TextView titleText;
     @Bind(R.id.id_modify_beanInfos)
@@ -126,7 +126,6 @@ public class DeviceFragment extends Fragment implements IDeviceView {
     TextView idBakeInwindTemp;
     @Bind(R.id.id_bake_outwindTemp)
     TextView idBakeOutwindTemp;
-    private BakeReport referTemperatures;
     private Handler mToastHandler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
@@ -153,18 +152,22 @@ public class DeviceFragment extends Fragment implements IDeviceView {
                 case UPDATE_TEMPERATURE_TEXT:
                     Temperature temperature = (Temperature) msg.obj;
                     updateTemperatureText(temperature);
+                    break;
+                case FINISH_DEVICE_FRAGMENT_TASK:
+                    mBtModifyBeanInfo.setVisibility(View.INVISIBLE);
+                    beanInfoBoard.removeAllViews();
             }
             return false;
         }
     });
-    private Handler mShowHandler = new Handler(new Handler.Callback() {
+    private Handler mDialogHandler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
             final AlertDialog.Builder dialogBuilder =
                     new AlertDialog.Builder(getContext());
             final ProgressDialog progressDialog = new ProgressDialog(getActivity());
             switch (msg.what) {
-                case 0:
+                case NO_BLUETOOTH_CONNECTED:
                     dialogBuilder.setTitle("");
                     dialogBuilder.setMessage("当前尚未连接蓝牙设备，请确认");
                     dialogBuilder.setCancelable(false);
@@ -184,25 +187,6 @@ public class DeviceFragment extends Fragment implements IDeviceView {
                     });
                     dialogBuilder.show();
                     break;
-                case 1:
-                    dialogBuilder.setMessage("当前尚未添加豆种");
-                    dialogBuilder.setPositiveButton("去添加", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            showDialogFragment();
-                            dialog.dismiss();
-                        }
-                    });
-                    dialogBuilder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
-                    dialogBuilder.show();
-                    break;
-                case 3:
-
             }
             return false;
         }
@@ -258,6 +242,7 @@ public class DeviceFragment extends Fragment implements IDeviceView {
         lastAddress = SettingTool.getConfig(getContext()).getAddress();
         // 判断是否连接过蓝牙，如果尚未连接过，初始化
         if (mPresenter == null) {
+            // TODO 搜寻上一次连接的设备，并连接他
             // Log.d(TAG, "onCreate: 创建BluetoothService");
             // Intent intent = new Intent(getCo ntext().getApplicationContext(), BluetoothService.class);
             // getContext().getApplicationContext().bindService(intent, conn, Context.BIND_AUTO_CREATE);
@@ -288,7 +273,6 @@ public class DeviceFragment extends Fragment implements IDeviceView {
             NLogger.i(TAG, "OnStart():正常安装Presenter...");
             ((MainActivity) getActivity()).revertBakingTab();
             mBtModifyBeanInfo.setVisibility(View.VISIBLE);
-            beanInfoBoard.removeAllViews();
             setupPresenter();
         }
     }
@@ -305,7 +289,8 @@ public class DeviceFragment extends Fragment implements IDeviceView {
                 startActivityForResult(intent, 9);
                 break;
             case R.id.id_device_prepare_bake:
-                goBake();
+                NLogger.i(TAG, "goBake():开始烘焙...");
+                mPresenter.goBake();
                 break;
         }
     }
@@ -327,15 +312,16 @@ public class DeviceFragment extends Fragment implements IDeviceView {
     private void showDialogFragment() {
         final BakeDialog dialogFragment = new BakeDialog();
         Bundle bundle = new Bundle();
-        if (beanInfos != null) {
-            bundle.putSerializable("beanInfos", new ArrayList<>(beanInfos));
+        if (mPresenter.getTemporaryBeanInfo() != null) {
+            bundle.putSerializable("beanInfos", new ArrayList<>(mPresenter.getTemporaryBeanInfo()));
         }
         dialogFragment.setArguments(bundle);
 
         dialogFragment.setBeanInfosListener(new BakeDialog.OnBeaninfosConfirmListener() {
             @Override
             public void setBeanInfos(List<BeanInfoSimple> beanInfos) {
-                DeviceFragment.this.beanInfos = beanInfos;
+                // DeviceFragment.this.beanInfos = beanInfos;
+                mPresenter.setTemporaryBeanInfo(beanInfos);
                 // 隐藏ModifyBeanInfo的按钮
                 mBtModifyBeanInfo.setVisibility(View.GONE);
                 // 显示豆种信息列表
@@ -346,50 +332,20 @@ public class DeviceFragment extends Fragment implements IDeviceView {
 
             @Override
             public void setTemperatures(BakeReport temperatures) {
-                DeviceFragment.this.referTemperatures = temperatures;
+                mPresenter.setTemporaryReferTemperatures(temperatures);
             }
         });
         FragmentTool.getFragmentToolInstance(getContext()).showDialogFragmen("dialogFragment", dialogFragment);
     }
 
-    private void goBake() {
-        NLogger.i(TAG, "goBake():开始烘焙...");
-
-        if (mPresenter == null || !mPresenter.isConnected()) {
-            mShowHandler.sendEmptyMessage(0);
-            return;
-        }
-        if (beanInfos == null) {
-            beanInfos = new ArrayList<>();
-        }
-        if (!(beanInfos.size() > 0)) {
-            // TODO 理论上是要处理的，但是懒得
-            // return;
-        }
-        mPresenter.initBakeReport();
-        BakeReportProxy proxy = mPresenter.getCurBakingReport();
-
+    @Override
+    public void goNextActivity(BakeReport referTemperatures) {
         Intent intent = new Intent(getContext(), BakeActivity.class);
-        proxy.setBeanInfoSimples(beanInfos);
-        if (beanInfos.size() == 1) {
-            proxy.setSingleBeanId(beanInfos.get(0).getSingleBeanId());
-        }
-        for (BeanInfoSimple simple : beanInfos) {
-            simple.setUsage(Utils.getReversed2DefaultWeight(simple.getUsage()) + "");
-
-        }
-        intent.putExtra(BakeActivity.DEVICE_NAME, mPresenter.getConnectedDevice());
         if (referTemperatures != null) {
             intent.putExtra(BakeActivity.ENABLE_REFERLINE, referTemperatures);
         }
-
-        mBtModifyBeanInfo.setVisibility(View.INVISIBLE);
         startActivity(intent);
-        mPresenter.resetBluetoothListener();
-        beanInfos = null;
-        referTemperatures = null;
     }
-
 
     @Override
     public void updateText(int index, Object updateContent) {
@@ -408,8 +364,8 @@ public class DeviceFragment extends Fragment implements IDeviceView {
     }
 
     @Override
-    public void showDialog(int index) {
-
+    public void showWarnDialog(int index) {
+        mDialogHandler.sendEmptyMessage(index);
     }
 
     private List<TextView> generateSimpleBeanInfo(List<BeanInfoSimple> beanInfoSimples) {
@@ -427,8 +383,9 @@ public class DeviceFragment extends Fragment implements IDeviceView {
     }
 
     private void showSimpleBeanInfo2Fragment() {
+        // 因为如果要修改，必须清除原来的再添加所有
         beanInfoBoard.removeAllViews();
-        List<TextView> textViews = generateSimpleBeanInfo(beanInfos);
+        List<TextView> textViews = generateSimpleBeanInfo(mPresenter.getTemporaryBeanInfo());
         // 最多就显示三列数据
         for (int i = 0; i < (textViews.size() > 3 ? 3 : textViews.size()); i++) {
             beanInfoBoard.addView(textViews.get(i));

@@ -75,16 +75,19 @@ public abstract class BaseBlePresenter<V extends IBaseView, M extends BaseModel>
 
     @Override
     public void toConnected() {
-
+        // 更新连接状态
+        mViewOperator.updateText(BluetoothProfile.STATE_CONNECTED, "");
     }
 
     @Override
     public void toDisconnected() {
+        // 更新连接状态为未连接
+        mViewOperator.updateText(BluetoothProfile.STATE_DISCONNECTED, "");
     }
 
     @Override
     public void toDisconnecting() {
-
+        toDisconnected();
     }
 
     public boolean isConnected(){

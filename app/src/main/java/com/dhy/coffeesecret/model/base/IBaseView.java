@@ -7,5 +7,5 @@ package com.dhy.coffeesecret.model.base;
 public interface IBaseView {
     void updateText(int index, Object updateContent);
     void showToast(int index, String toastContent);
-    void showDialog(int index);
+    void showWarnDialog(int index);
 }

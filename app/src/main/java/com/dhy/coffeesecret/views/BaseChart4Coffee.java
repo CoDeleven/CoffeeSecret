@@ -226,7 +226,7 @@ public class BaseChart4Coffee extends LineChart implements IChartView {
     }
 
     @Override
-    public void showDialog(int index) {
+    public void showWarnDialog(int index) {
 
     }
 

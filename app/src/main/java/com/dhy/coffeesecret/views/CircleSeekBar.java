@@ -54,7 +54,7 @@ public class CircleSeekBar extends View {
     private Paint mPointerPaint;
 
     private int mMaxProcess;
-    private int mCurProcess;
+    private float mCurProcess;
     private float mUnreachedRadius;
     private int mReachedColor, mUnreachedColor;
     private float mReachedWidth, mUnreachedWidth;
@@ -386,7 +386,7 @@ public class CircleSeekBar extends View {
         Bundle bundle = new Bundle();
         bundle.putParcelable(INATANCE_STATE, super.onSaveInstanceState());
         bundle.putInt(INSTANCE_MAX_PROCESS, mMaxProcess);
-        bundle.putInt(INSTANCE_CUR_PROCESS, mCurProcess);
+        bundle.putInt(INSTANCE_CUR_PROCESS, (int)mCurProcess);
         bundle.putInt(INSTANCE_REACHED_COLOR, mReachedColor);
         bundle.putFloat(INSTANCE_REACHED_WIDTH, mReachedWidth);
         bundle.putBoolean(INSTANCE_REACHED_CORNER_ROUND, isHasReachedCornerRound);
@@ -435,15 +435,15 @@ public class CircleSeekBar extends View {
         }
     }
 
-    private int getSelectedValue() {
-        return Math.round(mMaxProcess * ((float) mCurAngle / 360));
+    private float getSelectedValue() {
+        return mMaxProcess * ((float) mCurAngle / 360);
     }
 
-    public int getCurProcess() {
+    public float getCurProcess() {
         return mCurProcess;
     }
 
-    public void setCurProcess(int curProcess) {
+    public void setCurProcess(float curProcess) {
         this.mCurProcess = curProcess > mMaxProcess ? mMaxProcess : curProcess;
         if (mChangListener != null) {
             mChangListener.onChanged(this, curProcess, mCurAngle);
@@ -595,6 +595,6 @@ public class CircleSeekBar extends View {
 
 
     public interface OnSeekBarChangeListener {
-        void onChanged(CircleSeekBar seekbar, int curValue, double angle);
+        void onChanged(CircleSeekBar seekbar, float curValue, double angle);
     }
 }

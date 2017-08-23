@@ -4,12 +4,11 @@ import android.bluetooth.BluetoothProfile;
 import android.util.Log;
 
 import com.dhy.coffeesecret.model.BaseBlePresenter;
-import com.dhy.coffeesecret.model.base.IBaseView;
 import com.dhy.coffeesecret.model.bake.developbar.Presenter4DevelopBar;
+import com.dhy.coffeesecret.model.base.IBaseView;
 import com.dhy.coffeesecret.model.chart.Presenter4Chart;
 import com.dhy.coffeesecret.pojo.BakeReportProxy;
 import com.dhy.coffeesecret.pojo.Temperature;
-import com.dhy.coffeesecret.pojo.TemperatureSet;
 import com.dhy.coffeesecret.ui.device.BakeActivity;
 import com.dhy.coffeesecret.ui.device.record.BreakPointerRecorder;
 import com.dhy.coffeesecret.ui.device.record.RecorderSystem;
@@ -38,12 +37,10 @@ import static com.dhy.coffeesecret.views.DevelopBar.RAW_BEAN;
 public class Presenter4BakeActivity extends BaseBlePresenter<IBakeView, Model4Bake> {
     private static final String TAG = Presenter4BakeActivity.class.getSimpleName();
     private static final int[] LINE_INDEX = {BEANLINE, INWINDLINE, OUTWINDLINE, ACCBEANLINE, ACCINWINDLINE, ACCOUTWINDLINE};
-    private static Presenter4BakeActivity mPresenter;
-    // private IBakeView super.mViewOperator;
-    // private IBakeModel mBakeModel;
+    private static Presenter4BakeActivity mSelf;
     private List<Entry> mEventList;
     // 当前烘焙状态，一爆，二爆等状态
-    private int mCurStatus;
+    private int tCurStatus;
     // 开始记录拐点发生的位置
     private BreakPointerRecorder breakPointerRecorder;
     // 开始计时,并初始化一系列任务
@@ -57,12 +54,9 @@ public class Presenter4BakeActivity extends BaseBlePresenter<IBakeView, Model4Ba
     private Presenter4DevelopBar mDevelopBarPresenter;
     private boolean enabledFirstBurst = false;
     private boolean enabledSecondBurst = false;
-    // private IBakeModel mBakeModel;
 
     private Presenter4BakeActivity() {
         super(Model4Bake.newInstance());
-        // mBakeModel = ;
-        // super.mModelOperator = mBakeModel;
     }
 
     /**
@@ -73,15 +67,15 @@ public class Presenter4BakeActivity extends BaseBlePresenter<IBakeView, Model4Ba
     public static Presenter4BakeActivity newInstance() {
         if (BaseBlePresenter.mBluetoothOperator == null) {
             throw new RuntimeException("BluetoothOperator Is Null");
-        } else if (mPresenter == null) {
-            mPresenter = new Presenter4BakeActivity();
+        } else if (mSelf == null) {
+            mSelf = new Presenter4BakeActivity();
         }
 
-        return mPresenter;
+        return mSelf;
     }
 
     public IBaseView getCurOperatorView() {
-        return super.mViewOperator;
+        return mViewOperator;
     }
 
     public List<Entry> getEventList() {
@@ -97,7 +91,7 @@ public class Presenter4BakeActivity extends BaseBlePresenter<IBakeView, Model4Ba
     }
 
     public void init() {
-        mCurStatus = RAW_BEAN;
+        tCurStatus = RAW_BEAN;
         mEventList = new LinkedList<>();
         enabledFirstBurst = false;
         enabledSecondBurst = false;
@@ -120,12 +114,12 @@ public class Presenter4BakeActivity extends BaseBlePresenter<IBakeView, Model4Ba
      *
      * @return
      */
-    public TemperatureSet getTemperatureSet() {
+/*    public TemperatureSet getTemperatureSet() {
         if (recorderSystem == null) {
             throw new RuntimeException("没有初始化RecorderSystem...");
         }
         return recorderSystem.getTemperatureSet();
-    }
+    }*/
 
     @Override
     public void notifyTemperature(Temperature temperature) {
@@ -137,38 +131,38 @@ public class Presenter4BakeActivity extends BaseBlePresenter<IBakeView, Model4Ba
 
     @Override
     public void toDisconnected() {
-        super.mViewOperator.showToast(BluetoothProfile.STATE_DISCONNECTED, "蓝牙已断开，请勿远离...");
+        mViewOperator.showToast(BluetoothProfile.STATE_DISCONNECTED, "蓝牙已断开，请勿远离...");
         // 通过下面的方法，弹出是否重连的对话框
-        super.mViewOperator.updateText(BakeActivity.WARN_DISCONNECTED, null);
+        mViewOperator.showWarnDialog(BluetoothProfile.STATE_DISCONNECTED);
     }
 
     private void notifyTemperatureByManual(Temperature temperature) {
         // 温度数组: 0->豆温，1->进风温, 2->出风温, 3->加速豆温, 4->加速进风温, 5->加速出风温
-        float[] tempratures = {temperature.getBeanTemp(), temperature.getInwindTemp(),
+        float[] temperatures = {temperature.getBeanTemp(), temperature.getInwindTemp(),
                 temperature.getOutwindTemp(), temperature.getAccBeanTemp(), temperature.getAccInwindTemp(),
                 temperature.getAccOutwindTemp()};
 
-        if (breakPointerRecorder.record(temperature) && tempratures[0] > 160 && mCurStatus != DevelopBar.FIRST_BURST) {
-            mCurStatus = AFTER160;
+        if (breakPointerRecorder.record(temperature) && temperatures[0] > 160 && tCurStatus != DevelopBar.FIRST_BURST) {
+            tCurStatus = AFTER160;
         }
 
         lastTime = recorderSystem.addTemprature(temperature);
 
-        curBeanEntry = new Entry(lastTime, Utils.getCrspTempratureValue(tempratures[0] + ""));
+        curBeanEntry = new Entry(lastTime, Utils.getCrspTempratureValue(temperatures[0] + ""));
 
         // ((IBakeView) (super.mViewOperator)).updateChart(curBeanEntry, BEANLINE);
         mChartPresenter.dynamicAddDataImm(curBeanEntry, BEANLINE, !super.isMinimized());
         for (int i = 1; i < 6; ++i) {
             // ((IBakeView) (super.mViewOperator)).updateChart();
-            mChartPresenter.dynamicAddDataImm(new Entry(lastTime, Utils.getCrspTempratureValue(tempratures[i] + "")), LINE_INDEX[i], !super.isMinimized());
+            mChartPresenter.dynamicAddDataImm(new Entry(lastTime, Utils.getCrspTempratureValue(temperatures[i] + "")), LINE_INDEX[i], !super.isMinimized());
         }
         // 更新发展率条的数据
-        updateDevelopStatus(mCurStatus);
-        if (!mPresenter.isMinimized()) {
+        updateDevelopStatus(tCurStatus);
+        if (!mSelf.isMinimized()) {
             // 更新发展率条的颜色
-            (super.mViewOperator).updateText(BakeActivity.UPDATE_TIME_TEXT, mCurStatus);
+            mViewOperator.updateText(BakeActivity.UPDATE_TIME_TEXT, tCurStatus);
             // 更新温度文本
-            (super.mViewOperator).updateText(BakeActivity.UPDATE_TEMPERATURE_TEXT, temperature);
+            mViewOperator.updateText(BakeActivity.UPDATE_TEMPERATURE_TEXT, temperature);
         }
     }
 
@@ -178,7 +172,7 @@ public class Presenter4BakeActivity extends BaseBlePresenter<IBakeView, Model4Ba
      * @param developStatus 发展率的状态
      */
     public void updateDevelopStatus(int developStatus) {
-        this.mCurStatus = developStatus;
+        this.tCurStatus = developStatus;
         // 用于更新DevelopBar的时间
         this.mDevelopBarPresenter.updateDevelopBar(developStatus);
     }
@@ -193,7 +187,7 @@ public class Presenter4BakeActivity extends BaseBlePresenter<IBakeView, Model4Ba
         // 封装信息
         Model4Bake.EventInfo info = new Model4Bake.EventInfo(curStartIndex, timeInterval, Utils.get2PrecisionFloat(avgTemperature));
         // 进行存储
-        ((IBakeModel) super.mModelOperator).recordOneEvent(status, info);
+        mModelOperator.recordOneEvent(status, info);
         // 更新当前bean
         updateBeanEntryEvent(status, description);
         // 记录一下中间状态的按钮事件,比如一爆、一爆结束 两种状态
@@ -222,7 +216,7 @@ public class Presenter4BakeActivity extends BaseBlePresenter<IBakeView, Model4Ba
 
     private void updateBeanEntryEvent(Entry entry, int status, String description) {
         // 更新当前bean
-        ((IBakeModel) mModelOperator).updateEntry(entry, status, description);
+        mModelOperator.updateEntry(entry, status, description);
         // 本地记录事件结点
         mEventList.add(entry);
         // 添加事件修改至temperature set
@@ -278,9 +272,9 @@ public class Presenter4BakeActivity extends BaseBlePresenter<IBakeView, Model4Ba
         localProxy.setBreakPointerTime(breakPointerRecorder.getbreakPointerTime());
         localProxy.setBreakPointerTemprature(breakPointerRecorder.getBreakPointerTemprature());
 
-        Model4Bake.EventInfo dryEvent = ((IBakeModel) super.mModelOperator).getDryEventInfoByStatus(Event.DRY);
-        Model4Bake.EventInfo firstBurstEvent = ((IBakeModel) super.mModelOperator).getDryEventInfoByStatus(Event.FIRST_BURST);
-        Model4Bake.EventInfo endEvent = ((IBakeModel) super.mModelOperator).getDryEventInfoByStatus(Event.END);
+        Model4Bake.EventInfo dryEvent = mModelOperator.getDryEventInfoByStatus(Event.DRY);
+        Model4Bake.EventInfo firstBurstEvent = mModelOperator.getDryEventInfoByStatus(Event.FIRST_BURST);
+        Model4Bake.EventInfo endEvent = mModelOperator.getDryEventInfoByStatus(Event.END);
         if (dryEvent != null) {
             // 开始烘焙与脱水的时间间隔和平均升温率
             localProxy.setAvgDryTime(dryEvent.getConsumeTime());
