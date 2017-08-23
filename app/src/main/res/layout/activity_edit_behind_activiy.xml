@@ -101,7 +101,7 @@
                     android:layout_centerInParent="true"
                     android:layout_marginBottom="20dp"
                     android:padding="10dp"
-                    app:wheel_max_process="40"
+                    app:wheel_max_process="50"
                     app:wheel_pointer_color="#FFF"
                     app:wheel_pointer_radius="7dp"
                     app:wheel_reached_color="#936743"

@@ -136,6 +136,10 @@ public class Presenter4Chart extends BasePresenter<IChartView, Model4Chart>{
         return mPresenter;
     }
 
+    public void clearReferLine(){
+        referEntries = null;
+    }
+
     public void refreshChart(){
         mViewOperator.updateChart();
     }

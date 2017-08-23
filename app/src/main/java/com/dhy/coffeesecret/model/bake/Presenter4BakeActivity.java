@@ -305,6 +305,7 @@ public class Presenter4BakeActivity extends BaseBlePresenter<IBakeView, Model4Ba
 
     public void stopBake() {
         handlerData2BakeReport();
+        mChartPresenter.clearReferLine();
         super.setBakingNow(false);
     }
 

@@ -238,17 +238,17 @@ public class DeviceFragment extends Fragment implements IDeviceView {
         idBakeBeanTemp.setText(Utils.getCrspTempratureValue(temperature.getBeanTemp() + "") + MyApplication.temperatureUnit);
         idBakingAccBeanTempBefore.setText(Utils.getCommaBefore(temperature.getAccBeanTemp()));
         idBakingAccBeanTempAfter.setText(Utils.getCommaAfter(temperature.getAccBeanTemp()));
-        idTempUnit0.setText(temperatureUnit + "/m");
+        idTempUnit0.setText(temperatureUnit + "/min");
 
         idBakeInwindTemp.setText(Utils.getCrspTempratureValue(temperature.getInwindTemp() + "") + MyApplication.temperatureUnit);
         idBakingAccInwindTempBefore.setText(Utils.getCommaBefore(temperature.getAccInwindTemp()));
         idBakingAccInwindTempAfter.setText(Utils.getCommaAfter(temperature.getAccInwindTemp()));
-        idTempUnit1.setText(temperatureUnit + "/m");
+        idTempUnit1.setText(temperatureUnit + "/min");
 
         idBakeOutwindTemp.setText(Utils.getCrspTempratureValue(temperature.getOutwindTemp() + "") + MyApplication.temperatureUnit);
         idBakingAccOutwindTempBefore.setText(Utils.getCommaBefore(temperature.getAccOutwindTemp()));
         idBakingAccOutwindTempAfter.setText(Utils.getCommaAfter(temperature.getAccOutwindTemp()));
-        idTempUnit2.setText(temperatureUnit + "/m");
+        idTempUnit2.setText(temperatureUnit + "/min");
     }
 
     @Override
@@ -288,6 +288,7 @@ public class DeviceFragment extends Fragment implements IDeviceView {
             NLogger.i(TAG, "OnStart():正常安装Presenter...");
             ((MainActivity) getActivity()).revertBakingTab();
             mBtModifyBeanInfo.setVisibility(View.VISIBLE);
+            beanInfoBoard.removeAllViews();
             setupPresenter();
         }
     }
@@ -385,6 +386,8 @@ public class DeviceFragment extends Fragment implements IDeviceView {
         mBtModifyBeanInfo.setVisibility(View.INVISIBLE);
         startActivity(intent);
         mPresenter.resetBluetoothListener();
+        beanInfos = null;
+        referTemperatures = null;
     }
 
 

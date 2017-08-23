@@ -160,6 +160,7 @@ public class LineChartRenderer extends LineRadarRenderer {
         }
 
         // if filled is enabled, close the path
+
         if (dataSet.isDrawFilledEnabled()) {
 
             cubicFillPath.reset();
@@ -171,7 +172,12 @@ public class LineChartRenderer extends LineRadarRenderer {
         mRenderPaint.setColor(dataSet.getColor());
 
         mRenderPaint.setStyle(Paint.Style.STROKE);
-        mRenderPaint.setStrokeWidth(1f);
+
+        if(dataSet.getLabel().equals("")){
+            mRenderPaint.setStrokeWidth(1f);
+        }else{
+            mRenderPaint.setStrokeWidth(2f);
+        }
         trans.pathValueToPixel(cubicPath);
 
         // mRenderPaint.setShadowLayer(2.5f, 0, 10, Color.parseColor("#CCCCCC"));

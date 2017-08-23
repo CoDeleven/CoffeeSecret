@@ -169,17 +169,17 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
         idBakingBeanTemp.setText(Utils.getCrspTempratureValue(temperature.getBeanTemp() + "") + temperatureUnit);
         idBakingAccBeanTempBefore.setText(Utils.getCommaBefore(temperature.getAccBeanTemp()));
         idBakingAccBeanTempAfter.setText(Utils.getCommaAfter(temperature.getAccBeanTemp()));
-        idTempUnit0.setText(temperatureUnit + "/m");
+        idTempUnit0.setText(temperatureUnit + "/min");
 
         idBakingInwindTemp.setText(Utils.getCrspTempratureValue(temperature.getInwindTemp() + "") + temperatureUnit);
         idBakingAccInwindTempBefore.setText(Utils.getCommaBefore(temperature.getAccInwindTemp()));
         idBakingAccInwindTempAfter.setText(Utils.getCommaAfter(temperature.getAccInwindTemp()));
-        idTempUnit1.setText(temperatureUnit + "/m");
+        idTempUnit1.setText(temperatureUnit + "/min");
 
         idBakingOutwindTemp.setText(Utils.getCrspTempratureValue(temperature.getOutwindTemp() + "") + temperatureUnit);
         idBakingAccOutwindTempBefore.setText(Utils.getCommaBefore(temperature.getAccOutwindTemp()));
         idBakingAccOutwindTempAfter.setText(Utils.getCommaAfter(temperature.getAccOutwindTemp()));
-        idTempUnit2.setText(temperatureUnit + "/m");
+        idTempUnit2.setText(temperatureUnit + "/min");
 
         // switchImage(temperature);
         chart.notifyDataSetChanged();
@@ -567,9 +567,10 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @OnLongClick(R.id.id_baking_exit)
-    public boolean discardThisBake(View view) {
+    public boolean discardThisBake() {
         mPresenter.clearBakeReport();
         mPresenter.resetBluetoothListener();
+        mChartPresenter.clearReferLine();
         finish();
         return true;
     }
@@ -593,13 +594,15 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        // 按回退不做任何事
-        /*super.onBackPressed();
-        // 在烘焙过程中退出 即 视为放弃这次烘焙
-        mPresenter.clearBakeReportProxy();*/
-        minimizeActivity();
-        NLogger.i(TAG, "最小化界面");
-        finish();
+        // 烘焙中的时候默认最小化
+        if(mPresenter.isBakingNow()){
+            minimizeActivity();
+            NLogger.i(TAG, "最小化界面");
+            finish();
+        }else{
+            discardThisBake();
+        }
+
     }
 
     @Override
@@ -663,7 +666,7 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
                 .setPositiveButton("退出", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        BakeActivity.this.discardThisBake(null);
+                        BakeActivity.this.discardThisBake();
                     }
                 })
                 .setMessage("重连成功后会丢失部分数据.../(ㄒoㄒ)/~~");

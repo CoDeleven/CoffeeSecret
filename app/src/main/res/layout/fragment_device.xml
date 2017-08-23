@@ -108,7 +108,7 @@
                         android:id="@+id/id_bake_beanTemp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="-1℃"
+                        android:text="-℃"
                         android:textColor="#000000"
                         android:textSize="24sp" />
 
@@ -130,18 +130,18 @@
                             android:textSize="18sp"
                             style="@style/bakingAccTemp"
                             android:layout_toLeftOf="@id/id_baking_comma0"
-                            android:text="00"/>
+                            android:text="--"/>
                         <TextView
                             android:id="@+id/id_baking_accBeanTemp_after"
                             android:layout_toRightOf="@id/id_baking_comma0"
                             android:textSize="18sp"
                             style="@style/bakingAccTemp"
-                            android:text="00"/>
+                            android:text="--"/>
                         <TextView
                             android:layout_toRightOf="@id/id_baking_accBeanTemp_after"
                             android:id="@+id/id_temp_unit0"
                             android:layout_marginLeft="2dp"
-                            android:text="F/m"
+                            android:text="-/-"
                             style="@style/bakingAccTemp"
                             android:layout_gravity="top"
                             android:paddingLeft="3dp"
@@ -269,7 +269,7 @@
                         android:id="@+id/id_bake_inwindTemp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="-1℃"
+                        android:text="-℃"
                         android:textColor="#000000"
                         android:textSize="13sp" />
                     <RelativeLayout
@@ -288,18 +288,18 @@
                             style="@style/bakingAccTemp"
                             android:textSize="11sp"
                             android:layout_toLeftOf="@id/id_baking_comma1"
-                            android:text="00"/>
+                            android:text="--"/>
                         <TextView
                             android:id="@+id/id_baking_accInwindTemp_after"
                             android:layout_toRightOf="@id/id_baking_comma1"
                             style="@style/bakingAccTemp"
                             android:textSize="11sp"
-                            android:text="00"/>
+                            android:text="--"/>
                         <TextView
                             android:layout_toRightOf="@id/id_baking_accInwindTemp_after"
                             android:id="@+id/id_temp_unit1"
                             android:layout_marginLeft="2dp"
-                            android:text="F/m"
+                            android:text="-/-"
                             android:textSize="8sp"
                             style="@style/bakingAccTemp"/>
                     </RelativeLayout>
@@ -395,7 +395,7 @@
                         android:id="@+id/id_bake_outwindTemp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="-1℃"
+                        android:text="-℃"
                         android:textColor="#000000"
                         android:textSize="13sp" />
 
@@ -416,18 +416,18 @@
                             style="@style/bakingAccTemp"
                             android:layout_toLeftOf="@id/id_baking_comma2"
                             android:textSize="11sp"
-                            android:text="00"/>
+                            android:text="--"/>
                         <TextView
                             android:id="@+id/id_baking_accOutwindTemp_after"
                             android:layout_toRightOf="@id/id_baking_comma2"
                             style="@style/bakingAccTemp"
                             android:textSize="11sp"
-                            android:text="00"/>
+                            android:text="--"/>
                         <TextView
                             android:layout_toRightOf="@id/id_baking_accOutwindTemp_after"
                             android:id="@+id/id_temp_unit2"
                             android:layout_marginLeft="2dp"
-                            android:text="F/m"
+                            android:text="-/-"
                             android:textSize="8sp"
                             style="@style/bakingAccTemp"/>
                     </RelativeLayout>

@@ -317,8 +317,7 @@ public class EditBehindActivity extends AppCompatActivity implements CircleSeekB
         msg.what = BAKE_DEGREE;
         String tip = computeColorBlock4Toast(angle);
         int toastValue = computeToastValue(angle);
-        int colorValue = Utils.getColor((float)angle);
-
+        int colorValue = Utils.getColor((float)angle / 360);
         Bundle bundle = new Bundle();
         bundle.putInt("toast_value", toastValue);
         bundle.putString("color_block_str", tip);

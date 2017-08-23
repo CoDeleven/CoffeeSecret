@@ -57,7 +57,9 @@ public class NewBleService implements IBluetoothOperator, DataDigger4Ble.IBleWRO
         public void onConnectError(BleException exception) {
             NLogger.e(TAG, "BleGattCallback::onConnectError(): 扫描不到对应设备");
             // 按照未连接来处理
-            mConnStatusCallback.toDisconnected();
+            if(mConnStatusCallback != null){
+                mConnStatusCallback.toDisconnected();
+            }
             isConnected = false;
         }
 
@@ -66,7 +68,9 @@ public class NewBleService implements IBluetoothOperator, DataDigger4Ble.IBleWRO
             NLogger.i(TAG, "onConnectSuccess():连接成功");
             NewBleService.this.mCurConnectedDevice = gatt.getDevice();
             isConnected = true;
-            mConnStatusCallback.toConnected();
+            if(mConnStatusCallback != null){
+                mConnStatusCallback.toConnected();
+            }
             // 保存这次连接的地址，便于下次重连
             mLastConnectedDevice = mCurConnectedDevice.getAddress();
             // 内部直接实现了discoverServices
@@ -74,7 +78,9 @@ public class NewBleService implements IBluetoothOperator, DataDigger4Ble.IBleWRO
 
         @Override
         public void onDisConnected(BluetoothGatt gatt, int status, BleException exception) {
-            mConnStatusCallback.toDisconnected();
+            if(mConnStatusCallback != null){
+                mConnStatusCallback.toDisconnected();
+            }
             isConnected = false;
             NLogger.e(TAG, "BleGattCallback::onDisConnected(): " + exception.getDescription());
         }
@@ -97,7 +103,9 @@ public class NewBleService implements IBluetoothOperator, DataDigger4Ble.IBleWRO
 
         @Override
         public void onConnecting(BluetoothGatt gatt, int status) {
-            mConnStatusCallback.toDisconnecting();
+            if(mConnStatusCallback != null){
+                mConnStatusCallback.toConnecting();
+            }
         }
 
         @Override
@@ -169,7 +177,9 @@ public class NewBleService implements IBluetoothOperator, DataDigger4Ble.IBleWRO
         mBleOperator.scanDevice(new ListScanCallback(10000) {
             @Override
             public void onScanning(ScanResult result) {
-                mScanCallback.onScanning(result);
+                if(mScanCallback != null){
+                    mScanCallback.onScanning(result);
+                }
             }
 
             @Override
@@ -276,7 +286,9 @@ public class NewBleService implements IBluetoothOperator, DataDigger4Ble.IBleWRO
                                 NLogger.e(TAG, "onFailure: " + exception);
                                 switch (exception.getCode()) {
                                     case BleException.ERROR_CODE_GATT:
-                                        mConnStatusCallback.toDisconnected();
+                                        if(mConnStatusCallback != null){
+                                            mConnStatusCallback.toDisconnected();
+                                        }
                                         break;
                                     case BleException.ERROR_CODE_OTHER:
                                         try {
@@ -310,7 +322,9 @@ public class NewBleService implements IBluetoothOperator, DataDigger4Ble.IBleWRO
     public void occurDisconnectedBySelfDetect() {
         isConnected = false;
         NLogger.e(TAG, "occurDisconnectedBySelfDetect():紧急停止线程...通知监听器");
-        mConnStatusCallback.toDisconnected();
+        if(mConnStatusCallback != null){
+            mConnStatusCallback.toDisconnected();
+        }
         mBleOperator.closeBluetoothGatt();
         // 清除这些线程
         clearInfoAfterDisconnected();

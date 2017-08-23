@@ -147,6 +147,23 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
             // 关闭蓝牙设备后清空已连接的设备状态
             // hasConnected = null;
             mPresenter.disableBluetooth();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    while(mPresenter.isEnable()){
+
+                    }
+                    mPresenter.startScan();
+                    mTextHandler.sendEmptyMessage(REFRESH);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            // 现在成功启动了，开启按钮
+                            switchButton.setEnabled(true);
+                        }
+                    });
+                }
+            }).start();
             mAdapter.clearDevices();
             updateDeviceList();
         }
