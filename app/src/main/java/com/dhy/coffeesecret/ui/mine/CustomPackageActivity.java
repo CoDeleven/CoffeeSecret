@@ -104,7 +104,7 @@ public class CustomPackageActivity extends AppCompatActivity {
         mContext = CustomPackageActivity.this;
         colors = new ArrayList<>();
         selectedColors = new HashMap<>();
-        config = SettingTool.getConfig(mContext);
+        config = SettingTool.getConfig();
 
         initParams();
         init();

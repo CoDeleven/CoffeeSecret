@@ -1,7 +1,7 @@
 package com.dhy.coffeesecret.model.bake.developbar;
 
 import com.dhy.coffeesecret.model.base.BasePresenter;
-import com.dhy.coffeesecret.utils.Utils;
+import com.dhy.coffeesecret.utils.FormatUtils;
 import com.dhy.coffeesecret.views.DevelopBar;
 
 /**
@@ -66,7 +66,7 @@ public class Presenter4DevelopBar extends BasePresenter<IDevelopBarView, Model4D
      * @return
      */
     public String getDevelopTimeString() {
-        return Utils.getTimeWithFormat(getModel().getFirstBurstTime());
+        return FormatUtils.getTimeWithFormat(getModel().getFirstBurstTime());
     }
 
     /**

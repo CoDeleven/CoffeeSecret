@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.utils.SettingTool;
-import com.dhy.coffeesecret.utils.UnitConvert;
+import com.facebook.rebound.ui.Util;
 import com.github.mikephil.charting.data.Event;
 
 import java.util.List;
@@ -55,7 +55,7 @@ public class Other extends DialogFragment {
                 dismiss();
             }
         });
-        List<String> temp = SettingTool.parse2List(SettingTool.getConfig(getContext()).getQuickEvents());
+        List<String> temp = SettingTool.parse2List(SettingTool.getConfig().getQuickEvents());
         quick1.setText(temp.get(0));
         quick2.setText(temp.get(1));
         quick3.setText(temp.get(2));
@@ -74,7 +74,7 @@ public class Other extends DialogFragment {
     @Override
     public void onResume() {
         super.onResume();
-        getDialog().getWindow().setLayout(UnitConvert.dp2px(getResources(), 200), UnitConvert.dp2px(getResources(), 195));
+        getDialog().getWindow().setLayout(Util.dpToPx(200, getResources()), Util.dpToPx(195, getResources()));
     }
     @Override
     public void onDestroyView() {

@@ -1,6 +1,7 @@
 package com.dhy.coffeesecret.model;
 
 import android.bluetooth.BluetoothProfile;
+import android.util.Log;
 
 import com.clj.fastble.data.ScanResult;
 import com.dhy.coffeesecret.model.base.BaseModel;
@@ -30,6 +31,7 @@ public abstract class BaseBlePresenter<V extends IBaseView, M extends BaseModel>
     public void initBluetoothListener() {
         // 如果蓝牙操作助手不为空时，更改监听器
         if (BaseBlePresenter.mBluetoothOperator != null) {
+            Log.d("BaseBlePresenter", "initBluetoothListener: 初始化了");
             // 重新设置回调接口到本对象
             BaseBlePresenter.mBluetoothOperator.setTemperatureListener(this);
             BaseBlePresenter.mBluetoothOperator.setScanCallbackListener(this);

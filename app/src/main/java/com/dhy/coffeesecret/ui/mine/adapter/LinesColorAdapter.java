@@ -54,7 +54,7 @@ public class LinesColorAdapter extends FootViewAdapter {
         this.linesColorList = linesColorList;
 
 
-        config = SettingTool.getConfig(context);
+        config = SettingTool.getConfig();
         mLayoutInflater = LayoutInflater.from(context);
     }
 

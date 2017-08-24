@@ -2,7 +2,7 @@ package com.dhy.coffeesecret.services.data;
 
 import com.dhy.coffeesecret.pojo.Temperature;
 import com.dhy.coffeesecret.services.interfaces.IBleDataCallback;
-import com.dhy.coffeesecret.utils.Utils;
+import com.dhy.coffeesecret.utils.ConvertUtils;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -112,7 +112,7 @@ public class TransferControllerTask implements Runnable {
             // TODO 通知消息给监听器
             NLogger.i(TAG, "历经: " + durationTimeUntilNow + "ms ----> " + mData);
             if (mTemperatureCallback != null) {
-                mTemperatureCallback.notifyTemperature(Temperature.parseHex2Temprature(Utils.hexString2String(mData.toString())));
+                mTemperatureCallback.notifyTemperature(Temperature.parseHex2Temprature(ConvertUtils.hexString2String(mData.toString())));
             }
             // 休眠
             try {
@@ -203,6 +203,7 @@ public class TransferControllerTask implements Runnable {
 
     private void startNewTimer() {
         mHistoryTimer = new Timer();
+        long delay = 1000 - (System.currentTimeMillis() - mStartOnePeriodTime);
         mHistoryTimer.schedule(new TimerTask() {
             @Override
             public void run() {
@@ -225,7 +226,7 @@ public class TransferControllerTask implements Runnable {
                     }
                 }
             }
-        }, 1000 - (System.currentTimeMillis() - mStartOnePeriodTime));
+        }, delay < 0 ? 100: delay);
     }
 
     private void stopOldTimer() {

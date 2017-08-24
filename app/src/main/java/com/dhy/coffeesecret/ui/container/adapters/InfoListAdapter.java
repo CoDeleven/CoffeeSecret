@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.Species;
-import com.dhy.coffeesecret.utils.UnitConvert;
 import com.dhy.coffeesecret.utils.Utils;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
 

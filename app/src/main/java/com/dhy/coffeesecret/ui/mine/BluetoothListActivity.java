@@ -30,7 +30,7 @@ import butterknife.OnClick;
 public class BluetoothListActivity extends AppCompatActivity implements BluetoothListAdapter.OnItemClickListener,
         CompoundButton.OnCheckedChangeListener, BluetoothService.ViewControllerListener, SwipeRefreshLayout.OnRefreshListener,
         IScanListView {
-    public static final int DEVICE_CONNECTING = 0, DEVICE_CONNECT_FAILED = 1, DEVICE_CONNECTED = 2, CANCEL_REFRESH = -1, SCANNING_COMPLETE = -2, REFRESH = 0x77;
+    public static final int DEVICE_CONNECTED = 2, CANCEL_REFRESH = -1, REFRESH = 0x77;
     private static final String TAG = BluetoothListActivity.class.getSimpleName();
     @Bind(R.id.srl)
     SwipeRefreshLayout refreshLayout;
@@ -43,17 +43,15 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
     @Bind(R.id.id_scan_progress)
     ProgressBar mScanProgress;
 
+    View mCurConnectingView;
     @Override
     public void showWarnDialog(int index) {
 
     }
 
     ImageView tick = null;
-    // private Map<String, BluetoothDevice> canConnectDeviceMap = new HashMap<>();
-    // private BluetoothService.BluetoothOperator mBluetoothOperator;
     private ProgressBar progressCircle = null;
     private BluetoothListAdapter mAdapter;
-    // private BluetoothDevice hasConnected;
     private Presenter4ScanList mPresenter;
     private Handler toastHandler = new Handler() {
         @Override
@@ -79,14 +77,17 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
                 case BluetoothProfile.STATE_CONNECTED:
                     progressCircle.setVisibility(View.GONE);
                     tick.setVisibility(View.VISIBLE);
+                    mCurConnectingView.setEnabled(true);
                     break;
                 case BluetoothProfile.STATE_CONNECTING:
                     progressCircle.setVisibility(View.VISIBLE);
                     tick.setVisibility(View.GONE);
+                    mCurConnectingView.setEnabled(false);
                     break;
                 case BluetoothProfile.STATE_DISCONNECTED:
                     progressCircle.setVisibility(View.INVISIBLE);
                     tick.setVisibility(View.GONE);
+                    mCurConnectingView.setEnabled(true);
                     break;
             }
         }
@@ -174,18 +175,10 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        switchButton.setOnCheckedChangeListener(this);
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bluetooth_list);
         ButterKnife.bind(this);
-
-        refreshLayout.setOnRefreshListener(this);
 
         // 获取蓝牙操作对象
         if (mPresenter == null) {
@@ -201,6 +194,8 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
         mAdapter.setOnItemClickListener(this);
 
         mPresenter.setView(this);
+
+
         // 初始化监听器到本presenter
         mPresenter.initBluetoothListener();
         // 设置发现新设备进行回调的对象
@@ -219,12 +214,22 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
         }else{
             mAdapter.clearDevices();
         }
+        refreshLayout.setOnRefreshListener(this);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        switchButton.setOnCheckedChangeListener(this);
     }
 
     @Override
     public void onRefresh() {
         if (mPresenter != null) {
+            // mPresenter.clearAddedDevices();
+            // mAdapter.notifyDataSetChanged();
             mPresenter.startScan();
+            // mDevicesList.invalidate();
         } else {
             mTextHandler.sendEmptyMessage(CANCEL_REFRESH);
         }
@@ -278,6 +283,8 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
         progressCircle = (ProgressBar) view.findViewById(R.id.circle_progress);
         // progressCircle.setVisibility(View.VISIBLE);
         tick = (ImageView) view.findViewById(R.id.id_bluetooth_list_right);
+        // 设置当前正在连接的视图
+        mCurConnectingView = view;
         // 当前状态是处于正在连接的状态
         mTextHandler.sendEmptyMessage(BluetoothProfile.STATE_CONNECTING);
         // 开始正式请求连接,因为连接是异步回调，不是及时消息,如果此时false，一定不能连接成功
@@ -292,7 +299,8 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
         mPresenter.stopScan();
         // 因为destroy不能及时执行，所以这里去掉了
         // mPresenter.resetBluetoothListener();
-        mTextHandler = null;
+        // mTextHandler = null;
+        mCurConnectingView = null;
     }
 
 }

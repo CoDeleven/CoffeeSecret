@@ -35,8 +35,8 @@ import com.dhy.coffeesecret.services.NewBleService;
 import com.dhy.coffeesecret.services.interfaces.IBluetoothOperator;
 import com.dhy.coffeesecret.ui.device.fragments.BakeDialog;
 import com.dhy.coffeesecret.ui.mine.BluetoothListActivity;
+import com.dhy.coffeesecret.utils.ConvertUtils;
 import com.dhy.coffeesecret.utils.FragmentTool;
-import com.dhy.coffeesecret.utils.SettingTool;
 import com.dhy.coffeesecret.utils.T;
 import com.dhy.coffeesecret.utils.Utils;
 import com.dhy.coffeesecret.views.ArcProgress;
@@ -219,17 +219,17 @@ public class DeviceFragment extends Fragment implements IDeviceView {
      * @param temperature 温度
      */
     private void updateTemperatureText(Temperature temperature) {
-        idBakeBeanTemp.setText(Utils.getCrspTempratureValue(temperature.getBeanTemp() + "") + MyApplication.temperatureUnit);
+        idBakeBeanTemp.setText(ConvertUtils.getCrspTemperatureValue(temperature.getBeanTemp() + "") + MyApplication.temperatureUnit);
         idBakingAccBeanTempBefore.setText(Utils.getCommaBefore(temperature.getAccBeanTemp()));
         idBakingAccBeanTempAfter.setText(Utils.getCommaAfter(temperature.getAccBeanTemp()));
         idTempUnit0.setText(temperatureUnit + "/min");
 
-        idBakeInwindTemp.setText(Utils.getCrspTempratureValue(temperature.getInwindTemp() + "") + MyApplication.temperatureUnit);
+        idBakeInwindTemp.setText(ConvertUtils.getCrspTemperatureValue(temperature.getInwindTemp() + "") + MyApplication.temperatureUnit);
         idBakingAccInwindTempBefore.setText(Utils.getCommaBefore(temperature.getAccInwindTemp()));
         idBakingAccInwindTempAfter.setText(Utils.getCommaAfter(temperature.getAccInwindTemp()));
         idTempUnit1.setText(temperatureUnit + "/min");
 
-        idBakeOutwindTemp.setText(Utils.getCrspTempratureValue(temperature.getOutwindTemp() + "") + MyApplication.temperatureUnit);
+        idBakeOutwindTemp.setText(ConvertUtils.getCrspTemperatureValue(temperature.getOutwindTemp() + "") + MyApplication.temperatureUnit);
         idBakingAccOutwindTempBefore.setText(Utils.getCommaBefore(temperature.getAccOutwindTemp()));
         idBakingAccOutwindTempAfter.setText(Utils.getCommaAfter(temperature.getAccOutwindTemp()));
         idTempUnit2.setText(temperatureUnit + "/min");
@@ -239,7 +239,7 @@ public class DeviceFragment extends Fragment implements IDeviceView {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // 获取最后一次连接着的蓝牙设备地址
-        lastAddress = SettingTool.getConfig(getContext()).getAddress();
+        // lastAddress = SettingTool.getConfig().getAddress();
         // 判断是否连接过蓝牙，如果尚未连接过，初始化
         if (mPresenter == null) {
             // TODO 搜寻上一次连接的设备，并连接他
@@ -312,6 +312,7 @@ public class DeviceFragment extends Fragment implements IDeviceView {
     private void showDialogFragment() {
         final BakeDialog dialogFragment = new BakeDialog();
         Bundle bundle = new Bundle();
+        bundle.putString("appWeightUnit", mPresenter.getAppWeightUnit());
         if (mPresenter.getTemporaryBeanInfo() != null) {
             bundle.putSerializable("beanInfos", new ArrayList<>(mPresenter.getTemporaryBeanInfo()));
         }

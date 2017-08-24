@@ -24,10 +24,11 @@ import com.bigkoo.pickerview.TimePickerView;
 import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BeanInfo;
+import com.dhy.coffeesecret.utils.ConvertUtils;
 import com.dhy.coffeesecret.utils.HttpUtils;
 import com.dhy.coffeesecret.utils.SettingTool;
 import com.dhy.coffeesecret.utils.T;
-import com.dhy.coffeesecret.utils.UIUtils;
+import com.dhy.coffeesecret.utils.SystemStatusBarUtils;
 import com.dhy.coffeesecret.utils.URLs;
 import com.dhy.coffeesecret.utils.Utils;
 
@@ -134,7 +135,7 @@ public class EditBeanActivity extends AppCompatActivity {
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         ButterKnife.bind(this);
-        UIUtils.steepToolBar(this);
+        SystemStatusBarUtils.steepToolBar(this);
         mContext = EditBeanActivity.this;
         initParams();
         init();
@@ -224,7 +225,7 @@ public class EditBeanActivity extends AppCompatActivity {
         if ("0.0".equals(editWeight.getText().toString().trim())) {
             editWeight.setText("");
         }
-        editWeightUnit.setText(SettingTool.getConfig(mContext).getWeightUnit());
+        editWeightUnit.setText(SettingTool.getConfig().getWeightUnit());
         editBuyDate.setText(formatDate(beanInfo.getDate()));
 
         editLevel.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -484,7 +485,7 @@ public class EditBeanActivity extends AppCompatActivity {
         beanInfo.setWaterContent(Float.parseFloat(editWaterContent.getText().toString()));
         beanInfo.setSupplier(editSupplier.getText().toString());
         beanInfo.setPrice(Double.parseDouble(editPrice.getText().toString()));
-        beanInfo.setStockWeight(Utils.getReversed2DefaultWeight(Float.parseFloat(editWeight.getText().toString()) + ""));
+        beanInfo.setStockWeight(ConvertUtils.getReversed2DefaultWeight(Float.parseFloat(editWeight.getText().toString()) + ""));
         beanInfo.setDate(parseDate(editBuyDate.getText().toString()));
         // TODO 如果豆名为空字串或者为null，则默认给予国家+豆种格式
         beanInfo.setName(editName.getText().toString());

@@ -19,10 +19,10 @@ import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.ui.container.fragments.SearchFragment;
 import com.dhy.coffeesecret.ui.device.handler.LinesSelectorHandler;
 import com.dhy.coffeesecret.ui.mine.adapter.HistoryLineAdapter;
+import com.dhy.coffeesecret.utils.FormatUtils;
 import com.dhy.coffeesecret.utils.HttpUtils;
-import com.dhy.coffeesecret.utils.UIUtils;
+import com.dhy.coffeesecret.utils.SystemStatusBarUtils;
 import com.dhy.coffeesecret.utils.URLs;
-import com.dhy.coffeesecret.utils.Utils;
 import com.dhy.coffeesecret.views.DividerDecoration;
 import com.dhy.coffeesecret.views.SearchEditText;
 import com.google.gson.Gson;
@@ -39,8 +39,6 @@ import java.util.Map;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-import static android.view.WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION;
-import static android.view.WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
 import static com.dhy.coffeesecret.ui.cup.fragment.BakeInfoFragment.RESULT_CODE_ADD;
 import static com.dhy.coffeesecret.ui.device.handler.LinesSelectorHandler.GET_LINES_INFOS;
 import static com.dhy.coffeesecret.ui.device.handler.LinesSelectorHandler.LOADING_ERROR;
@@ -72,7 +70,7 @@ public class LineSelectedActivity extends AppCompatActivity implements View.OnCl
         getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         setContentView(R.layout.history_lines);
-        UIUtils.steepToolBar(this);
+        SystemStatusBarUtils.steepToolBar(this);
         ButterKnife.bind(this);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -188,7 +186,7 @@ public class LineSelectedActivity extends AppCompatActivity implements View.OnCl
                     Collections.sort(bakeReportList, new Comparator<BakeReport>() {
                         @Override
                         public int compare(BakeReport o1, BakeReport o2) {
-                            return (int) (Utils.date2IdWithTimestamp(o2.getDate()) - Utils.date2IdWithTimestamp(o1.getDate()));
+                            return (int) (FormatUtils.date2IdWithTimestamp(o2.getDate()) - FormatUtils.date2IdWithTimestamp(o1.getDate()));
                         }
                     });
                     // 请求成功

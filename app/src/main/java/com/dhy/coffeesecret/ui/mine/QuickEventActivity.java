@@ -53,7 +53,7 @@ public class QuickEventActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         mContext = QuickEventActivity.this;
-        mConfig = SettingTool.getConfig(this);
+        mConfig = SettingTool.getConfig();
 
         initView();
     }

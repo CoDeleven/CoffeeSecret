@@ -9,8 +9,7 @@ import android.widget.TextView;
 
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BakeReport;
-import com.dhy.coffeesecret.utils.Utils;
-import com.dhy.coffeesecret.views.SearchEditText;
+import com.dhy.coffeesecret.utils.FormatUtils;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
 
 import java.util.List;
@@ -49,13 +48,13 @@ public class HistoryLineAdapter extends RecyclerView.Adapter<HistoryLineAdapter.
 
     @Override
     public long getHeaderId(int position) {
-        return Utils.date2IdWithoutTimestamp(bakeReports.get(position).getDate());
+        return FormatUtils.date2IdWithoutTimestamp(bakeReports.get(position).getDate());
     }
 
     @Override
     public void onBindHeaderViewHolder(HistoryLineViewHolder holder, int position) {
         TextView letter = (TextView) holder.itemView;
-        letter.setText(Utils.dateWidthoutTimestamp(bakeReports.get(position).getDate()));
+        letter.setText(FormatUtils.dateWidthoutTimestamp(bakeReports.get(position).getDate()));
     }
 
     @Override

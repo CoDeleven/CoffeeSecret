@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
@@ -18,12 +17,19 @@ import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.ui.container.adapters.LinesAdapter;
 import com.dhy.coffeesecret.ui.container.fragments.SearchFragment;
 import com.dhy.coffeesecret.ui.device.ReportActivity;
-import com.dhy.coffeesecret.utils.TestData;
+import com.dhy.coffeesecret.utils.HttpParser;
+import com.dhy.coffeesecret.utils.HttpUtils;
+import com.dhy.coffeesecret.utils.URLs;
 import com.dhy.coffeesecret.views.SearchEditText;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 public class LinesSelectedActivity extends AppCompatActivity implements View.OnClickListener, SearchEditText.SearchBarListener {
 
@@ -56,32 +62,40 @@ public class LinesSelectedActivity extends AppCompatActivity implements View.OnC
     }
 
     private void init() {
-        // TODO 校赛视频，暂时注释
-        Map<String, ? extends BakeReport> bakeReports = ((MyApplication) getApplication()).getBakeReports();
-
-        bakeReportList.addAll(bakeReports.values());
-
-        listView.setAdapter(new LinesAdapter(bakeReportList, this));
-        View searchBarLayout = View.inflate(this, R.layout.conta_lines_searchbar_part, null);
-        listView.addHeaderView(searchBarLayout);
-        listView.setHeaderDividersEnabled(false);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        HttpUtils.enqueue(HttpUtils.getRequest(URLs.GET_ALL_BAKE_REPORT), new Callback() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                BakeReport report = (BakeReport) adapterView.getItemAtPosition(i);
-                // TODO 校赛专用
-                ((MyApplication)(getApplication())).setBakeReport(report);
+            public void onFailure(Call call, IOException e) {
 
-                Intent intent = new Intent(LinesSelectedActivity.this, ReportActivity.class);
-                startActivity(intent);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                Map<String, ? extends BakeReport> bakeReports = HttpParser.getBakeReports(response.body().string());
+                bakeReportList.addAll(bakeReports.values());
+
+                listView.setAdapter(new LinesAdapter(bakeReportList, LinesSelectedActivity.this));
+                View searchBarLayout = View.inflate(LinesSelectedActivity.this, R.layout.conta_lines_searchbar_part, null);
+                listView.addHeaderView(searchBarLayout);
+                listView.setHeaderDividersEnabled(false);
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        BakeReport report = (BakeReport) adapterView.getItemAtPosition(i);
+                        // TODO 校赛专用
+                        ((MyApplication)(getApplication())).setBakeReport(report);
+
+                        Intent intent = new Intent(LinesSelectedActivity.this, ReportActivity.class);
+                        startActivity(intent);
+                    }
+                });
+
+                searchBar = (SearchEditText) searchBarLayout.findViewById(R.id.lines_selected_srh);
+                searchBar.setSearchBarListener(LinesSelectedActivity.this);
+                ImageButton imgBtn = (ImageButton) searchBarLayout.findViewById(R.id.lines_selected_del);
+
+                imgBtn.setOnClickListener(LinesSelectedActivity.this);
             }
         });
-
-        searchBar = (SearchEditText) searchBarLayout.findViewById(R.id.lines_selected_srh);
-        searchBar.setSearchBarListener(this);
-        ImageButton imgBtn = (ImageButton) searchBarLayout.findViewById(R.id.lines_selected_del);
-
-        imgBtn.setOnClickListener(this);
     }
 
     @Override

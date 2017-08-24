@@ -2,6 +2,8 @@ package com.dhy.coffeesecret.ui.device.adapter;
 
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +33,7 @@ public class BluetoothListAdapter extends RecyclerView.Adapter<BluetoothListAdap
     private Map<String, ImageView> rssiTextView = new HashMap<>();
     private Map<String, Integer> rssiMac = new HashMap<>();
     private OnItemClickListener onItemClickListener;
+    private Handler threadHandler = new Handler(Looper.getMainLooper());
     private int curIndex;
     public BluetoothListAdapter(Context context) {
         this.context = context;
@@ -39,7 +42,28 @@ public class BluetoothListAdapter extends RecyclerView.Adapter<BluetoothListAdap
 
     @Override
     public int getItemCount() {
+        /*if(devices != null && devices.size() == 0){
+            if(mCurConnectedDevice != null){
+                return 1;
+            }
+        }else{
+            return devices.size();
+        }
+        return 0;*/
         return devices.size();
+    }
+
+    public void missConnected(){
+        mCurConnectedDevice = null;
+        devices.remove(mCurConnectedDevice);
+        devices.clear();
+        runOnMainThread(new Runnable() {
+            @Override
+            public void run() {
+                notifyDataSetChanged();
+
+            }
+        });
     }
 
     @Override
@@ -134,5 +158,11 @@ public class BluetoothListAdapter extends RecyclerView.Adapter<BluetoothListAdap
         devices.clear();
         devices.addAll(results);
     }
-
+    private void runOnMainThread(Runnable runnable) {
+        if (Looper.myLooper() == Looper.getMainLooper()) {
+            runnable.run();
+        } else {
+            threadHandler.post(runnable);
+        }
+    }
 }

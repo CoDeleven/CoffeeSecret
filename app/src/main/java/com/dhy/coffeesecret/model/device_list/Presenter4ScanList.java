@@ -9,9 +9,6 @@ import com.dhy.coffeesecret.model.BaseBlePresenter;
 import com.dhy.coffeesecret.ui.device.adapter.BluetoothListAdapter;
 import com.dhy.coffeesecret.utils.SettingTool;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import static com.dhy.coffeesecret.ui.mine.BluetoothListActivity.CANCEL_REFRESH;
 import static com.dhy.coffeesecret.ui.mine.BluetoothListActivity.DEVICE_CONNECTED;
 
@@ -22,16 +19,17 @@ import static com.dhy.coffeesecret.ui.mine.BluetoothListActivity.DEVICE_CONNECTE
 public class Presenter4ScanList extends BaseBlePresenter<IScanListView, Model4ScanList> {
     private static final String TAG = Presenter4ScanList.class.getSimpleName();
     private static Presenter4ScanList mSelf;
-    // private IScanListView mScanListView;
     private BluetoothListAdapter mAdapter;
-    private Map<String, ScanResult> mBeScanedDevice = new LinkedHashMap<>();
 
     public void setDeviceListAdapter(BluetoothListAdapter adapter){
         this.mAdapter = adapter;
-        adapter.setDevices(mBeScanedDevice.values());
+
         if(mBluetoothOperator.isConnected()){
             adapter.setConnectedDevice(mBluetoothOperator.getConnectedDevice());
+        }else{
+            mModelOperator.removeDevice(mBluetoothOperator.getLatestAddress());
         }
+        adapter.setDevices(mModelOperator.listAllAddedDevices());
     }
 
     public Presenter4ScanList() {
@@ -49,12 +47,11 @@ public class Presenter4ScanList extends BaseBlePresenter<IScanListView, Model4Sc
     @Override
     public void onScanning(ScanResult result) {
         BluetoothDevice device = result.getDevice();
-        String deviceAddr = device.getAddress();
         // 如果不含有该键的值时
-        if (!mBeScanedDevice.containsKey(deviceAddr)) {
+        if (!mModelOperator.isExisted(device.getAddress())) {
             // 如果蓝牙设备的名字为空或者名字为null就过滤掉
             if(!(device.getName() == null || device.getName().equals("null"))){
-                mBeScanedDevice.put(deviceAddr, result);
+                mModelOperator.addDevice(result);
                 // 添加新的设备，没必要执行下面的更新rssi骚操作了，直接结束
                 // mScanListView.addDevice2List(result);
                 if(mAdapter != null){
@@ -90,6 +87,10 @@ public class Presenter4ScanList extends BaseBlePresenter<IScanListView, Model4Sc
         //  设置连接失败状态
         getView().updateText(BluetoothProfile.STATE_DISCONNECTED, null);
         getView().showToast(BluetoothProfile.STATE_DISCONNECTED, "连接失败，请重新尝试...");
+        // 断开连接时，移除已经连接的设备。
+        mModelOperator.removeDevice(mBluetoothOperator.getLatestAddress());
+        // 告诉Adapter失去连接了，让Adapter清理已经连接的设备
+        mAdapter.missConnected();
     }
 
     @Override
@@ -101,11 +102,8 @@ public class Presenter4ScanList extends BaseBlePresenter<IScanListView, Model4Sc
     public void toConnected() {
         // 设置已经连接状态
         getView().updateText(DEVICE_CONNECTED, null);
-        // 设置已连接设备
-        String connectedAddr = mBluetoothOperator.getConnectedDevice().getAddress();
-        // adapter.lastConnectedAddress = device.getAddress();
         // 保存连接设备地址到配置文件,方便启动时读取并直接连接
-        SettingTool.saveAddress(connectedAddr);
+        SettingTool.saveAddress(mBluetoothOperator.getLatestAddress());
         super.resetBluetoothListener();
         // 连接成功后结束并跳转回首页
         getView().finishActivity();
@@ -124,10 +122,6 @@ public class Presenter4ScanList extends BaseBlePresenter<IScanListView, Model4Sc
         super.mBluetoothOperator.stopScanDevice();
     }
 
-    public BluetoothDevice getConnectedDevice() {
-        return super.mBluetoothOperator.getConnectedDevice();
-    }
-
     public void disableBluetooth(){
         super.mBluetoothOperator.disableBle();
     }
@@ -144,15 +138,10 @@ public class Presenter4ScanList extends BaseBlePresenter<IScanListView, Model4Sc
         }
         return super.mBluetoothOperator.connect(result);
     }
-/*
-    public void clearScanedDevices(){
-        mBeScanedDevice.clear();
-        mAdapter.clearDevices();
-    }*/
 
     @Override
     public void toDisable() {
-        mBeScanedDevice.clear();
+        mModelOperator.clearAllAddedDevices();
         mBluetoothOperator.stopScanDevice();
         getView().updateText(CANCEL_REFRESH, null);
     }

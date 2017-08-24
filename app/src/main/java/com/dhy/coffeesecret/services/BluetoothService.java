@@ -17,13 +17,14 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.util.Log;
+
 import com.clj.fastble.data.ScanResult;
 import com.dhy.coffeesecret.pojo.Temperature;
 import com.dhy.coffeesecret.services.interfaces.IBleConnCallback;
 import com.dhy.coffeesecret.services.interfaces.IBleDataCallback;
 import com.dhy.coffeesecret.services.interfaces.IBleScanCallback;
 import com.dhy.coffeesecret.services.interfaces.IBluetoothOperator;
-import com.dhy.coffeesecret.utils.Utils;
+import com.dhy.coffeesecret.utils.ConvertUtils;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -33,6 +34,7 @@ import static android.bluetooth.BluetoothProfile.STATE_CONNECTED;
 import static android.bluetooth.BluetoothProfile.STATE_CONNECTING;
 import static android.bluetooth.BluetoothProfile.STATE_DISCONNECTED;
 import static android.bluetooth.BluetoothProfile.STATE_DISCONNECTING;
+import static com.dhy.coffeesecret.utils.ConvertUtils.hexString2String;
 
 //                            _ooOoo_
 //                           o8888888o
@@ -122,7 +124,7 @@ public class BluetoothService extends Service implements IBluetoothOperator {
         public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
             // 将bytes数组转换成16进制存储起来
             String hexData = null;
-            hexData = Utils.bytesToHexString(characteristic.getValue());
+            hexData = ConvertUtils.bytesToHexString(characteristic.getValue());
             // 如果读到最后一行数据，返回true，并设置处理结束
             if (mRunThread != null && mRunThread.readData(hexData)) {
                 mRunThread.setHandling(false);
@@ -511,7 +513,7 @@ public class BluetoothService extends Service implements IBluetoothOperator {
                 if (!"".equals(result)) {
                     result = "";
                 }
-                mWriter.setValue(Utils.hexStringToBytes(FIRST_CHANNEL));
+                mWriter.setValue(ConvertUtils.hexStringToBytes(FIRST_CHANNEL));
                 do {
                     state = mBluetoothGatt.writeCharacteristic(mWriter);
                 } while (!state && readable);
@@ -532,7 +534,7 @@ public class BluetoothService extends Service implements IBluetoothOperator {
             @Override
             public void setWriteCommand() {
                 Log.d(TAG, "readData2 写入...");
-                mWriter.setValue(Utils.hexStringToBytes(READ_TEMP_COMMAND));
+                mWriter.setValue(ConvertUtils.hexStringToBytes(READ_TEMP_COMMAND));
                 do {
                     state = mBluetoothGatt.writeCharacteristic(mWriter);
                 } while (!state && readable);
@@ -541,13 +543,13 @@ public class BluetoothService extends Service implements IBluetoothOperator {
             @Override
             public boolean readData(String str) {
                 synchronized (result) {
-                    Log.d(TAG, "第2通道数据:" + Utils.hexString2String(str));
+                    Log.d(TAG, "第2通道数据:" + ConvertUtils.hexString2String(str));
                     result += str;
                     if (str.endsWith("0a")) {
                         dataReader = channelListener1;
                         if (mTemperatureListener != null) {
                             try {
-                                mTemperatureListener.notifyTemperature(Temperature.parseHex2Temprature(Utils.hexString2String(result)));
+                                mTemperatureListener.notifyTemperature(Temperature.parseHex2Temprature(hexString2String(result)));
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -563,7 +565,7 @@ public class BluetoothService extends Service implements IBluetoothOperator {
             @Override
             public void setWriteCommand() {
                 Log.d(TAG, "channelListener2 写入...");
-                mWriter.setValue(Utils.hexStringToBytes(SECOND_CHANNEL));
+                mWriter.setValue(ConvertUtils.hexStringToBytes(SECOND_CHANNEL));
                 do {
                     state = mBluetoothGatt.writeCharacteristic(mWriter);
                 } while (!state && readable);
@@ -582,7 +584,7 @@ public class BluetoothService extends Service implements IBluetoothOperator {
             @Override
             public void setWriteCommand() {
                 Log.d(TAG, "readData1 写入...");
-                mWriter.setValue(Utils.hexStringToBytes(READ_TEMP_COMMAND));
+                mWriter.setValue(ConvertUtils.hexStringToBytes(READ_TEMP_COMMAND));
                 do {
                     state = mBluetoothGatt.writeCharacteristic(mWriter);
                 } while (!state && readable);

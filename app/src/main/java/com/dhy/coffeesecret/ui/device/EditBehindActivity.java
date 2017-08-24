@@ -32,12 +32,14 @@ import com.dhy.coffeesecret.model.report_edit.Presenter4Editor;
 import com.dhy.coffeesecret.pojo.BakeReportProxy;
 import com.dhy.coffeesecret.pojo.BeanInfo;
 import com.dhy.coffeesecret.pojo.BeanInfoSimple;
+import com.dhy.coffeesecret.utils.ConvertUtils;
+import com.dhy.coffeesecret.utils.FormatUtils;
 import com.dhy.coffeesecret.utils.HttpUtils;
-import com.dhy.coffeesecret.utils.SettingTool;
 import com.dhy.coffeesecret.utils.T;
 import com.dhy.coffeesecret.utils.URLs;
 import com.dhy.coffeesecret.utils.Utils;
 import com.dhy.coffeesecret.views.CircleSeekBar;
+import com.facebook.rebound.ui.Util;
 import com.github.mikephil.charting.data.Entry;
 
 import java.io.IOException;
@@ -54,7 +56,6 @@ import static android.widget.LinearLayout.HORIZONTAL;
 import static android.widget.LinearLayout.LayoutParams.MATCH_PARENT;
 import static android.widget.LinearLayout.LayoutParams.WRAP_CONTENT;
 import static com.dhy.coffeesecret.ui.device.fragments.BakeDialog.SELECT_BEAN;
-import static com.dhy.coffeesecret.utils.DensityUtils.dp2px;
 
 public class EditBehindActivity extends AppCompatActivity implements CircleSeekBar.OnSeekBarChangeListener, IEditView {
     private static final String TAG = EditBehindActivity.class.getSimpleName();
@@ -227,7 +228,7 @@ public class EditBehindActivity extends AppCompatActivity implements CircleSeekB
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         setContentView(R.layout.activity_edit_behind_activiy);
         ButterKnife.bind(this);
-        unit = SettingTool.getConfig(this).getWeightUnit();
+        unit = mPresenter.getAppWeightUnit();
     }
 
     @Override
@@ -344,7 +345,7 @@ public class EditBehindActivity extends AppCompatActivity implements CircleSeekB
             // LinearLayout的设置
             LinearLayout linearLayout = new LinearLayout(this);
             // 设置LinearLayout的上下padding各位20dp
-            linearLayout.setPadding(0, dp2px(this, 20), 0, dp2px(this, 20));
+            linearLayout.setPadding(0, Util.dpToPx(20, getResources()), 0, Util.dpToPx(20, getResources()));
             linearLayout.setLayoutParams(new LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT));
             linearLayout.setOrientation(HORIZONTAL);
 
@@ -361,10 +362,10 @@ public class EditBehindActivity extends AppCompatActivity implements CircleSeekB
             params = new LinearLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT);
             params.gravity = Gravity.CENTER_VERTICAL;
             // textView.setId(id_edit_event_item_timeNode);
-            textView.setPadding(dp2px(this, 20), 0, 0, 0);
+            textView.setPadding(Util.dpToPx(20, getResources()), 0, 0, 0);
             // 设置时间
             int time = (int) entry.getX();
-            textView.setText(Utils.getTimeWithFormat(time));
+            textView.setText(FormatUtils.getTimeWithFormat(time));
 
             // 设置事件
             final TextView eventView = new TextView(this);
@@ -372,7 +373,7 @@ public class EditBehindActivity extends AppCompatActivity implements CircleSeekB
             params = new LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT);
             params.gravity = Gravity.CENTER_VERTICAL;
             // eventView.setId(id_edit_event_item_timeNode);
-            eventView.setPadding(dp2px(this, 20), 0, 0, 0);
+            eventView.setPadding(Util.dpToPx(20, getResources()), 0, 0, 0);
             // 设置时间
             eventView.setText(entry.getEvent().getDescription());
 
@@ -418,13 +419,13 @@ public class EditBehindActivity extends AppCompatActivity implements CircleSeekB
             LinearLayout linearLayout = new LinearLayout(this);
             linearLayout.setLayoutParams(new LinearLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
             linearLayout.setOrientation(HORIZONTAL);
-            linearLayout.setPadding(0, dp2px(this, 5), 0, dp2px(this, 5));
+            linearLayout.setPadding(0, Util.dpToPx(5, getResources()), 0, Util.dpToPx(5, getResources()));
 
             TextView index = new TextView(this);
             index.setText(beanCount++ + "");
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT);
             params.gravity = Gravity.CENTER_VERTICAL;
-            params.rightMargin = dp2px(this, 12);
+            params.rightMargin = Util.dpToPx(12, getResources());
             index.setLayoutParams(params);
 
             // 设置图片
@@ -432,16 +433,16 @@ public class EditBehindActivity extends AppCompatActivity implements CircleSeekB
             params = new LinearLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT);
             params.gravity = Gravity.CENTER_VERTICAL;
             imageView.setLayoutParams(params);
-            params.leftMargin = dp2px(this, 12);
+            params.leftMargin = Util.dpToPx(12, getResources());
             imageView.setImageResource(R.drawable.ic_bake_dialog_singlebean);
 
             // 设置豆名
             final Button beanName = new Button(this);
             params = new LinearLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT);
             params.gravity = Gravity.CENTER_VERTICAL;
-            params.leftMargin = dp2px(this, 12);
-            beanName.setMinHeight(dp2px(this, 25));
-            beanName.setMinimumHeight(dp2px(this, 25));
+            params.leftMargin = Util.dpToPx(12, getResources());
+            beanName.setMinHeight(Util.dpToPx(25, getResources()));
+            beanName.setMinimumHeight(Util.dpToPx(25, getResources()));
             beanName.setText(temp.getBeanName());
             beanName.setBackgroundColor(Color.TRANSPARENT);
             beanName.setOnClickListener(new View.OnClickListener() {
@@ -460,10 +461,10 @@ public class EditBehindActivity extends AppCompatActivity implements CircleSeekB
             params = new LinearLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT);
             params.gravity = Gravity.CENTER_VERTICAL;
             // 设置已添加豆子的重量
-            editText.setHint(Utils.getCrspWeightValue(temp.getUsage()) + unit);
+            editText.setHint(ConvertUtils.getCrspWeightValue(temp.getUsage()) + unit);
             // 设置不允许进行修改
             editText.setEnabled(false);
-            params.leftMargin = dp2px(this, 12);
+            params.leftMargin = Util.dpToPx(12, getResources());
             editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
             editText.setSingleLine(true);
             editText.setSingleLine();

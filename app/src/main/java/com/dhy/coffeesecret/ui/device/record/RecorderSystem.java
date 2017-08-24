@@ -43,7 +43,7 @@ public class RecorderSystem extends AbstractTimeSystem {
         temperatureSet.addAccOutwindTemp(temperature.getAccOutwindTemp());
         temperatureSet.addTimex(curTime);
 
-        // curBeanEntry = new Entry(curTime, Utils.getCrspTempratureValue(temperature.getBeanTemp() + ""));
+        // curBeanEntry = new Entry(curTime, Utils.getCrspTemperatureValue(temperature.getBeanTemp() + ""));
         return curTime;
     }
 

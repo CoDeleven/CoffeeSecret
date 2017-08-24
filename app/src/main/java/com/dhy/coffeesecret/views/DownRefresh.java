@@ -8,7 +8,8 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.dhy.coffeesecret.utils.UnitConvert;
+import com.dhy.coffeesecret.utils.ConvertUtils;
+import com.facebook.rebound.ui.Util;
 
 /**
  * Created by CoDeleven on 17-2-4.
@@ -37,12 +38,12 @@ public class DownRefresh extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         Paint paint = new Paint();
-        paint.setTextSize(UnitConvert.sp2px(getResources(), 10.125f));
+        paint.setTextSize(ConvertUtils.spToPx(getResources(), 10.125f));
         paint.setColor(Color.parseColor("#7f7f7f"));
         float xBase = width / 2 - paint.measureText(content) / 2;
         canvas.drawText(content, xBase, (int) (height / 10 * 4.5), paint);
         float singleFontWidth = paint.measureText("哈");
-        paint.setStrokeWidth(UnitConvert.dp2px(getResources(), 1.125f));
+        paint.setStrokeWidth(Util.dpToPx(1.125f, getResources()));
         canvas.drawLine(xBase + singleFontWidth, height / 10 * 6, xBase + paint.measureText(content) - singleFontWidth, height / 10 * 6, paint);
         canvas.drawLine(xBase + singleFontWidth * 2, height / 10 * 7, xBase + paint.measureText(content) - singleFontWidth * 2, height / 10 * 7, paint);
         canvas.drawLine(xBase + singleFontWidth * 2 + singleFontWidth / 2, height / 10 * 8, xBase + singleFontWidth * 2 + singleFontWidth / 2 + singleFontWidth, height / 10 * 8, paint);

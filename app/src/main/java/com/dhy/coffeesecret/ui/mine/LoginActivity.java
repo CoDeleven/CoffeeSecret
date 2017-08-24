@@ -16,7 +16,7 @@ import android.widget.PopupWindow;
 
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.ui.mine.adapter.AccountAdapter;
-import com.dhy.coffeesecret.utils.UIUtils;
+import com.dhy.coffeesecret.utils.SystemStatusBarUtils;
 import com.dhy.coffeesecret.views.DividerDecoration;
 
 import java.util.ArrayList;
@@ -39,7 +39,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        UIUtils.steepToolBar(this);
+        SystemStatusBarUtils.steepToolBar(this);
 
         usernameView = (EditText) findViewById(R.id.et_username);
         passwordView = (EditText) findViewById(R.id.et_password);

@@ -28,13 +28,14 @@ import com.dhy.coffeesecret.model.report.Presenter4Report;
 import com.dhy.coffeesecret.pojo.BakeReportProxy;
 import com.dhy.coffeesecret.pojo.BeanInfoSimple;
 import com.dhy.coffeesecret.ui.device.fragments.SharedFragment;
+import com.dhy.coffeesecret.utils.ConvertUtils;
+import com.dhy.coffeesecret.utils.FormatUtils;
 import com.dhy.coffeesecret.utils.FragmentTool;
-import com.dhy.coffeesecret.utils.SettingTool;
-import com.dhy.coffeesecret.utils.UnitConvert;
 import com.dhy.coffeesecret.utils.Utils;
 import com.dhy.coffeesecret.views.BaseChart4Coffee;
 import com.dhy.coffeesecret.views.ReportMarker;
 import com.dhy.coffeesecret.views.ScrollViewContainer;
+import com.facebook.rebound.ui.Util;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.Event;
 
@@ -154,8 +155,8 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
 
 
     private void initParam() {
-        weightUnit = SettingTool.getConfig(this).getWeightUnit();
-        tempratureUnit = SettingTool.getConfig(this).getTempratureUnit();
+        weightUnit = mPresenter.getAppWeightUnit();
+        tempratureUnit = mPresenter.getAppTemperatureUnit();
         mChart.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -216,7 +217,7 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
     private PopupWindow getPopupwindow() {
         if (popupWindow == null) {
             final View view = getLayoutInflater().inflate(R.layout.bake_lines_operator, null, false);
-            popupWindow = new PopupWindow(view, UnitConvert.dp2px(getResources(), 86), UnitConvert.dp2px(getResources(), 150), true);
+            popupWindow = new PopupWindow(view, Util.dpToPx(86, getResources()), Util.dpToPx(150, getResources()), true);
             popupWindow.setAnimationStyle(R.style.PopupWindowAnimation);
             view.setOnTouchListener(new View.OnTouchListener() {
                 @Override
@@ -330,11 +331,11 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
             TableLayout.LayoutParams p = new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT);
             tableRow.setLayoutParams(p);
             String[] content = new String[5];
-            content[0] = Utils.getTimeWithFormat(timex.get(i));
-            content[1] = Utils.getCrspTempratureValue(beanTemps.get(i).getY() + "") + tempratureUnit;
-            content[2] = Utils.getCrspTempratureValue(inwindTemps.get(i).getY() + "") + "";
-            content[3] = Utils.getCrspTempratureValue(outwindTemps.get(i).getY() + "") + "";
-            content[4] = Utils.getCrspTempratureValue(accBeanTemps.get(i).getY() + "") + "";
+            content[0] = FormatUtils.getTimeWithFormat(timex.get(i));
+            content[1] = ConvertUtils.getCrspTemperatureValue(beanTemps.get(i).getY() + "") + tempratureUnit;
+            content[2] = ConvertUtils.getCrspTemperatureValue(inwindTemps.get(i).getY() + "") + "";
+            content[3] = ConvertUtils.getCrspTemperatureValue(outwindTemps.get(i).getY() + "") + "";
+            content[4] = ConvertUtils.getCrspTemperatureValue(accBeanTemps.get(i).getY() + "") + "";
 
             for (int j = 0; j < 5; ++j) {
                 TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1);
@@ -419,7 +420,7 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
             beanArea.setLayoutParams(temp);
 
             TextView beanRawWeight = new TextView(this);
-            beanRawWeight.setText("生豆重量：" + Utils.getCrspWeightValue(beanInfo.getUsage()) + weightUnit);
+            beanRawWeight.setText("生豆重量：" + ConvertUtils.getCrspWeightValue(beanInfo.getUsage()) + weightUnit);
             beanRawWeight.setLayoutParams(temp);
 
             content[0].addView(beanName);
@@ -437,7 +438,7 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
             // 设置外linearlayout
             LayoutParams lp = new LayoutParams(MATCH_PARENT, MATCH_PARENT);
             // 设置margins
-            lp.setMargins(0, 0, 0, UnitConvert.dp2px(getResources(), 16.3125f));
+            lp.setMargins(0, 0, 0, Util.dpToPx(16.3125f, getResources()));
             // 设置方向
             outter.setOrientation(OrientationHelper.HORIZONTAL);
             // 给outter设置
@@ -468,7 +469,7 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
                 type.setText(eventDescription);
             }
 
-            time.setText("" + Utils.getTimeWithFormat(entry.getX()));
+            time.setText("" + FormatUtils.getTimeWithFormat(entry.getX()));
 
 
             type.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
@@ -514,9 +515,9 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
         mChart.addNewDatas(proxy.getLineDataSetByIndex(ACCINWINDLINE).getValues(), ACCINWINDLINE);
         mChart.addNewDatas(proxy.getLineDataSetByIndex(ACCOUTWINDLINE).getValues(), ACCOUTWINDLINE);
 
-        envTemp.setText(Utils.getCrspTempratureValue(proxy.getEnvTemp() + "") + tempratureUnit);
-        startTemp.setText(Utils.getCrspTempratureValue(proxy.getStartTemp() + "") + tempratureUnit);
-        endTemp.setText(Utils.getCrspTempratureValue(proxy.getEndTemp()) + tempratureUnit);
+        envTemp.setText(ConvertUtils.getCrspTemperatureValue(proxy.getEnvTemp() + "") + tempratureUnit);
+        startTemp.setText(ConvertUtils.getCrspTemperatureValue(proxy.getStartTemp() + "") + tempratureUnit);
+        endTemp.setText(ConvertUtils.getCrspTemperatureValue(proxy.getEndTemp()) + tempratureUnit);
         developTime.setText(proxy.getDevelopTime());
         developRate.setText(proxy.getDevelopRate() + "%");
         beanInfos = proxy.getBeanInfos();
@@ -527,18 +528,18 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
         int toastValue = computeToastValue(Float.parseFloat(proxy.getBakeDegree()) / 50f * 360);
         score.setText((toastValue == Integer.MAX_VALUE ? "N/A" : (toastValue + "")));
 
-        globalAccTemp.setText(Utils.getCrspTempratureValue(proxy.getGlobalAccBeanTemp() + "") + tempratureUnit);
-        idAvgDryTemperature.setText(Utils.getCrspTempratureValue(proxy.getAvgDryTemprature() + "") + tempratureUnit);
-        idAvgDryTime.setText(Utils.getTimeWithFormat(proxy.getAvgDryTime()));
+        globalAccTemp.setText(ConvertUtils.getCrspTemperatureValue(proxy.getGlobalAccBeanTemp() + "") + tempratureUnit);
+        idAvgDryTemperature.setText(ConvertUtils.getCrspTemperatureValue(proxy.getAvgDryTemprature() + "") + tempratureUnit);
+        idAvgDryTime.setText(FormatUtils.getTimeWithFormat(proxy.getAvgDryTime()));
 
-        idAvgFirbuTemperature.setText(Utils.getCrspTempratureValue(proxy.getAvgFirstBurstTemprature() + "") + tempratureUnit);
-        idAvgFirbuTime.setText(Utils.getTimeWithFormat(proxy.getAvgFirstBurstTime()));
+        idAvgFirbuTemperature.setText(ConvertUtils.getCrspTemperatureValue(proxy.getAvgFirstBurstTemprature() + "") + tempratureUnit);
+        idAvgFirbuTime.setText(FormatUtils.getTimeWithFormat(proxy.getAvgFirstBurstTime()));
 
-        idAvgEndTemperature.setText(Utils.getCrspTempratureValue(proxy.getAvgEndTemprature() + "") + tempratureUnit);
-        idAvgEndTime.setText(Utils.getTimeWithFormat(proxy.getAvgEndTime()));
+        idAvgEndTemperature.setText(ConvertUtils.getCrspTemperatureValue(proxy.getAvgEndTemprature() + "") + tempratureUnit);
+        idAvgEndTime.setText(FormatUtils.getTimeWithFormat(proxy.getAvgEndTime()));
 
-        breakPointerTemp.setText(Utils.getCrspTempratureValue(proxy.getBreakPointerTemprature() + "") + tempratureUnit);
-        breakPointerTime.setText(Utils.getTimeWithFormat(proxy.getBreakPointerTime()));
+        breakPointerTemp.setText(ConvertUtils.getCrspTemperatureValue(proxy.getBreakPointerTemprature() + "") + tempratureUnit);
+        breakPointerTime.setText(FormatUtils.getTimeWithFormat(proxy.getBreakPointerTime()));
 
         float cooked = Float.parseFloat(proxy.getBakeReport().getCookedBeanWeight());
         float raw = proxy.getRawBeanWeight();
@@ -549,7 +550,7 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
                 raw += Float.parseFloat(simple.getUsage());
             }
         }
-        species.setText("品种 （" + "熟豆重量：" + Utils.getCrspWeightValue(cooked + "") + weightUnit + "，" + "脱水率：" + Utils.get2PrecisionFloat((cooked * 100) / raw) + "% ）");
+        species.setText("品种 （" + "熟豆重量：" + ConvertUtils.getCrspWeightValue(cooked + "") + weightUnit + "，" + "脱水率：" + Utils.get2PrecisionFloat((cooked * 100) / raw) + "% ）");
 
         generateProxyDetails(proxy);
 

@@ -3,7 +3,7 @@ package com.dhy.coffeesecret.ui.device.record;
 import android.util.Log;
 
 import com.dhy.coffeesecret.pojo.Temperature;
-import com.dhy.coffeesecret.utils.Utils;
+import com.dhy.coffeesecret.utils.FormatUtils;
 
 import java.util.LinkedList;
 
@@ -32,7 +32,7 @@ public class BreakPointerRecorder extends AbstractTimeSystem {
             }
             if(temperature.getBeanTemp() - lastTemperature.getBeanTemp() > 0.3){
                 breakPointerTime = getTimeIntervalFromNow();
-                Log.e("wrong", lastTemperature.getBeanTemp() + "->" + Utils.getTimeWithFormat(breakPointerTime));
+                Log.e("wrong", lastTemperature.getBeanTemp() + "->" + FormatUtils.getTimeWithFormat(breakPointerTime));
                 return isBreakPointer = true;
             }
         }

@@ -11,15 +11,14 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.pojo.BeanInfo;
 import com.dhy.coffeesecret.ui.mine.HistoryLineActivity;
 import com.dhy.coffeesecret.utils.T;
-import com.dhy.coffeesecret.utils.UIUtils;
-import com.dhy.coffeesecret.utils.UnitConvert;
+import com.dhy.coffeesecret.utils.SystemStatusBarUtils;
 import com.dhy.coffeesecret.utils.Utils;
+import com.facebook.rebound.ui.Util;
 
 import java.util.ArrayList;
 
@@ -78,7 +77,7 @@ public class BeanInfoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_bean_info);
         ButterKnife.bind(this);
 
-        UIUtils.steepToolBar(this);
+        SystemStatusBarUtils.steepToolBar(this);
         beanInfo = (BeanInfo) getIntent().getSerializableExtra("beanInfo");
         init();
         infoActivity = this;
@@ -95,7 +94,7 @@ public class BeanInfoActivity extends AppCompatActivity {
     }
 
     private void init() {
-        editButtonTrans = UnitConvert.dp2px(getResources(), 25);
+        editButtonTrans = Util.dpToPx(25, getResources());
 
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override

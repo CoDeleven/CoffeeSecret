@@ -20,7 +20,7 @@ import com.dhy.coffeesecret.pojo.BakeReportProxy;
 import com.dhy.coffeesecret.pojo.BeanInfoSimple;
 import com.dhy.coffeesecret.ui.cup.LinesSelectedActivity;
 import com.dhy.coffeesecret.ui.device.ReportActivity;
-import com.dhy.coffeesecret.utils.Utils;
+import com.dhy.coffeesecret.utils.ConvertUtils;
 import com.dhy.coffeesecret.views.BaseChart4Coffee;
 
 import java.util.List;
@@ -175,7 +175,7 @@ public class BakeInfoFragment extends Fragment implements View.OnClickListener {
                 TextView tv_process = (TextView) inflate.findViewById(R.id.tv_process);
 
                 tv_name.setText(simple.getBeanName());
-                tv_use.setText(Utils.getCrspWeightValue(simple.getUsage()) + MyApplication.weightUnit);
+                tv_use.setText(ConvertUtils.getCrspWeightValue(simple.getUsage()) + MyApplication.weightUnit);
                 tv_country.setText(simple.getCountry());
                 tv_manor.setText(simple.getManor());
                 tv_altitude.setText(simple.getAltitude());
@@ -198,9 +198,9 @@ public class BakeInfoFragment extends Fragment implements View.OnClickListener {
         if (mBakeReport != null && mDevTime != null) {
             mDevTime.setText(mBakeReport.getDevelopmentTime());
             mDevRate.setText(mBakeReport.getDevelopmentRate() + "%");
-            mEndTemp.setText(Utils.getCrspTempratureValue(mBakeReport.getEndTemperature()) + MyApplication.temperatureUnit);
-            mStartTemp.setText(Utils.getCrspTempratureValue(mBakeReport.getStartTemperature()) + MyApplication.temperatureUnit);
-            mEnvTime.setText(Utils.getCrspTempratureValue(mBakeReport.getAmbientTemperature()) + MyApplication.temperatureUnit);
+            mEndTemp.setText(ConvertUtils.getCrspTemperatureValue(mBakeReport.getEndTemperature()) + MyApplication.temperatureUnit);
+            mStartTemp.setText(ConvertUtils.getCrspTemperatureValue(mBakeReport.getStartTemperature()) + MyApplication.temperatureUnit);
+            mEnvTime.setText(ConvertUtils.getCrspTemperatureValue(mBakeReport.getAmbientTemperature()) + MyApplication.temperatureUnit);
 
             BakeReportProxy proxy = new BakeReportProxy(mBakeReport);
             mChart.setTemperatureSet(proxy.getBakeReport().getTemperatureSet());

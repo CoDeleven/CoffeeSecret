@@ -10,7 +10,7 @@ import com.dhy.coffeesecret.pojo.BeanInfoSimple;
 import com.dhy.coffeesecret.pojo.Temperature;
 import com.dhy.coffeesecret.services.interfaces.IBluetoothOperator;
 import com.dhy.coffeesecret.ui.device.DeviceFragment;
-import com.dhy.coffeesecret.utils.Utils;
+import com.dhy.coffeesecret.utils.ConvertUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -104,7 +104,7 @@ public class Presenter4Device extends BaseBlePresenter<IDeviceView, Model4Device
         }
         // 转换为统一单位kg
         for (BeanInfoSimple simple : temporaryBeanInfo) {
-            simple.setUsage(Utils.getReversed2DefaultWeight(simple.getUsage()) + "");
+            simple.setUsage(ConvertUtils.getReversed2DefaultWeight(simple.getUsage()) + "");
         }
         // 设置设备名
         proxy.setDevice(mBluetoothOperator.getConnectedDevice().getName());

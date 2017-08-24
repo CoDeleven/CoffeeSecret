@@ -13,9 +13,9 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.dhy.coffeesecret.R;
-import com.dhy.coffeesecret.utils.UnitConvert;
 import com.dhy.coffeesecret.utils.Utils;
 import com.dhy.coffeesecret.views.CircleSeekBar;
+import com.facebook.rebound.ui.Util;
 import com.github.mikephil.charting.data.Event;
 
 import butterknife.Bind;
@@ -130,7 +130,7 @@ public class FireWindDialog extends DialogFragment implements CircleSeekBar.OnSe
     @Override
     public void onResume() {
         super.onResume();
-        getDialog().getWindow().setLayout(UnitConvert.dp2px(getResources(), 400), UnitConvert.dp2px(getResources(), 250));
+        getDialog().getWindow().setLayout(Util.dpToPx(400, getResources()), Util.dpToPx(250, getResources()));
     }
 
     @Override

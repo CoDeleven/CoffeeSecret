@@ -25,7 +25,6 @@ import com.dhy.coffeesecret.pojo.BeanInfoSimple;
 import com.dhy.coffeesecret.ui.device.DialogBeanSelected;
 import com.dhy.coffeesecret.ui.device.LineSelectedActivity;
 import com.dhy.coffeesecret.ui.device.adapter.BeanSelectAdapter;
-import com.dhy.coffeesecret.utils.SettingTool;
 import com.dhy.coffeesecret.utils.T;
 import com.dhy.coffeesecret.views.DividerDecoration;
 
@@ -70,7 +69,6 @@ public class BakeDialog extends DialogFragment implements BeanSelectAdapter.MyBu
     private String unit;
     
     public BakeDialog(){
-
     }
 
     @Nullable
@@ -83,6 +81,7 @@ public class BakeDialog extends DialogFragment implements BeanSelectAdapter.MyBu
         Bundle bundle = getArguments();
         if(bundle != null){
             beanInfos = (ArrayList<BeanInfoSimple>)bundle.getSerializable("beanInfos");
+            unit = bundle.getString("appWeightUnit");
         }
         if(beanInfos == null){
             beanInfos = new ArrayList<>();
@@ -221,7 +220,7 @@ public class BakeDialog extends DialogFragment implements BeanSelectAdapter.MyBu
      * @return
      */
     private float getDefaultWeight() {
-        unit = SettingTool.getConfig(getContext()).getWeightUnit();
+        // unit = SettingTool.getConfig().getWeightUnit();
         //默认5,根据单位乘1000或者500
         float defaultWeight = -1;
         if (unit.equals("g")) {

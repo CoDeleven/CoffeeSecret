@@ -18,7 +18,7 @@ import com.dhy.coffeesecret.ui.device.BakeActivity;
 import com.dhy.coffeesecret.ui.device.DeviceFragment;
 import com.dhy.coffeesecret.ui.mine.MineFragment;
 import com.dhy.coffeesecret.utils.T;
-import com.dhy.coffeesecret.utils.UIUtils;
+import com.dhy.coffeesecret.utils.SystemStatusBarUtils;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         initParam();
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-        UIUtils.steepToolBar(this);
+        SystemStatusBarUtils.steepToolBar(this);
     }
 
     public void changeBakingTab() {

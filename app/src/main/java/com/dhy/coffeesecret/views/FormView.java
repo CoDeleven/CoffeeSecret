@@ -7,7 +7,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.dhy.coffeesecret.pojo.BakeReport;
-import com.dhy.coffeesecret.utils.UnitConvert;
+import com.dhy.coffeesecret.utils.ConvertUtils;
 
 import java.util.List;
 
@@ -50,7 +50,7 @@ public class FormView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         paint = new Paint();
-        paint.setTextSize(UnitConvert.sp2px(getResources(), 13));
+        paint.setTextSize(ConvertUtils.spToPx(getResources(), 13));
 /*        for(BakeReport report: reports){
             canvas.drawText();
         }*/

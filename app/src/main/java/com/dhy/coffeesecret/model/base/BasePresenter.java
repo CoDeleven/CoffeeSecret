@@ -60,4 +60,10 @@ public abstract class BasePresenter <V extends IBaseView, M extends BaseModel> i
     public V getView(){
         return this.mViewOperator;
     }
+    public String getAppWeightUnit(){
+        return this.mModelOperator.getAppConfig().getWeightUnit();
+    }
+    public String getAppTemperatureUnit(){
+        return this.mModelOperator.getAppConfig().getTempratureUnit();
+    }
 }

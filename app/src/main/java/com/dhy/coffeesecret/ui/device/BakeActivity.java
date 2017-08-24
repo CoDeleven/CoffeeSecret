@@ -29,16 +29,16 @@ import com.dhy.coffeesecret.model.chart.Presenter4Chart;
 import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.pojo.BakeReportProxy;
 import com.dhy.coffeesecret.pojo.Temperature;
-import com.dhy.coffeesecret.pojo.UniversalConfiguration;
 import com.dhy.coffeesecret.ui.device.fragments.FireWindDialog;
 import com.dhy.coffeesecret.ui.device.fragments.Other;
 import com.dhy.coffeesecret.ui.device.record.RecorderSystem;
+import com.dhy.coffeesecret.utils.ConvertUtils;
+import com.dhy.coffeesecret.utils.FormatUtils;
 import com.dhy.coffeesecret.utils.FragmentTool;
-import com.dhy.coffeesecret.utils.SettingTool;
-import com.dhy.coffeesecret.utils.UnitConvert;
 import com.dhy.coffeesecret.utils.Utils;
 import com.dhy.coffeesecret.views.BaseChart4Coffee;
 import com.dhy.coffeesecret.views.DevelopBar;
+import com.facebook.rebound.ui.Util;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.Event;
 
@@ -130,10 +130,10 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
     private Presenter4BakeActivity mPresenter = Presenter4BakeActivity.newInstance();
     private Presenter4Chart mChartPresenter = Presenter4Chart.newInstance();
     private Presenter4DevelopBar mDevelopBarPresenter = Presenter4DevelopBar.newInstance();
-    private boolean enableDoubleConfirm;
+    // private boolean enableDoubleConfirm;
     private boolean isDoubleClick;
     private View curStatusView;
-    private UniversalConfiguration mConfig;
+    // private UniversalConfiguration mConfig;
     private FragmentTool fragmentTool;
     private BakeReportProxy referTempratures;
     // 执行UI操作
@@ -173,17 +173,17 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
 
     private void updateTemperatureText(Temperature temperature) {
         // 所有用户可见性数值均进行转换
-        idBakingBeanTemp.setText(Utils.getCrspTempratureValue(temperature.getBeanTemp() + "") + temperatureUnit);
+        idBakingBeanTemp.setText(ConvertUtils.getCrspTemperatureValue(temperature.getBeanTemp() + "") + temperatureUnit);
         idBakingAccBeanTempBefore.setText(Utils.getCommaBefore(temperature.getAccBeanTemp()));
         idBakingAccBeanTempAfter.setText(Utils.getCommaAfter(temperature.getAccBeanTemp()));
         idTempUnit0.setText(temperatureUnit + "/min");
 
-        idBakingInwindTemp.setText(Utils.getCrspTempratureValue(temperature.getInwindTemp() + "") + temperatureUnit);
+        idBakingInwindTemp.setText(ConvertUtils.getCrspTemperatureValue(temperature.getInwindTemp() + "") + temperatureUnit);
         idBakingAccInwindTempBefore.setText(Utils.getCommaBefore(temperature.getAccInwindTemp()));
         idBakingAccInwindTempAfter.setText(Utils.getCommaAfter(temperature.getAccInwindTemp()));
         idTempUnit1.setText(temperatureUnit + "/min");
 
-        idBakingOutwindTemp.setText(Utils.getCrspTempratureValue(temperature.getOutwindTemp() + "") + temperatureUnit);
+        idBakingOutwindTemp.setText(ConvertUtils.getCrspTemperatureValue(temperature.getOutwindTemp() + "") + temperatureUnit);
         idBakingAccOutwindTempBefore.setText(Utils.getCommaBefore(temperature.getAccOutwindTemp()));
         idBakingAccOutwindTempAfter.setText(Utils.getCommaAfter(temperature.getAccOutwindTemp()));
         idTempUnit2.setText(temperatureUnit + "/min");
@@ -195,7 +195,7 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
     private void updateTimeText(int curStatus) {
         // 转换成秒
         int now = ((int) (System.currentTimeMillis() - RecorderSystem.getStartTime()) / 1000);
-        untilTime.setText(Utils.getTimeWithFormat(now));
+        untilTime.setText(FormatUtils.getTimeWithFormat(now));
         if (curStatus == DevelopBar.FIRST_BURST) {
             developTime.setText(mDevelopBarPresenter.getDevelopTimeString());
             developRate.setText("发展率：" + mDevelopBarPresenter.getDevelopRateString() + "%");
@@ -268,9 +268,6 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         setContentView(R.layout.activity_bake);
         ButterKnife.bind(this);
-
-        mConfig = SettingTool.getConfig(this);
-        enableDoubleConfirm = mConfig.isDoubleClick();
 
         init();
         // 测试用
@@ -383,7 +380,8 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
     private PopupWindow getPopupwindow() {
         if (popupWindow == null) {
             popupOperator = getLayoutInflater().inflate(R.layout.bake_lines_operator, null, false);
-            popupWindow = new PopupWindow(popupOperator, UnitConvert.dp2px(getResources(), 86), UnitConvert.dp2px(getResources(), 150), true);
+
+            popupWindow = new PopupWindow(popupOperator, Util.dpToPx(86, getResources()), Util.dpToPx(150, getResources()), true);
             popupWindow.setAnimationStyle(R.style.PopupWindowAnimation);
             popupOperator.setOnTouchListener(new View.OnTouchListener() {
                 @Override
@@ -412,7 +410,7 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         // 如果启用了双点击生效
-        if (enableDoubleConfirm && R.id.id_baking_end == v.getId()) {
+        if (mPresenter.isEnableDoubleClick() && R.id.id_baking_end == v.getId()) {
             doubleClickConfirm(v);
         } else {
             // 执行事件的分发
@@ -560,6 +558,7 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
         mPresenter.clearBakeReport();
         mPresenter.resetBluetoothListener();
         mChartPresenter.clearReferLine();
+
         finish();
         return true;
     }
@@ -598,11 +597,11 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
     protected void onDestroy() {
         super.onDestroy();
         Log.e(TAG, "onDestroy: BakeActivity被销毁:" + this.toString());
-        if (!mPresenter.isMinimized()) {
+/*        if (!mPresenter.isMinimized()) {
             if (this == mPresenter.getCurOperatorView()) {
                 mPresenter.resetBluetoothListener();
             }
-        }
+        }*/
     }
 
     /**

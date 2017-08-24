@@ -9,35 +9,16 @@ import com.bugtags.library.Bugtags;
 import com.bugtags.library.BugtagsOptions;
 import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.pojo.BakeReportProxy;
-import com.dhy.coffeesecret.pojo.BeanInfo;
-import com.dhy.coffeesecret.pojo.CuppingInfo;
 import com.dhy.coffeesecret.pojo.UniversalConfiguration;
 import com.dhy.coffeesecret.services.BluetoothService;
-import com.dhy.coffeesecret.utils.CacheUtils;
-import com.dhy.coffeesecret.utils.HttpParser;
-import com.dhy.coffeesecret.utils.HttpUtils;
-import com.dhy.coffeesecret.utils.SPPrivateUtils;
 import com.dhy.coffeesecret.utils.SettingTool;
-import com.dhy.coffeesecret.utils.URLs;
-import com.google.gson.Gson;
 import com.qiniu.pili.droid.streaming.StreamingEnv;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import cn.jesse.nativelogger.Logger;
 import cn.jesse.nativelogger.NLogger;
 import cn.jesse.nativelogger.formatter.SimpleFormatter;
 import cn.jesse.nativelogger.logger.LoggerLevel;
 import cn.jesse.nativelogger.util.CrashWatcher;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
-
-import static com.dhy.coffeesecret.utils.HttpUtils.getRequest;
 
 /**
  * Created by CoDeleven on 17-3-6.
@@ -46,25 +27,11 @@ import static com.dhy.coffeesecret.utils.HttpUtils.getRequest;
 public class MyApplication extends Application {
     public static String weightUnit;
     public static String temperatureUnit;
-    private static Map<String, BeanInfo> beanInfos = new HashMap<>();
-    private static Map<String, CuppingInfo> cupInfos = new HashMap<>();
-    private static Map<String, BakeReport> bakeReports = new HashMap<>();
-    private static String url = "-1";
-    private static CacheUtils cacheUtils;
     private static BakeReportProxy BAKE_REPORT;
     private static SQLiteDatabase country2Continent;
-    private String user;
 
     public MyApplication() {
         super();
-    }
-
-    public static void setUrl(String temp) {
-        url = temp;
-    }
-
-    public static SQLiteDatabase getCountry2Continent() {
-        return country2Continent;
     }
 
     public static void setCountry2Continent(SQLiteDatabase country2Continent) {
@@ -133,161 +100,6 @@ public class MyApplication extends Application {
         initLogger();
     }
 
-    // 每次进入应用时进行校验
-    private void init() {
-        user = SPPrivateUtils.getString(this, "user", "-1");
-        int version = SPPrivateUtils.getInt(this, "version", -1);
-
-        // 模拟请求（此时没有用户类）
-        String json = "{user:\"test\", version:\"" + version + "}";
-        RequestBody requestBody = RequestBody.create(HttpUtils.TYPE, json);
-        Request request = new Request.Builder().url(url).post(requestBody).build();
-
-        // TODO 从服务器获取版本
-/*        HttpUtils.enqueue(request, new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                // TODO 获取失败的请求
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                // TODO 获取成功
-                if()
-            }
-        });*/
-    }
-
-    /**
-     * 获取所有的bakeReports
-     *
-     * @return
-     */
-    public Map<String, ? extends BakeReport> getBakeReports() {
-        if (bakeReports.isEmpty()) {
-            // 设置获取所有烘焙报告的url
-            url = URLs.GET_ALL_BAKE_REPORT;
-            // 进行初始化
-            initMap(BakeReport.class);
-        }
-        return bakeReports;
-    }
-
-    /**
-     * 获取所有豆子信息
-     *
-     * @return
-     */
-    public Map<String, ? extends BeanInfo> getBeanInfos() {
-        if (beanInfos.isEmpty()) {
-            url = URLs.GET_ALL_BEAN_INFO;
-            initMap(BeanInfo.class);
-        }
-        return beanInfos;
-    }
-
-    /**
-     * 获取所有杯测信息
-     *
-     * @return
-     */
-    public Map<String, ? extends CuppingInfo> getCupInfos() {
-        if (cupInfos.isEmpty()) {
-            url = URLs.GET_ALL_CUPPING;
-            initMap(CuppingInfo.class);
-        }
-        return cupInfos;
-    }
-
-    /**
-     * 初始化需要的文件
-     */
-    private void initMap(Class clazz) {
-        boolean status = false;
-        if (cacheUtils == null) {
-            cacheUtils = CacheUtils.getCacheUtils(this);
-        }
-        // TODO 这里应该进行版本校验
-        if (false) {
-
-        }
-        if (clazz == BakeReport.class) {
-            bakeReports.putAll(cacheUtils.getListObjectFromCache(clazz));
-            if (bakeReports.size() == 0) {
-                status = true;
-            }
-        } else if (clazz == CuppingInfo.class) {
-            cupInfos.putAll(cacheUtils.getListObjectFromCache(clazz));
-            if (cupInfos.size() == 0) {
-                status = true;
-            }
-        } else if (clazz == BeanInfo.class) {
-            beanInfos.putAll(cacheUtils.getListObjectFromCache(clazz));
-            if (beanInfos.size() == 0) {
-                status = true;
-            }
-        }
-        if (status) {
-            initMapFromServer(clazz);
-        }
-    }
-
-    /**
-     * 从服务器获取对应类型的信息
-     *
-     * @param clazz 类型
-     */
-    public void initMapFromServer(final Class clazz) {
-        HttpUtils.enqueue(getRequest(url), new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                String temp = response.body().string();
-                Map<String, Object> maps = new HashMap<>();
-                if (clazz == BakeReport.class) {
-                    bakeReports.putAll(HttpParser.getBakeReports(temp));
-                    maps.putAll(bakeReports);
-                } else if (clazz == BeanInfo.class) {
-                    beanInfos.putAll(HttpParser.getBeanInfos(temp));
-                    maps.putAll(beanInfos);
-                } else if (clazz == CuppingInfo.class) {
-                    cupInfos.putAll(HttpParser.getCuppingInfos(temp));
-                    maps.putAll(cupInfos);
-                }
-                if (cacheUtils == null) {
-                    cacheUtils = CacheUtils.getCacheUtils(getApplicationContext());
-                }
-                for (String key : maps.keySet()) {
-                    cacheUtils.saveObject(key, new Gson().toJson(maps.get(key)), clazz);
-                }
-            }
-        });
-    }
-
-    /**
-     * 获取该类的前缀
-     *
-     * @param clazz 类
-     * @return 对应Clazz的前缀
-     */
-    private String getPrefix(Class clazz) {
-        if (clazz == BakeReport.class) {
-            url = URLs.GET_ALL_BAKE_REPORT;
-            return CacheUtils.BAKE_REPORT_PREFIX;
-        } else if (clazz == BeanInfo.class) {
-            url = URLs.GET_ALL_BEAN_INFO;
-            return CacheUtils.BEAN_INFO_PREFIX;
-        } else if (clazz == CuppingInfo.class) {
-            url = URLs.GET_ALL_CUPPING;
-            return CacheUtils.CUP_INFO_PREFEX;
-        }
-        return null;
-    }
-
     public void setBakeReport(BakeReport bakeReport) {
         BAKE_REPORT = new BakeReportProxy(bakeReport);
     }
@@ -310,7 +122,7 @@ public class MyApplication extends Application {
     }
 
     public void initUnit() {
-        UniversalConfiguration config = SettingTool.getConfig(this);
+        UniversalConfiguration config = SettingTool.getConfig();
         weightUnit = config.getWeightUnit();
         temperatureUnit = config.getTempratureUnit();
     }

@@ -1,6 +1,7 @@
 package com.dhy.coffeesecret.model.base;
 
 import com.dhy.coffeesecret.pojo.BakeReportProxy;
+import com.dhy.coffeesecret.pojo.UniversalConfiguration;
 
 /**
  * Created by CoDeleven on 17-8-1.
@@ -24,4 +25,8 @@ interface IBaseModel {
      * 请确保curBakingReport为空
      */
     void initBakeReport();
+
+    UniversalConfiguration getAppConfig();
+
+    void updateAppConfig(UniversalConfiguration appConfig);
 }

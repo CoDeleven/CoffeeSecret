@@ -5,7 +5,6 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -14,7 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.dhy.coffeesecret.R;
-import com.dhy.coffeesecret.utils.DensityUtils;
+import com.facebook.rebound.ui.Util;
 
 import java.util.ArrayList;
 
@@ -95,8 +94,8 @@ public class QuickEventAdapter extends FootViewAdapter<RecyclerView.ViewHolder> 
                     case MotionEvent.ACTION_CANCEL:
 //                        Log.i(TAG, "onTouch: up = "  + (lastX - event.getX()));
 //                        Log.i(TAG, "onTouch: viewX = "  + DensityUtils.px2dp(context, qeHolder.quickEventLayout.getX()));
-                        float x = DensityUtils.dp2px(context, qeHolder.quickEventLayout.getX());
-                        if (x > DensityUtils.dp2px(context, -35)) {
+                        float x = Util.dpToPx(qeHolder.quickEventLayout.getX(), context.getResources());
+                        if (x > Util.dpToPx(-35, context.getResources())) {
                             startAnimation(x, 0, qeHolder);
                         } else {
                             startAnimation(x, -70, qeHolder);
@@ -118,7 +117,7 @@ public class QuickEventAdapter extends FootViewAdapter<RecyclerView.ViewHolder> 
      */
     public void startAnimation(float x, float limitX, final QuickEventViewHolder qeHolder) {
         ValueAnimator anim = ValueAnimator.ofFloat(x
-                , DensityUtils.dp2px(context, limitX));
+                , Util.dpToPx(limitX, context.getResources()));
         anim.setDuration(300);
         anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override

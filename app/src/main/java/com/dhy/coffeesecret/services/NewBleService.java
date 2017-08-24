@@ -19,7 +19,7 @@ import com.dhy.coffeesecret.services.interfaces.IBleConnCallback;
 import com.dhy.coffeesecret.services.interfaces.IBleDataCallback;
 import com.dhy.coffeesecret.services.interfaces.IBleScanCallback;
 import com.dhy.coffeesecret.services.interfaces.IBluetoothOperator;
-import com.dhy.coffeesecret.utils.Utils;
+import com.dhy.coffeesecret.utils.ConvertUtils;
 
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -68,11 +68,12 @@ public class NewBleService implements IBluetoothOperator, DataDigger4Ble.IBleWRO
             NLogger.i(TAG, "onConnectSuccess():连接成功");
             NewBleService.this.mCurConnectedDevice = gatt.getDevice();
             isConnected = true;
+            // 保存这次连接的地址，便于下次重连
+            mLastConnectedDevice = mCurConnectedDevice.getAddress();
+
             if(mConnStatusCallback != null){
                 mConnStatusCallback.toConnected();
             }
-            // 保存这次连接的地址，便于下次重连
-            mLastConnectedDevice = mCurConnectedDevice.getAddress();
             // 内部直接实现了discoverServices
         }
 
@@ -82,6 +83,7 @@ public class NewBleService implements IBluetoothOperator, DataDigger4Ble.IBleWRO
                 mConnStatusCallback.toDisconnected();
             }
             isConnected = false;
+            mCurConnectedDevice = null;
             NLogger.e(TAG, "BleGattCallback::onDisConnected(): " + exception.getDescription());
         }
 
@@ -110,7 +112,7 @@ public class NewBleService implements IBluetoothOperator, DataDigger4Ble.IBleWRO
 
         @Override
         public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
-            String hexData = Utils.bytesToHexString(characteristic.getValue());
+            String hexData = ConvertUtils.bytesToHexString(characteristic.getValue());
             periodData += hexData;
             // 判断一个周期是否结束
             if (hexData.endsWith("0a") || hexData.endsWith("65")) {
@@ -274,7 +276,7 @@ public class NewBleService implements IBluetoothOperator, DataDigger4Ble.IBleWRO
             @Override
             public void run() {
                 mBleOperator.writeDevice(PRIMARY_SERVICE.toString(),
-                        TAG_WRITE.toString(), Utils.hexStringToBytes(command),
+                        TAG_WRITE.toString(), ConvertUtils.hexStringToBytes(command),
                         new BleCharacterCallback() {
                             @Override
                             public void onSuccess(BluetoothGattCharacteristic characteristic) {

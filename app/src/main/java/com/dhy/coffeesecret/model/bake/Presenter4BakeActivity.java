@@ -12,6 +12,8 @@ import com.dhy.coffeesecret.pojo.Temperature;
 import com.dhy.coffeesecret.ui.device.BakeActivity;
 import com.dhy.coffeesecret.ui.device.record.BreakPointerRecorder;
 import com.dhy.coffeesecret.ui.device.record.RecorderSystem;
+import com.dhy.coffeesecret.utils.ConvertUtils;
+import com.dhy.coffeesecret.utils.FormatUtils;
 import com.dhy.coffeesecret.utils.Utils;
 import com.dhy.coffeesecret.views.DevelopBar;
 import com.github.mikephil.charting.data.Entry;
@@ -82,6 +84,10 @@ public class Presenter4BakeActivity extends BaseBlePresenter<IBakeView, Model4Ba
         return mEventList;
     }
 
+    public boolean isEnableDoubleClick(){
+        return mModelOperator.getAppConfig().isDoubleClick();
+    }
+
     public void setChartPresenter(Presenter4Chart presenter) {
         this.mChartPresenter = presenter;
     }
@@ -99,7 +105,7 @@ public class Presenter4BakeActivity extends BaseBlePresenter<IBakeView, Model4Ba
         breakPointerRecorder = new BreakPointerRecorder();
         if (curBeanEntry != null) {
             mModelOperator.getCurBakingReport().setStartTemperature(curBeanEntry.getY() + "");
-            mModelOperator.getCurBakingReport().setDate(Utils.data2Timestamp(new Date()));
+            mModelOperator.getCurBakingReport().setDate(FormatUtils.data2Timestamp(new Date()));
             mModelOperator.getCurBakingReport().setAmbientTemperature(Temperature.getEnvTemp() + "");
         }
     }
@@ -148,13 +154,13 @@ public class Presenter4BakeActivity extends BaseBlePresenter<IBakeView, Model4Ba
 
         lastTime = recorderSystem.addTemprature(temperature);
 
-        curBeanEntry = new Entry(lastTime, Utils.getCrspTempratureValue(temperatures[0] + ""));
+        curBeanEntry = new Entry(lastTime, ConvertUtils.getCrspTemperatureValue(temperatures[0] + ""));
 
         // ((IBakeView) (super.mViewOperator)).updateChart(curBeanEntry, BEANLINE);
         mChartPresenter.dynamicAddDataImm(curBeanEntry, BEANLINE, !super.isMinimized());
         for (int i = 1; i < 6; ++i) {
             // ((IBakeView) (super.mViewOperator)).updateChart();
-            mChartPresenter.dynamicAddDataImm(new Entry(lastTime, Utils.getCrspTempratureValue(temperatures[i] + "")), LINE_INDEX[i], !super.isMinimized());
+            mChartPresenter.dynamicAddDataImm(new Entry(lastTime, ConvertUtils.getCrspTemperatureValue(temperatures[i] + "")), LINE_INDEX[i], !super.isMinimized());
         }
         // 更新发展率条的数据
         updateDevelopStatus(tCurStatus);

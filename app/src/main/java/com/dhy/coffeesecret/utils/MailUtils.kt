@@ -60,3 +60,4 @@ fun sendMessageByLogPath(path:String?){
     transport.sendMessage(msg, arrayOf(InternetAddress("codeleven@vip.qq.com")))
 
 }
+

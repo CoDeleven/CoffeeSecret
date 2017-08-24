@@ -1,19 +1,3 @@
-/*
- * Copyright (C) 2013 readyState Software Ltd
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.dhy.coffeesecret.utils;
 
 import android.annotation.SuppressLint;
@@ -33,16 +17,87 @@ import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.FrameLayout.LayoutParams;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
+import com.dhy.coffeesecret.R;
+
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 /**
- * Class to manage status and navigation bar tint effects when using KitKat
- * translucent system UI modes.
+ * Created by 孤月悬空 on 2015/11/30.
  */
-@SuppressWarnings("ResourceType")
-public class SystemBarTintManager {
+public class SystemStatusBarUtils {
+
+    /**
+     * @return : 获取状态栏的高度
+     */
+    public static int getStatusBarHeight() {
+        Class<?> c;
+        Object obj;
+        Field field;
+        int x = 0;
+        try {
+            c = Class.forName("com.android.internal.R$dimen");
+            obj = c.newInstance();
+            field = c.getField("status_bar_height");
+            x = Integer.parseInt(field.get(obj).toString());
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+        return x;
+    }
+
+    /**
+     * 如果系统为4.4以上 ，则隐藏状态栏
+     *
+     * @param activity activity
+     * @param resource 资源文件整体的 layout
+     */
+    public static void hideTitleBar(Activity activity, int resource) {
+        if (Build.VERSION.SDK_INT > 18) {  // 如果系统为4.4以上 ，则隐藏状态栏
+            Window window = activity.getWindow();
+            window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            LinearLayout whole_layout = (LinearLayout) activity.findViewById(resource);  // 页面整体布局
+            whole_layout.setPadding(0, activity.getResources().getDimensionPixelSize(getStatusBarHeight()), 0, 0);
+        }
+    }
+
+    public static void steepToolBar(Activity activity) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            setTranslucentStatus(true, activity);
+            SystemBarTintManager tintManager = new SystemBarTintManager(activity);
+            tintManager.setStatusBarTintEnabled(true);
+            //此处可以重新指定状态栏颜色
+            tintManager.setStatusBarTintResource(R.color.colorPrimary);
+        }
+    }
+
+    public static void steepToolBar(Activity activity, int colorResource) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            SystemBarTintManager tintManager = new SystemBarTintManager(activity);
+            tintManager.setStatusBarTintEnabled(true);
+            //此处可以重新指定状态栏颜色
+            tintManager.setStatusBarTintResource(colorResource);
+        }
+    }
+
+    @TargetApi(19)
+    private static void setTranslucentStatus(boolean on, Activity activity) {
+        Window win = activity.getWindow();
+        WindowManager.LayoutParams winParams = win.getAttributes();
+        final int bits = WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
+        if (on) {
+            winParams.flags |= bits;
+        } else {
+            winParams.flags &= ~bits;
+        }
+        win.setAttributes(winParams);
+    }
+
+}
+class SystemBarTintManager {
 
     /**
      * The default system bar tint color value.
@@ -319,7 +374,7 @@ public class SystemBarTintManager {
 
     private void setupStatusBarView(Context context, ViewGroup decorViewGroup) {
         mStatusBarTintView = new View(context);
-        LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, mConfig.getStatusBarHeight());
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, mConfig.getStatusBarHeight());
         params.gravity = Gravity.TOP;
         if (mNavBarAvailable && !mConfig.isNavigationAtBottom()) {
             params.rightMargin = mConfig.getNavigationBarWidth();
@@ -332,12 +387,12 @@ public class SystemBarTintManager {
 
     private void setupNavBarView(Context context, ViewGroup decorViewGroup) {
         mNavBarTintView = new View(context);
-        LayoutParams params;
+        FrameLayout.LayoutParams params;
         if (mConfig.isNavigationAtBottom()) {
-            params = new LayoutParams(LayoutParams.MATCH_PARENT, mConfig.getNavigationBarHeight());
+            params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, mConfig.getNavigationBarHeight());
             params.gravity = Gravity.BOTTOM;
         } else {
-            params = new LayoutParams(mConfig.getNavigationBarWidth(), LayoutParams.MATCH_PARENT);
+            params = new FrameLayout.LayoutParams(mConfig.getNavigationBarWidth(), FrameLayout.LayoutParams.MATCH_PARENT);
             params.gravity = Gravity.RIGHT;
         }
         mNavBarTintView.setLayoutParams(params);
@@ -350,6 +405,7 @@ public class SystemBarTintManager {
      * Class which describes system bar sizing and other characteristics for the current
      * device configuration.
      */
+    @SuppressWarnings("ResourceType")
     public static class SystemBarConfig {
 
         private static final String STATUS_BAR_HEIGHT_RES_NAME = "status_bar_height";

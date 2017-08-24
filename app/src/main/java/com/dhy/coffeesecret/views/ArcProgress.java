@@ -12,7 +12,8 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.dhy.coffeesecret.R;
-import com.dhy.coffeesecret.utils.UnitConvert;
+import com.dhy.coffeesecret.utils.ConvertUtils;
+import com.facebook.rebound.ui.Util;
 
 /**
  * Created by CoDeleven on 17-1-19.
@@ -52,7 +53,7 @@ public class ArcProgress extends View {
 
         // 初始化arcProgress文字画笔
         textPaint.setColor(Color.BLACK);
-        textPaint.setTextSize(UnitConvert.sp2px(res, 20));
+        textPaint.setTextSize(ConvertUtils.spToPx(res, 20));
     }
 
     /**
@@ -68,7 +69,7 @@ public class ArcProgress extends View {
         mSecondArcRadius = typedArray.getDimension(R.styleable.ArcProgress_secondCircleRadius, 0);
         mRotateAngle = typedArray.getFloat(R.styleable.ArcProgress_rotateAngle, 0);
 
-        strokeWidth = UnitConvert.dp2px(res, 3f);
+        strokeWidth = Util.dpToPx(3f, res);
     }
 
     @Override
