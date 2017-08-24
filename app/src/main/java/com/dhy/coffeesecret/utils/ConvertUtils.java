@@ -1,6 +1,7 @@
 package com.dhy.coffeesecret.utils;
 
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.util.Log;
 
 import com.dhy.coffeesecret.MyApplication;
@@ -155,5 +156,25 @@ public class ConvertUtils {
                 }
             }
         }).start();
+    }
+
+    public static int toDecimalColor(Resources resources, int colorDrawableId){
+        String foo = "#" + Integer.toHexString(resources.getColor(colorDrawableId));
+        return Color.parseColor(foo);
+    }
+    public static String toHexColor(int color) {
+        String R, G, B;
+        StringBuffer sb = new StringBuffer();
+        R = Integer.toHexString(Color.red(color));
+        G = Integer.toHexString(Color.green(color));
+        B = Integer.toHexString(Color.blue(color));
+        R = R.length() == 1 ? "0" + R : R;
+        G = G.length() == 1 ? "0" + G : G;
+        B = B.length() == 1 ? "0" + B : B;
+        sb.append("#");
+        sb.append(R.toUpperCase());
+        sb.append(G.toUpperCase());
+        sb.append(B.toUpperCase());
+        return sb.toString();
     }
 }

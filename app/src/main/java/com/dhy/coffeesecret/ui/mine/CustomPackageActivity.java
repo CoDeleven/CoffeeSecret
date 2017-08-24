@@ -3,8 +3,6 @@ package com.dhy.coffeesecret.ui.mine;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -22,16 +20,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dhy.coffeesecret.R;
+import com.dhy.coffeesecret.model.line_color.Presenter4ColorLine;
 import com.dhy.coffeesecret.pojo.LinesColor;
-import com.dhy.coffeesecret.pojo.UniversalConfiguration;
-import com.dhy.coffeesecret.utils.SettingTool;
 import com.dhy.coffeesecret.utils.T;
 import com.dhy.coffeesecret.views.ColorChooseDialog;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,13 +42,6 @@ public class CustomPackageActivity extends AppCompatActivity {
     private static final int SHOW_EDIT_DIALOG = 222;
     private static final int CHANGE_PREVIEW_COLOR = 333;
     private static final int SHOW_TOAST = 444;
-    public static Integer[] linesColor = {
-            R.color.default_0, R.color.default_1, R.color.default_2
-            , R.color.default_3, R.color.default_4, R.color.default_5, R.color.default_6,
-            R.color.simo_blue300, R.color.simo_green300, R.color.simo_red300, R.color.simo_yellow300,
-            R.color.simo_purple700, R.color.simo_pink700, R.color.simo_limea400, R.color.simo_orange300,
-            R.color.simo_brown300, R.color.simo_grey500, R.color.simo_lightgreena400, R.color.simo_reda700};
-
     @Bind(R.id.btn_back)
     ImageView btnBack;
     @Bind(R.id.title_text)
@@ -92,8 +81,9 @@ public class CustomPackageActivity extends AppCompatActivity {
     private Map<String, Integer> selectedColors;
     private boolean isSaved = false;    // 是否保存标记
     private boolean isEdit = false;     // 是否编辑过的标记
-    private UniversalConfiguration config;
+    // private UniversalConfiguration config;
     private CustomPackageHandler mHandler = new CustomPackageHandler(this);
+    private Presenter4ColorLine mPresenter = Presenter4ColorLine.newInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,32 +94,9 @@ public class CustomPackageActivity extends AppCompatActivity {
         mContext = CustomPackageActivity.this;
         colors = new ArrayList<>();
         selectedColors = new HashMap<>();
-        config = SettingTool.getConfig();
 
-        initParams();
+        // initParams();
         init();
-    }
-
-    private void initParams() {
-        Collections.addAll(colors, linesColor);
-
-        // 放入默认的前7个元素
-        selectedColors.put("colorPreviewBean", R.color.default_0);
-        selectedColors.put("colorPreviewInWind", R.color.default_1);
-        selectedColors.put("colorPreviewOutWind", R.color.default_2);
-        selectedColors.put("colorPreviewAccBean", R.color.default_3);
-        selectedColors.put("colorPreviewAccInWind", R.color.default_4);
-        selectedColors.put("colorPreviewAccOutWind", R.color.default_5);
-        selectedColors.put("colorPreviewEnv", R.color.default_6);
-
-        // 移除上面7个已用的颜色
-        int count = 7;
-        while (count-- != 0) {
-            // 因为ArrayList，删除一个元素后面的元素移前
-            colors.remove(0);
-        }
-
-
     }
 
     private void init() {
@@ -145,7 +112,7 @@ public class CustomPackageActivity extends AppCompatActivity {
                 back();
                 break;
             case R.id.btn_save:
-                save();
+                mHandler.sendEmptyMessage(SHOW_EDIT_DIALOG);
                 break;
             default:
                 msg = new Message();
@@ -155,24 +122,6 @@ public class CustomPackageActivity extends AppCompatActivity {
                 break;
         }
 
-    }
-
-    /**
-     * 保存所有颜色
-     */
-    private void save() {
-        isSaved = true;
-
-        LinesColor linesColor = getLinesColor();
-        config.setBeanColor(Color.parseColor(linesColor.getBeanColor()));
-        config.setInwindColor(Color.parseColor(linesColor.getInwindColor()));
-        config.setOutwindColor(Color.parseColor(linesColor.getOutwindColor()));
-        config.setAccBeanColor(Color.parseColor(linesColor.getAccBeanColor()));
-        config.setAccInwindColor(Color.parseColor(linesColor.getAccInwindColor()));
-        config.setAccOutwindColor(Color.parseColor(linesColor.getAccOutwindColor()));
-        config.setEnvColor(Color.parseColor(linesColor.getEnvColor()));
-
-        mHandler.sendEmptyMessage(SHOW_EDIT_DIALOG);
     }
 
     /**
@@ -196,9 +145,8 @@ public class CustomPackageActivity extends AppCompatActivity {
                                 Toast.makeText(CustomPackageActivity.this, "已存在相同的名字...", Toast.LENGTH_LONG).show();
                                 mHandler.sendEmptyMessage(SHOW_EDIT_DIALOG);
                             } else {
-                                config.setColorPackageName(title);
-                                exit(RESULT_OK, getLinesColor());
-                                SettingTool.saveConfig(config);
+                                mPresenter.save(getResources(), title);
+                                exit(RESULT_OK, mPresenter.getSavedLinesColor());
                             }
                         } else {
                             Toast.makeText(CustomPackageActivity.this, "您尚未输入套餐名称...", Toast.LENGTH_LONG).show();
@@ -226,48 +174,37 @@ public class CustomPackageActivity extends AppCompatActivity {
      */
     private void changePreviewColor(int btnId, int position) {
         isEdit = true;
+        Integer drawableId = mPresenter.getColors().get(position);
         switch (btnId) {
             case R.id.btn_choose_bean:
-                colorPreviewBean.setImageResource(colors.get(position));
-                notifyData("colorPreviewBean", position);
+                colorPreviewBean.setImageResource(drawableId);
+                mPresenter.changePreviewColor("colorPreviewBean", position);
                 break;
             case R.id.btn_choose_in_wind:
-                colorPreviewInWind.setImageResource(colors.get(position));
-                notifyData("colorPreviewInWind", position);
+                colorPreviewInWind.setImageResource(drawableId);
+                mPresenter.changePreviewColor("colorPreviewInWind", position);
                 break;
             case R.id.btn_choose_out_wind:
-                colorPreviewOutWind.setImageResource(colors.get(position));
-                notifyData("colorPreviewOutWind", position);
+                colorPreviewOutWind.setImageResource(drawableId);
+                mPresenter.changePreviewColor("colorPreviewOutWind", position);
                 break;
             case R.id.btn_choose_acc_bean:
-                colorPreviewAccBean.setImageResource(colors.get(position));
-                notifyData("colorPreviewAccBean", position);
+                colorPreviewAccBean.setImageResource(drawableId);
+                mPresenter.changePreviewColor("colorPreviewAccBean", position);
                 break;
             case R.id.btn_choose_acc_in_wind:
-                colorPreviewAccInWind.setImageResource(colors.get(position));
-                notifyData("colorPreviewAccInWind", position);
+                colorPreviewAccInWind.setImageResource(drawableId);
+                mPresenter.changePreviewColor("colorPreviewAccInWind", position);
                 break;
             case R.id.btn_choose_acc_out_wind:
-                colorPreviewAccOutWind.setImageResource(colors.get(position));
-                notifyData("colorPreviewAccOutWind", position);
+                colorPreviewAccOutWind.setImageResource(drawableId);
+                mPresenter.changePreviewColor("colorPreviewAccOutWind", position);
                 break;
             case R.id.btn_choose_env:
-                colorPreviewEnv.setImageResource(colors.get(position));
-                notifyData("colorPreviewEnv", position);
+                colorPreviewEnv.setImageResource(drawableId);
+                mPresenter.changePreviewColor("colorPreviewEnv", position);
                 break;
         }
-    }
-
-    // 更新list和map
-    private void notifyData(String key, int position) {
-        colors.add(selectedColors.get(key));
-
-        // 更新 map 中的颜色
-        selectedColors.remove(key);
-        selectedColors.put(key, colors.get(position));
-
-        // 移除已选择的颜色
-        colors.remove(position);
     }
 
     @Override
@@ -285,56 +222,12 @@ public class CustomPackageActivity extends AppCompatActivity {
 
         // 如果单击过保存，那么进入以下判断
         if (isSaved) {
-            exit(RESULT_OK, getLinesColor());
+            exit(RESULT_OK, mPresenter.getSavedLinesColor());
         } else {
             showDialog("您还未保存设置，确定要退出吗？");
         }
     }
 
-/*
-    private boolean isAllSelected() {
-
-        int i = 0;
-        Set<Map.Entry<String, Integer>> colorSet = selectedColors.entrySet();
-        Log.i(TAG, "isAllSelected: colorSet = " + colorSet);
-        Log.i(TAG, "isAllSelected: selectedColor = " + selectedColors);
-        for (Map.Entry<String, Integer> entry : colorSet) {
-            if (entry.getValue() == 0) {
-                i++;
-            }
-        }
-
-        return i == 0;
-    }
-*/
-
-    /**
-     * 获取已选中的颜色
-     *
-     * @return 返回LineColor
-     */
-    private LinesColor getLinesColor() {
-        LinesColor linesColor = new LinesColor();
-        linesColor.setPackageName(config.getColorPackageName());
-        try {
-            linesColor.setBeanColor("#" + Integer.toHexString(getResources().getColor(selectedColors.get("colorPreviewBean"))));
-            linesColor.setInwindColor("#" + Integer.toHexString(getResources().getColor(selectedColors.get("colorPreviewInWind"))));
-            linesColor.setOutwindColor("#" + Integer.toHexString(getResources().getColor(selectedColors.get("colorPreviewOutWind"))));
-            linesColor.setAccBeanColor("#" + Integer.toHexString(getResources().getColor(selectedColors.get("colorPreviewAccBean"))));
-            linesColor.setAccInwindColor("#" + Integer.toHexString(getResources().getColor(selectedColors.get("colorPreviewAccInWind"))));
-            linesColor.setAccOutwindColor("#" + Integer.toHexString(getResources().getColor(selectedColors.get("colorPreviewAccOutWind"))));
-            linesColor.setEnvColor("#" + Integer.toHexString(getResources().getColor(selectedColors.get("colorPreviewEnv"))));
-        } catch (Resources.NotFoundException e) {
-            linesColor.setBeanColor("#1abc9c");
-            linesColor.setInwindColor("#2ecc71");
-            linesColor.setOutwindColor("#3498db");
-            linesColor.setAccBeanColor("#9b59b6");
-            linesColor.setAccInwindColor("#f1c40f");
-            linesColor.setAccOutwindColor("#e67e22");
-            linesColor.setEnvColor("#e74c3c");
-        }
-        return linesColor;
-    }
 
     private void showDialog(String message) {
         new AlertDialog.Builder(mContext)
@@ -381,7 +274,7 @@ public class CustomPackageActivity extends AppCompatActivity {
                     btnId = msg.arg1;
                     Log.e("CustomPackageActivity", "colors:" + colors.size());
                     dialog = new ColorChooseDialog.Builder(activity.mContext)
-                            .setView(colors, new ColorChooseDialog.OnItemClickListener() {
+                            .setView(mPresenter.getColors(), new ColorChooseDialog.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(int position) {
                                     dialog.dismiss();

@@ -5,7 +5,6 @@ import android.util.Log;
 
 import com.dhy.coffeesecret.model.BaseBlePresenter;
 import com.dhy.coffeesecret.model.bake.developbar.Presenter4DevelopBar;
-import com.dhy.coffeesecret.model.base.IBaseView;
 import com.dhy.coffeesecret.model.chart.Presenter4Chart;
 import com.dhy.coffeesecret.pojo.BakeReportProxy;
 import com.dhy.coffeesecret.pojo.Temperature;
@@ -74,10 +73,6 @@ public class Presenter4BakeActivity extends BaseBlePresenter<IBakeView, Model4Ba
         }
 
         return mSelf;
-    }
-
-    public IBaseView getCurOperatorView() {
-        return mViewOperator;
     }
 
     public List<Entry> getEventList() {

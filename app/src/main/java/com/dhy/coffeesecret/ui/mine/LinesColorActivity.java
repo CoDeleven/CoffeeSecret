@@ -93,9 +93,24 @@ public class LinesColorActivity extends AppCompatActivity {
     }
 
     private void getColorsPackages() {
-
         linesColorList = new ArrayList<>();
 
+        Gson gson = new Gson();
+        String listJson = SPPrivateUtils.getString(context, Global.LINES_COLOR_PACKAGE, null);
+
+        if(listJson == null){
+            linesColorList.addAll(generateColorLines4Default());
+        }else{
+            linesColorList = gson.fromJson(listJson, new TypeToken<ArrayList<LinesColor>>() {
+            }.getType());
+            for(LinesColor temp: linesColorList){
+                names.add(temp.getPackageName());
+            }
+        }
+    }
+
+    private List<LinesColor> generateColorLines4Default(){
+        List<LinesColor> colors = new ArrayList<>();
         LinesColor linesColor = new LinesColor();
         linesColor.setPackageName("海洋");
         linesColor.setBeanColor("#654321");
@@ -126,18 +141,11 @@ public class LinesColorActivity extends AppCompatActivity {
         linesColor3.setAccOutwindColor("#758964");
         linesColor3.setEnvColor("#103254");
 
-        linesColorList.add(linesColor);
-        linesColorList.add(linesColor2);
-        linesColorList.add(linesColor3);
+        colors.add(linesColor);
+        colors.add(linesColor2);
+        colors.add(linesColor3);
 
-        Gson gson = new Gson();
-        String listJson = SPPrivateUtils.getString(context, Global.LINES_COLOR_PACKAGE, gson.toJson(linesColorList));
-
-        linesColorList = gson.fromJson(listJson, new TypeToken<ArrayList<LinesColor>>() {
-        }.getType());
-        for(LinesColor temp: linesColorList){
-            names.add(temp.getPackageName());
-        }
+        return colors;
     }
 
     @Override
@@ -145,7 +153,9 @@ public class LinesColorActivity extends AppCompatActivity {
         switch (resultCode) {
             case RESULT_OK:
                 Log.i(TAG, "onActivityResult: resultOk");
+
                 LinesColor linesColor = (LinesColor) data.getSerializableExtra("linesColor");
+
                 Log.i(TAG, "onActivityResult: " + linesColor);
                 linesColorList.add(linesColor);
 

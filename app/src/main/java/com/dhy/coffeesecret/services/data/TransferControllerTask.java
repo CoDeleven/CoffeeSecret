@@ -135,6 +135,8 @@ public class TransferControllerTask implements Runnable {
                 // 因为第一次是从这里开始，所以这里记录一次；
                 // 以后都是acknowledgeData()来记录时间
                 mStartOnePeriodTime = System.currentTimeMillis();
+                startNewTimer();
+
                 // 保存这次读写的类
                 mLatestDataDiggerClazz = mCurDigger.getClass();
                 isWriting = false;

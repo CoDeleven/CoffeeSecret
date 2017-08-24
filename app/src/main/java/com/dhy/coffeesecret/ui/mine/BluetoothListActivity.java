@@ -212,6 +212,8 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
             // 设置进度条可见
             mScanProgress.setVisibility(View.VISIBLE);
         }else{
+            // 打开连接按钮
+            switchButton.setChecked(false);
             mAdapter.clearDevices();
         }
         refreshLayout.setOnRefreshListener(this);
