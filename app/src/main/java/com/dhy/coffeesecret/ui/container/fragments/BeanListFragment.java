@@ -28,11 +28,13 @@ import com.bigkoo.quicksidebar.QuickSideBarTipsView;
 import com.bigkoo.quicksidebar.QuickSideBarView;
 import com.bigkoo.quicksidebar.listener.OnQuickSideBarTouchListener;
 import com.dhy.coffeesecret.R;
+import com.dhy.coffeesecret.model.UniExtraKey;
 import com.dhy.coffeesecret.pojo.BeanInfo;
 import com.dhy.coffeesecret.ui.container.BeanInfoActivity;
 import com.dhy.coffeesecret.ui.container.adapters.BeanListAdapter;
 import com.dhy.coffeesecret.ui.container.adapters.CountryListAdapter;
 import com.dhy.coffeesecret.ui.container.adapters.HandlerAdapter;
+import com.dhy.coffeesecret.ui.device.fragments.OnItemClickListener;
 import com.dhy.coffeesecret.utils.HttpUtils;
 import com.dhy.coffeesecret.utils.T;
 import com.dhy.coffeesecret.utils.TestData;
@@ -45,6 +47,7 @@ import com.google.gson.reflect.TypeToken;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -96,7 +99,7 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
     private Handler mHandler = new BeanListHandler(this);
 
     // 因为此处需要用到position，而继承不需要
-    private int curPosition = -1;
+    // private int curPosition = -1;
 
     public BeanListFragment() {
         super();
@@ -126,12 +129,17 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         beanListRecycler.setLayoutManager(layoutManager);
 
-        beanListAdapter = new BeanListAdapter(context, coffeeBeanInfos, new BeanListAdapter.OnItemClickListener() {
+        beanListAdapter = new BeanListAdapter(context, coffeeBeanInfos, new OnItemClickListener() {
             @Override
+            public void onItemClick(Serializable serializable) {
+                hook((BeanInfo)serializable);
+
+            }
+
+/*            @Override
             public void onItemClicked(int position) {
                 curPosition = position;
-                hook(coffeeBeanInfos.get(position));
-            }
+            }*/
         });
 
         beanListRecycler.setAdapter(beanListAdapter);
@@ -169,9 +177,10 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
     // 钩子函数，时间紧急，使用继承
     public void hook(BeanInfo beanInfo) {
         Intent intent = new Intent(context, BeanInfoActivity.class);
-        intent.putExtra("beanInfo", beanInfo);
-        startActivityForResult(intent, curPosition);
+        intent.putExtra(UniExtraKey.EXTRA_BEAN_INFO.getKey(), beanInfo);
+        // startActivityForResult(intent, curPosition);
         getActivity().overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
+        startActivity(intent);
     }
 
     @TargetApi(Build.VERSION_CODES.CUPCAKE)

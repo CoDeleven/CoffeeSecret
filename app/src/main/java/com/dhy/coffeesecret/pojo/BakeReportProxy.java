@@ -30,6 +30,16 @@ public class BakeReportProxy implements Serializable{
     private float rawBeanWeight;
     private Map<String, String> events;
 
+    @Override
+    public String toString() {
+        return "BakeReportProxy{" +
+                "bakeReport=" + bakeReport +
+                ", lines=" + lines +
+                ", entriesWithEvents=" + entriesWithEvents +
+                ", rawBeanWeight=" + rawBeanWeight +
+                ", events=" + events +
+                '}';
+    }
 
     public BakeReportProxy(BakeReport bakeReport) {
         this.bakeReport = bakeReport;

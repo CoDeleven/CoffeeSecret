@@ -18,8 +18,10 @@ import android.widget.LinearLayout;
 import com.astuetz.PagerSlidingTabStrip;
 import com.dhy.coffeesecret.MainActivity;
 import com.dhy.coffeesecret.R;
+import com.dhy.coffeesecret.model.UniExtraKey;
 import com.dhy.coffeesecret.pojo.BeanInfo;
 import com.dhy.coffeesecret.ui.container.fragments.BeanListFragment;
+import com.dhy.coffeesecret.ui.container.fragments.SearchBeanInfoFragment;
 import com.dhy.coffeesecret.ui.container.fragments.SearchFragment;
 import com.dhy.coffeesecret.views.SearchEditText;
 
@@ -70,16 +72,16 @@ public class ContainerFragment extends Fragment {
     public void initView() {
         searchBeanET.setSearchBarListener(new SearchEditText.SearchBarListener() {
             @Override
-            public void starSearchPage() {
+            public void startSearchPage() {
                 FragmentTransaction tx = ((MainActivity) context).getSupportFragmentManager().beginTransaction();
                 tx.setCustomAnimations(R.anim.in_from_right, R.anim.out_to_left);
                 if (searchFragment != null) {
                     isAddSearchFragment = !searchFragment.isRemoved();
                 }
                 if (!isAddSearchFragment) {
-                    searchFragment = new SearchFragment();
+                    searchFragment = new SearchBeanInfoFragment();
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable("beanList", (Serializable) fragments.get(0).getBeaninfoList());
+                    bundle.putSerializable(UniExtraKey.EXTRA_BAKE_REPORT_LIST.getKey(), (Serializable) fragments.get(0).getBeaninfoList());
                     searchFragment.setArguments(bundle);
                     tx.add(R.id.activity_main, searchFragment, "search_bean");
                     isAddSearchFragment = true;

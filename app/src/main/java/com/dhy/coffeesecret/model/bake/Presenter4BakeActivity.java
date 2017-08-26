@@ -22,6 +22,8 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import cn.jesse.nativelogger.NLogger;
+
 import static com.dhy.coffeesecret.model.chart.Model4Chart.ACCBEANLINE;
 import static com.dhy.coffeesecret.model.chart.Model4Chart.ACCINWINDLINE;
 import static com.dhy.coffeesecret.model.chart.Model4Chart.ACCOUTWINDLINE;
@@ -58,6 +60,7 @@ public class Presenter4BakeActivity extends BaseBlePresenter<IBakeView, Model4Ba
 
     private Presenter4BakeActivity() {
         super(Model4Bake.newInstance());
+        NLogger.i(TAG, "当前使用的烘焙报告：" + mModelOperator.getCurBakingReport());
     }
 
     /**
@@ -71,7 +74,6 @@ public class Presenter4BakeActivity extends BaseBlePresenter<IBakeView, Model4Ba
         } else if (mSelf == null) {
             mSelf = new Presenter4BakeActivity();
         }
-
         return mSelf;
     }
 
@@ -135,6 +137,11 @@ public class Presenter4BakeActivity extends BaseBlePresenter<IBakeView, Model4Ba
         mViewOperator.showToast(BluetoothProfile.STATE_DISCONNECTED, "蓝牙已断开，请勿远离...");
         // 通过下面的方法，弹出是否重连的对话框
         mViewOperator.showWarnDialog(BluetoothProfile.STATE_DISCONNECTED);
+    }
+
+    @Override
+    public void toUrgentDisconnected() {
+        toDisconnected();
     }
 
     private void notifyTemperatureByManual(Temperature temperature) {
@@ -263,11 +270,11 @@ public class Presenter4BakeActivity extends BaseBlePresenter<IBakeView, Model4Ba
      */
     private BakeReportProxy handlerData2BakeReport() {
         BakeReportProxy localProxy = getModel().getCurBakingReport();
-        String deviceName = mBluetoothOperator.getConnectedDevice().getName();
+        // String deviceName = mBluetoothOperator.getConnectedDevice().getName();
         // FIXME 建造者模式
 
         localProxy.setTempratureSet(recorderSystem.getTemperatureSet());
-        localProxy.setDevice(deviceName);
+        // localProxy.setDevice(deviceName);
         localProxy.setDevelopmentTime(mDevelopBarPresenter.getDevelopTimeString());
         localProxy.setDevelopmentRate(mDevelopBarPresenter.getDevelopRateString());
         localProxy.setBreakPointerTime(breakPointerRecorder.getbreakPointerTime());
@@ -295,6 +302,7 @@ public class Presenter4BakeActivity extends BaseBlePresenter<IBakeView, Model4Ba
         localProxy.setGlobalAccBeanTemp(recorderSystem.getGlobalAccTemprature());
         localProxy.setEndTemp(curBeanEntry.getY());
 
+        NLogger.i(TAG, "最终生成的报告为：" + localProxy.toString());
         return localProxy;
     }
 

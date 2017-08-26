@@ -21,8 +21,8 @@ public class BakeReport implements Serializable {
     private String device;
     // 熟豆重量
     private String cookedBeanWeight;
-    // 烘焙度
-    private String roastDegree;
+    // 烘焙度, 如果用户没有移动SeekBar导致这里为空,会引发错误
+    private String roastDegree = "0";
     @SerializedName("tempratureSet")
     private TemperatureSet temperatureSet;
 
@@ -275,4 +275,34 @@ public class BakeReport implements Serializable {
         this.avgGlobalBeanTemprature = avgGlobalBeanTemprature;
     }
 
+    @Override
+    public String toString() {
+        return "BakeReport{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", device='" + device + '\'' +
+                ", cookedBeanWeight='" + cookedBeanWeight + '\'' +
+                ", roastDegree='" + roastDegree + '\'' +
+                ", temperatureSet=" + temperatureSet +
+                ", breakPointerTime=" + breakPointerTime +
+                ", breakPointerTemprature=" + breakPointerTemprature +
+                ", avgDryTemprature=" + avgDryTemprature +
+                ", avgDryTime=" + avgDryTime +
+                ", avgFirstBurstTime=" + avgFirstBurstTime +
+                ", avgFirstBurstTemprature=" + avgFirstBurstTemprature +
+                ", avgEndTime=" + avgEndTime +
+                ", avgEndTemprature=" + avgEndTemprature +
+                ", avgAccBeanTemprature=" + avgAccBeanTemprature +
+                ", avgGlobalBeanTemprature=" + avgGlobalBeanTemprature +
+                ", developmentTime='" + developmentTime + '\'' +
+                ", developmentRate='" + developmentRate + '\'' +
+                ", ambientTemperature='" + ambientTemperature + '\'' +
+                ", endTemperature='" + endTemperature + '\'' +
+                ", startTemperature='" + startTemperature + '\'' +
+                ", date='" + date + '\'' +
+                ", beanInfoSimples=" + beanInfoSimples +
+                ", cuppingInfo=" + cuppingInfo +
+                ", beanId=" + beanId +
+                '}';
+    }
 }

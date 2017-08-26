@@ -34,4 +34,6 @@ public interface IBleConnCallback {
      * 蓝牙不可用
      */
     void toDisable();
+
+    void toUrgentDisconnected();
 }

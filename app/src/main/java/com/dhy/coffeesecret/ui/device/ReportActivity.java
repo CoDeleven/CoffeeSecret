@@ -20,11 +20,12 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
+import com.dhy.coffeesecret.model.UniExtraKey;
 import com.dhy.coffeesecret.model.chart.Model4Chart;
 import com.dhy.coffeesecret.model.report.IReportView;
 import com.dhy.coffeesecret.model.report.Presenter4Report;
+import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.pojo.BakeReportProxy;
 import com.dhy.coffeesecret.pojo.BeanInfoSimple;
 import com.dhy.coffeesecret.ui.device.fragments.SharedFragment;
@@ -124,7 +125,8 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
     TextView idAvgEndTemperature;
     @Bind(R.id.id_avgEnd_time)
     TextView idAvgEndTime;
-
+    @Bind(R.id.toolbar_device_activtiy)
+    Toolbar toolbar;
     private Presenter4Report mPresenter = Presenter4Report.newInstance();
     private String weightUnit;
     private String tempratureUnit;
@@ -144,7 +146,6 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_report);
         ButterKnife.bind(this);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_device_activtiy);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
         mPresenter.setView(this);
@@ -192,12 +193,12 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
                 getPopupwindow().showAsDropDown(v);
             }
         });
-        if (mPresenter.getCurBakingReport() == null) {
-            init(((MyApplication) getApplication()).getBakeReport());
-        } else {
-            mPresenter.initViewWithProxy();
-        }
 
+        // 检测是否存在该参数
+        BakeReport mLocalBakeReport = (BakeReport)getIntent().getSerializableExtra(UniExtraKey.EXTRA_BAKE_REPORT.getKey());
+        mPresenter.setLocalBakeReport(mLocalBakeReport);
+
+        mPresenter.initViewWithProxy();
     }
 
 

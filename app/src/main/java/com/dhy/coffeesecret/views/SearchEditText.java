@@ -61,7 +61,7 @@ public class SearchEditText extends EditText {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        searchBarListener.starSearchPage();
+        searchBarListener.startSearchPage();
         return false;
     }
 
@@ -76,6 +76,6 @@ public class SearchEditText extends EditText {
     }
 
     public interface SearchBarListener {
-        void starSearchPage();
+        void startSearchPage();
     }
 }

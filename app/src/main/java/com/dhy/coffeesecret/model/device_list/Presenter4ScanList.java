@@ -87,10 +87,16 @@ public class Presenter4ScanList extends BaseBlePresenter<IScanListView, Model4Sc
         //  设置连接失败状态
         getView().updateText(BluetoothProfile.STATE_DISCONNECTED, null);
         getView().showToast(BluetoothProfile.STATE_DISCONNECTED, "连接失败，请重新尝试...");
+    }
+
+    @Override
+    public void toUrgentDisconnected() {
         // 断开连接时，移除已经连接的设备。
         mModelOperator.removeDevice(mBluetoothOperator.getLatestAddress());
         // 告诉Adapter失去连接了，让Adapter清理已经连接的设备
         mAdapter.missConnected();
+        getView().updateText(BluetoothProfile.STATE_DISCONNECTED, null);
+        // getView().showToast(BluetoothProfile.STATE_DISCONNECTED, "连接失败，请重新尝试...");
     }
 
     @Override
@@ -109,6 +115,8 @@ public class Presenter4ScanList extends BaseBlePresenter<IScanListView, Model4Sc
         getView().finishActivity();
 
     }
+
+
 
     public boolean isEnable() {
         return super.mBluetoothOperator.isEnable();

@@ -61,6 +61,7 @@ public class NewBleService implements IBluetoothOperator, DataDigger4Ble.IBleWRO
                 mConnStatusCallback.toDisconnected();
             }
             isConnected = false;
+            mCurConnectedDevice = null;
         }
 
         @Override
@@ -227,6 +228,9 @@ public class NewBleService implements IBluetoothOperator, DataDigger4Ble.IBleWRO
     @Override
     public void disableBle() {
         NLogger.i(TAG, "disableBle():关闭蓝牙");
+        if(mBleOperator.isInScanning()){
+            mBleOperator.cancelScan();
+        }
         mBleOperator.closeBluetoothGatt();
         mBleOperator.disableBluetooth();
         mConnStatusCallback.toDisable();
@@ -325,7 +329,7 @@ public class NewBleService implements IBluetoothOperator, DataDigger4Ble.IBleWRO
         isConnected = false;
         NLogger.e(TAG, "occurDisconnectedBySelfDetect():紧急停止线程...通知监听器");
         if(mConnStatusCallback != null){
-            mConnStatusCallback.toDisconnected();
+            mConnStatusCallback.toUrgentDisconnected();
         }
         mBleOperator.closeBluetoothGatt();
         // 清除这些线程

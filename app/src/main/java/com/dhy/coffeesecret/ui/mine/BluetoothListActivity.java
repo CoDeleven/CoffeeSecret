@@ -44,11 +44,6 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
     ProgressBar mScanProgress;
 
     View mCurConnectingView;
-    @Override
-    public void showWarnDialog(int index) {
-
-    }
-
     ImageView tick = null;
     private ProgressBar progressCircle = null;
     private BluetoothListAdapter mAdapter;
@@ -93,6 +88,11 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
         }
     };
 
+    @Override
+    public void showWarnDialog(int index) {
+
+    }
+
     /**
      * 刷新列表
      */
@@ -122,7 +122,7 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    while(!mPresenter.isEnable()){
+                    while (!mPresenter.isEnable()) {
 
                     }
                     mPresenter.startScan();
@@ -155,11 +155,13 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    while(mPresenter.isEnable()){
+                    while (mPresenter.isEnable()) {
 
                     }
                     mPresenter.startScan();
-                    mTextHandler.sendEmptyMessage(REFRESH);
+                    // mTextHandler.sendEmptyMessage(REFRESH);
+                    // mTextHandler.sendEmptyMessage(CANCEL_REFRESH);
+                    mTextHandler.sendEmptyMessage(BluetoothProfile.STATE_DISCONNECTED);
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -211,7 +213,7 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
             mPresenter.startScan();
             // 设置进度条可见
             mScanProgress.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             // 打开连接按钮
             switchButton.setChecked(false);
             mAdapter.clearDevices();
@@ -245,8 +247,8 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
     @Override
     public void updateText(int index, Object updateContent) {
         if (mTextHandler != null) {
-            if(index == BluetoothProfile.STATE_DISCONNECTED || index == BluetoothProfile.STATE_CONNECTED || index == BluetoothProfile.STATE_CONNECTING){
-                if(tick == null && progressCircle == null){
+            if (index == BluetoothProfile.STATE_DISCONNECTED || index == BluetoothProfile.STATE_CONNECTED || index == BluetoothProfile.STATE_CONNECTING) {
+                if (tick == null && progressCircle == null) {
                     return;
                 }
             }

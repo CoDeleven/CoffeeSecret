@@ -100,6 +100,8 @@ public abstract class BaseBlePresenter<V extends IBaseView, M extends BaseModel>
     public void toDisable() {
 
     }
+    @Override
+    public void toUrgentDisconnected() {
 
-
+    }
 }

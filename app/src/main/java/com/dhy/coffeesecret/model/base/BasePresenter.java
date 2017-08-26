@@ -1,5 +1,6 @@
 package com.dhy.coffeesecret.model.base;
 
+import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.pojo.BakeReportProxy;
 
 /**
@@ -65,5 +66,23 @@ public abstract class BasePresenter <V extends IBaseView, M extends BaseModel> i
     }
     public String getAppTemperatureUnit(){
         return this.mModelOperator.getAppConfig().getTempratureUnit();
+    }
+    public void setNoBakingBakeReport(BakeReport bakeReport){
+        mModelOperator.setNoBakingBakeReport(bakeReport);
+    }
+
+    /**
+     * 获取不是正在烘焙的烘焙报告，即仅用于查看或者参考
+     * @param toClear 是否在获取后清理
+     * @return 获取不是正在烘焙的烘焙报告
+     */
+    public BakeReport getNoBakingBakeReport(boolean toClear){
+        if(toClear){
+            BakeReport temp = mModelOperator.getNoBakingBakeReport();
+            mModelOperator.setNoBakingBakeReport(null);
+            return temp;
+        }else{
+            return mModelOperator.getNoBakingBakeReport();
+        }
     }
 }

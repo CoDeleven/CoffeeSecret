@@ -103,7 +103,7 @@ public class MineFragment extends Fragment {
             case R.id.mine_my_privacy:
                 break;
             case R.id.mine_history_line:
-                intent = new Intent(mContext, HistoryLineActivity.class);
+                intent = new Intent(mContext, HistoryReportEntranceActivity.class);
                 startActivity(intent);
                 break;
             case R.id.mine_my_device:

@@ -51,6 +51,7 @@ import butterknife.OnClick;
 import cn.jesse.nativelogger.NLogger;
 
 import static com.dhy.coffeesecret.MyApplication.temperatureUnit;
+import static com.dhy.coffeesecret.model.UniExtraKey.EXTRA_BAKE_REPORT_LIST;
 
 // TODO 待重构,重构对象-> 统一符号处理、统一handler处理、统一dialog的生成方式
 
@@ -314,7 +315,7 @@ public class DeviceFragment extends Fragment implements IDeviceView {
         Bundle bundle = new Bundle();
         bundle.putString("appWeightUnit", mPresenter.getAppWeightUnit());
         if (mPresenter.getTemporaryBeanInfo() != null) {
-            bundle.putSerializable("beanInfos", new ArrayList<>(mPresenter.getTemporaryBeanInfo()));
+            bundle.putSerializable(EXTRA_BAKE_REPORT_LIST.getKey(), new ArrayList<>(mPresenter.getTemporaryBeanInfo()));
         }
         dialogFragment.setArguments(bundle);
 

@@ -15,6 +15,8 @@ import com.dhy.coffeesecret.utils.ConvertUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.jesse.nativelogger.NLogger;
+
 /**
  * Created by CoDeleven on 17-8-1.
  */
@@ -95,7 +97,7 @@ public class Presenter4Device extends BaseBlePresenter<IDeviceView, Model4Device
         initPrepareBakeReport();
 
         BakeReportProxy proxy = mModelOperator.getCurBakingReport();
-
+        NLogger.i(TAG, "总共放入豆种数量为:" + temporaryBeanInfo.size() + "->" + temporaryBeanInfo.get(0));
         proxy.setBeanInfoSimples(temporaryBeanInfo);
 
         // 对于只有一个豆种的情况进行id特殊处理
@@ -119,7 +121,7 @@ public class Presenter4Device extends BaseBlePresenter<IDeviceView, Model4Device
      * 以免下次回到DeviceFragment拥有错误的数据
      */
     private void finishDeviceFragmentTask(){
-        temporaryBeanInfo.clear();
+        temporaryBeanInfo = new ArrayList<>();
         temporaryReferTemperatures = null;
         resetBluetoothListener();
         mViewOperator.updateText(DeviceFragment.FINISH_DEVICE_FRAGMENT_TASK, "");

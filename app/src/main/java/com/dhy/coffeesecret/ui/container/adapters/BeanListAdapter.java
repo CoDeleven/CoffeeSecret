@@ -9,10 +9,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BeanInfo;
-import com.dhy.coffeesecret.utils.SettingTool;
+import com.dhy.coffeesecret.ui.device.fragments.OnItemClickListener;
 import com.dhy.coffeesecret.utils.Utils;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
 
@@ -64,7 +63,7 @@ public class BeanListAdapter extends RecyclerView.Adapter<BeanListAdapter.BeanLi
 
 
     @Override
-    public void onBindViewHolder(final BeanListViewHolder holder, int position) {
+    public void onBindViewHolder(final BeanListViewHolder holder, final int position) {
 
         BeanInfo beaninfo = coffeeBeanInfoList.get(position);
         if (beaninfo.getDrawablePath().equals("")) {
@@ -79,7 +78,8 @@ public class BeanListAdapter extends RecyclerView.Adapter<BeanListAdapter.BeanLi
         holder.itemBeanLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onItemClickListener.onItemClicked(holder.getAdapterPosition());
+                // onItemClickListener.onItemClicked(holder.getAdapterPosition());
+                onItemClickListener.onItemClick(coffeeBeanInfoList.get(holder.getAdapterPosition()));
             }
         });
 
@@ -91,10 +91,10 @@ public class BeanListAdapter extends RecyclerView.Adapter<BeanListAdapter.BeanLi
         return coffeeBeanInfoList.size();
     }
 
-    public interface OnItemClickListener {
+/*    public interface OnItemClickListener {
         void onItemClicked(int position);
     }
-
+    */
     class BeanListViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView beanIcon = null;

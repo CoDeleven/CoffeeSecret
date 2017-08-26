@@ -21,9 +21,9 @@ import com.bigkoo.quicksidebar.QuickSideBarView;
 import com.bigkoo.quicksidebar.listener.OnQuickSideBarTouchListener;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.Species;
-import com.dhy.coffeesecret.ui.container.adapters.CountryListAdapter;
 import com.dhy.coffeesecret.ui.container.adapters.InfoListAdapter;
 import com.dhy.coffeesecret.ui.container.fragments.SearchFragment;
+import com.dhy.coffeesecret.ui.container.fragments.SearchPlaceFragment;
 import com.dhy.coffeesecret.utils.T;
 import com.dhy.coffeesecret.utils.TestData;
 import com.dhy.coffeesecret.utils.Utils;
@@ -34,7 +34,6 @@ import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 
 import butterknife.Bind;
@@ -290,7 +289,7 @@ public class SelectInfoActivity extends AppCompatActivity implements OnQuickSide
     }
 
     @Override
-    public void starSearchPage() {
+    public void startSearchPage() {
         //TODO  类似这个的代码需要重构一遍
 
         FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
@@ -300,7 +299,7 @@ public class SelectInfoActivity extends AppCompatActivity implements OnQuickSide
             isAddSearchFragment = !searchFragment.isRemoved();
         }
         if (!isAddSearchFragment) {
-            searchFragment = new SearchFragment();
+            searchFragment = new SearchPlaceFragment();
             Bundle bundle = new Bundle();
             if (dataList.size() > 0) {
                 bundle.putStringArrayList("infoList", dataList);

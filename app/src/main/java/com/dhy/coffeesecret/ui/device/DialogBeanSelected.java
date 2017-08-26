@@ -1,7 +1,6 @@
 package com.dhy.coffeesecret.ui.device;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,17 +10,20 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.dhy.coffeesecret.R;
+import com.dhy.coffeesecret.model.UniExtraKey;
 import com.dhy.coffeesecret.pojo.BeanInfo;
 import com.dhy.coffeesecret.ui.container.EditBeanActivity;
+import com.dhy.coffeesecret.ui.container.fragments.SearchBeanInfoFragment;
+import com.dhy.coffeesecret.ui.container.fragments.SearchFragment;
 import com.dhy.coffeesecret.ui.device.fragments.BakeBeanListFragment;
-import com.dhy.coffeesecret.ui.device.fragments.SearchFragment;
+import com.dhy.coffeesecret.ui.device.fragments.OnItemClickListener;
 import com.dhy.coffeesecret.views.SearchEditText;
 
 import java.io.Serializable;
@@ -30,7 +32,16 @@ import java.util.List;
 
 import static com.dhy.coffeesecret.ui.device.fragments.BakeDialog.SELECT_BEAN;
 
-public class DialogBeanSelected extends AppCompatActivity implements BakeBeanListFragment.OnBeanSelected, SearchFragment.OnSearchCallBack {
+public class DialogBeanSelected extends AppCompatActivity implements
+        BakeBeanListFragment.OnBeanSelected, OnItemClickListener {
+    @Override
+    public void onItemClick(Serializable serializable) {
+        Log.d(TAG, "onItemClick: 打印个看看");
+        Intent intent = new Intent();
+        intent.putExtra(UniExtraKey.EXTRA_BEAN_INFO.getKey(), serializable);
+        setResult(RESULT_OK, intent);
+        finish();
+    }
 
     private static final String TAG = "DialogBeanSelected";
     private static final int ADD_BEAN = 111;
@@ -67,17 +78,17 @@ public class DialogBeanSelected extends AppCompatActivity implements BakeBeanLis
     public void initView() {
         searchBeanET.setSearchBarListener(new SearchEditText.SearchBarListener() {
             @Override
-            public void starSearchPage() {
+            public void startSearchPage() {
                 FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
                 tx.setCustomAnimations(R.anim.in_from_right, R.anim.out_to_left);
                 if (searchFragment != null) {
                     isAddSearchFragment = !searchFragment.isRemoved();
                 }
                 if (!isAddSearchFragment) {
-                    searchFragment = new SearchFragment();
-                    searchFragment.addOnSearchCallBack(DialogBeanSelected.this);
+                    searchFragment = new SearchBeanInfoFragment();
+                    searchFragment.setOnResultClickListenr(DialogBeanSelected.this);
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable("beanList", (Serializable) fragments.get(0).getBeaninfoList());
+                    bundle.putSerializable(UniExtraKey.EXTRA_BAKE_REPORT_LIST.getKey(), (Serializable) fragments.get(0).getBeaninfoList());
                     searchFragment.setArguments(bundle);
                     tx.add(R.id.activity_dialog_bean_selected, searchFragment, "search_bean");
                     isAddSearchFragment = true;
@@ -151,7 +162,7 @@ public class DialogBeanSelected extends AppCompatActivity implements BakeBeanLis
         }
     }
 
-    @Override
+/*    @Override
     public void onSearchCallBack(String info) {
 
     }
@@ -162,7 +173,9 @@ public class DialogBeanSelected extends AppCompatActivity implements BakeBeanLis
         intent.putExtra("beanInfo", info);
         setResult(SELECT_BEAN, intent);
         finish();
-    }
+    }*/
+
+
 
     public class MyPagerAdapter extends FragmentPagerAdapter {
 
@@ -191,7 +204,7 @@ public class DialogBeanSelected extends AppCompatActivity implements BakeBeanLis
     @Override
     public void onBeanSelected(BeanInfo beanInfo) {
         Intent intent = new Intent();
-        intent.putExtra("beanInfo", beanInfo);
+        intent.putExtra(UniExtraKey.EXTRA_BEAN_INFO.getKey(), beanInfo);
         setResult(SELECT_BEAN, intent);
         finish();
     }

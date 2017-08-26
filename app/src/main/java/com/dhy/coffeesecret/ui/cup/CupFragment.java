@@ -3,7 +3,6 @@ package com.dhy.coffeesecret.ui.cup;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -14,26 +13,26 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import com.dhy.coffeesecret.MainActivity;
 import com.dhy.coffeesecret.R;
+import com.dhy.coffeesecret.model.UniExtraKey;
 import com.dhy.coffeesecret.pojo.CuppingInfo;
 import com.dhy.coffeesecret.ui.container.adapters.HandlerAdapter;
+import com.dhy.coffeesecret.ui.container.fragments.SearchCupInfoFragment;
 import com.dhy.coffeesecret.ui.container.fragments.SearchFragment;
-import com.dhy.coffeesecret.ui.cup.filter.Filter;
 import com.dhy.coffeesecret.ui.cup.adapter.CuppingListAdapter;
 import com.dhy.coffeesecret.ui.cup.comparator.BaseComparator;
 import com.dhy.coffeesecret.ui.cup.comparator.DateComparator;
 import com.dhy.coffeesecret.ui.cup.comparator.OrderBy;
 import com.dhy.coffeesecret.ui.cup.comparator.ScoreComparator;
+import com.dhy.coffeesecret.ui.cup.filter.Filter;
+import com.dhy.coffeesecret.ui.device.fragments.OnItemClickListener;
 import com.dhy.coffeesecret.utils.HttpUtils;
 import com.dhy.coffeesecret.utils.T;
 import com.dhy.coffeesecret.utils.URLs;
@@ -47,13 +46,15 @@ import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Type;
-import java.util.Collections;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
-import static com.dhy.coffeesecret.ui.cup.NewCuppingActivity.*;
+import static com.dhy.coffeesecret.ui.cup.NewCuppingActivity.NEW_CUPPING;
+import static com.dhy.coffeesecret.ui.cup.NewCuppingActivity.SHOW_INFO;
+import static com.dhy.coffeesecret.ui.cup.NewCuppingActivity.TARGET;
 import static com.dhy.coffeesecret.ui.cup.NewCuppingActivity.VIEW_TYPE;
 
 public class CupFragment extends Fragment implements View.OnClickListener {
@@ -124,20 +125,18 @@ public class CupFragment extends Fragment implements View.OnClickListener {
         mSortButton = mCuppingView.findViewById(R.id.btn_sort);
         mScreenButton = mCuppingView.findViewById(R.id.btn_screen);
         mSortText = (TextView) mCuppingView.findViewById(R.id.sort_type);
-        mAdapter = new CuppingListAdapter(mContext, cuppingInfos);
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-        initSortPopupWindow(inflater);
-        initScreenPopupWindow(inflater);
-
-        mAdapter.setOnItemClickListener(new CuppingListAdapter.OnItemClickListener() {
+        mAdapter = new CuppingListAdapter(mContext, cuppingInfos, new OnItemClickListener() {
             @Override
-            public void onItemClick(int position) {
+            public void onItemClick(Serializable serializable) {
                 Intent intent = new Intent(mContext, NewCuppingActivity.class);
-                intent.putExtra(TARGET, cuppingInfos.get(position));
+                intent.putExtra(TARGET, serializable);
                 intent.putExtra(VIEW_TYPE, SHOW_INFO);
                 startActivityForResult(intent, REQ_CODE_EDIT);
             }
         });
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        initSortPopupWindow(inflater);
+        initScreenPopupWindow(inflater);
 
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
@@ -389,22 +388,19 @@ public class CupFragment extends Fragment implements View.OnClickListener {
             isAddSearchFragment = !searchFragment.isRemoved();
         }
         if (!isAddSearchFragment) {
-            searchFragment = new SearchFragment();
+            searchFragment = new SearchCupInfoFragment();
             Bundle bundle = new Bundle();
-            bundle.putSerializable("cuppingInfos", (Serializable) (allCuppingInfos == null ? cuppingInfos : allCuppingInfos));
+            bundle.putSerializable(UniExtraKey.EXTRA_CUP_INFO_LIST.getKey(), (Serializable) (allCuppingInfos == null ? cuppingInfos : allCuppingInfos));
             searchFragment.setArguments(bundle);
             tx.add(R.id.activity_main, searchFragment, "search_cupping");
             isAddSearchFragment = true;
 
-            searchFragment.setOnResultClickListenr(new SearchFragment.OnResultClickListenr() {
+/*            searchFragment.setOnResultClickListenr(new SearchFragment.OnResultClickListenr() {
                 @Override
                 public void onItemClick(Serializable serializable) {
-                    Intent intent = new Intent(mContext, NewCuppingActivity.class);
-                    intent.putExtra(TARGET, serializable);
-                    intent.putExtra(VIEW_TYPE, SHOW_INFO);
-                    startActivityForResult(intent, REQ_CODE_EDIT);
+
                 }
-            });
+            });*/
         } else {
             tx.show(searchFragment);
         }

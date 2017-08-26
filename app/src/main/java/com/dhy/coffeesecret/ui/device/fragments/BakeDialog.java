@@ -19,11 +19,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.dhy.coffeesecret.R;
+import com.dhy.coffeesecret.model.UniExtraKey;
 import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.pojo.BeanInfo;
 import com.dhy.coffeesecret.pojo.BeanInfoSimple;
 import com.dhy.coffeesecret.ui.device.DialogBeanSelected;
-import com.dhy.coffeesecret.ui.device.LineSelectedActivity;
 import com.dhy.coffeesecret.ui.device.adapter.BeanSelectAdapter;
 import com.dhy.coffeesecret.utils.T;
 import com.dhy.coffeesecret.views.DividerDecoration;
@@ -80,7 +80,7 @@ public class BakeDialog extends DialogFragment implements BeanSelectAdapter.MyBu
         ButterKnife.bind(this, view);
         Bundle bundle = getArguments();
         if(bundle != null){
-            beanInfos = (ArrayList<BeanInfoSimple>)bundle.getSerializable("beanInfos");
+            beanInfos = (ArrayList<BeanInfoSimple>)bundle.getSerializable(UniExtraKey.EXTRA_BAKE_REPORT_LIST.getKey());
             unit = bundle.getString("appWeightUnit");
         }
         if(beanInfos == null){
@@ -175,8 +175,8 @@ public class BakeDialog extends DialogFragment implements BeanSelectAdapter.MyBu
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (data != null) {
-            BeanInfo beanInfo = (BeanInfo) data.getSerializableExtra("beanInfo");
-            BakeReport bakeReport = (BakeReport) data.getSerializableExtra("report");
+            BeanInfo beanInfo = (BeanInfo) data.getSerializableExtra(UniExtraKey.EXTRA_BEAN_INFO.getKey());
+            BakeReport bakeReport = (BakeReport) data.getSerializableExtra(UniExtraKey.EXTRA_BAKE_REPORT.getKey());
             if (beanInfo != null) {
                 BeanInfoSimple simple = beanInfos.get(curItem);
                 simple.setSingleBeanId(beanInfo.getId());
@@ -203,13 +203,15 @@ public class BakeDialog extends DialogFragment implements BeanSelectAdapter.MyBu
         switch (view.getId()) {
             case R.id.id_bake_dialog_refer_history:
                 //TODO 完成历史参考曲线
-                intent = new Intent(getContext(), LineSelectedActivity.class);
-                startActivityForResult(intent, GET_HISTORY);
+                intent = new Intent(getContext(), ReferReportSelectedActivity.class);
+                // intent.putExtra(LINE_PARAMETER_KEY, SET_BAKE_REPORT);
 
+                startActivityForResult(intent, GET_HISTORY);
                 break;
             case R.id.id_bake_dialog_refer_collection:
                 //TODO 完成收藏参考曲线
-                intent = new Intent(getContext(), LineSelectedActivity.class);
+                intent = new Intent(getContext(), ReferReportSelectedActivity.class);
+                // intent.putExtra(LINE_PARAMETER_KEY, SET_BAKE_REPORT);
                 startActivityForResult(intent, GET_COLLECTION);
         }
     }

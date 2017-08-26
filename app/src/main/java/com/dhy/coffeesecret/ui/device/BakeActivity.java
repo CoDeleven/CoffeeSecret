@@ -294,9 +294,11 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
         mChartPresenter.setView(chart);
         // 初始化曲线
         mChartPresenter.initLines();
-        // 考虑是否添加参考曲线
-        BakeReport bakeReport = (BakeReport) getIntent().getSerializableExtra(ENABLE_REFERLINE);
-        
+        // 考虑是否添加参考曲线,用完即删，哈哈
+        // BakeReport bakeReport = mPresenter.getNoBakingBakeReport(true);
+
+        BakeReport bakeReport = (BakeReport)getIntent().getSerializableExtra(ENABLE_REFERLINE);
+
         if (bakeReport != null) {
             referTempratures = new BakeReportProxy(bakeReport);
             List<Entry> entries = new ArrayList<>();

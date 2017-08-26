@@ -12,11 +12,11 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.dhy.coffeesecret.R;
+import com.dhy.coffeesecret.model.UniExtraKey;
 import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.pojo.BeanInfo;
-import com.dhy.coffeesecret.ui.mine.HistoryLineActivity;
-import com.dhy.coffeesecret.utils.T;
 import com.dhy.coffeesecret.utils.SystemStatusBarUtils;
+import com.dhy.coffeesecret.utils.T;
 import com.dhy.coffeesecret.utils.Utils;
 import com.facebook.rebound.ui.Util;
 
@@ -78,7 +78,7 @@ public class BeanInfoActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         SystemStatusBarUtils.steepToolBar(this);
-        beanInfo = (BeanInfo) getIntent().getSerializableExtra("beanInfo");
+        beanInfo = (BeanInfo) getIntent().getSerializableExtra(UniExtraKey.EXTRA_BEAN_INFO.getKey());
         init();
         infoActivity = this;
     }
@@ -115,8 +115,8 @@ public class BeanInfoActivity extends AppCompatActivity {
         btnCurve.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(BeanInfoActivity.this, HistoryLineActivity.class);
-                intent.putExtra("bakeReports",(ArrayList<BakeReport>)beanInfo.getBakeReports());
+                Intent intent = new Intent(BeanInfoActivity.this, SelectedRelatedBeanActivity.class);
+                intent.putExtra(UniExtraKey.EXTRA_BAKE_REPORT_LIST.getKey(),(ArrayList<BakeReport>)beanInfo.getBakeReports());
                 startActivity(intent);
                 overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
             }

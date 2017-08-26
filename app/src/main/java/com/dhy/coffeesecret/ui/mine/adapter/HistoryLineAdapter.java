@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BakeReport;
+import com.dhy.coffeesecret.ui.device.fragments.OnItemClickListener;
 import com.dhy.coffeesecret.utils.FormatUtils;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
 
@@ -21,8 +22,8 @@ import java.util.List;
 public class HistoryLineAdapter extends RecyclerView.Adapter<HistoryLineAdapter.HistoryLineViewHolder> implements StickyRecyclerHeadersAdapter<HistoryLineAdapter.HistoryLineViewHolder> {
     private LayoutInflater layoutInflater;
     private List<BakeReport> bakeReports;
-    private OnLineClickedListener onLineClickedListener;
-    public HistoryLineAdapter(Context context, List<BakeReport> bakeReports,  OnLineClickedListener onLineClickedListener) {
+    private OnItemClickListener onLineClickedListener;
+    public HistoryLineAdapter(Context context, List<BakeReport> bakeReports,  OnItemClickListener onLineClickedListener) {
         this.onLineClickedListener = onLineClickedListener;
         this.layoutInflater = LayoutInflater.from(context);
         this.bakeReports = bakeReports;
@@ -35,7 +36,7 @@ public class HistoryLineAdapter extends RecyclerView.Adapter<HistoryLineAdapter.
         holder.layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onLineClickedListener.onLineClicked(bakeReports.get(position));
+                onLineClickedListener.onItemClick(bakeReports.get(position));
             }
         });
     }
@@ -67,9 +68,9 @@ public class HistoryLineAdapter extends RecyclerView.Adapter<HistoryLineAdapter.
         return bakeReports.size();
     }
 
-    public interface OnLineClickedListener {
-        void onLineClicked(BakeReport bakeReport);
-    }
+    /*public interface OnItemClickListener {
+        void onItemClicked(Serializable serializable);
+    }*/
 
     class HistoryLineViewHolder extends RecyclerView.ViewHolder {
         TextView itemName;

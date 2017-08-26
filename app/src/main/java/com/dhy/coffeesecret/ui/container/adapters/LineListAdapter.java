@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BakeReport;
-import com.dhy.coffeesecret.utils.Utils;
+import com.dhy.coffeesecret.ui.device.fragments.OnItemClickListener;
 
 import java.util.List;
 
@@ -21,9 +21,9 @@ import java.util.List;
 public class LineListAdapter extends RecyclerView.Adapter<LineListAdapter.LineViewHolder> {
     private Context context;
     private List<BakeReport> reports;
-    private OnItemClickListener onItemClickListener;
+    // private OnItemClickListener onItemClickListener;
     private LayoutInflater inflater;
-
+    private OnItemClickListener onItemClickListener;
     public LineListAdapter(Context context, List<BakeReport> reports, OnItemClickListener onItemClickListener) {
         this.context = context;
         this.reports = reports;
@@ -43,7 +43,7 @@ public class LineListAdapter extends RecyclerView.Adapter<LineListAdapter.LineVi
         holder.lineLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onItemClickListener.onItemClicked(holder.getAdapterPosition(), reports.get(holder.getAdapterPosition()));
+                onItemClickListener.onItemClick(reports.get(holder.getAdapterPosition()));
             }
         });
     }
@@ -53,9 +53,9 @@ public class LineListAdapter extends RecyclerView.Adapter<LineListAdapter.LineVi
         return reports.size();
     }
 
-    public interface OnItemClickListener {
+/*    public interface OnItemClickListener {
         void onItemClicked(int position, BakeReport report);
-    }
+    }*/
 
     class LineViewHolder extends RecyclerView.ViewHolder {
         private TextView lineName;

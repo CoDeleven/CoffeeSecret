@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void revertBakingTab(){
-        mViewPager.setCurrentItem(2);
+        // mViewPager.setCurrentItem(2);
         mBakingNow.setVisibility(View.GONE);
     }
 
@@ -83,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, BakeActivity.class);
                 startActivity(intent);
+                mViewPager.setCurrentItem(2);
                 return;
             }
         });

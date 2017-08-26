@@ -89,7 +89,6 @@ public class EditBehindActivity extends AppCompatActivity implements CircleSeekB
     LinearLayout beanContainer;
     private Presenter4Editor mPresenter = Presenter4Editor.newInstance();
     private Button curBeanButton;
-    private String unit;
     private Dialog dialog;
 
     @Override
@@ -228,7 +227,6 @@ public class EditBehindActivity extends AppCompatActivity implements CircleSeekB
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         setContentView(R.layout.activity_edit_behind_activiy);
         ButterKnife.bind(this);
-        unit = mPresenter.getAppWeightUnit();
     }
 
     @Override
@@ -238,6 +236,7 @@ public class EditBehindActivity extends AppCompatActivity implements CircleSeekB
 
         // 设置视图
         mPresenter.setView(this);
+
         // 初始化带有prxoy参数的试图
         mPresenter.initViewWithProxy();
         // 设置圆形seekbar
@@ -461,7 +460,7 @@ public class EditBehindActivity extends AppCompatActivity implements CircleSeekB
             params = new LinearLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT);
             params.gravity = Gravity.CENTER_VERTICAL;
             // 设置已添加豆子的重量
-            editText.setHint(ConvertUtils.getCrspWeightValue(temp.getUsage()) + unit);
+            editText.setHint(ConvertUtils.getCrspWeightValue(temp.getUsage()) + mPresenter.getAppWeightUnit());
             // 设置不允许进行修改
             editText.setEnabled(false);
             params.leftMargin = Util.dpToPx(12, getResources());

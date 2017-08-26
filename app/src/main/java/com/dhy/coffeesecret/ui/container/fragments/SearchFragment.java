@@ -1,10 +1,9 @@
 package com.dhy.coffeesecret.ui.container.fragments;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
+import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -21,79 +20,49 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
-import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
-import com.dhy.coffeesecret.pojo.BakeReport;
-import com.dhy.coffeesecret.pojo.BeanInfo;
-import com.dhy.coffeesecret.pojo.CuppingInfo;
-import com.dhy.coffeesecret.ui.container.BeanInfoActivity;
-import com.dhy.coffeesecret.ui.container.adapters.BeanListAdapter;
-import com.dhy.coffeesecret.ui.container.adapters.InfoListAdapter;
-import com.dhy.coffeesecret.ui.container.adapters.LineListAdapter;
-import com.dhy.coffeesecret.ui.cup.CupFragment;
-import com.dhy.coffeesecret.ui.cup.NewCuppingActivity;
-import com.dhy.coffeesecret.ui.cup.adapter.CuppingListAdapter;
-import com.dhy.coffeesecret.ui.device.ReportActivity;
-import com.dhy.coffeesecret.ui.mine.HistoryLineActivity;
-import com.dhy.coffeesecret.utils.Utils;
+import com.dhy.coffeesecret.ui.device.fragments.OnItemClickListener;
 
-import java.io.Serializable;
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-
-import static com.dhy.coffeesecret.ui.cup.NewCuppingActivity.SHOW_INFO;
-import static com.dhy.coffeesecret.ui.cup.NewCuppingActivity.TARGET;
-import static com.dhy.coffeesecret.ui.cup.NewCuppingActivity.VIEW_TYPE;
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 
-public class SearchFragment extends Fragment {
-
+public abstract class SearchFragment extends Fragment {
     private static final String TAG = "SearchFragment";
-    private static final int GET_LIKE_BEAN_LIST = 111;
-    private static final int GET_LIKE_LINE_LIST = 222;
-    private static final int GET_LIKE_INFO_LIST = 333;
-    private static final int GET_LIKE_CUPPING_LIST = 444;
+    @Bind(R.id.id_search_edit)
+    EditText editText;
+    @Bind(R.id.id_btn_cancel)
+    Button cancel;
+    @Bind(R.id.id_search_clear)
+    ImageButton clear;
+    @Bind(R.id.search_list)
+    RecyclerView searchList;
     private View searchView;
-    private EditText editText;
-    private Button cancel;
-    private ImageButton clear;
-    private RecyclerView searchList;
     private InputMethodManager imm;
     private Context mContext;
-    private BeanListAdapter beanListAdapter;
-    private LineListAdapter lineListAdapter;
-    private InfoListAdapter infoListAdapter;
-    private CuppingListAdapter cuppingListAdapter;
-    private ArrayList<BeanInfo> beanInfos;
-    private ArrayList<BeanInfo> beanInfoTemp;
-    private ArrayList<BakeReport> bakeReports;
-    private ArrayList<BakeReport> bakeReportTemp;
-    private ArrayList<CuppingInfo> cuppingInfos;
-    private ArrayList<CuppingInfo> cuppingInfosTemp;
-    private ArrayList<String> infos;
-    private ArrayList<String> infoTemp;
-    private String entrance;
-    private SearchHandler mHandler = new SearchHandler(this);
+    // private SearchHandler mHandler = new SearchHandler(this);
     private OnSearchCallBack onSearchCallBack;
-    private OnResultClickListenr resultClickListenr;
+    private OnItemClickListener resultClickListenr;
     private boolean isRemoved = false;
+    private Handler mThreadHandler = new Handler(Looper.getMainLooper());
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         searchView = inflater.inflate(R.layout.fragment_search, container, false);
-
+        ButterKnife.bind(this, searchView);
         mContext = getContext();
-        entrance = getTag();
         Bundle bundle = getArguments();
-
         initData(bundle);
-
         return searchView;
     }
 
-    private void initData(Bundle bundle) {
+    public OnItemClickListener getResultClickListenr() {
+        return resultClickListenr;
+    }
+
+    protected abstract void initData(Bundle bundle);/* {
         if (entrance.equals("search_bean")) {
             beanInfos = new ArrayList<>();
             beanInfoTemp = (ArrayList<BeanInfo>) bundle.getSerializable("beanList");
@@ -162,22 +131,18 @@ public class SearchFragment extends Fragment {
             });
         }
 
-    }
+    }*/
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        editText = (EditText) searchView.findViewById(R.id.id_search_edit);
-        cancel = (Button) searchView.findViewById(R.id.id_btn_cancel);
-        clear = (ImageButton) searchView.findViewById(R.id.id_search_clear);
-        searchList = (RecyclerView) searchView.findViewById(R.id.search_list);
 
         initCancel();
         initClear();
         initEditText();
 
-        if (entrance.equals("search_bean")) {
+/*        if (entrance.equals("search_bean")) {
             initSearchList(beanListAdapter);
         } else if (entrance.equals("search_line")) {
             initSearchList(lineListAdapter);
@@ -185,10 +150,10 @@ public class SearchFragment extends Fragment {
             initSearchList(infoListAdapter);
         } else if (entrance.equals("search_cupping")) {
             initSearchList(cuppingListAdapter);
-        }
+        }*/
     }
 
-    private void initSearchList(RecyclerView.Adapter adapter) {
+    protected void initSearchList(RecyclerView.Adapter adapter) {
 
         LinearLayoutManager manager = new LinearLayoutManager(mContext);
         manager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -228,7 +193,7 @@ public class SearchFragment extends Fragment {
             public void afterTextChanged(Editable editable) {
                 Log.i(TAG, "afterTextChanged: " + System.currentTimeMillis());
                 String searchText = editable.toString();
-
+/*
                 Message msg = new Message();
                 switch (entrance) {
                     case "search_bean":
@@ -243,9 +208,10 @@ public class SearchFragment extends Fragment {
                     case "search_cupping":
                         msg.what = GET_LIKE_CUPPING_LIST;
                         break;
-                }
-                msg.obj = searchText;
-                mHandler.sendMessage(msg);
+                }*/
+                /*msg.obj = searchText;
+                mHandler.sendMessage(msg);*/
+                handleDataBySearchKey(searchText);
 
                 Log.i(TAG, "afterTextChanged: " + System.currentTimeMillis());
             }
@@ -267,7 +233,8 @@ public class SearchFragment extends Fragment {
         tx.remove(SearchFragment.this);
         tx.commit();
         isRemoved = true;
-        imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
+        imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+
     }
 
     public boolean isRemoved() {
@@ -280,7 +247,7 @@ public class SearchFragment extends Fragment {
         editText.requestFocus();
         // toolbar.setVisibility(View.GONE);
         if (imm == null) {
-            imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         }
         imm.showSoftInput(editText, InputMethodManager.SHOW_FORCED);
 
@@ -299,10 +266,12 @@ public class SearchFragment extends Fragment {
         this.onSearchCallBack = onSearchCallBack;
     }
 
-    public void setOnResultClickListenr(OnResultClickListenr listenr){
+    public void setOnResultClickListenr(OnItemClickListener listenr) {
         this.resultClickListenr = listenr;
     }
 
+
+    protected abstract void handleDataBySearchKey(String searchKey);
 
     @Override
     public void onDestroy() {
@@ -310,16 +279,18 @@ public class SearchFragment extends Fragment {
         Log.e(TAG, "onDestroy: ");
     }
 
-    public interface OnSearchCallBack {
-        void onSearchCallBack(String info);
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
     }
 
-    public interface OnResultClickListenr {
+    /*public interface OnResultClickListenr {
         void onItemClick(Serializable serializable);
-    }
+    }*/
 
 
-    private class SearchHandler extends Handler {
+    /*private class SearchHandler extends Handler {
 
         private final WeakReference<SearchFragment> mActivity;
 
@@ -388,5 +359,17 @@ public class SearchFragment extends Fragment {
                     break;
             }
         }
+    }*/
+
+    protected void runOnMainThread(Runnable runnable) {
+        if (Looper.myLooper() == Looper.getMainLooper()) {
+            runnable.run();
+        } else {
+            mThreadHandler.post(runnable);
+        }
+    }
+
+    public interface OnSearchCallBack {
+        void onSearchCallBack(String info);
     }
 }
