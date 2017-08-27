@@ -21,8 +21,8 @@ import android.widget.TextView;
 import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.UniversalConfiguration;
+import com.dhy.coffeesecret.utils.ConvertUtils;
 import com.dhy.coffeesecret.utils.SettingTool;
-import com.dhy.coffeesecret.utils.Utils;
 
 import java.lang.ref.WeakReference;
 
@@ -99,7 +99,7 @@ public class SettingsActivity extends AppCompatActivity {
     private void init() {
         titleText.setText("通用设置");
 
-        config = SettingTool.getConfig(this);
+        config = SettingTool.getConfig();
         checkQuickStart.setChecked(config.isQuickStart());
         checkConfirmAgain.setChecked(config.isDoubleClick());
         textWeightUnit.setText(config.getWeightUnit());
@@ -201,8 +201,8 @@ public class SettingsActivity extends AppCompatActivity {
                         switch (viewId) {
                             case R.id.weight_unit:
                                 textWeightUnit.setText(whichItem);
-                                config.setWeightUnit(Utils.convertUnitChineses2Eng(whichItem));
-                                ((MyApplication) getApplicationContext()).weightUnit = Utils.convertUnitChineses2Eng(whichItem);
+                                config.setWeightUnit(ConvertUtils.convertUnitCn2Eng(whichItem));
+                                ((MyApplication) getApplicationContext()).weightUnit = ConvertUtils.convertUnitCn2Eng(whichItem);
                                 break;
                             case R.id.temperature_unit:
                                 textTemperatureUnit.setText(whichItem);

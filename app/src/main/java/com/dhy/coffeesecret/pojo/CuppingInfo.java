@@ -1,9 +1,11 @@
 package com.dhy.coffeesecret.pojo;
 
-import java.io.Serializable;
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.Date;
 
-public class CuppingInfo implements Serializable {
+public class CuppingInfo implements Parcelable {
     // id
     private long id;
 
@@ -208,32 +210,6 @@ public class CuppingInfo implements Serializable {
         return feel;
     }
 
-    @Override
-    public String toString() {
-        return "CuppingInfo{" +
-                "acidity=" + acidity +
-                ", id=" + id +
-                ", name='" + name + '\'' +
-                ", score=" + score +
-                ", feel=" + feel +
-                ", flaw=" + flaw +
-                ", dryAndFragrant=" + dryAndFragrant +
-                ", flavor=" + flavor +
-                ", afterTaste=" + afterTaste +
-                ", taste=" + taste +
-                ", sweetness=" + sweetness +
-                ", balance=" + balance +
-                ", overall=" + overall +
-                ", underdevelopment=" + underdevelopment +
-                ", overdevelopment=" + overdevelopment +
-                ", baked=" + baked +
-                ", scorched=" + scorched +
-                ", tipped=" + tipped +
-                ", faced=" + faced +
-                ", date=" + date +
-                ", bakeReport=" + bakeReport +
-                '}';
-    }
 
     @Override
     public boolean equals(Object obj) {
@@ -243,4 +219,74 @@ public class CuppingInfo implements Serializable {
             return false;
         }
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(this.id);
+        dest.writeString(this.name);
+        dest.writeFloat(this.score);
+        dest.writeFloat(this.feel);
+        dest.writeFloat(this.flaw);
+        dest.writeFloat(this.dryAndFragrant);
+        dest.writeFloat(this.flavor);
+        dest.writeFloat(this.afterTaste);
+        dest.writeFloat(this.acidity);
+        dest.writeFloat(this.taste);
+        dest.writeFloat(this.sweetness);
+        dest.writeFloat(this.balance);
+        dest.writeFloat(this.overall);
+        dest.writeInt(this.underdevelopment);
+        dest.writeInt(this.overdevelopment);
+        dest.writeInt(this.baked);
+        dest.writeInt(this.scorched);
+        dest.writeInt(this.tipped);
+        dest.writeInt(this.faced);
+        dest.writeLong(this.date != null ? this.date.getTime() : -1);
+        dest.writeParcelable(this.bakeReport, flags);
+    }
+
+    public CuppingInfo() {
+    }
+
+    protected CuppingInfo(Parcel in) {
+        this.id = in.readLong();
+        this.name = in.readString();
+        this.score = in.readFloat();
+        this.feel = in.readFloat();
+        this.flaw = in.readFloat();
+        this.dryAndFragrant = in.readFloat();
+        this.flavor = in.readFloat();
+        this.afterTaste = in.readFloat();
+        this.acidity = in.readFloat();
+        this.taste = in.readFloat();
+        this.sweetness = in.readFloat();
+        this.balance = in.readFloat();
+        this.overall = in.readFloat();
+        this.underdevelopment = in.readInt();
+        this.overdevelopment = in.readInt();
+        this.baked = in.readInt();
+        this.scorched = in.readInt();
+        this.tipped = in.readInt();
+        this.faced = in.readInt();
+        long tmpDate = in.readLong();
+        this.date = tmpDate == -1 ? null : new Date(tmpDate);
+        this.bakeReport = in.readParcelable(BakeReport.class.getClassLoader());
+    }
+
+    public static final Creator<CuppingInfo> CREATOR = new Creator<CuppingInfo>() {
+        @Override
+        public CuppingInfo createFromParcel(Parcel source) {
+            return new CuppingInfo(source);
+        }
+
+        @Override
+        public CuppingInfo[] newArray(int size) {
+            return new CuppingInfo[size];
+        }
+    };
 }

@@ -9,13 +9,11 @@ import android.widget.TextView;
 
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.CuppingInfo;
+import com.dhy.coffeesecret.ui.common.interfaces.OnItemClickListener;
 import com.hedgehog.ratingbar.RatingBar;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -29,9 +27,10 @@ public class CuppingListAdapter extends RecyclerView.Adapter implements StickyRe
 
     private OnItemClickListener mListener;
 
-    public CuppingListAdapter(Context context, List<CuppingInfo> cuppingInfos) {
+    public CuppingListAdapter(Context context, List<CuppingInfo> cuppingInfos, OnItemClickListener listener) {
         this.context = context;
         this.cuppingInfos = cuppingInfos;
+        this.mListener = listener;
     }
 
     public void add(CuppingInfo info){
@@ -66,7 +65,7 @@ public class CuppingListAdapter extends RecyclerView.Adapter implements StickyRe
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         CuppingViewHolder cuppingViewHolder = (CuppingViewHolder) holder;
-        CuppingInfo info = cuppingInfos.get(position);
+        final CuppingInfo info = cuppingInfos.get(position);
         float score = info.getScore() / 16f;
         cuppingViewHolder.itemTitle.setText(info.getName());
         cuppingViewHolder.ratingBar.setStar(score);
@@ -74,7 +73,8 @@ public class CuppingListAdapter extends RecyclerView.Adapter implements StickyRe
             @Override
             public void onClick(View view) {
                 if (mListener != null) {
-                    mListener.onItemClick(position);
+                    // mListener.onItemClick(position);
+                    mListener.onItemClick(info);
                 }
             }
         });
@@ -106,9 +106,9 @@ public class CuppingListAdapter extends RecyclerView.Adapter implements StickyRe
         return cuppingInfos.size();
     }
 
-    public interface OnItemClickListener {
+    /*public interface OnItemClickListener {
         void onItemClick(int position);
-    }
+    }*/
 
     private class CuppingViewHolder extends RecyclerView.ViewHolder {
 

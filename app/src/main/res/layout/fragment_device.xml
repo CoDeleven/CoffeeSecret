@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".ui.device.DeviceFragment">
+    tools:context=".ui.bake.PreparationFragment">
 
     <RelativeLayout
                     android:layout_width="match_parent"
@@ -16,7 +16,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="我的"
+            android:text="烘焙"
             android:textColor="@color/white"
             android:textSize="18.5sp" />
 
@@ -56,7 +56,7 @@
             android:layout_height="207dp"
             android:layout_centerHorizontal="true">
 
-            <com.dhy.coffeesecret.views.ArcProgress
+            <com.dhy.coffeesecret.ui.common.views.ArcProgress
                 android:id="@+id/id_arcprogress_bean"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -108,7 +108,7 @@
                         android:id="@+id/id_bake_beanTemp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="-1℃"
+                        android:text="-℃"
                         android:textColor="#000000"
                         android:textSize="24sp" />
 
@@ -130,18 +130,18 @@
                             android:textSize="18sp"
                             style="@style/bakingAccTemp"
                             android:layout_toLeftOf="@id/id_baking_comma0"
-                            android:text="00"/>
+                            android:text="--"/>
                         <TextView
                             android:id="@+id/id_baking_accBeanTemp_after"
                             android:layout_toRightOf="@id/id_baking_comma0"
                             android:textSize="18sp"
                             style="@style/bakingAccTemp"
-                            android:text="00"/>
+                            android:text="--"/>
                         <TextView
                             android:layout_toRightOf="@id/id_baking_accBeanTemp_after"
                             android:id="@+id/id_temp_unit0"
                             android:layout_marginLeft="2dp"
-                            android:text="F/m"
+                            android:text="-/-"
                             style="@style/bakingAccTemp"
                             android:layout_gravity="top"
                             android:paddingLeft="3dp"
@@ -199,18 +199,6 @@
             android:layout_centerHorizontal="true"
             android:background="@android:color/transparent"></View>
 
-        <LinearLayout
-            android:layout_centerVertical="true"
-            android:orientation="vertical"
-            android:layout_marginRight="30dp"
-            android:paddingTop="40dp"
-            android:id="@+id/id_bake_beanInfos"
-            android:layout_toLeftOf="@id/bake_vertical_refer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-
-        </LinearLayout>
 
 
         <View
@@ -229,7 +217,7 @@
             android:layout_marginLeft="20dp"
             android:layout_toRightOf="@id/bake_vertical_refer">
 
-            <com.dhy.coffeesecret.views.ArcProgress
+            <com.dhy.coffeesecret.ui.common.views.ArcProgress
                 android:id="@+id/id_arcprogress_inwind"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -281,7 +269,7 @@
                         android:id="@+id/id_bake_inwindTemp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="-1℃"
+                        android:text="-℃"
                         android:textColor="#000000"
                         android:textSize="13sp" />
                     <RelativeLayout
@@ -300,18 +288,18 @@
                             style="@style/bakingAccTemp"
                             android:textSize="11sp"
                             android:layout_toLeftOf="@id/id_baking_comma1"
-                            android:text="00"/>
+                            android:text="--"/>
                         <TextView
                             android:id="@+id/id_baking_accInwindTemp_after"
                             android:layout_toRightOf="@id/id_baking_comma1"
                             style="@style/bakingAccTemp"
                             android:textSize="11sp"
-                            android:text="00"/>
+                            android:text="--"/>
                         <TextView
                             android:layout_toRightOf="@id/id_baking_accInwindTemp_after"
                             android:id="@+id/id_temp_unit1"
                             android:layout_marginLeft="2dp"
-                            android:text="F/m"
+                            android:text="-/-"
                             android:textSize="8sp"
                             style="@style/bakingAccTemp"/>
                     </RelativeLayout>
@@ -323,13 +311,27 @@
             android:layout_marginTop="10dp"
             android:layout_below="@id/device_bake_circle2"
             android:layout_alignParentRight="true"
-            android:id="@+id/id_rerange_bean"
-            android:text="修改信息"
+            android:id="@+id/id_add_bean"
+            android:text="添加咖啡豆"
             android:textColor="@color/white"
-            android:visibility="invisible"
+            android:visibility="visible"
             android:background="@drawable/bg_modify_round"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_below="@id/device_bake_circle2"
+            android:layout_alignParentRight="true"
+            android:paddingTop="10dp"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:id="@+id/id_modify_beanInfos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+
+        </LinearLayout>
+
         <!-- 第三个圈，出风温-->
         <RelativeLayout
             android:id="@+id/device_bake_circle3"
@@ -340,7 +342,7 @@
             android:layout_marginLeft="20dp"
             android:layout_marginTop="70dp">
 
-            <com.dhy.coffeesecret.views.ArcProgress
+            <com.dhy.coffeesecret.ui.common.views.ArcProgress
                 android:id="@+id/id_arcprogress_outwind"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -393,7 +395,7 @@
                         android:id="@+id/id_bake_outwindTemp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="-1℃"
+                        android:text="-℃"
                         android:textColor="#000000"
                         android:textSize="13sp" />
 
@@ -414,18 +416,18 @@
                             style="@style/bakingAccTemp"
                             android:layout_toLeftOf="@id/id_baking_comma2"
                             android:textSize="11sp"
-                            android:text="00"/>
+                            android:text="--"/>
                         <TextView
                             android:id="@+id/id_baking_accOutwindTemp_after"
                             android:layout_toRightOf="@id/id_baking_comma2"
                             style="@style/bakingAccTemp"
                             android:textSize="11sp"
-                            android:text="00"/>
+                            android:text="--"/>
                         <TextView
                             android:layout_toRightOf="@id/id_baking_accOutwindTemp_after"
                             android:id="@+id/id_temp_unit2"
                             android:layout_marginLeft="2dp"
-                            android:text="F/m"
+                            android:text="-/-"
                             android:textSize="8sp"
                             style="@style/bakingAccTemp"/>
                     </RelativeLayout>
@@ -445,7 +447,7 @@
             android:layout_below="@id/device_bake_circle3"
             android:background="@drawable/bg_round_pricolor"
             android:layout_marginTop="15dp"
-            android:text="准备烘焙"
+            android:text="开始烘焙"
             android:textColor="#FFF" />
     </RelativeLayout>
 

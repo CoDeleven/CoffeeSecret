@@ -4,92 +4,34 @@ import android.app.Application;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import com.bugtags.library.Bugtags;
 import com.bugtags.library.BugtagsOptions;
 import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.pojo.BakeReportProxy;
-import com.dhy.coffeesecret.pojo.BeanInfo;
-import com.dhy.coffeesecret.pojo.CuppingInfo;
 import com.dhy.coffeesecret.pojo.UniversalConfiguration;
 import com.dhy.coffeesecret.services.BluetoothService;
-import com.dhy.coffeesecret.url.UrlBake;
-import com.dhy.coffeesecret.url.UrlBean;
-import com.dhy.coffeesecret.url.UrlCupping;
-import com.dhy.coffeesecret.utils.CacheUtils;
-import com.dhy.coffeesecret.utils.HttpParser;
-import com.dhy.coffeesecret.utils.HttpUtils;
-import com.dhy.coffeesecret.utils.SPPrivateUtils;
 import com.dhy.coffeesecret.utils.SettingTool;
-import com.google.gson.Gson;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.qiniu.pili.droid.streaming.StreamingEnv;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
-
-import static com.dhy.coffeesecret.utils.HttpUtils.getRequest;
+import cn.jesse.nativelogger.Logger;
+import cn.jesse.nativelogger.NLogger;
+import cn.jesse.nativelogger.formatter.SimpleFormatter;
+import cn.jesse.nativelogger.logger.LoggerLevel;
+import cn.jesse.nativelogger.util.CrashWatcher;
 
 /**
  * Created by CoDeleven on 17-3-6.
  */
-
+@Logger(tag = "coffeesecret", level = Logger.INFO)
 public class MyApplication extends Application {
-
-
-    private static final String TAG = "MyApplication";
-
     public static String weightUnit;
     public static String temperatureUnit;
-    private static Map<String, BeanInfo> beanInfos = new HashMap<>();
-    private static Map<String, CuppingInfo> cupInfos = new HashMap<>();
-    private static Map<String, BakeReport> bakeReports = new HashMap<>();
-    private static String url = "-1";
-    private static CacheUtils cacheUtils;
     private static BakeReportProxy BAKE_REPORT;
     private static SQLiteDatabase country2Continent;
 
-    private String token;
-    private String user;
-
     public MyApplication() {
         super();
-    }
-
-    public String getToken() {
-        if(token == null){
-            token = SPPrivateUtils.getString(this,"token",null);
-        }
-        return token;
-    }
-
-    public void setToken(String token){
-        this.token = token;
-        Log.d(TAG,"token:"+token);
-        if(token == null){
-            SPPrivateUtils.remove(this,"token");
-        }else {
-            SPPrivateUtils.put(this,"token",token);
-        }
-
-    }
-
-    public static void setUrl(String temp) {
-        url = temp;
-    }
-
-    public static SQLiteDatabase getCountry2Continent() {
-        return country2Continent;
     }
 
     public static void setCountry2Continent(SQLiteDatabase country2Continent) {
@@ -105,6 +47,25 @@ public class MyApplication extends Application {
             str="其它";
         }
         return str;
+    }
+
+    private void initLogger(){
+        NLogger.getInstance()
+                .builder()
+                .tag("CoffeeSecret")
+                .loggerLevel(LoggerLevel.INFO)
+                .fileLogger(true)
+                .fileDirectory(getApplicationContext().getFilesDir().getPath() + "/logs")
+                .fileFormatter(new SimpleFormatter())
+                .expiredPeriod(3)
+                .catchException(true, new CrashWatcher.UncaughtExceptionListener() {
+                    @Override
+                    public void uncaughtException(Thread thread, Throwable ex) {
+                        NLogger.e("uncaughtException", ex);
+                        android.os.Process.killProcess(android.os.Process.myPid());
+                    }
+                })
+                .build();
     }
 
     @Override
@@ -136,167 +97,7 @@ public class MyApplication extends Application {
         //在这里初始化
         Bugtags.start("e71c5cd04eea2bf6fd7e179915935981", this, Bugtags.BTGInvocationEventBubble, options);
 
-
-        DisplayImageOptions _options = new DisplayImageOptions.Builder().cacheOnDisk(true).cacheInMemory(true).build();
-        ImageLoaderConfiguration configuration = new ImageLoaderConfiguration.Builder(this)
-                .defaultDisplayImageOptions(_options).build();
-
-        ImageLoader.getInstance().init(configuration);
-    }
-
-    // 每次进入应用时进行校验
-    private void init() {
-        user = SPPrivateUtils.getString(this, "user", "-1");
-        int version = SPPrivateUtils.getInt(this, "version", -1);
-
-        // 模拟请求（此时没有用户类）
-        String json = "{user:\"test\", version:\"" + version + "}";
-        RequestBody requestBody = RequestBody.create(HttpUtils.TYPE, json);
-        Request request = new Request.Builder().url(url).post(requestBody).build();
-
-        // TODO 从服务器获取版本
-/*        HttpUtils.enqueue(request, new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                // TODO 获取失败的请求
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                // TODO 获取成功
-                if()
-            }
-        });*/
-    }
-
-    /**
-     * 获取所有的bakeReports
-     *
-     * @return
-     */
-    public Map<String, ? extends BakeReport> getBakeReports() {
-        if (bakeReports.isEmpty()) {
-            // 设置获取所有烘焙报告的url
-            url = UrlBake.getAll(token);
-            // 进行初始化
-            initMap(BakeReport.class);
-        }
-        return bakeReports;
-    }
-
-    /**
-     * 获取所有豆子信息
-     *
-     * @return
-     */
-    public Map<String, ? extends BeanInfo> getBeanInfos() {
-        if (beanInfos.isEmpty()) {
-            url = UrlBean.getAll(token);
-            initMap(BeanInfo.class);
-        }
-        return beanInfos;
-    }
-
-    /**
-     * 获取所有杯测信息
-     *
-     * @return
-     */
-    public Map<String, ? extends CuppingInfo> getCupInfos() {
-        if (cupInfos.isEmpty()) {
-            url = UrlCupping.getAll(token);
-            initMap(CuppingInfo.class);
-        }
-        return cupInfos;
-    }
-
-    /**
-     * 初始化需要的文件
-     */
-    private void initMap(Class clazz) {
-        boolean status = false;
-        if (cacheUtils == null) {
-            cacheUtils = CacheUtils.getCacheUtils(this);
-        }
-        // TODO 这里应该进行版本校验
-        if (false) {
-
-        }
-        if (clazz == BakeReport.class) {
-            bakeReports.putAll(cacheUtils.getListObjectFromCache(clazz));
-            if (bakeReports.size() == 0) {
-                status = true;
-            }
-        } else if (clazz == CuppingInfo.class) {
-            cupInfos.putAll(cacheUtils.getListObjectFromCache(clazz));
-            if (cupInfos.size() == 0) {
-                status = true;
-            }
-        } else if (clazz == BeanInfo.class) {
-            beanInfos.putAll(cacheUtils.getListObjectFromCache(clazz));
-            if (beanInfos.size() == 0) {
-                status = true;
-            }
-        }
-        if (status) {
-            initMapFromServer(clazz);
-        }
-    }
-
-    /**
-     * 从服务器获取对应类型的信息
-     *
-     * @param clazz
-     */
-    public void initMapFromServer(final Class clazz) {
-        HttpUtils.enqueue(getRequest(url), new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                String temp = response.body().string();
-                Map<String, Object> maps = new HashMap<>();
-                if (clazz == BakeReport.class) {
-                    bakeReports.putAll(HttpParser.getBakeReports(temp));
-                    maps.putAll(bakeReports);
-                } else if (clazz == BeanInfo.class) {
-                    beanInfos.putAll(HttpParser.getBeanInfos(temp));
-                    maps.putAll(beanInfos);
-                } else if (clazz == CuppingInfo.class) {
-                    cupInfos.putAll(HttpParser.getCuppingInfos(temp));
-                    maps.putAll(cupInfos);
-                }
-                if (cacheUtils == null) {
-                    cacheUtils = CacheUtils.getCacheUtils(getApplicationContext());
-                }
-                for (String key : maps.keySet()) {
-                    cacheUtils.saveObject(key, new Gson().toJson(maps.get(key)), clazz);
-                }
-            }
-        });
-    }
-
-    /**
-     * 获取该类的前缀
-     *
-     * @param clazz
-     * @return
-     */
-    private String getPrefix(Class clazz) {
-        if (clazz == BakeReport.class) {
-            url = UrlBake.getAll(token);
-            return CacheUtils.BAKE_REPORT_PREFIX;
-        } else if (clazz == BeanInfo.class) {
-            url = UrlBean.getAll(token);
-            return CacheUtils.BEAN_INFO_PREFIX;
-        } else if (clazz == CuppingInfo.class) {
-            url = UrlCupping.getAll(token);
-            return CacheUtils.CUP_INFO_PREFEX;
-        }
-        return null;
+        initLogger();
     }
 
     public void setBakeReport(BakeReport bakeReport) {
@@ -308,7 +109,7 @@ public class MyApplication extends Application {
     }
 
     public void setBakeReport(BakeReportProxy bakeReport) {
-        this.BAKE_REPORT = bakeReport;
+        MyApplication.BAKE_REPORT = bakeReport;
     }
 
     @Override
@@ -321,7 +122,7 @@ public class MyApplication extends Application {
     }
 
     public void initUnit() {
-        UniversalConfiguration config = SettingTool.getConfig(this);
+        UniversalConfiguration config = SettingTool.getConfig();
         weightUnit = config.getWeightUnit();
         temperatureUnit = config.getTempratureUnit();
     }

@@ -1,9 +1,6 @@
 package com.dhy.coffeesecret.model.chart;
 
-import android.util.Log;
-
-import com.dhy.coffeesecret.model.IBaseView;
-import com.dhy.coffeesecret.pojo.TemperatureSet;
+import com.dhy.coffeesecret.model.base.BasePresenter;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
@@ -17,22 +14,22 @@ import java.util.Map;
  * Created by CoDeleven on 17-8-14.
  */
 
-public class Presenter4Chart {
+public class Presenter4Chart extends BasePresenter<IChartView, Model4Chart>{
     private static final String TAG = Presenter4Chart.class.getSimpleName();
-    private IChartView mViewOperator;
-    private Model4Chart mModelOperator;
+    // private IChartView mViewOperator;
+    // private Model4Chart mModelOperator;
     private static Presenter4Chart mPresenter;
     private Map<Integer, ILineDataSet> lines = new HashMap<>();
     private static Map<Integer, String> labels = new HashMap<>();
     // 参考曲线
     private List<Entry> referEntries;
 
-    // 用于记录真实的，需要保存的数据
-    private TemperatureSet temperatureSet;
+    // 用于记录真实的，需要保存的数据,貌似没用
+    // private TemperatureSet temperatureSet;
 
-    public void setTemperatureSet(TemperatureSet temperatureSet) {
+    /*public void setTemperatureSet(TemperatureSet temperatureSet) {
         this.temperatureSet = temperatureSet;
-    }
+    }*/
 
     static {
         labels.put(Model4Chart.BEANLINE, "豆温");
@@ -45,19 +42,22 @@ public class Presenter4Chart {
     }
 
     public Presenter4Chart(){
+        super(new Model4Chart(4, 4));
         // FIXME 手动设置 -> 读取配置文件
-        mModelOperator = new Model4Chart(4, 4);
     }
 
-    public void setView(IBaseView baseView){
-        mViewOperator = (IChartView)baseView;
-    }
-
-    public void initLine(){
+    public void initLines(){
         // 总共6条曲线
         for(int i = 1; i < 7; ++i){
             LineDataSet set = new LineDataSet(new ArrayList<Entry>(), labels.get(new Integer(i)));
             lines.put(new Integer(i), set);
+            mViewOperator.addLine(set, i, i >= 4 && i < 7);
+        }
+    }
+
+    public void continueLastLines(){
+        for(int i = 1; i < 7; ++i){
+            LineDataSet set = (LineDataSet)lines.get(new Integer(i));
             mViewOperator.addLine(set, i, i >= 4 && i < 7);
         }
     }
@@ -95,7 +95,6 @@ public class Presenter4Chart {
      */
     public void dynamicAddDataImm(Entry immData, int lineIndex, boolean toRefresh) {
         double mockTemperature = mModelOperator.getMockData(immData, lineIndex);
-        Log.d(TAG, "模拟的数据为:" + mockTemperature + ",  真实的数据为：" + immData.getY());
         immData.setY((float) mockTemperature);
         // 设置新的Entry去line里面
         lines.get(new Integer(lineIndex)).addEntry(immData);
@@ -124,7 +123,7 @@ public class Presenter4Chart {
 
     public void clear(){
         mViewOperator.clear();
-        initLine();
+        initLines();
         if(referEntries != null && referEntries.size() > 0){
             enableReferLine(referEntries);
         }
@@ -135,5 +134,13 @@ public class Presenter4Chart {
             mPresenter = new Presenter4Chart();
         }
         return mPresenter;
+    }
+
+    public void clearReferLine(){
+        referEntries = null;
+    }
+
+    public void refreshChart(){
+        mViewOperator.updateChart();
     }
 }

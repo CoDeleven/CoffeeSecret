@@ -9,7 +9,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.dhy.coffeesecret.R;
-import com.dhy.coffeesecret.views.CameraPreviewFrameView;
+import com.dhy.coffeesecret.ui.common.views.CameraPreviewFrameView;
 import com.qiniu.android.dns.DnsManager;
 import com.qiniu.android.dns.IResolver;
 import com.qiniu.android.dns.NetworkInfo;

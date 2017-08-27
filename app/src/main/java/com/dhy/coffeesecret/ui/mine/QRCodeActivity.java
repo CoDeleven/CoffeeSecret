@@ -5,16 +5,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
-import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
-import com.dhy.coffeesecret.pojo.BakeReport;
-import com.dhy.coffeesecret.pojo.BakeReportProxy;
-import com.dhy.coffeesecret.ui.device.ReportActivity;
-import com.dhy.coffeesecret.utils.TestData;
-
-import junit.framework.Test;
-
-import java.util.Map;
+import com.dhy.coffeesecret.ui.bake.ReportActivity;
 
 import cn.bingoogolapple.qrcode.core.QRCodeView;
 import cn.bingoogolapple.qrcode.zxing.ZXingView;

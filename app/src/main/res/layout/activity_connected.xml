@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.dhy.coffeesecret.ConnectedActivity">
+    tools:context="com.dhy.coffeesecret.ui.launcher.ConnectedActivity">
     <RelativeLayout
         android:paddingTop="50dp"
         android:paddingBottom="50dp"

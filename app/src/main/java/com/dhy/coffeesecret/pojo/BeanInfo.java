@@ -1,11 +1,13 @@
 package com.dhy.coffeesecret.pojo;
 
-import java.io.Serializable;
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class BeanInfo implements Serializable {
+public class BeanInfo implements Parcelable {
 
 	private int id;
 	// 咖啡名称
@@ -208,26 +210,66 @@ public class BeanInfo implements Serializable {
 	}
 
 	@Override
-	public String toString() {
-		return "BeanInfo{" +
-				"id=" + id +
-				", name='" + name + '\'' +
-				", manor='" + manor + '\'' +
-				", drawablePath='" + drawablePath + '\'' +
-				", stockWeight=" + stockWeight +
-				", country='" + country + '\'' +
-				", area='" + area + '\'' +
-				", altitude='" + altitude + '\'' +
-				", species='" + species + '\'' +
-				", level='" + level + '\'' +
-				", process='" + process + '\'' +
-				", waterContent=" + waterContent +
-				", supplier='" + supplier + '\'' +
-				", price=" + price +
-				", date=" + date +
-				", continent='" + continent + '\'' +
-				", bakeReports=" + bakeReports +
-				", hasBakeReports=" + hasBakeReports +
-				'}';
+	public int describeContents() {
+		return 0;
 	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeInt(this.id);
+		dest.writeString(this.name);
+		dest.writeString(this.manor);
+		dest.writeString(this.drawablePath);
+		dest.writeDouble(this.stockWeight);
+		dest.writeString(this.country);
+		dest.writeString(this.area);
+		dest.writeString(this.altitude);
+		dest.writeString(this.species);
+		dest.writeString(this.level);
+		dest.writeString(this.process);
+		dest.writeFloat(this.waterContent);
+		dest.writeString(this.supplier);
+		dest.writeDouble(this.price);
+		dest.writeLong(this.date != null ? this.date.getTime() : -1);
+		dest.writeString(this.continent);
+		dest.writeTypedList(this.bakeReports);
+		dest.writeByte(this.hasBakeReports ? (byte) 1 : (byte) 0);
+	}
+
+	public BeanInfo() {
+	}
+
+	protected BeanInfo(Parcel in) {
+		this.id = in.readInt();
+		this.name = in.readString();
+		this.manor = in.readString();
+		this.drawablePath = in.readString();
+		this.stockWeight = in.readDouble();
+		this.country = in.readString();
+		this.area = in.readString();
+		this.altitude = in.readString();
+		this.species = in.readString();
+		this.level = in.readString();
+		this.process = in.readString();
+		this.waterContent = in.readFloat();
+		this.supplier = in.readString();
+		this.price = in.readDouble();
+		long tmpDate = in.readLong();
+		this.date = tmpDate == -1 ? null : new Date(tmpDate);
+		this.continent = in.readString();
+		this.bakeReports = in.createTypedArrayList(BakeReport.CREATOR);
+		this.hasBakeReports = in.readByte() != 0;
+	}
+
+	public static final Creator<BeanInfo> CREATOR = new Creator<BeanInfo>() {
+		@Override
+		public BeanInfo createFromParcel(Parcel source) {
+			return new BeanInfo(source);
+		}
+
+		@Override
+		public BeanInfo[] newArray(int size) {
+			return new BeanInfo[size];
+		}
+	};
 }

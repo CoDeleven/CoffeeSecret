@@ -1,7 +1,5 @@
 package com.github.mikephil.charting.data;
 
-import android.os.Parcelable;
-
 import java.io.Serializable;
 
 /**
@@ -10,6 +8,8 @@ import java.io.Serializable;
 
 public class Event implements Serializable {
     public static final int DRY = 1, FIRST_BURST = 2, SECOND_BURST = 3, END = 4, FIRE_WIND = 7, OTHER = 9;
+    // 后来补上
+    public static final int FIRST_BURST_END = -2, SECOND_BURST_END = -3;
     private String description = "";
     private int curStatus;
     public Event(){
@@ -36,5 +36,13 @@ public class Event implements Serializable {
 
     public void setCurStatus(int curStatus){
         this.curStatus = curStatus;
+    }
+
+    @Override
+    public String toString() {
+        return "Event{" +
+                "description='" + description + '\'' +
+                ", curStatus=" + curStatus +
+                '}';
     }
 }

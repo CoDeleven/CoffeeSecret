@@ -1,6 +1,7 @@
 package com.dhy.coffeesecret.model.device;
 
-import com.dhy.coffeesecret.model.IBaseView;
+import com.dhy.coffeesecret.model.base.IBaseView;
+import com.dhy.coffeesecret.pojo.BakeReport;
 
 /**
  * Created by CoDeleven on 17-8-1.
@@ -8,5 +9,5 @@ import com.dhy.coffeesecret.model.IBaseView;
  */
 
 public interface IDeviceView extends IBaseView{
-    // void updateTemperatureView(Temperature temperature);
+    void goNextActivity(BakeReport referTemperatures);
 }

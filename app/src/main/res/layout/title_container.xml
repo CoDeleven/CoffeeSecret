@@ -12,13 +12,13 @@
         android:layout_height="match_parent"
         android:layout_weight="1" />
 
-    <com.dhy.coffeesecret.views.SearchEditText
+    <com.dhy.coffeesecret.ui.common.views.SearchEditText
         android:id="@+id/search_bean"
         style="@style/SearchBar"
         android:cursorVisible="false"
         android:layout_gravity="center"
         android:layout_weight="0.5">
-    </com.dhy.coffeesecret.views.SearchEditText>
+    </com.dhy.coffeesecret.ui.common.views.SearchEditText>
 
     <LinearLayout
         android:layout_width="match_parent"

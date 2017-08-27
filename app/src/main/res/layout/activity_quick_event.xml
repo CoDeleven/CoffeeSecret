@@ -15,5 +15,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/title_bar" />
-
+        <!--<com.daimajia.swipe.SwipeLayout
+            android:id="@+id/quick_event_list"
+            android:layout_below="@id/title_bar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"></com.daimajia.swipe.SwipeLayout>-->
 </RelativeLayout>

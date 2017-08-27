@@ -3,6 +3,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/white"
-                tools:context="com.dhy.coffeesecret.ui.device.fragments.ThreeCirclesPart">
+                tools:context="com.dhy.coffeesecret.ui.bake.fragments.ThreeCirclesPart">
 
 </RelativeLayout>

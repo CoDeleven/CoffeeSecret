@@ -1,7 +1,6 @@
 package com.dhy.coffeesecret.model.bake;
 
-import com.dhy.coffeesecret.model.IBaseModel;
-import com.dhy.coffeesecret.pojo.Temperature;
+import com.dhy.coffeesecret.model.base.BaseModel;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.Event;
 
@@ -12,21 +11,11 @@ import java.util.Map;
  * Created by CoDeleven on 17-8-2.
  */
 
-public class Model4Bake implements IBakeModel {
+public class Model4Bake extends BaseModel implements IBakeModel {
     private Map<Integer, EventInfo> eventInfoMap = new HashMap<>();
     private static Model4Bake model4Bake = new Model4Bake();
 
     private Model4Bake() {
-    }
-
-    @Override
-    public void notifyTemperatureByManual(Temperature temperature) {
-
-    }
-
-    @Override
-    public void notifyTemperatureByAtuo(Temperature temperature) {
-
     }
 
     @Override
@@ -44,7 +33,7 @@ public class Model4Bake implements IBakeModel {
         return eventInfoMap.get(new Integer(status));
     }
 
-    public static IBaseModel newInstance() {
+    public static Model4Bake newInstance() {
         if(model4Bake == null){
             model4Bake = new Model4Bake();
         }

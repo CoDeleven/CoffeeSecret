@@ -16,7 +16,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.RadioGroup;
 
-import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.pojo.CuppingInfo;
@@ -107,7 +106,7 @@ public class NewCuppingActivity extends AppCompatActivity
         Intent intent = getIntent();
         viewType = intent.getStringExtra(VIEW_TYPE);
         if (SHOW_INFO.equals(viewType)) {
-            mCuppingInfo = (CuppingInfo) intent.getSerializableExtra(TARGET);
+            mCuppingInfo = intent.getParcelableExtra(TARGET);
             mBakeReport = mCuppingInfo.getBakeReport();
             loadShowInfoView();
         } else if (NEW_CUPPING.equals(viewType)) {
@@ -266,13 +265,19 @@ public class NewCuppingActivity extends AppCompatActivity
 
     private void initParam() {
         if (NEW_CUPPING.equals(viewType)) {
-            cuppingInfoFragment = CuppingInfoFragment.newInstance(null, null);
+            cuppingInfoFragment = CuppingInfoFragment.newInstance(null, null, 0);
             cuppingInfoFragment.initEditable(true);
         } else {
             float[] feelScores = new float[]{mCuppingInfo.getDryAndFragrant(), mCuppingInfo.getFlavor(), mCuppingInfo.getAfterTaste(),
                     mCuppingInfo.getAcidity(), mCuppingInfo.getTaste(), mCuppingInfo.getSweetness(), mCuppingInfo.getBalance(), mCuppingInfo.getOverall()};
             float[] flawScores = new float[]{mCuppingInfo.getUnderdevelopment(), mCuppingInfo.getOverdevelopment(), mCuppingInfo.getBaked(), mCuppingInfo.getScorched(), mCuppingInfo.getTipped(), mCuppingInfo.getFaced()};
-            cuppingInfoFragment = CuppingInfoFragment.newInstance(flawScores, feelScores);
+            int roastDegree = 0;
+            try{
+                roastDegree = (int)Float.parseFloat(mBakeReport.getRoastDegree());
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            cuppingInfoFragment = CuppingInfoFragment.newInstance(flawScores, feelScores, roastDegree);
         }
 
         bakeInfoFragment = BakeInfoFragment.newInstance(mBakeReport, NEW_CUPPING.equals(viewType));

@@ -5,7 +5,7 @@
     android:id="@+id/activity_launch"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.dhy.coffeesecret.LauncherActivity">
+    tools:context="com.dhy.coffeesecret.ui.launcher.LauncherActivity">
     <ImageView
         android:src="@mipmap/launch_frame"
         android:scaleType="fitXY"

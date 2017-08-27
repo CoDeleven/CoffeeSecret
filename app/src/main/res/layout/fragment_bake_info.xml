@@ -76,7 +76,7 @@
             android:textColor="@android:color/darker_gray"
             android:textSize="@dimen/font_size_primary" />
 
-        <com.dhy.coffeesecret.views.BaseChart4Coffee
+        <com.dhy.coffeesecret.ui.common.views.BaseChart4Coffee
             android:id="@+id/chart"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

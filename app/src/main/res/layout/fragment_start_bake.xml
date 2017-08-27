@@ -2,7 +2,7 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:context="com.dhy.coffeesecret.ui.device.fragments.StartBakeFragment">
+                tools:context="com.dhy.coffeesecret.ui.bake.fragments.StartBakeFragment">
 
     <!-- TODO: Update blank fragment layout -->
 

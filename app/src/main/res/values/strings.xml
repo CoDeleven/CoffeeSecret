@@ -90,4 +90,5 @@
     <string name="early_cupping">最早的杯测</string>
     <string name="later_cupping">最新的杯测</string>
 
+    <string name="request_permission_rationale">您好，欢迎使用CoffeeSecret，我们需要以下的权限才能更好的为您服务...</string>
 </resources>

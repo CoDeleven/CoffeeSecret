@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#EDEEE9"
-    tools:context="com.dhy.coffeesecret.ui.device.ReportActivity">
+    tools:context="com.dhy.coffeesecret.ui.bake.ReportActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar_device_activtiy"
@@ -61,7 +61,7 @@
 
     </android.support.v7.widget.Toolbar>
 
-    <com.dhy.coffeesecret.views.ScrollViewContainer
+    <com.dhy.coffeesecret.ui.common.views.ScrollViewContainer
         android:id="@+id/id_report_scrollContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -239,12 +239,12 @@
                             android:text="温度曲线图"
                             android:textSize="15sp"/>
 
-                        <com.dhy.coffeesecret.views.BaseChart4Coffee
+                        <com.dhy.coffeesecret.ui.common.views.BaseChart4Coffee
                             android:id="@+id/id_report_chart"
                             android:layout_width="344.25dp"
                             android:layout_height="200dp"
                             android:layout_below="@id/id_report_lineOperator"
-                            android:layout_centerHorizontal="true"></com.dhy.coffeesecret.views.BaseChart4Coffee>
+                            android:layout_centerHorizontal="true"></com.dhy.coffeesecret.ui.common.views.BaseChart4Coffee>
 
                         <TableLayout
                             android:id="@+id/id_tl_chart_descriptor"
@@ -539,7 +539,7 @@
 
                 </LinearLayout>
 
-                <com.dhy.coffeesecret.views.DownRefresh
+                <com.dhy.coffeesecret.ui.common.views.DownRefresh
                     android:layout_width="match_parent"
                     android:layout_height="40dp"/>
             </LinearLayout>
@@ -598,5 +598,5 @@
 
             </TableLayout>
         </ScrollView>
-    </com.dhy.coffeesecret.views.ScrollViewContainer>
+    </com.dhy.coffeesecret.ui.common.views.ScrollViewContainer>
 </RelativeLayout>

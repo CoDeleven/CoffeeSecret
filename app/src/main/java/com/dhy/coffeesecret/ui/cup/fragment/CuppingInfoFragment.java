@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.ui.cup.listener.GridViewItemClickListener;
 import com.dhy.coffeesecret.utils.ArrayUtil;
+import com.dhy.coffeesecret.ui.common.views.BakeDegreeShowBar;
 import com.dinuscxj.progressbar.CircleProgressBar;
 
 import java.util.HashMap;
@@ -55,6 +56,8 @@ public class CuppingInfoFragment extends Fragment implements InputDialogFragment
 
     private static final String FLAW_SCORES_ARRAY = "flawScores";
     private static final String FEEL_SCORES_ARRAY = "feelScores";
+    private static final String ROAST_DEGREE_KEY = "roastDegree";
+
 
     private OnDeleteListener mListener;
     private GridView mGridViewFeel;
@@ -66,9 +69,10 @@ public class CuppingInfoFragment extends Fragment implements InputDialogFragment
     private View mScoresCircles;
 
     private View cuppingInfoView;
-
+    private BakeDegreeShowBar mShowBar;
     private float[] flawScores;
     private float[] feelScores;
+    private int roastDegree;
     private boolean isNewCupping = false;
 
     private InfoGridViewAdapter mFeelAdapter;
@@ -82,10 +86,11 @@ public class CuppingInfoFragment extends Fragment implements InputDialogFragment
     public CuppingInfoFragment() {
     }
 
-    public static CuppingInfoFragment newInstance(float[] flawScores, float[] feelScores) {
+    public static CuppingInfoFragment newInstance(float[] flawScores, float[] feelScores, int roastDegree) {
         Bundle args = new Bundle();
         args.putFloatArray(FEEL_SCORES_ARRAY, feelScores);
         args.putFloatArray(FLAW_SCORES_ARRAY, flawScores);
+        args.putInt(ROAST_DEGREE_KEY, roastDegree);
         CuppingInfoFragment fragment = new CuppingInfoFragment();
         fragment.setArguments(args);
         return fragment;
@@ -106,8 +111,11 @@ public class CuppingInfoFragment extends Fragment implements InputDialogFragment
         flawProgressBar = (CircleProgressBar) cuppingInfoView.findViewById(R.id.cpb_flaw);
         finalProgressBar = (CircleProgressBar) cuppingInfoView.findViewById(R.id.cpb_final);
         mDeleteButton = (Button) cuppingInfoView.findViewById(R.id.btn_delete);
+        mShowBar = (BakeDegreeShowBar) cuppingInfoView.findViewById(R.id.id_show_bake_degree);
+        mShowBar.setCurProcess(roastDegree);
 
         mScoresCircles = cuppingInfoView.findViewById(R.id.line_result);
+
 
         mFeelAdapter = new InfoGridViewAdapter(FEEL_ICONS, mData, FEEL_TITLES);
         mFlawAdapter = new InfoGridViewAdapter(FLAW_ICONS, mData, FLAW_TITLES);
@@ -192,11 +200,13 @@ public class CuppingInfoFragment extends Fragment implements InputDialogFragment
         if (getArguments() != null) {
             feelScores = getArguments().getFloatArray(FEEL_SCORES_ARRAY);
             flawScores = getArguments().getFloatArray(FLAW_SCORES_ARRAY);
+            roastDegree = getArguments().getInt(ROAST_DEGREE_KEY);
         }
 
         if (feelScores == null) {
             feelScores = new float[]{10f, 10f, 10f, 10f, 10f, 10f, 10f, 10f};
             flawScores = new float[]{0, 0, 0, 0, 0, 0};
+            roastDegree = 0;
             isNewCupping = true;
         }
 
@@ -207,6 +217,8 @@ public class CuppingInfoFragment extends Fragment implements InputDialogFragment
         for (int i = 0; i < FLAW_TITLES.length; i++) {
             mData.put(FLAW_TITLES[i], flawScores[i]);
         }
+
+        // TODO 显示烘焙都在界面上
     }
 
     @Override

@@ -1,10 +1,9 @@
 package com.dhy.coffeesecret.pojo;
 
-import com.google.gson.annotations.Expose;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-import java.io.Serializable;
-
-public class BeanInfoSimple implements Serializable {
+public class BeanInfoSimple implements Parcelable {
 
     private transient long singleBeanId;
     private String beanName;
@@ -132,4 +131,48 @@ public class BeanInfoSimple implements Serializable {
     public void setSingleBeanId(long singleBeanId) {
         this.singleBeanId = singleBeanId;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.beanName);
+        dest.writeString(this.species);
+        dest.writeString(this.country);
+        dest.writeString(this.level);
+        dest.writeString(this.area);
+        dest.writeString(this.altitude);
+        dest.writeString(this.manor);
+        dest.writeString(this.process);
+        dest.writeString(this.waterContent);
+        dest.writeString(this.usage);
+    }
+
+    protected BeanInfoSimple(Parcel in) {
+        this.beanName = in.readString();
+        this.species = in.readString();
+        this.country = in.readString();
+        this.level = in.readString();
+        this.area = in.readString();
+        this.altitude = in.readString();
+        this.manor = in.readString();
+        this.process = in.readString();
+        this.waterContent = in.readString();
+        this.usage = in.readString();
+    }
+
+    public static final Creator<BeanInfoSimple> CREATOR = new Creator<BeanInfoSimple>() {
+        @Override
+        public BeanInfoSimple createFromParcel(Parcel source) {
+            return new BeanInfoSimple(source);
+        }
+
+        @Override
+        public BeanInfoSimple[] newArray(int size) {
+            return new BeanInfoSimple[size];
+        }
+    };
 }

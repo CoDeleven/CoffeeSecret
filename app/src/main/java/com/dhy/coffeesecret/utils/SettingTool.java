@@ -3,7 +3,6 @@ package com.dhy.coffeesecret.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.support.v4.content.SharedPreferencesCompat;
 
 import com.dhy.coffeesecret.pojo.UniversalConfiguration;
 import com.google.gson.Gson;
@@ -12,7 +11,6 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.HashSet;
 
 /**
  * Created by CoDeleven on 17-2-3.
@@ -22,9 +20,9 @@ public class SettingTool {
     private static UniversalConfiguration mConfig;
     private static SharedPreferences sharedPreferences;
 
-    public static UniversalConfiguration getConfig(Context context) {
+    public static UniversalConfiguration getConfig() {
         if (mConfig == null) {
-            setupConfig(context);
+            throw new RuntimeException("SettingTool 没有在MyApplication正常初始化");
         }
         return mConfig;
     }

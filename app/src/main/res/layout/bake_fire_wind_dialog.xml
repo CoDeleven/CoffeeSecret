@@ -21,7 +21,7 @@
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
-                <com.dhy.coffeesecret.views.CircleSeekBar
+                <com.dhy.coffeesecret.ui.common.views.CircleSeekBar
                     android:id="@+id/id_baking_circle1"
                     android:layout_width="150dp"
                     android:padding="20dp"
@@ -58,7 +58,7 @@
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
-                <com.dhy.coffeesecret.views.CircleSeekBar
+                <com.dhy.coffeesecret.ui.common.views.CircleSeekBar
                     android:id="@+id/id_baking_circle2"
                     android:layout_width="150dp"
                     android:padding="20dp"

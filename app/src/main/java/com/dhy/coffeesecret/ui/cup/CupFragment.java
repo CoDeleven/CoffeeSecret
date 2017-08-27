@@ -6,6 +6,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -20,16 +21,20 @@ import android.widget.PopupWindow;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
+import com.dhy.coffeesecret.model.UniExtraKey;
 import com.dhy.coffeesecret.pojo.CuppingInfo;
-import com.dhy.coffeesecret.ui.container.adapters.HandlerAdapter;
-import com.dhy.coffeesecret.ui.container.fragments.SearchFragment;
+import com.dhy.coffeesecret.ui.common.SearchFragment;
+import com.dhy.coffeesecret.ui.common.interfaces.OnItemClickListener;
+import com.dhy.coffeesecret.ui.common.views.DividerDecoration;
+import com.dhy.coffeesecret.ui.counters.adapters.HandlerAdapter;
 import com.dhy.coffeesecret.ui.cup.adapter.CuppingListAdapter;
 import com.dhy.coffeesecret.ui.cup.comparator.BaseComparator;
 import com.dhy.coffeesecret.ui.cup.comparator.DateComparator;
 import com.dhy.coffeesecret.ui.cup.comparator.OrderBy;
 import com.dhy.coffeesecret.ui.cup.comparator.ScoreComparator;
+import com.dhy.coffeesecret.ui.cup.filter.Filter;
+import com.dhy.coffeesecret.ui.cup.fragment.SearchCupInfoFragment;
 import com.dhy.coffeesecret.ui.cup.filter.Filter;
 import com.dhy.coffeesecret.url.UrlCupping;
 import com.dhy.coffeesecret.utils.HttpUtils;
@@ -41,7 +46,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
-import java.io.Serializable;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -101,7 +105,6 @@ public class CupFragment extends Fragment implements View.OnClickListener {
     private Filter filter;
     private boolean isAddSearchFragment;
     private SearchFragment searchFragment;
-    private MyApplication application;
 
 
     public CupFragment() {
@@ -119,27 +122,23 @@ public class CupFragment extends Fragment implements View.OnClickListener {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        application = (MyApplication) getActivity().getApplication();
-
         mRefreshLayout = (SwipeRefreshLayout) mCuppingView.findViewById(R.id.refresh_layout);
         mRecyclerView = (RecyclerView) mCuppingView.findViewById(R.id.rv_cupping);
         mSortButton = mCuppingView.findViewById(R.id.btn_sort);
         mScreenButton = mCuppingView.findViewById(R.id.btn_screen);
         mSortText = (TextView) mCuppingView.findViewById(R.id.sort_type);
-        mAdapter = new CuppingListAdapter(mContext, cuppingInfos);
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-        initSortPopupWindow(inflater);
-        initScreenPopupWindow(inflater);
-
-        mAdapter.setOnItemClickListener(new CuppingListAdapter.OnItemClickListener() {
+        mAdapter = new CuppingListAdapter(mContext, cuppingInfos, new OnItemClickListener() {
             @Override
-            public void onItemClick(int position) {
+            public void onItemClick(Parcelable parcelable) {
                 Intent intent = new Intent(mContext, NewCuppingActivity.class);
-                intent.putExtra(TARGET, cuppingInfos.get(position));
+                intent.putExtra(TARGET, parcelable);
                 intent.putExtra(VIEW_TYPE, SHOW_INFO);
                 startActivityForResult(intent, REQ_CODE_EDIT);
             }
         });
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        initSortPopupWindow(inflater);
+        initScreenPopupWindow(inflater);
 
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
@@ -168,15 +167,15 @@ public class CupFragment extends Fragment implements View.OnClickListener {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQ_CODE_EDIT) {
             if (resultCode == RESULT_CODE_UPDATE) {
-                CuppingInfo info = (CuppingInfo) data.getSerializableExtra(TARGET);
+                CuppingInfo info =  data.getParcelableExtra(TARGET);
                 mAdapter.update(info);
             } else if (resultCode == RESULT_CODE_DElETE) {
-                CuppingInfo info = (CuppingInfo) data.getSerializableExtra(TARGET);
+                CuppingInfo info =  data.getParcelableExtra(TARGET);
                 mAdapter.delete(info);
             }
         } else if (requestCode == REQ_CODE_NEW) {
             if (resultCode == RESULT_CODE_ADD) {
-                CuppingInfo info = (CuppingInfo) data.getSerializableExtra(TARGET);
+                CuppingInfo info =  data.getParcelableExtra(TARGET);
                 mAdapter.add(info);
                 sortList();
             }
@@ -331,8 +330,7 @@ public class CupFragment extends Fragment implements View.OnClickListener {
             @Override
             public void run() {
                 try {
-
-                    String str = HttpUtils.getStringFromServer(UrlCupping.getAll(application.getToken()));
+                    String str = HttpUtils.getStringFromServer(URLs.GET_ALL_CUPPING);
                     Type type = new TypeToken<ArrayList<CuppingInfo>>() {
                     }.getType();
                     Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
@@ -392,22 +390,19 @@ public class CupFragment extends Fragment implements View.OnClickListener {
             isAddSearchFragment = !searchFragment.isRemoved();
         }
         if (!isAddSearchFragment) {
-            searchFragment = new SearchFragment();
+            searchFragment = new SearchCupInfoFragment();
             Bundle bundle = new Bundle();
-            bundle.putSerializable("cuppingInfos", (Serializable) (allCuppingInfos == null ? cuppingInfos : allCuppingInfos));
+            bundle.putParcelableArrayList(UniExtraKey.EXTRA_CUP_INFO_LIST.getKey(), new ArrayList<Parcelable>((allCuppingInfos == null ? cuppingInfos : allCuppingInfos)));
             searchFragment.setArguments(bundle);
             tx.add(R.id.activity_main, searchFragment, "search_cupping");
             isAddSearchFragment = true;
 
-            searchFragment.setOnResultClickListenr(new SearchFragment.OnResultClickListenr() {
+/*            searchFragment.setOnResultClickListenr(new SearchFragment.OnResultClickListenr() {
                 @Override
                 public void onItemClick(Serializable serializable) {
-                    Intent intent = new Intent(mContext, NewCuppingActivity.class);
-                    intent.putExtra(TARGET, serializable);
-                    intent.putExtra(VIEW_TYPE, SHOW_INFO);
-                    startActivityForResult(intent, REQ_CODE_EDIT);
+
                 }
-            });
+            });*/
         } else {
             tx.show(searchFragment);
         }

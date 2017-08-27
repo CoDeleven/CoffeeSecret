@@ -1,35 +1,34 @@
 package com.dhy.coffeesecret.model.device;
 
-import android.bluetooth.BluetoothDevice;
 import android.util.Log;
 
+import com.clj.fastble.data.ScanResult;
 import com.dhy.coffeesecret.model.BaseBlePresenter;
-import com.dhy.coffeesecret.model.IBaseView;
+import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.pojo.BakeReportProxy;
+import com.dhy.coffeesecret.pojo.BeanInfoSimple;
 import com.dhy.coffeesecret.pojo.Temperature;
-import com.dhy.coffeesecret.services.IBluetoothOperator;
-import com.dhy.coffeesecret.ui.device.DeviceFragment;
+import com.dhy.coffeesecret.services.interfaces.IBluetoothOperator;
+import com.dhy.coffeesecret.ui.bake.PreparationFragment;
+import com.dhy.coffeesecret.utils.ConvertUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import cn.jesse.nativelogger.NLogger;
 
 /**
  * Created by CoDeleven on 17-8-1.
  */
 
-public class Presenter4Device extends BaseBlePresenter {
+public class Presenter4Device extends BaseBlePresenter<IDeviceView, Model4Device> {
     private static final String TAG = Presenter4Device.class.getSimpleName();
-
-    private static Presenter4Device mPresenter;
+    private static Presenter4Device mSelf;
     private boolean isStart = false;
-
+    private List<BeanInfoSimple> temporaryBeanInfo = new ArrayList<>();
+    private BakeReport temporaryReferTemperatures;
     private Presenter4Device() {
-        // 初始化model
-        super.modelOperator = Model4Device.newInstance();
-    }
-
-    /**
-     * 只能在DeviceFragment重新进行bakeReport的生成
-     */
-    public void initBakeReport(){
-        super.bakeReportProxy = new BakeReportProxy();
+        super(Model4Device.newInstance());
     }
 
     /**
@@ -40,75 +39,95 @@ public class Presenter4Device extends BaseBlePresenter {
      */
     public static Presenter4Device newInstance(IBluetoothOperator bluetoothOperator) {
         if (BaseBlePresenter.mBluetoothOperator == null) {
-            mPresenter = new Presenter4Device();
+            mSelf = new Presenter4Device();
             BaseBlePresenter.mBluetoothOperator = bluetoothOperator;
         }
-        return mPresenter;
+        return mSelf;
     }
 
-    @Override
-    public void setView(IBaseView baseView) {
-        viewOperator = baseView;
+    public void setTemporaryBeanInfo(List<BeanInfoSimple> temporaryBeanInfo) {
+        this.temporaryBeanInfo = temporaryBeanInfo;
+    }
+
+    public List<BeanInfoSimple> getTemporaryBeanInfo(){
+        return this.temporaryBeanInfo;
     }
 
     @Override
     public void notifyTemperature(Temperature temperature) {
         Log.d(TAG, "presenter4device -> notifyTemperature: 收到温度信息：" + temperature);
         if (!isStart) {
-            ((Model4Device) modelOperator).updateBeginTemperature(temperature);
+            mModelOperator.updateBeginTemperature(temperature);
             // beginTemp = temperature.getBeanTemp();
             isStart = true;
         }
-        viewOperator.updateText(DeviceFragment.UPDATE_TEMPERATURE_TEXT, temperature);
+        mViewOperator.updateText(PreparationFragment.UPDATE_TEMPERATURE_TEXT, temperature);
     }
 
+    public void setTemporaryReferTemperatures(BakeReport temporaryReferTemperatures) {
+        this.temporaryReferTemperatures = temporaryReferTemperatures;
+    }
+
+    public BakeReport getTemporaryReferTemperatures() {
+        return temporaryReferTemperatures;
+    }
 
     @Override
-    public void onScanning(BluetoothDevice bluetoothDevice, int rssi) {
-        if (bluetoothDevice.getAddress().equals(((Model4Device) modelOperator).getLastConnectedAddr())) {
-            viewOperator.showToast(DeviceFragment.AUTO_CONNECTION_TIPS, "正在自动重连...");
+    public void onScanning(ScanResult result) {
+        if (result.getDevice().getAddress().equals(mModelOperator.getLastConnectedAddr())) {
+            mViewOperator.showToast(PreparationFragment.AUTO_CONNECTION_TIPS, "正在自动重连...");
             // 连接蓝牙设备
-            BaseBlePresenter.mBluetoothOperator.connect(bluetoothDevice);
+            BaseBlePresenter.mBluetoothOperator.connect(result);
             // 停止扫描
             BaseBlePresenter.mBluetoothOperator.stopScanDevice();
         }
-    }
-
-    @Override
-    public void toConnected(int status) {
-        // 更新连接状态
-        viewOperator.updateText(0, "");
-    }
-
-    @Override
-    public void toDisconnected(int status) {
-        // 更新连接状态为未连接
-        viewOperator.updateText(1, "");
-    }
-
-    @Override
-    public void toDisconnecting(int status) {
-        toDisconnected(status);
     }
 
     public boolean isConnected() {
         return BaseBlePresenter.mBluetoothOperator.isConnected();
     }
 
-    public BluetoothDevice getConnectedDevice() {
-        return BaseBlePresenter.mBluetoothOperator.getConnectedDevice();
+    /**
+     * 开始烘焙
+     * 初始化烘焙报告，设置豆种信息，统一单位，设置设备名，
+     * 启动BakeActivity，清理临时变量，恢复一些视图
+     */
+    public void goBake() {
+        if(mBluetoothOperator == null || !mBluetoothOperator.isConnected()){
+            mViewOperator.showWarnDialog(PreparationFragment.NO_BLUETOOTH_CONNECTED);
+            return;
+        }
+
+        initPrepareBakeReport();
+
+        BakeReportProxy proxy = mModelOperator.getCurBakingReport();
+        NLogger.i(TAG, "总共放入豆种数量为:" + temporaryBeanInfo.size());
+        proxy.setBeanInfoSimples(temporaryBeanInfo);
+
+        // 对于只有一个豆种的情况进行id特殊处理
+        if (temporaryBeanInfo.size() == 1) {
+            proxy.setSingleBeanId(temporaryBeanInfo.get(0).getSingleBeanId());
+        }
+        // 转换为统一单位kg
+        for (BeanInfoSimple simple : temporaryBeanInfo) {
+            simple.setUsage(ConvertUtils.getReversed2DefaultWeight(simple.getUsage()) + "");
+        }
+        // 设置设备名
+        proxy.setDevice(mBluetoothOperator.getConnectedDevice().getName());
+        // 启动BakeActivity
+        getView().goNextActivity(temporaryReferTemperatures);
+
+        finishDeviceFragmentTask();
     }
 
-    public boolean isEnable(){
-        return BaseBlePresenter.mBluetoothOperator.isEnable();
-    }
-    public void enableBluetooth(){
-        BaseBlePresenter.mBluetoothOperator.enable();
-    }
-    public void startScan(){
-        BaseBlePresenter.mBluetoothOperator.startScanDevice();
-    }
-    public void disableBluetooth(){
-        // BaseBlePresenter.mBluetoothOperator.
+    /**
+     * 开始烘焙之后处理一些变量，将其初始化即归零
+     * 以免下次回到DeviceFragment拥有错误的数据
+     */
+    private void finishDeviceFragmentTask(){
+        temporaryBeanInfo = new ArrayList<>();
+        temporaryReferTemperatures = null;
+        resetBluetoothListener();
+        mViewOperator.updateText(PreparationFragment.FINISH_DEVICE_FRAGMENT_TASK, "");
     }
 }

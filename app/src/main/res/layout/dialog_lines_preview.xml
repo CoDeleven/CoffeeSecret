@@ -5,7 +5,7 @@
     android:gravity="center_horizontal"
     android:orientation="vertical">
 
-    <com.dhy.coffeesecret.views.BaseChart4Coffee
+    <com.dhy.coffeesecret.ui.common.views.BaseChart4Coffee
         android:id="@+id/preview_chart"
         android:layout_width="269dp"
         android:layout_height="97dp"

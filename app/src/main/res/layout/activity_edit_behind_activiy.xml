@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:background="#FFF"
     android:orientation="vertical"
-    tools:context="com.dhy.coffeesecret.ui.device.EditBehindActivity">
+    tools:context="com.dhy.coffeesecret.ui.bake.EditBehindActivity">
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar_device_activtiy"
         android:layout_width="match_parent"
@@ -24,13 +24,14 @@
             android:text="@string/title_device_child_activity"
             android:textColor="#FFF"
             android:textSize="20sp"/>
-        <Button
+        <ImageButton
             android:id="@+id/id_bake_behind_save"
             android:layout_gravity="right|center_vertical"
             android:background="@android:color/transparent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="17sp"
+            android:padding="16dp"
+            android:src="@drawable/ic_right_white"
             android:textColor="#FFF"
             android:text="保存"/>
     </android.support.v7.widget.Toolbar>
@@ -93,14 +94,14 @@
 
                 </RelativeLayout>
 
-                <com.dhy.coffeesecret.views.BakeDegreeCircleSeekBar
+                <com.dhy.coffeesecret.ui.common.views.BakeDegreeCircleSeekBar
                     android:id="@+id/id_bake_degree"
                     android:layout_width="150dp"
                     android:layout_height="150dp"
                     android:layout_centerInParent="true"
                     android:layout_marginBottom="20dp"
                     android:padding="10dp"
-                    app:wheel_max_process="70"
+                    app:wheel_max_process="50"
                     app:wheel_pointer_color="#FFF"
                     app:wheel_pointer_radius="7dp"
                     app:wheel_reached_color="#936743"
@@ -127,30 +128,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
             </LinearLayout>
-
-            <TextView
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:paddingLeft="25.3125dp"
-                android:background="#ECECEC"
-                android:textColor="#a29e9b"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="烘焙事件"/>
-            <LinearLayout
-                android:orientation="vertical"
-                android:id="@+id/id_event_container"
-                android:paddingLeft="25.3125dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-                <!--<android.support.v7.widget.RecyclerView
-                    android:id="@+id/id_edit_list"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>-->
-            </LinearLayout>
-
             <TextView
                 android:paddingLeft="25.3125dp"
                 android:paddingTop="10dp"
@@ -181,6 +158,30 @@
                     android:textSize="12sp"
                     android:hint="重量"/>
             </LinearLayout>
+
+            <TextView
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:paddingLeft="25.3125dp"
+                android:background="#ECECEC"
+                android:textColor="#a29e9b"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="烘焙事件"/>
+            <LinearLayout
+                android:orientation="vertical"
+                android:id="@+id/id_event_container"
+                android:paddingLeft="25.3125dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <!--<android.support.v7.widget.RecyclerView
+                    android:id="@+id/id_edit_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>-->
+            </LinearLayout>
+
 
 
             <Button

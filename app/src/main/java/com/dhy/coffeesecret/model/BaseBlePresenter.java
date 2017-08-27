@@ -1,23 +1,28 @@
 package com.dhy.coffeesecret.model;
 
-import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothProfile;
+import android.util.Log;
 
-import com.dhy.coffeesecret.pojo.BakeReportProxy;
+import com.clj.fastble.data.ScanResult;
+import com.dhy.coffeesecret.model.base.BaseModel;
+import com.dhy.coffeesecret.model.base.BasePresenter;
+import com.dhy.coffeesecret.model.base.IBaseView;
 import com.dhy.coffeesecret.pojo.Temperature;
-import com.dhy.coffeesecret.services.IBleConnectionCallback;
-import com.dhy.coffeesecret.services.IBleScanCallback;
-import com.dhy.coffeesecret.services.IBleTemperatureCallback;
-import com.dhy.coffeesecret.services.IBluetoothOperator;
+import com.dhy.coffeesecret.services.interfaces.IBleConnCallback;
+import com.dhy.coffeesecret.services.interfaces.IBleDataCallback;
+import com.dhy.coffeesecret.services.interfaces.IBleScanCallback;
+import com.dhy.coffeesecret.services.interfaces.IBluetoothOperator;
 
 /**
  * Created by CoDeleven on 17-8-2.
  */
 
-public abstract class BaseBlePresenter implements IBasePresenter, IBleScanCallback, IBleConnectionCallback, IBleTemperatureCallback {
+public abstract class BaseBlePresenter<V extends IBaseView, M extends BaseModel> extends BasePresenter<V, M> implements IBleScanCallback, IBleConnCallback, IBleDataCallback {
+    public BaseBlePresenter(M mModelOperator) {
+        super(mModelOperator);
+    }
+
     protected static IBluetoothOperator mBluetoothOperator;
-    protected static BakeReportProxy bakeReportProxy;
-    protected static IBaseView viewOperator;
-    protected static IBaseModel modelOperator;
     /**
      * 初始化蓝牙操作助手的监听
      *
@@ -26,31 +31,27 @@ public abstract class BaseBlePresenter implements IBasePresenter, IBleScanCallba
     public void initBluetoothListener() {
         // 如果蓝牙操作助手不为空时，更改监听器
         if (BaseBlePresenter.mBluetoothOperator != null) {
+            Log.d("BaseBlePresenter", "initBluetoothListener: 初始化了");
             // 重新设置回调接口到本对象
             BaseBlePresenter.mBluetoothOperator.setTemperatureListener(this);
             BaseBlePresenter.mBluetoothOperator.setScanCallbackListener(this);
             BaseBlePresenter.mBluetoothOperator.setConnectionListener(this);
             // 如果初始化的时候处于连接状态那么设置文本为已连接
             if(BaseBlePresenter.mBluetoothOperator.isConnected()){
-                viewOperator.updateText(0, "");
+                mViewOperator.updateText(BluetoothProfile.STATE_CONNECTED, "");
+            }else{
+                mViewOperator.updateText(BluetoothProfile.STATE_DISCONNECTED, "");
             }
         }
     }
-    public void destroyBluetoothListener() {
+    public void resetBluetoothListener() {
         mBluetoothOperator.setTemperatureListener(null);
         mBluetoothOperator.setScanCallbackListener(null);
-    }
-
-    public void clearBakeReportProxy(){
-        bakeReportProxy = null;
-    }
-
-    public BakeReportProxy getBakeReportProxy() {
-        return bakeReportProxy;
+        BaseBlePresenter.mBluetoothOperator.setConnectionListener(null);
     }
 
     @Override
-    public void onScanning(BluetoothDevice bluetoothDevice, int rssi) {
+    public void onScanning(ScanResult result) {
 
     }
 
@@ -60,32 +61,47 @@ public abstract class BaseBlePresenter implements IBasePresenter, IBleScanCallba
     }
 
     @Override
-    public void toPreConnect(int status) {
+    public void toPreConnect() {
 
     }
 
     @Override
-    public void onScanningComplete(BluetoothDevice... bluetoothDevice) {
+    public void onScanningComplete(ScanResult... results) {
 
     }
 
     @Override
-    public void toConnecting(int status) {
+    public void toConnecting() {
 
     }
 
     @Override
-    public void toConnected(int status) {
-
+    public void toConnected() {
+        // 更新连接状态
+        mViewOperator.updateText(BluetoothProfile.STATE_CONNECTED, "");
     }
 
     @Override
-    public void toDisconnected(int status) {
-
+    public void toDisconnected() {
+        // 更新连接状态为未连接
+        mViewOperator.updateText(BluetoothProfile.STATE_DISCONNECTED, "");
     }
 
     @Override
-    public void toDisconnecting(int status) {
+    public void toDisconnecting() {
+        toDisconnected();
+    }
+
+    public boolean isConnected(){
+        return mBluetoothOperator.isConnected();
+    }
+
+    @Override
+    public void toDisable() {
+
+    }
+    @Override
+    public void toUrgentDisconnected() {
 
     }
 }

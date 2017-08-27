@@ -21,7 +21,7 @@ import com.dhy.coffeesecret.pojo.LinesColor;
 import com.dhy.coffeesecret.pojo.TemperatureSet;
 import com.dhy.coffeesecret.pojo.UniversalConfiguration;
 import com.dhy.coffeesecret.utils.SettingTool;
-import com.dhy.coffeesecret.views.BaseChart4Coffee;
+import com.dhy.coffeesecret.ui.common.views.BaseChart4Coffee;
 import com.github.mikephil.charting.data.Entry;
 
 import java.util.ArrayList;
@@ -54,7 +54,7 @@ public class LinesColorAdapter extends FootViewAdapter {
         this.linesColorList = linesColorList;
 
 
-        config = SettingTool.getConfig(context);
+        config = SettingTool.getConfig();
         mLayoutInflater = LayoutInflater.from(context);
     }
 

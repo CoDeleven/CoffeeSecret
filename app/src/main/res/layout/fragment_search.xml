@@ -3,7 +3,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="#F3F3F3"
-                tools:context="com.dhy.coffeesecret.ui.container.fragments.SearchFragment">
+                tools:context="com.dhy.coffeesecret.ui.common.SearchFragment">
 
     <!-- TODO: Update blank fragment layout -->
 

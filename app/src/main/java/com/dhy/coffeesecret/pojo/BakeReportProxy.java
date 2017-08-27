@@ -17,7 +17,7 @@ import static com.dhy.coffeesecret.model.chart.Model4Chart.ACCOUTWINDLINE;
 import static com.dhy.coffeesecret.model.chart.Model4Chart.BEANLINE;
 import static com.dhy.coffeesecret.model.chart.Model4Chart.INWINDLINE;
 import static com.dhy.coffeesecret.model.chart.Model4Chart.OUTWINDLINE;
-import static com.dhy.coffeesecret.views.BaseChart4Coffee.getLableByIndex;
+import static com.dhy.coffeesecret.ui.common.views.BaseChart4Coffee.getLableByIndex;
 
 /**
  * Created by CoDeleven on 17-3-3.
@@ -30,6 +30,16 @@ public class BakeReportProxy implements Serializable{
     private float rawBeanWeight;
     private Map<String, String> events;
 
+    @Override
+    public String toString() {
+        return "BakeReportProxy{" +
+                "bakeReport=" + bakeReport +
+                ", lines=" + lines +
+                ", entriesWithEvents=" + entriesWithEvents +
+                ", rawBeanWeight=" + rawBeanWeight +
+                ", events=" + events +
+                '}';
+    }
 
     public BakeReportProxy(BakeReport bakeReport) {
         this.bakeReport = bakeReport;
@@ -94,9 +104,10 @@ public class BakeReportProxy implements Serializable{
                 // 转换id
                 String id = str.substring(str.lastIndexOf(":") + 1, str.length());
                 // 转换描述
-                String descriptor = str.substring(0, str.lastIndexOf(":"));
+                // String descriptor = str.substring(0, str.lastIndexOf(":"));
+
                 // 给实体设计事件
-                entry.setEvent(new Event(Integer.parseInt(id), descriptor));
+                entry.setEvent(new Event(Integer.parseInt(id), str));
                 entriesWithEvents.add(entry);
             }
             entries.add(entry);
@@ -271,21 +282,21 @@ public class BakeReportProxy implements Serializable{
     }
     public void setBreakPointerTemprature(Temperature pointerTemperature){
         if(pointerTemperature == null){
-            bakeReport.setBreakPointerTemprature(-1f);
+            bakeReport.setBreakPointerTemperature(-1f);
         }else{
-            bakeReport.setBreakPointerTemprature(pointerTemperature.getBeanTemp());
+            bakeReport.setBreakPointerTemperature(pointerTemperature.getBeanTemp());
         }
 
     }
     public float getBreakPointerTemprature(){
-        return bakeReport.getBreakPointerTemprature();
+        return bakeReport.getBreakPointerTemperature();
     }
     public float getAvgDryTemprature() {
-        return bakeReport.getAvgDryTemprature();
+        return bakeReport.getAvgDryTemperature();
     }
 
     public void setAvgDryTemprature(float avgDryTemprature) {
-        this.bakeReport.setAvgDryTemprature(avgDryTemprature);
+        this.bakeReport.setAvgDryTemperature(avgDryTemprature);
     }
 
     public float getAvgDryTime() {
@@ -305,11 +316,11 @@ public class BakeReportProxy implements Serializable{
     }
 
     public float getAvgFirstBurstTemprature() {
-        return this.bakeReport.getAvgFirstBurstTemprature();
+        return this.bakeReport.getAvgFirstBurstTemperature();
     }
 
     public void setAvgFirstBurstTemprature(float avgFirstBurstTemprature) {
-        this.bakeReport.setAvgFirstBurstTemprature(avgFirstBurstTemprature);
+        this.bakeReport.setAvgFirstBurstTemperature(avgFirstBurstTemprature);
     }
 
     public float getAvgEndTime() {
@@ -321,18 +332,18 @@ public class BakeReportProxy implements Serializable{
     }
 
     public float getAvgEndTemprature() {
-        return this.bakeReport.getAvgEndTemprature();
+        return this.bakeReport.getAvgEndTemperature();
     }
 
     public void setAvgEndTemprature(float avgEndTemprature) {
-        this.bakeReport.setAvgEndTemprature(avgEndTemprature);
+        this.bakeReport.setAvgEndTemperature(avgEndTemprature);
     }
 
     public float getGlobalAccBeanTemp() {
-        return this.bakeReport.getAvgGlobalBeanTemprature();
+        return this.bakeReport.getAvgGlobalBeanTemperature();
     }
 
     public void setGlobalAccBeanTemp(float globalAccBeanTemp) {
-        this.bakeReport.setAvgGlobalBeanTemprature(globalAccBeanTemp);
+        this.bakeReport.setAvgGlobalBeanTemperature(globalAccBeanTemp);
     }
 }
