@@ -19,7 +19,7 @@ import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.model.device_list.IScanListView;
 import com.dhy.coffeesecret.model.device_list.Presenter4ScanList;
 import com.dhy.coffeesecret.services.BluetoothService;
-import com.dhy.coffeesecret.ui.device.adapter.BluetoothListAdapter;
+import com.dhy.coffeesecret.ui.bake.adapter.BluetoothListAdapter;
 import com.dhy.coffeesecret.utils.T;
 import com.kyleduo.switchbutton.SwitchButton;
 

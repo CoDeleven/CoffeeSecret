@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.CuppingInfo;
-import com.dhy.coffeesecret.ui.device.fragments.OnItemClickListener;
+import com.dhy.coffeesecret.ui.common.interfaces.OnItemClickListener;
 import com.hedgehog.ratingbar.RatingBar;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
 

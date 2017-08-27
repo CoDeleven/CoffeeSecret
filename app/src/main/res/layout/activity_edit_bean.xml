@@ -326,7 +326,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="80.5dp">
 
-                        <com.dhy.coffeesecret.views.ReSpinner
+                        <com.dhy.coffeesecret.ui.common.views.ReSpinner
                             android:id="@+id/edit_level"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"

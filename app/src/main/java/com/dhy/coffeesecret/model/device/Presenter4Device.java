@@ -9,7 +9,7 @@ import com.dhy.coffeesecret.pojo.BakeReportProxy;
 import com.dhy.coffeesecret.pojo.BeanInfoSimple;
 import com.dhy.coffeesecret.pojo.Temperature;
 import com.dhy.coffeesecret.services.interfaces.IBluetoothOperator;
-import com.dhy.coffeesecret.ui.device.DeviceFragment;
+import com.dhy.coffeesecret.ui.bake.PreparationFragment;
 import com.dhy.coffeesecret.utils.ConvertUtils;
 
 import java.util.ArrayList;
@@ -61,7 +61,7 @@ public class Presenter4Device extends BaseBlePresenter<IDeviceView, Model4Device
             // beginTemp = temperature.getBeanTemp();
             isStart = true;
         }
-        mViewOperator.updateText(DeviceFragment.UPDATE_TEMPERATURE_TEXT, temperature);
+        mViewOperator.updateText(PreparationFragment.UPDATE_TEMPERATURE_TEXT, temperature);
     }
 
     public void setTemporaryReferTemperatures(BakeReport temporaryReferTemperatures) {
@@ -75,7 +75,7 @@ public class Presenter4Device extends BaseBlePresenter<IDeviceView, Model4Device
     @Override
     public void onScanning(ScanResult result) {
         if (result.getDevice().getAddress().equals(mModelOperator.getLastConnectedAddr())) {
-            mViewOperator.showToast(DeviceFragment.AUTO_CONNECTION_TIPS, "正在自动重连...");
+            mViewOperator.showToast(PreparationFragment.AUTO_CONNECTION_TIPS, "正在自动重连...");
             // 连接蓝牙设备
             BaseBlePresenter.mBluetoothOperator.connect(result);
             // 停止扫描
@@ -94,7 +94,7 @@ public class Presenter4Device extends BaseBlePresenter<IDeviceView, Model4Device
      */
     public void goBake() {
         if(mBluetoothOperator == null || !mBluetoothOperator.isConnected()){
-            mViewOperator.showWarnDialog(DeviceFragment.NO_BLUETOOTH_CONNECTED);
+            mViewOperator.showWarnDialog(PreparationFragment.NO_BLUETOOTH_CONNECTED);
             return;
         }
 
@@ -128,6 +128,6 @@ public class Presenter4Device extends BaseBlePresenter<IDeviceView, Model4Device
         temporaryBeanInfo = new ArrayList<>();
         temporaryReferTemperatures = null;
         resetBluetoothListener();
-        mViewOperator.updateText(DeviceFragment.FINISH_DEVICE_FRAGMENT_TASK, "");
+        mViewOperator.updateText(PreparationFragment.FINISH_DEVICE_FRAGMENT_TASK, "");
     }
 }

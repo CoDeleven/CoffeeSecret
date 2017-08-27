@@ -37,4 +37,12 @@ public class Event implements Serializable {
     public void setCurStatus(int curStatus){
         this.curStatus = curStatus;
     }
+
+    @Override
+    public String toString() {
+        return "Event{" +
+                "description='" + description + '\'' +
+                ", curStatus=" + curStatus +
+                '}';
+    }
 }

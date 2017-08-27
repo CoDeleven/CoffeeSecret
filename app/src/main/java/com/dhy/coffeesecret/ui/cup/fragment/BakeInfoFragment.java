@@ -19,9 +19,9 @@ import com.dhy.coffeesecret.model.UniExtraKey;
 import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.pojo.BakeReportProxy;
 import com.dhy.coffeesecret.pojo.BeanInfoSimple;
-import com.dhy.coffeesecret.ui.device.ReportActivity;
+import com.dhy.coffeesecret.ui.bake.ReportActivity;
 import com.dhy.coffeesecret.utils.ConvertUtils;
-import com.dhy.coffeesecret.views.BaseChart4Coffee;
+import com.dhy.coffeesecret.ui.common.views.BaseChart4Coffee;
 
 import java.util.List;
 
@@ -65,7 +65,7 @@ public class BakeInfoFragment extends Fragment implements View.OnClickListener {
     public static BakeInfoFragment newInstance(BakeReport report, boolean isNewCupping) {
         BakeInfoFragment fragment = new BakeInfoFragment();
         Bundle args = new Bundle();
-        args.putSerializable(TARGET, report);
+        args.putParcelable(TARGET, report);
         args.putBoolean("isNewCupping", isNewCupping);
         fragment.setArguments(args);
         return fragment;
@@ -75,7 +75,7 @@ public class BakeInfoFragment extends Fragment implements View.OnClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mBakeReport = (BakeReport) getArguments().getSerializable(TARGET);
+            mBakeReport = (BakeReport) getArguments().getParcelable(TARGET);
             isNewCupping = getArguments().getBoolean("isNewCupping");
         }
 
@@ -92,7 +92,7 @@ public class BakeInfoFragment extends Fragment implements View.OnClickListener {
         super.onActivityResult(requestCode, resultCode, data);
         if (SELECT_LINE == requestCode) {
             if (RESULT_OK == resultCode) {
-                mBakeReport = (BakeReport) data.getSerializableExtra(UniExtraKey.EXTRA_BAKE_REPORT.getKey());
+                mBakeReport = (BakeReport) data.getParcelableExtra(UniExtraKey.EXTRA_BAKE_REPORT.getKey());
                 mOnBakeInfoLoadedListener.onLoaded(mBakeReport);
                 updateUI();
             } else if (RESULT_CANCELED == resultCode) {

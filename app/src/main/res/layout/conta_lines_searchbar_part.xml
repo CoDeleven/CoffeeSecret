@@ -10,12 +10,12 @@
         android:layout_marginLeft="@dimen/pageinfo_text_horizontal_margin"
         android:layout_marginRight="@dimen/pageinfo_text_horizontal_margin">
 
-        <com.dhy.coffeesecret.views.SearchEditText
+        <com.dhy.coffeesecret.ui.common.views.SearchEditText
             android:id="@+id/lines_selected_srh"
             style="@style/SearchBar"
             android:cursorVisible="false"
             android:layout_margin="10dp">
-        </com.dhy.coffeesecret.views.SearchEditText>
+        </com.dhy.coffeesecret.ui.common.views.SearchEditText>
 
         <ImageButton
             android:id="@+id/lines_selected_del"

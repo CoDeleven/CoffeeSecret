@@ -15,7 +15,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true">
 
-        <com.dhy.coffeesecret.views.CameraPreviewFrameView
+        <com.dhy.coffeesecret.ui.common.views.CameraPreviewFrameView
             android:id="@+id/cameraPreview_surfaceView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

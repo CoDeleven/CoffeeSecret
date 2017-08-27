@@ -34,7 +34,7 @@
                 android:paddingTop="10dp">
 
             </LinearLayout>-->
-            <com.dhy.coffeesecret.views.BakeDegreeShowBar
+            <com.dhy.coffeesecret.ui.common.views.BakeDegreeShowBar
                 android:id="@+id/id_show_bake_degree"
                 android:layout_marginTop="10dp"
                 android:layout_width="match_parent"

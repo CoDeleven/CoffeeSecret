@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:background="#E2D8D3"
     android:orientation="horizontal"
-    tools:context="com.dhy.coffeesecret.ui.device.BakeActivity">
+    tools:context="com.dhy.coffeesecret.ui.bake.BakeActivity">
 
     <LinearLayout
         android:layout_width="127dp"
@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="19.125dp">
 
-            <com.dhy.coffeesecret.views.ArcProgress
+            <com.dhy.coffeesecret.ui.common.views.ArcProgress
                 android:layout_width="101.25dp"
                 android:layout_height="101.25dp"
                 arc:firstCircleRadius="2.8125dp"
@@ -76,7 +76,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="6.75dp">
 
-            <com.dhy.coffeesecret.views.ArcProgress
+            <com.dhy.coffeesecret.ui.common.views.ArcProgress
                 android:layout_width="101.25dp"
                 android:layout_height="101.25dp"
                 arc:firstCircleRadius="2.8125dp"
@@ -130,7 +130,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="6.75dp">
 
-            <com.dhy.coffeesecret.views.ArcProgress
+            <com.dhy.coffeesecret.ui.common.views.ArcProgress
                 android:layout_width="101.25dp"
                 android:layout_height="101.25dp"
                 arc:firstCircleRadius="2.8125dp"
@@ -221,7 +221,7 @@
                     android:text="00:00"/>
             </LinearLayout>
 
-            <com.dhy.coffeesecret.views.DevelopBar
+            <com.dhy.coffeesecret.ui.common.views.DevelopBar
                 android:id="@+id/id_baking_developbar"
                 android:layout_width="314.4375dp"
                 android:layout_height="10dp"
@@ -245,7 +245,7 @@
                     android:text="温度曲线图"
                     android:textSize="15sp"/>
 
-                <com.dhy.coffeesecret.views.BaseChart4Coffee
+                <com.dhy.coffeesecret.ui.common.views.BaseChart4Coffee
                     android:id="@+id/id_baking_chart"
                     android:layout_width="344.25dp"
                     android:layout_height="match_parent"

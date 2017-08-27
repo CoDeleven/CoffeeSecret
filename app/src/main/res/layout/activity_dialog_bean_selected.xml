@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/activity_dialog_bean_selected"
-    tools:context="com.dhy.coffeesecret.ui.device.DialogBeanSelected">
+    tools:context="com.dhy.coffeesecret.ui.bake.BeanChoiceActivity">
 
 
     <include

@@ -34,7 +34,7 @@
         android:theme="@style/AppTheme"
         tools:replace="android:icon,android:name">
         <activity
-            android:name=".LauncherActivity"
+            android:name=".ui.launcher.LauncherActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan">
@@ -45,32 +45,32 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.container.BeanInfoActivity"
+            android:name=".ui.counters.BeanInfoActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.cup.NewCuppingActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.device.DialogBeanSelected"
+            android:name=".ui.bake.BeanChoiceActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.mine.BluetoothListActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".ui.device.BakeActivity"
+        <activity android:name=".ui.bake.BakeActivity"
                   android:launchMode="singleInstance"
                   android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:screenOrientation="landscape"/>
         <activity
-            android:name=".ui.device.ReportActivity"
+            android:name=".ui.bake.ReportActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.cup.fragment.CupRelatedReportSelectActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.device.EditBehindActivity"
+            android:name=".ui.bake.EditBehindActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.container.SelectInfoActivity"
+            android:name=".ui.counters.SelectInfoActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.mine.AboutUsActivity"
@@ -82,7 +82,7 @@
             android:name=".ui.mine.QuickEventActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.container.EditBeanActivity"
+            android:name=".ui.counters.EditBeanActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.mine.LinesColorActivity"
@@ -99,12 +99,12 @@
         <activity
             android:name=".ui.community.live.player.LiveListActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".ui.device.fragments.ReferReportSelectedActivity"
+        <activity android:name=".ui.bake.fragments.ReferReportSelectedActivity"
                   android:screenOrientation="portrait">
 
         </activity>
 
-        <activity android:name=".ui.container.SelectedRelatedBeanActivity"
+        <activity android:name=".ui.counters.SelectedRelatedBeanActivity"
                   android:screenOrientation="portrait">
         </activity>
         <activity android:name=".ui.mine.HistoryReportEntranceActivity"
@@ -126,15 +126,15 @@
             android:name=".ui.community.SellActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.MainActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".GuidanceActivity"
+            android:name=".ui.launcher.GuidanceActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".FirstConnectedActivity"
+            android:name=".ui.launcher.FirstConnectedActivity"
             android:windowSoftInputMode="adjustPan" />
-        <activity android:name=".ConnectedActivity" />
+        <activity android:name=".ui.launcher.ConnectedActivity" />
         <activity android:name=".ui.mine.QRCodeActivity" />
         <activity android:name=".ui.mine.LoginActivity"></activity>
     </application>

@@ -198,7 +198,7 @@
                 android:layout_marginStart="18.2dp"
                 android:background="@color/color_gray_c9" />
 
-            <LinearLayout
+<!--            <LinearLayout
                 android:id="@+id/mine_my_privacy"
                 style="@style/option_item_vertical">
 
@@ -238,7 +238,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
-                android:background="@color/bg_reportinfo" />
+                android:background="@color/bg_reportinfo" />-->
 
             <LinearLayout
                 android:id="@+id/mine_my_device"

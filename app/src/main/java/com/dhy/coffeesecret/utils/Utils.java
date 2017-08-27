@@ -4,7 +4,7 @@ package com.dhy.coffeesecret.utils;
 import android.graphics.Color;
 
 import com.dhy.coffeesecret.R;
-import com.dhy.coffeesecret.views.BakeDegreeCircleSeekBar;
+import com.dhy.coffeesecret.ui.common.views.BakeDegreeCircleSeekBar;
 
 import net.sourceforge.pinyin4j.PinyinHelper;
 

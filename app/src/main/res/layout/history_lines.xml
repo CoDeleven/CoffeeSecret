@@ -35,12 +35,12 @@
             android:textSize="17sp" />
     </android.support.v7.widget.Toolbar>
 
-    <com.dhy.coffeesecret.views.SearchEditText
+    <com.dhy.coffeesecret.ui.common.views.SearchEditText
         android:id="@+id/lines_selected_srh"
         style="@style/SearchBar"
         android:layout_below="@id/toolbar_device_activtiy"
         android:layout_margin="10dp"
-        android:cursorVisible="false"></com.dhy.coffeesecret.views.SearchEditText>
+        android:cursorVisible="false"></com.dhy.coffeesecret.ui.common.views.SearchEditText>
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/id_swipeRefresh"

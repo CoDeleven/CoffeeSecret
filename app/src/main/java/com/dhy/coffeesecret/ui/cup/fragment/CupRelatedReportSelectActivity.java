@@ -1,11 +1,10 @@
 package com.dhy.coffeesecret.ui.cup.fragment;
 
 import android.content.Intent;
+import android.os.Parcelable;
 
 import com.dhy.coffeesecret.model.UniExtraKey;
 import com.dhy.coffeesecret.ui.mine.HistoryReportEntranceActivity;
-
-import java.io.Serializable;
 
 /**
  * Created by CoDeleven on 17-8-26.
@@ -13,14 +12,11 @@ import java.io.Serializable;
 
 public class CupRelatedReportSelectActivity extends HistoryReportEntranceActivity{
     @Override
-    public void onItemClick(Serializable serializable) {
+    public void onItemClick(Parcelable parcelable) {
         Intent intent = new Intent();
-        intent.putExtra(UniExtraKey.EXTRA_BAKE_REPORT.getKey(), serializable);
+        intent.putExtra(UniExtraKey.EXTRA_BAKE_REPORT.getKey(), parcelable);
         setResult(RESULT_OK, intent);
-        if(mSearchFragment != null){
-            mSearchFragment.remove();
-            mSearchFragment = null;
-        }
+        removeSearchFragment();
         finish();
     }
 }

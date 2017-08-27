@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".ui.device.DeviceFragment">
+    tools:context=".ui.bake.PreparationFragment">
 
     <RelativeLayout
                     android:layout_width="match_parent"
@@ -56,7 +56,7 @@
             android:layout_height="207dp"
             android:layout_centerHorizontal="true">
 
-            <com.dhy.coffeesecret.views.ArcProgress
+            <com.dhy.coffeesecret.ui.common.views.ArcProgress
                 android:id="@+id/id_arcprogress_bean"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -217,7 +217,7 @@
             android:layout_marginLeft="20dp"
             android:layout_toRightOf="@id/bake_vertical_refer">
 
-            <com.dhy.coffeesecret.views.ArcProgress
+            <com.dhy.coffeesecret.ui.common.views.ArcProgress
                 android:id="@+id/id_arcprogress_inwind"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -342,7 +342,7 @@
             android:layout_marginLeft="20dp"
             android:layout_marginTop="70dp">
 
-            <com.dhy.coffeesecret.views.ArcProgress
+            <com.dhy.coffeesecret.ui.common.views.ArcProgress
                 android:id="@+id/id_arcprogress_outwind"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

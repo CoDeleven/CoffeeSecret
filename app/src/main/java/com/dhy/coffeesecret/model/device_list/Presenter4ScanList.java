@@ -6,7 +6,7 @@ import android.util.Log;
 
 import com.clj.fastble.data.ScanResult;
 import com.dhy.coffeesecret.model.BaseBlePresenter;
-import com.dhy.coffeesecret.ui.device.adapter.BluetoothListAdapter;
+import com.dhy.coffeesecret.ui.bake.adapter.BluetoothListAdapter;
 import com.dhy.coffeesecret.utils.SettingTool;
 
 import static com.dhy.coffeesecret.ui.mine.BluetoothListActivity.CANCEL_REFRESH;

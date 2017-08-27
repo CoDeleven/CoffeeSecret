@@ -17,7 +17,7 @@ import android.widget.PopupWindow;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.ui.mine.adapter.AccountAdapter;
 import com.dhy.coffeesecret.utils.SystemStatusBarUtils;
-import com.dhy.coffeesecret.views.DividerDecoration;
+import com.dhy.coffeesecret.ui.common.views.DividerDecoration;
 
 import java.util.ArrayList;
 import java.util.HashSet;

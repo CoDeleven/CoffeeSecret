@@ -1,8 +1,10 @@
 package com.dhy.coffeesecret.pojo;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.dhy.coffeesecret.model.chart.Model4Chart;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,7 +14,7 @@ import java.util.Map;
  * Created by CoDeleven on 17-3-8.
  */
 
-public class TemperatureSet implements Serializable{
+public class TemperatureSet implements Parcelable{
 
     private List<Float> beanTemps = new ArrayList<>();
     private List<Float> inwindTemps = new ArrayList<>();
@@ -179,4 +181,64 @@ public class TemperatureSet implements Serializable{
         accOutwindTemps.clear();
         timex.clear();
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeList(this.beanTemps);
+        dest.writeList(this.inwindTemps);
+        dest.writeList(this.outwindTemps);
+        dest.writeList(this.accBeanTemps);
+        dest.writeList(this.accInwindTemps);
+        dest.writeList(this.accOutwindTemps);
+        dest.writeInt(this.events.size());
+        for (Map.Entry<String, String> entry : this.events.entrySet()) {
+            dest.writeString(entry.getKey());
+            dest.writeString(entry.getValue());
+        }
+        dest.writeList(this.timex);
+    }
+
+    public TemperatureSet() {
+    }
+
+    protected TemperatureSet(Parcel in) {
+        this.beanTemps = new ArrayList<Float>();
+        in.readList(this.beanTemps, Float.class.getClassLoader());
+        this.inwindTemps = new ArrayList<Float>();
+        in.readList(this.inwindTemps, Float.class.getClassLoader());
+        this.outwindTemps = new ArrayList<Float>();
+        in.readList(this.outwindTemps, Float.class.getClassLoader());
+        this.accBeanTemps = new ArrayList<Float>();
+        in.readList(this.accBeanTemps, Float.class.getClassLoader());
+        this.accInwindTemps = new ArrayList<Float>();
+        in.readList(this.accInwindTemps, Float.class.getClassLoader());
+        this.accOutwindTemps = new ArrayList<Float>();
+        in.readList(this.accOutwindTemps, Float.class.getClassLoader());
+        int eventsSize = in.readInt();
+        this.events = new HashMap<String, String>(eventsSize);
+        for (int i = 0; i < eventsSize; i++) {
+            String key = in.readString();
+            String value = in.readString();
+            this.events.put(key, value);
+        }
+        this.timex = new ArrayList<Float>();
+        in.readList(this.timex, Float.class.getClassLoader());
+    }
+
+    public static final Creator<TemperatureSet> CREATOR = new Creator<TemperatureSet>() {
+        @Override
+        public TemperatureSet createFromParcel(Parcel source) {
+            return new TemperatureSet(source);
+        }
+
+        @Override
+        public TemperatureSet[] newArray(int size) {
+            return new TemperatureSet[size];
+        }
+    };
 }

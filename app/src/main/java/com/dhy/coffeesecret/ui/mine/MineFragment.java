@@ -45,8 +45,8 @@ public class MineFragment extends Fragment {
     TextView collectionNumber;
     @Bind(R.id.collection_layout)
     LinearLayout collectionLayout;
-    @Bind(R.id.mine_my_privacy)
-    LinearLayout mineMyRecent;
+/*    @Bind(R.id.mine_my_privacy)
+    LinearLayout mineMyRecent;*/
     @Bind(R.id.mine_history_line)
     LinearLayout mineHistoryLine;
     @Bind(R.id.mine_settings)
@@ -90,7 +90,7 @@ public class MineFragment extends Fragment {
         ButterKnife.unbind(this);
     }
 
-    @OnClick({R.id.attention_layout, R.id.fans_layout, R.id.collection_layout, R.id.mine_my_privacy, R.id.mine_history_line, R.id.mine_settings, R.id.mine_my_device, R.id.mine_about_us,R.id.mine_qr_code,R.id.mine_head_img, R.id.mine_feedback})
+    @OnClick({R.id.attention_layout, R.id.fans_layout, R.id.collection_layout, R.id.mine_history_line, R.id.mine_settings, R.id.mine_my_device, R.id.mine_about_us,R.id.mine_qr_code,R.id.mine_head_img, R.id.mine_feedback})
     public void onClick(View view) {
         Intent intent;
         switch (view.getId()) {
@@ -99,8 +99,6 @@ public class MineFragment extends Fragment {
             case R.id.fans_layout:
                 break;
             case R.id.collection_layout:
-                break;
-            case R.id.mine_my_privacy:
                 break;
             case R.id.mine_history_line:
                 intent = new Intent(mContext, HistoryReportEntranceActivity.class);

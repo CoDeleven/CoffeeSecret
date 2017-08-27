@@ -6,7 +6,7 @@
     android:id="@+id/activity_first_connected"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.dhy.coffeesecret.FirstConnectedActivity">
+    tools:context="com.dhy.coffeesecret.ui.launcher.FirstConnectedActivity">
     <RelativeLayout
         android:id="@+id/id_fisrt_title"
         android:background="@color/colorPrimary"
@@ -32,7 +32,7 @@
                 android:textColor="@color/white"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
-            <com.dhy.coffeesecret.views.LoadingDots
+            <com.dhy.coffeesecret.ui.common.views.LoadingDots
                 android:layout_gravity="center_vertical"
                 app:LoadingDots_dots_count="4"
                 app:LoadingDots_dots_size="5dp"
@@ -40,7 +40,7 @@
                 app:LoadingDots_loop_start_delay="1"
                 app:LoadingDots_dots_color="@color/white"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"></com.dhy.coffeesecret.views.LoadingDots>
+                android:layout_height="wrap_content"></com.dhy.coffeesecret.ui.common.views.LoadingDots>
         </LinearLayout>
 
         <EditText

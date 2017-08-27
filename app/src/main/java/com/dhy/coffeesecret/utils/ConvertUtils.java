@@ -6,10 +6,12 @@ import android.util.Log;
 
 import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.pojo.BakeReport;
+import com.github.mikephil.charting.data.Event;
 import com.google.gson.Gson;
 
 import java.io.IOException;
 
+import cn.jesse.nativelogger.NLogger;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -176,5 +178,56 @@ public class ConvertUtils {
         sb.append(G.toUpperCase());
         sb.append(B.toUpperCase());
         return sb.toString();
+    }
+    public static String getEventType(String typeCodeStr){
+        int code = 0;
+        try {
+            code = Integer.parseInt(typeCodeStr);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+        switch (code){
+            case Event.DRY:
+                return "脱水";
+            case Event.FIRST_BURST:
+                return "一爆";
+            case Event.FIRST_BURST_END:
+                return "一爆结束";
+            case Event.FIRE_WIND:
+                return "风门/火力";
+            case Event.SECOND_BURST:
+                return "二爆";
+            case Event.SECOND_BURST_END:
+                return "二爆结束";
+            case Event.OTHER:
+                return "快捷事件";
+            case Event.END:
+                return "结束";
+            default:
+                throw new RuntimeException("传入的事件类型码有误...");
+        }
+    }
+
+    /**
+     * 根据Separator切割字符串， 通过part选择是第几个part
+     * @param original
+     * @param separator
+     * @param forward
+     * @return
+     */
+    public static String separateStrByChar(String original, String separator, boolean forward){
+        int separatorIndex = original.indexOf(separator);
+        NLogger.i("ConvertUtils", "要分割的字符串：" + original);
+        if(original == null){
+            throw new RuntimeException("separateStrByChar字符串为空...");
+        }
+        if(separatorIndex != -1){
+            if(forward){
+                return original.substring(0, separatorIndex);
+            }else{
+                return original.substring(separatorIndex + 1, original.length());
+            }
+        }
+        return null;
     }
 }

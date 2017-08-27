@@ -2,7 +2,7 @@ package com.dhy.coffeesecret.model.bake.developbar;
 
 import com.dhy.coffeesecret.model.base.BasePresenter;
 import com.dhy.coffeesecret.utils.FormatUtils;
-import com.dhy.coffeesecret.views.DevelopBar;
+import com.dhy.coffeesecret.ui.common.views.DevelopBar;
 
 /**
  * Created by CoDeleven on 17-8-18.

@@ -5,8 +5,8 @@ import android.support.annotation.Nullable;
 
 import com.dhy.coffeesecret.model.UniExtraKey;
 import com.dhy.coffeesecret.pojo.BakeReport;
-import com.dhy.coffeesecret.ui.container.adapters.LineListAdapter;
-import com.dhy.coffeesecret.ui.container.fragments.SearchFragment;
+import com.dhy.coffeesecret.ui.mine.adapter.LineListAdapter;
+import com.dhy.coffeesecret.ui.common.SearchFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +26,7 @@ public class HistoryReportSearchFragment extends SearchFragment {
             throw new RuntimeException("没有数据...");
         }
         bakeReports = new ArrayList<>();
-        bakeReportTemp = (List<BakeReport>) bundle.getSerializable(UniExtraKey.EXTRA_BAKE_REPORT_LIST.getKey());
+        bakeReportTemp = bundle.getParcelableArrayList(UniExtraKey.EXTRA_BAKE_REPORT_LIST.getKey());
 
         mLineListAdapter = new LineListAdapter(getContext(), bakeReports, getResultClickListenr());
     }

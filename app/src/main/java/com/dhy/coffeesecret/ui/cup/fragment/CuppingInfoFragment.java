@@ -16,7 +16,7 @@ import android.widget.TextView;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.ui.cup.listener.GridViewItemClickListener;
 import com.dhy.coffeesecret.utils.ArrayUtil;
-import com.dhy.coffeesecret.views.BakeDegreeShowBar;
+import com.dhy.coffeesecret.ui.common.views.BakeDegreeShowBar;
 import com.dinuscxj.progressbar.CircleProgressBar;
 
 import java.util.HashMap;

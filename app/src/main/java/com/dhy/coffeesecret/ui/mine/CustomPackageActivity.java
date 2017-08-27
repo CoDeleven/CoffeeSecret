@@ -23,7 +23,7 @@ import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.model.line_color.Presenter4ColorLine;
 import com.dhy.coffeesecret.pojo.LinesColor;
 import com.dhy.coffeesecret.utils.T;
-import com.dhy.coffeesecret.views.ColorChooseDialog;
+import com.dhy.coffeesecret.ui.common.views.ColorChooseDialog;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.lang.ref.WeakReference;

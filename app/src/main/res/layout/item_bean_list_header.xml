@@ -13,5 +13,5 @@
     android:clickable="true"
     android:textColor="@color/tab_default"
     android:textSize="13.5sp"
-    tools:context=".MainActivity"
+    tools:context=".ui.MainActivity"
     tools:text="A" />

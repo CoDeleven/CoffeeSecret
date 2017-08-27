@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:clipToPadding="true"
     android:fitsSystemWindows="true"
-    tools:context="com.dhy.coffeesecret.MainActivity">
+    tools:context="com.dhy.coffeesecret.ui.MainActivity">
 
     <android.support.design.widget.TabLayout
         android:id="@+id/id_fragment_tabLayout"

@@ -6,6 +6,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -23,27 +24,26 @@ import android.widget.TextView;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.model.UniExtraKey;
 import com.dhy.coffeesecret.pojo.CuppingInfo;
-import com.dhy.coffeesecret.ui.container.adapters.HandlerAdapter;
-import com.dhy.coffeesecret.ui.container.fragments.SearchCupInfoFragment;
-import com.dhy.coffeesecret.ui.container.fragments.SearchFragment;
+import com.dhy.coffeesecret.ui.common.SearchFragment;
+import com.dhy.coffeesecret.ui.common.interfaces.OnItemClickListener;
+import com.dhy.coffeesecret.ui.common.views.DividerDecoration;
+import com.dhy.coffeesecret.ui.counters.adapters.HandlerAdapter;
 import com.dhy.coffeesecret.ui.cup.adapter.CuppingListAdapter;
 import com.dhy.coffeesecret.ui.cup.comparator.BaseComparator;
 import com.dhy.coffeesecret.ui.cup.comparator.DateComparator;
 import com.dhy.coffeesecret.ui.cup.comparator.OrderBy;
 import com.dhy.coffeesecret.ui.cup.comparator.ScoreComparator;
 import com.dhy.coffeesecret.ui.cup.filter.Filter;
-import com.dhy.coffeesecret.ui.device.fragments.OnItemClickListener;
+import com.dhy.coffeesecret.ui.cup.fragment.SearchCupInfoFragment;
 import com.dhy.coffeesecret.utils.HttpUtils;
 import com.dhy.coffeesecret.utils.T;
 import com.dhy.coffeesecret.utils.URLs;
-import com.dhy.coffeesecret.views.DividerDecoration;
 import com.edmodo.rangebar.RangeBar;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
-import java.io.Serializable;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -127,9 +127,9 @@ public class CupFragment extends Fragment implements View.OnClickListener {
         mSortText = (TextView) mCuppingView.findViewById(R.id.sort_type);
         mAdapter = new CuppingListAdapter(mContext, cuppingInfos, new OnItemClickListener() {
             @Override
-            public void onItemClick(Serializable serializable) {
+            public void onItemClick(Parcelable parcelable) {
                 Intent intent = new Intent(mContext, NewCuppingActivity.class);
-                intent.putExtra(TARGET, serializable);
+                intent.putExtra(TARGET, parcelable);
                 intent.putExtra(VIEW_TYPE, SHOW_INFO);
                 startActivityForResult(intent, REQ_CODE_EDIT);
             }
@@ -165,15 +165,15 @@ public class CupFragment extends Fragment implements View.OnClickListener {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQ_CODE_EDIT) {
             if (resultCode == RESULT_CODE_UPDATE) {
-                CuppingInfo info = (CuppingInfo) data.getSerializableExtra(TARGET);
+                CuppingInfo info =  data.getParcelableExtra(TARGET);
                 mAdapter.update(info);
             } else if (resultCode == RESULT_CODE_DElETE) {
-                CuppingInfo info = (CuppingInfo) data.getSerializableExtra(TARGET);
+                CuppingInfo info =  data.getParcelableExtra(TARGET);
                 mAdapter.delete(info);
             }
         } else if (requestCode == REQ_CODE_NEW) {
             if (resultCode == RESULT_CODE_ADD) {
-                CuppingInfo info = (CuppingInfo) data.getSerializableExtra(TARGET);
+                CuppingInfo info =  data.getParcelableExtra(TARGET);
                 mAdapter.add(info);
                 sortList();
             }
@@ -390,7 +390,7 @@ public class CupFragment extends Fragment implements View.OnClickListener {
         if (!isAddSearchFragment) {
             searchFragment = new SearchCupInfoFragment();
             Bundle bundle = new Bundle();
-            bundle.putSerializable(UniExtraKey.EXTRA_CUP_INFO_LIST.getKey(), (Serializable) (allCuppingInfos == null ? cuppingInfos : allCuppingInfos));
+            bundle.putParcelableArrayList(UniExtraKey.EXTRA_CUP_INFO_LIST.getKey(), new ArrayList<Parcelable>((allCuppingInfos == null ? cuppingInfos : allCuppingInfos)));
             searchFragment.setArguments(bundle);
             tx.add(R.id.activity_main, searchFragment, "search_cupping");
             isAddSearchFragment = true;

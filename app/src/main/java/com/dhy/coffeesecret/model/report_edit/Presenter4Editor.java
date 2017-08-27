@@ -13,9 +13,9 @@ import com.google.gson.Gson;
 
 import java.util.List;
 
-import static com.dhy.coffeesecret.ui.device.EditBehindActivity.BUTTON_NAME;
-import static com.dhy.coffeesecret.ui.device.EditBehindActivity.INVALIDATE_COOKED_WEIGHT;
-import static com.dhy.coffeesecret.ui.device.EditBehindActivity.RERANGE_BEAN_INFO;
+import static com.dhy.coffeesecret.ui.bake.EditBehindActivity.BUTTON_EVENT_NAME;
+import static com.dhy.coffeesecret.ui.bake.EditBehindActivity.INVALIDATE_COOKED_WEIGHT;
+import static com.dhy.coffeesecret.ui.bake.EditBehindActivity.RERANGE_BEAN_INFO;
 
 /**
  * Created by CoDeleven on 17-8-5.
@@ -109,19 +109,25 @@ public class Presenter4Editor extends BaseBlePresenter<IEditView, Model4Editor> 
      * @param weight 重量字符串
      */
     public void setCookedWeight4BakeReport(String weight) {
+        BakeReportProxy localProxy = null;
+        if(mModelOperator.getCurBakingReport() == null){
+            localProxy = tLocalBakeReport;
+        }else{
+            localProxy = mModelOperator.getCurBakingReport();
+        }
         if (!"".equals(weight) && weight != null) {
             float defaultWeight = ConvertUtils.getReversed2DefaultWeight(Float.parseFloat(weight) + "");
             // 填写的熟豆重量大于生豆重量时进行提示
-            if (defaultWeight > getModel().getCurBakingReport().getRawBeanWeight()) {
+            if (defaultWeight > localProxy.getRawBeanWeight()) {
                 super.mViewOperator.showToast(INVALIDATE_COOKED_WEIGHT, "填写不大于生豆重量的数值...");
                 return;
             }
-            getModel().getCurBakingReport().setCookedBeanWeight(defaultWeight);
+            localProxy.setCookedBeanWeight(defaultWeight);
         } else {
-            getModel().getCurBakingReport().setCookedBeanWeight(0);
+            localProxy.setCookedBeanWeight(0);
         }
-        if (getModel().getCurBakingReport().getBeanInfos().size() != 1) {
-            getModel().getCurBakingReport().setSingleBeanId(-1);
+        if (localProxy.getBeanInfos().size() != 1) {
+            localProxy.setSingleBeanId(-1);
         }
     }
 
@@ -131,7 +137,12 @@ public class Presenter4Editor extends BaseBlePresenter<IEditView, Model4Editor> 
      * @param bakeDegree 烘焙度
      */
     public void setBakeDegree(float bakeDegree) {
-        getModel().getCurBakingReport().setBakeDegree(bakeDegree);
+        if(mModelOperator.getCurBakingReport() == null){
+            tLocalBakeReport.setBakeDegree(bakeDegree);
+        }else{
+            getModel().getCurBakingReport().setBakeDegree(bakeDegree);
+        }
+
     }
 
     /**
@@ -140,8 +151,12 @@ public class Presenter4Editor extends BaseBlePresenter<IEditView, Model4Editor> 
     public void save() {
         // TODO 测试用隐藏
         // getModel().sendJsonData(super.mCurBakingProxy.getBakeReport());
+        if(mModelOperator.getCurBakingReport() == null){
+            Log.d(TAG, "save-data -> " + new Gson().toJson(tLocalBakeReport.getBakeReport()));
+        }else{
+            Log.d(TAG, "save-data -> " + new Gson().toJson(getModel().getCurBakingReport().getBakeReport()));
+        }
 
-        Log.d(TAG, "save-data -> " + new Gson().toJson(getModel().getCurBakingReport().getBakeReport()));
     }
 
     /**
@@ -151,8 +166,25 @@ public class Presenter4Editor extends BaseBlePresenter<IEditView, Model4Editor> 
      * @param supplement 要补充的内容
      */
     public void supplyEventInfo(Entry entry, String supplement) {
-        entry.getEvent().setDescription(supplement);
-        super.mViewOperator.updateText(BUTTON_NAME, supplement);
+        Log.d(TAG, "entry: " + entry.toString() + "supplyEventInfo: 补充的内容是：" + supplement);
+        String descriptor;
+        String subStr;
+        BakeReport foo;
+        if(mModelOperator.getCurBakingReport() != null){
+            // String descriptor = entry.getEvent().getDescription();
+            foo = mModelOperator.getCurBakingReport().getBakeReport();
+        }else{
+            foo = tLocalBakeReport.getBakeReport();
+        }
+        descriptor = foo.getEvents().get(entry.getX() + "");
+        subStr = ConvertUtils.separateStrByChar(descriptor, ":", true);
+        descriptor = descriptor.replace(subStr, supplement);
+
+
+        foo.getEvents().put(entry.getX() + "", descriptor);
+        entry.getEvent().setDescription(descriptor);
+        // 这里的entry是对proxy设置的，所以没有效果
+        super.mViewOperator.updateText(BUTTON_EVENT_NAME, supplement);
     }
 
     public void initViewWithProxy() {

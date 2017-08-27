@@ -103,7 +103,7 @@ public class NewCuppingActivity extends AppCompatActivity
         Intent intent = getIntent();
         viewType = intent.getStringExtra(VIEW_TYPE);
         if (SHOW_INFO.equals(viewType)) {
-            mCuppingInfo = (CuppingInfo) intent.getSerializableExtra(TARGET);
+            mCuppingInfo = intent.getParcelableExtra(TARGET);
             mBakeReport = mCuppingInfo.getBakeReport();
             loadShowInfoView();
         } else if (NEW_CUPPING.equals(viewType)) {

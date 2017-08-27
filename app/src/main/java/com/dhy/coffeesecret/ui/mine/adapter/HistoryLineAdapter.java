@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BakeReport;
-import com.dhy.coffeesecret.ui.device.fragments.OnItemClickListener;
+import com.dhy.coffeesecret.ui.common.interfaces.OnItemClickListener;
 import com.dhy.coffeesecret.utils.FormatUtils;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
 

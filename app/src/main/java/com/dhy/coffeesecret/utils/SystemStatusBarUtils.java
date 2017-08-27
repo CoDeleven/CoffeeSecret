@@ -167,7 +167,7 @@ class SystemBarTintManager {
         }
 
         mConfig = new SystemBarConfig(activity, mStatusBarAvailable, mNavBarAvailable);
-        // device might not have virtual navigation keys
+        // bake might not have virtual navigation keys
         if (!mConfig.hasNavigtionBar()) {
             mNavBarAvailable = false;
         }
@@ -332,7 +332,7 @@ class SystemBarTintManager {
     /**
      * Get the system bar configuration.
      *
-     * @return The system bar configuration for the current device configuration.
+     * @return The system bar configuration for the current bake configuration.
      */
     public SystemBarConfig getConfig() {
         return mConfig;
@@ -403,7 +403,7 @@ class SystemBarTintManager {
 
     /**
      * Class which describes system bar sizing and other characteristics for the current
-     * device configuration.
+     * bake configuration.
      */
     @SuppressWarnings("ResourceType")
     public static class SystemBarConfig {
@@ -521,7 +521,7 @@ class SystemBarTintManager {
 
         /**
          * Should a navigation bar appear at the bottom of the screen in the current
-         * device configuration? A navigation bar may appear on the right side of
+         * bake configuration? A navigation bar may appear on the right side of
          * the screen in certain configurations.
          *
          * @return True if navigation should appear at the bottom of the screen, False otherwise.
@@ -549,9 +549,9 @@ class SystemBarTintManager {
         }
 
         /**
-         * Does this device have a system navigation bar?
+         * Does this bake have a system navigation bar?
          *
-         * @return True if this device uses soft key navigation, False otherwise.
+         * @return True if this bake uses soft key navigation, False otherwise.
          */
         public boolean hasNavigtionBar() {
             return mHasNavigationBar;
@@ -560,7 +560,7 @@ class SystemBarTintManager {
         /**
          * Get the height of the system navigation bar.
          *
-         * @return The height of the navigation bar (in pixels). If the device does not have
+         * @return The height of the navigation bar (in pixels). If the bake does not have
          * soft navigation keys, this will always return 0.
          */
         public int getNavigationBarHeight() {
@@ -570,7 +570,7 @@ class SystemBarTintManager {
         /**
          * Get the width of the system navigation bar when it is placed vertically on the screen.
          *
-         * @return The width of the navigation bar (in pixels). If the device does not have
+         * @return The width of the navigation bar (in pixels). If the bake does not have
          * soft navigation keys, this will always return 0.
          */
         public int getNavigationBarWidth() {

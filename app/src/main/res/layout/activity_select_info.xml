@@ -5,13 +5,13 @@
                 android:id="@+id/activity_select_info"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:context="com.dhy.coffeesecret.ui.container.SelectInfoActivity">
+                tools:context="com.dhy.coffeesecret.ui.counters.SelectInfoActivity">
 
     <include
         android:id="@+id/title_edit"
         layout="@layout/title_edit"/>
 
-    <com.dhy.coffeesecret.views.SearchEditText
+    <com.dhy.coffeesecret.ui.common.views.SearchEditText
         android:id="@+id/search_edit"
         style="@style/SearchBar"
         android:layout_below="@id/title_edit"

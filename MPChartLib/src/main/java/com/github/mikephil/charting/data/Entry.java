@@ -2,7 +2,6 @@
 package com.github.mikephil.charting.data;
 
 import android.os.Parcel;
-import android.os.ParcelFormatException;
 import android.os.Parcelable;
 
 import com.github.mikephil.charting.utils.Utils;
@@ -122,7 +121,7 @@ public class Entry extends BaseEntry implements Serializable {
      */
     @Override
     public String toString() {
-        return "Entry, x: " + x + " y: " + getY();
+        return "Entry, x: " + x + " y: " + getY() + "event:" + event;
     }
 
 /*    @Override

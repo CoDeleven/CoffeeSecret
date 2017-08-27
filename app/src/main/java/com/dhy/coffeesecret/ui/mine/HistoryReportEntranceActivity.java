@@ -2,13 +2,14 @@ package com.dhy.coffeesecret.ui.mine;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.widget.RecyclerView;
 
 import com.dhy.coffeesecret.model.UniExtraKey;
 import com.dhy.coffeesecret.pojo.BakeReport;
-import com.dhy.coffeesecret.ui.container.fragments.SearchFragment;
-import com.dhy.coffeesecret.ui.device.LineSelectedActivity;
-import com.dhy.coffeesecret.ui.device.ReportActivity;
+import com.dhy.coffeesecret.ui.common.SearchFragment;
+import com.dhy.coffeesecret.ui.common.LineSelectedActivity;
+import com.dhy.coffeesecret.ui.bake.ReportActivity;
 import com.dhy.coffeesecret.ui.mine.adapter.HistoryLineAdapter;
 import com.dhy.coffeesecret.utils.FormatUtils;
 import com.dhy.coffeesecret.utils.HttpUtils;
@@ -16,16 +17,16 @@ import com.dhy.coffeesecret.utils.URLs;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import java.io.Serializable;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import static com.dhy.coffeesecret.ui.DefaultViewHandler.LOADING_ERROR;
-import static com.dhy.coffeesecret.ui.DefaultViewHandler.LOADING_SUCCESS;
+import static com.dhy.coffeesecret.ui.common.DefaultViewHandler.LOADING_ERROR;
+import static com.dhy.coffeesecret.ui.common.DefaultViewHandler.LOADING_SUCCESS;
 
 /**
  * Created by CoDeleven on 17-8-26.
@@ -44,16 +45,27 @@ public class HistoryReportEntranceActivity extends LineSelectedActivity{
     }
 
     @Override
-    public void onItemClick(Serializable serializable) {
+    public void onBackPressed() {
+        super.onBackPressed();
+        removeSearchFragment();
+    }
+
+    @Override
+    public void onItemClick(Parcelable parcelable) {
         Intent intent = new Intent(this, ReportActivity.class);
-        intent.putExtra(UniExtraKey.EXTRA_BAKE_REPORT.getKey(), serializable);
+        intent.putExtra(UniExtraKey.EXTRA_BAKE_REPORT.getKey(), parcelable);
         startActivity(intent);
+        removeSearchFragment();
+    }
+
+    protected void removeSearchFragment(){
         if(mSearchFragment != null){
-            mSearchFragment.remove();
+            if(!mSearchFragment.isRemoved()){
+                mSearchFragment.remove();
+            }
             mSearchFragment = null;
         }
     }
-
 
     protected void fetchDataFromServer(){
         new Thread(new Runnable() {
@@ -96,7 +108,7 @@ public class HistoryReportEntranceActivity extends LineSelectedActivity{
                 fetchDataFromServer();
             }
             Bundle bundle = new Bundle();
-            bundle.putSerializable(UniExtraKey.EXTRA_BAKE_REPORT_LIST.getKey(), (LinkedList)mBakeReports);
+            bundle.putParcelableArrayList(UniExtraKey.EXTRA_BAKE_REPORT_LIST.getKey(), new ArrayList<>(mBakeReports));
             mSearchFragment.setArguments(bundle);
         }
         return mSearchFragment;
