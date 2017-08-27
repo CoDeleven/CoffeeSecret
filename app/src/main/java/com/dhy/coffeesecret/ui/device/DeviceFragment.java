@@ -273,7 +273,10 @@ public class DeviceFragment extends Fragment implements IDeviceView {
         } else {
             NLogger.i(TAG, "OnStart():正常安装Presenter...");
             ((MainActivity) getActivity()).revertBakingTab();
-            mBtModifyBeanInfo.setVisibility(View.VISIBLE);
+            if(mPresenter.getTemporaryBeanInfo() == null && mPresenter.getTemporaryReferTemperatures() == null){
+                mBtModifyBeanInfo.setVisibility(View.VISIBLE);
+            }
+
             setupPresenter();
         }
     }

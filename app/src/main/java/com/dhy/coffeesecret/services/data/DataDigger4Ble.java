@@ -18,32 +18,32 @@ public abstract class DataDigger4Ble {
         void writeData2Device(String command);
 
     }
-}
-class SwitchChannelToOne extends DataDigger4Ble{
+    static class SwitchChannelToOne extends DataDigger4Ble{
 
-    @Override
-    void doWrite(IBleWROperator mOperator) {
-        mOperator.writeData2Device(BluetoothService.FIRST_CHANNEL);
+        @Override
+        void doWrite(IBleWROperator mOperator) {
+            mOperator.writeData2Device(BluetoothService.FIRST_CHANNEL);
+        }
     }
-}
-class SwitchChannelToTwo extends DataDigger4Ble{
+    static class SwitchChannelToTwo extends DataDigger4Ble{
 
-    @Override
-    void doWrite(IBleWROperator mOperator) {
-        mOperator.writeData2Device(BluetoothService.SECOND_CHANNEL);
+        @Override
+        void doWrite(IBleWROperator mOperator) {
+            mOperator.writeData2Device(BluetoothService.SECOND_CHANNEL);
+        }
     }
-}
-class ReadDataFromChannelOne extends DataDigger4Ble{
+    static class ReadDataFromChannelOne extends DataDigger4Ble{
 
-    @Override
-    void doWrite(IBleWROperator mOperator) {
-        mOperator.writeData2Device(BluetoothService.READ_TEMP_COMMAND);
+        @Override
+        void doWrite(IBleWROperator mOperator) {
+            mOperator.writeData2Device(BluetoothService.READ_TEMP_COMMAND);
+        }
     }
-}
-class ReadDataFromChannelTwo extends DataDigger4Ble{
+    static class ReadDataFromChannelTwo extends DataDigger4Ble{
 
-    @Override
-    void doWrite(IBleWROperator mOperator) {
-        mOperator.writeData2Device(BluetoothService.READ_TEMP_COMMAND);
+        @Override
+        void doWrite(IBleWROperator mOperator) {
+            mOperator.writeData2Device(BluetoothService.READ_TEMP_COMMAND);
+        }
     }
 }

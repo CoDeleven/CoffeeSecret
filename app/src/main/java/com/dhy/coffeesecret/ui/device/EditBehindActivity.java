@@ -27,8 +27,10 @@ import android.widget.TextView;
 
 import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
+import com.dhy.coffeesecret.model.UniExtraKey;
 import com.dhy.coffeesecret.model.report_edit.IEditView;
 import com.dhy.coffeesecret.model.report_edit.Presenter4Editor;
+import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.pojo.BakeReportProxy;
 import com.dhy.coffeesecret.pojo.BeanInfo;
 import com.dhy.coffeesecret.pojo.BeanInfoSimple;
@@ -226,12 +228,17 @@ public class EditBehindActivity extends AppCompatActivity implements CircleSeekB
         super.onCreate(savedInstanceState);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         setContentView(R.layout.activity_edit_behind_activiy);
+
         ButterKnife.bind(this);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        if(mPresenter.getCurBakingReport() == null){
+            BakeReport proxy = (BakeReport)getIntent().getSerializableExtra(UniExtraKey.EXTRA_BAKE_REPORT.getKey());
+            mPresenter.settLocalBakeReport(proxy);
+        }
         mEditorMode = getIntent().getIntExtra(MODE_KEY, MODE_GENERATE);
 
         // 设置视图
@@ -314,8 +321,8 @@ public class EditBehindActivity extends AppCompatActivity implements CircleSeekB
 
         // 保存
         mPresenter.save();
-
         Intent other = new Intent(this, ReportActivity.class);
+        T.showLong(this, "保存成功!");
         startActivity(other);
         finish();
     }

@@ -65,7 +65,7 @@ public class QuickEventActivity extends AppCompatActivity {
         quickEvents = new ArrayList<>();
         quickEvents.addAll(SettingTool.parse2List(mConfig.getQuickEvents()));
 
-        quickEventAdapter = new QuickEventAdapter(mContext, quickEvents, getFootView());
+        quickEventAdapter = new QuickEventAdapter(mContext, quickEvents);
         quickEventAdapter.setOnItemClickListener(new QuickEventAdapter.onItemClickListener() {
             @Override
             public void onItemClicked(String itemString) {
@@ -81,7 +81,12 @@ public class QuickEventActivity extends AppCompatActivity {
                 SettingTool.saveConfig(mConfig);
             }
         });
-
+        quickEventAdapter.setOnFootClickListener(new QuickEventAdapter.onFootClickListener() {
+            @Override
+            public void onFootClicked(View view) {
+                showEditDialog(null);
+            }
+        });
         LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 
@@ -89,18 +94,7 @@ public class QuickEventActivity extends AppCompatActivity {
         quickEventList.setAdapter(quickEventAdapter);
     }
 
-    private View getFootView() {
-        LayoutInflater inflater = LayoutInflater.from(mContext);
-        View footView = inflater.inflate(R.layout.item_quick_event_foot, null);
-        RelativeLayout addQuickEvent = (RelativeLayout) footView.findViewById(R.id.add_quick_event);
-        addQuickEvent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showEditDialog(null);
-            }
-        });
-        return footView;
-    }
+
 
     private void editQuickEvent(String newQuickEvent, String oldQuickEvent) {
 

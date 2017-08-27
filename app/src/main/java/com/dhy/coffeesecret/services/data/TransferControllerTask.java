@@ -32,10 +32,10 @@ public class TransferControllerTask implements Runnable {
     private IConnEmergencyListener mEmergencyAccess;
     private boolean isWriting = false;
     private boolean continueToWrite = true;
-    private DataDigger4Ble mToFirstChannel = new SwitchChannelToOne();
-    private DataDigger4Ble mToSecondChannel = new SwitchChannelToTwo();
-    private DataDigger4Ble mReadDataFromFirst = new ReadDataFromChannelOne();
-    private DataDigger4Ble mReadDataFromSecond = new ReadDataFromChannelTwo();
+    private DataDigger4Ble mToFirstChannel = new DataDigger4Ble.SwitchChannelToOne();
+    private DataDigger4Ble mToSecondChannel = new DataDigger4Ble.SwitchChannelToTwo();
+    private DataDigger4Ble mReadDataFromFirst = new DataDigger4Ble.ReadDataFromChannelOne();
+    private DataDigger4Ble mReadDataFromSecond = new DataDigger4Ble.ReadDataFromChannelTwo();
     private StringBuilder mData = new StringBuilder();
     private Timer mHistoryTimer = new Timer();
     private IBleDataCallback mTemperatureCallback;

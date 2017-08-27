@@ -41,4 +41,8 @@ public class Presenter4Report extends BaseBlePresenter<IReportView, Model4Report
     public void setLocalBakeReport(BakeReport bakeReport){
         this.tLocalBakeReport = new BakeReportProxy(bakeReport);
     }
+
+    public BakeReportProxy gettLocalBakeReport() {
+        return tLocalBakeReport;
+    }
 }

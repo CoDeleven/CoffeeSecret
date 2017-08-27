@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -76,8 +77,11 @@ public class FireWindDialog extends DialogFragment implements CircleSeekBar.OnSe
         circle1.setOnSeekBarChangeListener(this);
         circle2.setOnSeekBarChangeListener(this);
 
-        circle1.setCurProcess((int)windValue);
-        circle2.setCurProcess((int)fireValue);
+        circle1.setCurProcess(windValue);
+        circle2.setCurProcess(fireValue);
+
+        text1.setText(windValue + "");
+        text2.setText(fireValue + "");
         return view;
     }
 
@@ -141,10 +145,21 @@ public class FireWindDialog extends DialogFragment implements CircleSeekBar.OnSe
 
     @Override
     public void onChanged(CircleSeekBar seekbar, float curValue, double angle) {
-        // Log.d("GG", "onChanged: curValue" + curValue + ", angle:" + angle);
+        Log.d("GG", "onChanged: curValue" + curValue + ", angle:" + angle);
+/*        if(curValue != 0 && angle == 0){
+            updateText(seekbar, Utils.get1PrecisionFloat(curValue));
+        }*/
+        storeLocalStatus(seekbar, (float)angle / 360 * seekbar.getMaxProcess());
         // 因为客户需求，需要精确到0.1，故再传入angle自行根据 半分比获取相应的数值
-        double processVal = angle / 360 * seekbar.getMaxProcess();
-        updateText(seekbar, Utils.get1PrecisionFloat(processVal));
+        updateText(seekbar, Utils.get1PrecisionFloat(angle / 360 * seekbar.getMaxProcess()));
+    }
+
+    private void storeLocalStatus(CircleSeekBar seekBar, float curValue){
+        if (seekBar == circle1) {
+            windValue = curValue;
+        } else {
+            fireValue = curValue;
+        }
     }
 
     /**
@@ -174,10 +189,10 @@ public class FireWindDialog extends DialogFragment implements CircleSeekBar.OnSe
         bundle.putFloat("curValue", curValue);
 
         if (seekBar == circle1) {
-            windValue = curValue;
+            // windValue = curValue;
             bundle.putInt("curSeek", 1);
         } else {
-            fireValue = curValue;
+            // fireValue = curValue;
             bundle.putInt("curSeek", 2);
         }
         msg.setData(bundle);
@@ -195,12 +210,12 @@ public class FireWindDialog extends DialogFragment implements CircleSeekBar.OnSe
     void generateEvent() {
         Event event = new Event(Event.FIRE_WIND);
         if (isGroup) {
-            event.setDescription("FireValue:" + fireValue + ", WindValue:" + windValue);
+            event.setDescription("FireValue:" + Utils.get2PrecisionFloat(fireValue) + ", WindValue:" + Utils.get2PrecisionFloat(windValue));
         } else {
             if (curCircle == circle1) {
-                event.setDescription("WindValue:" + windValue);
+                event.setDescription("WindValue:" + Utils.get2PrecisionFloat(windValue));
             } else {
-                event.setDescription("FireValue:" + fireValue);
+                event.setDescription("FireValue:" + Utils.get2PrecisionFloat(fireValue));
             }
         }
         onFireWindAddListener.onFireWindChanged(event);

@@ -68,6 +68,10 @@ public class Presenter4Device extends BaseBlePresenter<IDeviceView, Model4Device
         this.temporaryReferTemperatures = temporaryReferTemperatures;
     }
 
+    public BakeReport getTemporaryReferTemperatures() {
+        return temporaryReferTemperatures;
+    }
+
     @Override
     public void onScanning(ScanResult result) {
         if (result.getDevice().getAddress().equals(mModelOperator.getLastConnectedAddr())) {
@@ -97,7 +101,7 @@ public class Presenter4Device extends BaseBlePresenter<IDeviceView, Model4Device
         initPrepareBakeReport();
 
         BakeReportProxy proxy = mModelOperator.getCurBakingReport();
-        NLogger.i(TAG, "总共放入豆种数量为:" + temporaryBeanInfo.size() + "->" + temporaryBeanInfo.get(0));
+        NLogger.i(TAG, "总共放入豆种数量为:" + temporaryBeanInfo.size());
         proxy.setBeanInfoSimples(temporaryBeanInfo);
 
         // 对于只有一个豆种的情况进行id特殊处理

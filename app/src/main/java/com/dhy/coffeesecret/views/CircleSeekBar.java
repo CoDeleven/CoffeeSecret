@@ -446,7 +446,11 @@ public class CircleSeekBar extends View {
     public void setCurProcess(float curProcess) {
         this.mCurProcess = curProcess > mMaxProcess ? mMaxProcess : curProcess;
         if (mChangListener != null) {
+            if(curProcess != 0 && mCurAngle == 0){
+                mCurAngle = (mCurProcess / mMaxProcess) * 360f;
+            }
             mChangListener.onChanged(this, curProcess, mCurAngle);
+
         }
         refershPosition();
         invalidate();

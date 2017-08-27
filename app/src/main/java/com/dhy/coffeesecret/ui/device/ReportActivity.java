@@ -211,6 +211,7 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
         // 不好意思，用完即删
         if(mPresenter != null){
             mPresenter.clearBakeReport();
+            mPresenter.setLocalBakeReport(null);
         }
         finish();
     }
@@ -284,6 +285,9 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
     public void onMoreClick() {
         Intent intent = new Intent(this, EditBehindActivity.class);
         intent.putExtra(EditBehindActivity.MODE_KEY, EditBehindActivity.MODE_EDITOR);
+        if(mPresenter.getCurBakingReport() == null){
+            intent.putExtra(UniExtraKey.EXTRA_BAKE_REPORT.getKey(), mPresenter.gettLocalBakeReport().getBakeReport());
+        }
         startActivity(intent);
         finish();
     }

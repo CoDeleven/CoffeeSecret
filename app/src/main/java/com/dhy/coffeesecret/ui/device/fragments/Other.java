@@ -5,11 +5,14 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.dhy.coffeesecret.R;
@@ -21,7 +24,8 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
+
+import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 /**
  * Created by CoDeleven on 17-2-23.
@@ -29,19 +33,11 @@ import butterknife.OnClick;
 
 public class Other extends DialogFragment {
     private OnOtherAddListener onOtherAddListener;
-    @Bind(R.id.id_baking_quick1)
-    TextView quick1;
-    @Bind(R.id.id_baking_quick2)
-    TextView quick2;
-    @Bind(R.id.id_baking_quick3)
-    TextView quick3;
-    @Bind(R.id.id_baking_quick4)
-    TextView quick4;
-    @Bind(R.id.id_baking_quick5)
-    TextView quick5;
-    @Bind(R.id.id_baking_cancel)
-    Button mCancel;
-    @Nullable
+/*    @Bind(R.id.id_baking_cancel)
+    Button mCancel;*/
+    @Bind(R.id.id_quick_event_container)
+    LinearLayout eventContainer;
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -49,22 +45,65 @@ public class Other extends DialogFragment {
         View view = inflater.inflate(R.layout.bake_other_dialog, container, false);
         ButterKnife.bind(this, view);
 
-        mCancel.setOnClickListener(new View.OnClickListener() {
+        List<String> temp = SettingTool.parse2List(SettingTool.getConfig().getQuickEvents());
+        generateQuickEvent(temp);
+
+        return view;
+    }
+
+    private void generateQuickEvent(List<String> events){
+        for (String event : events) {
+            TextView textView = new TextView(getContext());
+
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, WRAP_CONTENT);
+            params.setMargins(0, Util.dpToPx(2.25f, getResources()), 0, 0);
+            textView.setLayoutParams(params);
+
+            textView.setPadding(Util.dpToPx(20.1285f, getResources()), Util.dpToPx(6.75f, getResources()), 0, Util.dpToPx(6.75f, getResources()));
+            textView.setTextColor(Color.parseColor("#9ea3a8"));
+            textView.setText(event);
+            textView.setEllipsize(TextUtils.TruncateAt.END);
+            textView.setMaxLines(1);
+            textView.setSingleLine(true);
+            textView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String info = ((TextView)v).getText().toString();
+                    Event event = new Event(Event.OTHER);
+                    event.setDescription(info);
+                    onOtherAddListener.onDataChanged(event);
+                    dismiss();
+                }
+            });
+            eventContainer.addView(textView);
+
+            View view = new View(getContext());
+            LinearLayout.LayoutParams viewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Util.dpToPx(1f, getResources()));
+            viewParams.setMargins(Util.dpToPx(5.625f, getResources()), 0, Util.dpToPx(5.625f, getResources()), 0);
+            view.setBackgroundColor(Color.parseColor("#F1F2F0"));
+            view.setLayoutParams(viewParams);
+
+            eventContainer.addView(view);
+        }
+        Button btn = new Button(getContext());
+        btn.setBackgroundColor(Color.TRANSPARENT);
+        btn.setText("取消");
+        btn.setMinHeight(Util.dpToPx(15f, getResources()));
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT);
+        params.gravity = Gravity.CENTER;
+        // params.setMargins(0, 0, 0, Util.dpToPx(3f, getResources()));
+        btn.setPadding(0, Util.dpToPx(1f, getResources()), 0, Util.dpToPx(1f, getResources()));
+        btn.setTextColor(Color.parseColor("#936743"));
+        btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dismiss();
             }
         });
-        List<String> temp = SettingTool.parse2List(SettingTool.getConfig().getQuickEvents());
-        quick1.setText(temp.get(0));
-        quick2.setText(temp.get(1));
-        quick3.setText(temp.get(2));
-        quick4.setText(temp.get(3));
-        quick5.setText(temp.get(4));
+        btn.setLayoutParams(params);
 
-
-
-        return view;
+        eventContainer.addView(btn);
     }
 
     public void setOnOtherAddListener(OnOtherAddListener onOtherAddListener){
@@ -74,7 +113,7 @@ public class Other extends DialogFragment {
     @Override
     public void onResume() {
         super.onResume();
-        getDialog().getWindow().setLayout(Util.dpToPx(200, getResources()), Util.dpToPx(195, getResources()));
+        getDialog().getWindow().setLayout(Util.dpToPx(200, getResources()), WRAP_CONTENT);
     }
     @Override
     public void onDestroyView() {
@@ -85,15 +124,6 @@ public class Other extends DialogFragment {
         void onDataChanged(Event event);
     }
 
-    @OnClick({R.id.id_baking_quick1, R.id.id_baking_quick2, R.id.id_baking_quick3, R.id.id_baking_quick4, R.id.id_baking_quick5})
-    void quickSelected(View view){
-        String info = ((TextView)view).getText().toString();
-        Event event = new Event(Event.OTHER);
-        event.setDescription(info);
-        onOtherAddListener.onDataChanged(event);
-        dismiss();
-    }
-    @OnClick(R.id.id_baking_cancel)
     void exitOtherDialog(){
         dismiss();
     }

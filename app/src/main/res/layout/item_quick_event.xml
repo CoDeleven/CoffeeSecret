@@ -1,42 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="52dp">
-
-    <TextView
-        android:id="@+id/btn_delete"
-        android:layout_width="70dp"
-        android:layout_height="match_parent"
-        android:layout_alignParentRight="true"
-        android:background="@color/simo_red600"
-        android:gravity="center"
-        android:paddingBottom="15dp"
-        android:paddingTop="15dp"
-        android:text="删除"
-        android:textSize="14.5sp" />
-
-    <LinearLayout
-        android:id="@+id/quick_event_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/option_selector">
+    android:layout_height="wrap_content">
+    <com.daimajia.swipe.SwipeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                    android:id="@+id/id_swipe_layout"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content">
 
         <TextView
-            android:id="@+id/text_quick_event"
+            android:id="@+id/btn_delete"
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:background="@color/simo_red600"
+            android:gravity="center"
+            android:paddingBottom="15dp"
+            android:paddingTop="15dp"
+            android:text="删除"
+            android:textSize="14.5sp" />
+
+        <LinearLayout
+            android:id="@+id/quick_event_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingBottom="15dp"
-            android:paddingLeft="30dp"
-            android:paddingTop="15dp"
-            android:text="快速事件1"
-            android:textSize="14.5sp" />
-    </LinearLayout>
+            android:background="@drawable/option_selector">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginLeft="9.5dp"
-        android:layout_marginRight="9.5dp"
-        android:background="@color/color_gray_c9" />
-</RelativeLayout>
+            <TextView
+                android:id="@+id/text_quick_event"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingBottom="15dp"
+                android:paddingLeft="30dp"
+                android:paddingTop="15dp"
+                android:text="快速事件1"
+                android:textSize="14.5sp" />
+        </LinearLayout>
+    </com.daimajia.swipe.SwipeLayout>
+</LinearLayout>

@@ -3,6 +3,7 @@ package com.dhy.coffeesecret.model.report_edit;
 import android.util.Log;
 
 import com.dhy.coffeesecret.model.BaseBlePresenter;
+import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.pojo.BakeReportProxy;
 import com.dhy.coffeesecret.pojo.BeanInfo;
 import com.dhy.coffeesecret.pojo.BeanInfoSimple;
@@ -23,7 +24,16 @@ import static com.dhy.coffeesecret.ui.device.EditBehindActivity.RERANGE_BEAN_INF
 public class Presenter4Editor extends BaseBlePresenter<IEditView, Model4Editor> {
     private static final String TAG = Presenter4Editor.class.getSimpleName();
     private static Presenter4Editor mPresenter;
+    private BakeReportProxy tLocalBakeReport;
     private BeanInfoSimple mCurBeanInfo;
+
+    public BakeReportProxy gettLocalBakeReport() {
+        return tLocalBakeReport;
+    }
+
+    public void settLocalBakeReport(BakeReport tLocalBakeReport) {
+        this.tLocalBakeReport = new BakeReportProxy(tLocalBakeReport);
+    }
 
     private Presenter4Editor() {
         super(Model4Editor.newInstance());
@@ -40,7 +50,13 @@ public class Presenter4Editor extends BaseBlePresenter<IEditView, Model4Editor> 
      * 从BakeReport获取带事件的节点
      */
     public void generateItem() {
-        List<Entry> entries = getModel().getCurBakingReport().getEntriesWithEvents();
+        List<Entry> entries;
+        if(mModelOperator.getCurBakingReport() == null){
+            entries = tLocalBakeReport.getEntriesWithEvents();
+        }else{
+            entries = mModelOperator.getCurBakingReport().getEntriesWithEvents();
+        }
+
         getModel().setEntriesWithEvent(entries);
         getView().updateEntryEvents(entries);
     }
@@ -49,8 +65,13 @@ public class Presenter4Editor extends BaseBlePresenter<IEditView, Model4Editor> 
      * 从BakeReport获取BeanInfos
      */
     public void generateBean() {
+        List<BeanInfoSimple> simpleBeanInfo;
+        if(mModelOperator.getCurBakingReport() == null){
+            simpleBeanInfo = tLocalBakeReport.getBeanInfos();
+        }else{
+            simpleBeanInfo = getModel().getCurBakingReport().getBeanInfos();
+        }
 
-        List<BeanInfoSimple> simpleBeanInfo = getModel().getCurBakingReport().getBeanInfos();
         getModel().setBeanInfo(simpleBeanInfo);
         getView().updateBeanInfos(simpleBeanInfo);
     }
@@ -140,8 +161,8 @@ public class Presenter4Editor extends BaseBlePresenter<IEditView, Model4Editor> 
         if(getCurBakingReport() != null && !isBakingNow()){
             getView().init(getCurBakingReport());
             // 如果不存在正在烘焙的内容，那么查看是否存在不是正在烘焙的内容，如果存在，那么用它来初始化
-        }else if(getNoBakingBakeReport(false) != null){
-            getView().init(new BakeReportProxy(getNoBakingBakeReport(false)));
+        }else if(tLocalBakeReport != null){
+            getView().init(tLocalBakeReport);
         }
     }
 }

@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/id_quick_event_container"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:background="@drawable/bg_round"
               android:orientation="vertical">
 
-    <TextView
+<!--    <TextView
         android:id="@+id/id_baking_quick1"
         style="@style/bakingOtherSelect"
         android:layout_marginTop="2.25dp"
@@ -69,5 +70,5 @@
         android:background="@android:color/transparent"
         android:minHeight="15dp"
         android:text="取消"
-        android:textColor="#936743"/>
+        android:textColor="#936743"/>-->
 </LinearLayout>
