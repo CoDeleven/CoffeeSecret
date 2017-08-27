@@ -7,13 +7,13 @@ import android.support.v7.widget.RecyclerView;
 
 import com.dhy.coffeesecret.model.UniExtraKey;
 import com.dhy.coffeesecret.pojo.BakeReport;
-import com.dhy.coffeesecret.ui.common.SearchFragment;
-import com.dhy.coffeesecret.ui.common.LineSelectedActivity;
 import com.dhy.coffeesecret.ui.bake.ReportActivity;
+import com.dhy.coffeesecret.ui.common.LineSelectedActivity;
+import com.dhy.coffeesecret.ui.common.SearchFragment;
 import com.dhy.coffeesecret.ui.mine.adapter.HistoryLineAdapter;
+import com.dhy.coffeesecret.url.UrlBake;
 import com.dhy.coffeesecret.utils.FormatUtils;
 import com.dhy.coffeesecret.utils.HttpUtils;
-import com.dhy.coffeesecret.utils.URLs;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -25,6 +25,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import cn.jesse.nativelogger.NLogger;
+
 import static com.dhy.coffeesecret.ui.common.DefaultViewHandler.LOADING_ERROR;
 import static com.dhy.coffeesecret.ui.common.DefaultViewHandler.LOADING_SUCCESS;
 
@@ -33,6 +35,7 @@ import static com.dhy.coffeesecret.ui.common.DefaultViewHandler.LOADING_SUCCESS;
  */
 
 public class HistoryReportEntranceActivity extends LineSelectedActivity{
+    private static final String TAG = HistoryReportEntranceActivity.class.getSimpleName();
     private List<BakeReport> mBakeReports = new LinkedList<>();
     protected SearchFragment mSearchFragment;
 
@@ -72,7 +75,8 @@ public class HistoryReportEntranceActivity extends LineSelectedActivity{
             @Override
             public void run() {
                 try {
-                    String temp = HttpUtils.getStringFromServer(URLs.GET_ALL_BAKE_REPORT);
+                    String token = application.getToken();
+                    String temp = HttpUtils.getStringFromServer(UrlBake.getAll(token));
                     Type type = new TypeToken<Map<String, BakeReport>>() {
                     }.getType();
                     Map<String, BakeReport> bakeReports = new Gson().fromJson(temp, type);
@@ -87,6 +91,7 @@ public class HistoryReportEntranceActivity extends LineSelectedActivity{
                             return (int) (FormatUtils.date2IdWithTimestamp(o2.getDate()) - FormatUtils.date2IdWithTimestamp(o1.getDate()));
                         }
                     });
+                    NLogger.i(TAG, "从服务器获取到" + bakeReports.size() + "个数据");
                     // 请求成功
                     mHandler.sendEmptyMessage(LOADING_SUCCESS);
                 } catch (Exception e) {

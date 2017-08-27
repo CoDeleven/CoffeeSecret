@@ -3,8 +3,8 @@ package com.dhy.coffeesecret.model.report_edit;
 import com.dhy.coffeesecret.model.base.BaseModel;
 import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.pojo.BeanInfoSimple;
+import com.dhy.coffeesecret.url.UrlBake;
 import com.dhy.coffeesecret.utils.HttpUtils;
-import com.dhy.coffeesecret.utils.URLs;
 import com.github.mikephil.charting.data.Entry;
 
 import java.io.IOException;
@@ -46,12 +46,13 @@ public class Model4Editor extends BaseModel implements IEditModel{
         return beanInfoSimples;
     }
 
-    public void sendJsonData(final BakeReport bakeReport) {
+    public void sendJsonData(final String token, final BakeReport bakeReport) {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    HttpUtils.execute(URLs.ADD_BAKE_REPORT, bakeReport);
+                    String add = UrlBake.add(token);
+                    HttpUtils.execute(add, bakeReport);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

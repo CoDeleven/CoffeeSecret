@@ -12,6 +12,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.ui.common.interfaces.OnItemClickListener;
 import com.dhy.coffeesecret.utils.SystemStatusBarUtils;
@@ -46,6 +47,7 @@ public abstract class LineSelectedActivity extends AppCompatActivity implements
     protected DefaultViewHandler mHandler;
     private RecyclerView.Adapter mAdapter;
     private boolean isAddSearchFragment = false;
+    protected MyApplication application;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,6 +57,7 @@ public abstract class LineSelectedActivity extends AppCompatActivity implements
         setContentView(R.layout.history_lines);
         SystemStatusBarUtils.steepToolBar(this);
         ButterKnife.bind(this);
+        application = (MyApplication) getApplication();
         init();
         initTitle();
         mHandler.sendEmptyMessage(DefaultViewHandler.GET_DATA);

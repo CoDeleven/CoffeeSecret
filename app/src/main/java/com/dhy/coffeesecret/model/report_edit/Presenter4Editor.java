@@ -148,9 +148,9 @@ public class Presenter4Editor extends BaseBlePresenter<IEditView, Model4Editor> 
     /**
      * 保存
      */
-    public void save() {
-        // TODO 测试用隐藏
-        // getModel().sendJsonData(super.mCurBakingProxy.getBakeReport());
+    public void save(String token) {
+        // TODO 需要根据是烘焙的报告还是已经存在的报告，分别进行处理
+        // getModel().sendJsonData(token, mModelOperator.getCurBakingReport().getBakeReport());
         if(mModelOperator.getCurBakingReport() == null){
             Log.d(TAG, "save-data -> " + new Gson().toJson(tLocalBakeReport.getBakeReport()));
         }else{

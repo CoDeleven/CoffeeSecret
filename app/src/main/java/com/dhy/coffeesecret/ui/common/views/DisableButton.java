@@ -1,4 +1,4 @@
-package com.dhy.coffeesecret.views;
+package com.dhy.coffeesecret.ui.common.views;
 
 import android.annotation.TargetApi;
 import android.content.Context;

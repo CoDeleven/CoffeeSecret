@@ -21,12 +21,14 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.PopupWindow;
 
+import com.dhy.coffeesecret.ui.MainActivity;
+import com.dhy.coffeesecret.ui.common.views.DividerDecoration;
+import com.dhy.coffeesecret.ui.launcher.FirstConnectedActivity;
 import com.dhy.coffeesecret.ui.mine.adapter.AccountAdapter;
 import com.dhy.coffeesecret.url.UrlLogin;
 import com.dhy.coffeesecret.utils.HttpUtils;
 import com.dhy.coffeesecret.utils.SPPrivateUtils;
-import com.dhy.coffeesecret.utils.UIUtils;
-import com.dhy.coffeesecret.views.DividerDecoration;
+import com.dhy.coffeesecret.utils.SystemStatusBarUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -80,7 +82,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        UIUtils.steepToolBar(this);
+        SystemStatusBarUtils.steepToolBar(this);
         myApplication = (MyApplication) getApplication();
         new Thread(){
             @Override

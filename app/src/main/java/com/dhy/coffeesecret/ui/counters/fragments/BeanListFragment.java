@@ -28,24 +28,21 @@ import android.widget.TextView;
 import com.bigkoo.quicksidebar.QuickSideBarTipsView;
 import com.bigkoo.quicksidebar.QuickSideBarView;
 import com.bigkoo.quicksidebar.listener.OnQuickSideBarTouchListener;
+import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.model.UniExtraKey;
 import com.dhy.coffeesecret.pojo.BeanInfo;
-import com.dhy.coffeesecret.ui.container.BeanInfoActivity;
-import com.dhy.coffeesecret.ui.container.adapters.BeanListAdapter;
-import com.dhy.coffeesecret.ui.container.adapters.CountryListAdapter;
-import com.dhy.coffeesecret.ui.container.adapters.HandlerAdapter;
-import com.dhy.coffeesecret.url.UrlBean;
+import com.dhy.coffeesecret.ui.common.interfaces.OnItemClickListener;
+import com.dhy.coffeesecret.ui.common.views.DividerDecoration;
 import com.dhy.coffeesecret.ui.counters.BeanInfoActivity;
 import com.dhy.coffeesecret.ui.counters.adapters.BeanListAdapter;
 import com.dhy.coffeesecret.ui.counters.adapters.CountryListAdapter;
 import com.dhy.coffeesecret.ui.counters.adapters.HandlerAdapter;
-import com.dhy.coffeesecret.ui.common.interfaces.OnItemClickListener;
+import com.dhy.coffeesecret.url.UrlBean;
 import com.dhy.coffeesecret.utils.HttpUtils;
 import com.dhy.coffeesecret.utils.T;
 import com.dhy.coffeesecret.utils.TestData;
 import com.dhy.coffeesecret.utils.Utils;
-import com.dhy.coffeesecret.ui.common.views.DividerDecoration;
 import com.edmodo.rangebar.RangeBar;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -266,7 +263,7 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
         Gson gson = new Gson();
         String beanInfoListJson = "";
         try {
-            // MyApplication application = (MyApplication) getActivity().getApplication();
+            MyApplication application = (MyApplication) getActivity().getApplication();
             beanInfoListJson = HttpUtils.getStringFromServer(UrlBean.getAll(application.getToken()));
         } catch (IOException e) {
             e.printStackTrace();

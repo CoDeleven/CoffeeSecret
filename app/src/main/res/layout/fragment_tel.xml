@@ -45,7 +45,7 @@
         android:paddingTop="8dp"
         android:singleLine="true"
         android:textSize="16sp" />
-    <com.dhy.coffeesecret.views.DisableButton
+    <com.dhy.coffeesecret.ui.common.views.DisableButton
         android:id="@+id/btn_send_code"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

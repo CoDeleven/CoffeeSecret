@@ -30,7 +30,6 @@ import com.dhy.coffeesecret.utils.HttpUtils;
 import com.dhy.coffeesecret.utils.SettingTool;
 import com.dhy.coffeesecret.utils.T;
 import com.dhy.coffeesecret.utils.SystemStatusBarUtils;
-import com.dhy.coffeesecret.utils.UIUtils;
 import com.dhy.coffeesecret.utils.Utils;
 
 import java.io.IOException;
@@ -129,10 +128,13 @@ public class EditBeanActivity extends AppCompatActivity {
     private EditBeanHandler mHandler = new EditBeanHandler(EditBeanActivity.this);
     private BeanInfo beanInfo;
     private int count = 0;
+    private MyApplication application;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_bean);
+        application = ((MyApplication) getApplication());
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         ButterKnife.bind(this);

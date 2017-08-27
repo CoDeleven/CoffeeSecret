@@ -23,6 +23,7 @@ public class HistoryLineAdapter extends RecyclerView.Adapter<HistoryLineAdapter.
     private LayoutInflater layoutInflater;
     private List<BakeReport> bakeReports;
     private OnItemClickListener onLineClickedListener;
+
     public HistoryLineAdapter(Context context, List<BakeReport> bakeReports,  OnItemClickListener onLineClickedListener) {
         this.onLineClickedListener = onLineClickedListener;
         this.layoutInflater = LayoutInflater.from(context);

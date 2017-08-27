@@ -22,7 +22,7 @@ import android.widget.TextView;
 import com.aliyuncs.exceptions.ClientException;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.utils.SmsUtils;
-import com.dhy.coffeesecret.views.DisableButton;
+import com.dhy.coffeesecret.ui.common.views.DisableButton;
 
 public class VerifyFragment extends Fragment implements View.OnClickListener, TextWatcher {
 

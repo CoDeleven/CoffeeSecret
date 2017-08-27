@@ -21,6 +21,7 @@ import android.widget.PopupWindow;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.model.UniExtraKey;
 import com.dhy.coffeesecret.pojo.CuppingInfo;
@@ -35,11 +36,9 @@ import com.dhy.coffeesecret.ui.cup.comparator.OrderBy;
 import com.dhy.coffeesecret.ui.cup.comparator.ScoreComparator;
 import com.dhy.coffeesecret.ui.cup.filter.Filter;
 import com.dhy.coffeesecret.ui.cup.fragment.SearchCupInfoFragment;
-import com.dhy.coffeesecret.ui.cup.filter.Filter;
 import com.dhy.coffeesecret.url.UrlCupping;
 import com.dhy.coffeesecret.utils.HttpUtils;
 import com.dhy.coffeesecret.utils.T;
-import com.dhy.coffeesecret.views.DividerDecoration;
 import com.edmodo.rangebar.RangeBar;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -105,6 +104,7 @@ public class CupFragment extends Fragment implements View.OnClickListener {
     private Filter filter;
     private boolean isAddSearchFragment;
     private SearchFragment searchFragment;
+    private MyApplication application;
 
 
     public CupFragment() {
@@ -121,6 +121,8 @@ public class CupFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        application = (MyApplication) getActivity().getApplication();
 
         mRefreshLayout = (SwipeRefreshLayout) mCuppingView.findViewById(R.id.refresh_layout);
         mRecyclerView = (RecyclerView) mCuppingView.findViewById(R.id.rv_cupping);
@@ -330,7 +332,7 @@ public class CupFragment extends Fragment implements View.OnClickListener {
             @Override
             public void run() {
                 try {
-                    String str = HttpUtils.getStringFromServer(URLs.GET_ALL_CUPPING);
+                    String str = HttpUtils.getStringFromServer(UrlCupping.getAll(application.getToken()));
                     Type type = new TypeToken<ArrayList<CuppingInfo>>() {
                     }.getType();
                     Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();

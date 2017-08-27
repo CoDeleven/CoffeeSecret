@@ -11,7 +11,11 @@ import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.pojo.BakeReportProxy;
 import com.dhy.coffeesecret.pojo.UniversalConfiguration;
 import com.dhy.coffeesecret.services.BluetoothService;
+import com.dhy.coffeesecret.utils.SPPrivateUtils;
 import com.dhy.coffeesecret.utils.SettingTool;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.qiniu.pili.droid.streaming.StreamingEnv;
 
 import cn.jesse.nativelogger.Logger;
@@ -25,15 +29,34 @@ import cn.jesse.nativelogger.util.CrashWatcher;
  */
 @Logger(tag = "coffeesecret", level = Logger.INFO)
 public class MyApplication extends Application {
+    private static final String TAG = MyApplication.class.getSimpleName();
     public static String weightUnit;
     public static String temperatureUnit;
     private static BakeReportProxy BAKE_REPORT;
     private static SQLiteDatabase country2Continent;
+    private String token;
+    private String user;
 
     public MyApplication() {
         super();
     }
+    public String getToken() {
+        if(token == null){
+            token = SPPrivateUtils.getString(this,"token",null);
+        }
+        return token;
+    }
 
+    public void setToken(String token){
+        this.token = token;
+        NLogger.i(TAG,"token:"+token);
+        if(token == null){
+            SPPrivateUtils.remove(this,"token");
+        }else {
+            SPPrivateUtils.put(this,"token",token);
+        }
+
+    }
     public static void setCountry2Continent(SQLiteDatabase country2Continent) {
         MyApplication.country2Continent = country2Continent;
     }
@@ -98,6 +121,15 @@ public class MyApplication extends Application {
         Bugtags.start("e71c5cd04eea2bf6fd7e179915935981", this, Bugtags.BTGInvocationEventBubble, options);
 
         initLogger();
+        initImageLoader();
+    }
+
+    private void initImageLoader(){
+        DisplayImageOptions _options = new DisplayImageOptions.Builder().cacheOnDisk(true).cacheInMemory(true).build();
+        ImageLoaderConfiguration configuration = new ImageLoaderConfiguration.Builder(this)
+                .defaultDisplayImageOptions(_options).build();
+
+        ImageLoader.getInstance().init(configuration);
     }
 
     public void setBakeReport(BakeReport bakeReport) {

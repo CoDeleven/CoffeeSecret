@@ -327,7 +327,7 @@ public class EditBehindActivity extends AppCompatActivity implements CircleSeekB
         mPresenter.setCookedWeight4BakeReport(weight);
 
         // 保存
-        mPresenter.save();
+        mPresenter.save(application.getToken());
         Intent other = new Intent(this, ReportActivity.class);
         if(mPresenter.getCurBakingReport() == null){
             other.putExtra(UniExtraKey.EXTRA_BAKE_REPORT.getKey(), mPresenter.gettLocalBakeReport().getBakeReport());
