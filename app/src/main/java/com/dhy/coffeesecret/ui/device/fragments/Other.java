@@ -33,8 +33,6 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 public class Other extends DialogFragment {
     private OnOtherAddListener onOtherAddListener;
-/*    @Bind(R.id.id_baking_cancel)
-    Button mCancel;*/
     @Bind(R.id.id_quick_event_container)
     LinearLayout eventContainer;
 
@@ -122,9 +120,5 @@ public class Other extends DialogFragment {
     }
     public interface OnOtherAddListener {
         void onDataChanged(Event event);
-    }
-
-    void exitOtherDialog(){
-        dismiss();
     }
 }
