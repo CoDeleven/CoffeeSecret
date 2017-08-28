@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
+import com.dhy.coffeesecret.model.UniExtraKey;
 import com.dhy.coffeesecret.pojo.User;
 import com.dhy.coffeesecret.url.UrlLogin;
 import com.dhy.coffeesecret.utils.HttpUtils;
@@ -170,7 +171,7 @@ public class MineFragment extends Fragment {
                 break;
             case R.id.mine_head_img:
                 intent = new Intent(mContext, UserInfoActivity.class);
-                intent.putExtra("user", user);
+                intent.putExtra(UniExtraKey.EXTRA_USER_INFO.getKey(), user);
                 startActivityForResult(intent, 0x123);
                 break;
             case R.id.mine_feedback:

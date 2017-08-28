@@ -216,7 +216,7 @@ public class ConvertUtils {
      * @return
      */
     public static String separateStrByChar(String original, String separator, boolean forward){
-        int separatorIndex = original.indexOf(separator);
+        int separatorIndex = original.lastIndexOf(separator);
         NLogger.i("ConvertUtils", "要分割的字符串：" + original);
         if(original == null){
             throw new RuntimeException("separateStrByChar字符串为空...");

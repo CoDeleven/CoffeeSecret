@@ -43,6 +43,7 @@ import java.util.Locale;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.jesse.nativelogger.NLogger;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -508,7 +509,9 @@ public class EditBeanActivity extends AppCompatActivity {
         HttpUtils.enqueue(UrlBean.add(application.getToken()), beanInfo, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
+                NLogger.e(TAG,  "更新豆种信息错误：" + e);
                 mHandler.sendEmptyMessage(TOAST_2);
+
             }
 
             @Override

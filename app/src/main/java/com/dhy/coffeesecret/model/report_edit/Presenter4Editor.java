@@ -150,11 +150,13 @@ public class Presenter4Editor extends BaseBlePresenter<IEditView, Model4Editor> 
      */
     public void save(String token) {
         // TODO 需要根据是烘焙的报告还是已经存在的报告，分别进行处理
-        // getModel().sendJsonData(token, mModelOperator.getCurBakingReport().getBakeReport());
+
         if(mModelOperator.getCurBakingReport() == null){
             Log.d(TAG, "save-data -> " + new Gson().toJson(tLocalBakeReport.getBakeReport()));
+            getModel().sendJsonData(token, tLocalBakeReport.getBakeReport());
         }else{
             Log.d(TAG, "save-data -> " + new Gson().toJson(getModel().getCurBakingReport().getBakeReport()));
+            getModel().sendJsonData(token, mModelOperator.getCurBakingReport().getBakeReport());
         }
 
     }

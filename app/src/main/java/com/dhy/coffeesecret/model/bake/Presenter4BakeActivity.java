@@ -219,7 +219,7 @@ public class Presenter4BakeActivity extends BaseBlePresenter<IBakeView, Model4Ba
     }
 
     public void updateBeanEntryEvent(int status, String description) {
-        updateBeanEntryEvent(curBeanEntry, status, description);
+        updateBeanEntryEvent(curBeanEntry, status, description + ":" + status);
     }
 
     private void updateBeanEntryEvent(Entry entry, int status, String description) {
@@ -228,7 +228,7 @@ public class Presenter4BakeActivity extends BaseBlePresenter<IBakeView, Model4Ba
         // 本地记录事件结点
         mEventList.add(entry);
         // 添加事件修改至temperature set
-        recorderSystem.addEvent(lastTime + "", description + ":" + status);
+        recorderSystem.addEvent(lastTime + "", description);
         // 通知图表更新
         mChartPresenter.refreshChart();
         // ((IBakeView) super.mViewOperator).notifyChartDataChanged();

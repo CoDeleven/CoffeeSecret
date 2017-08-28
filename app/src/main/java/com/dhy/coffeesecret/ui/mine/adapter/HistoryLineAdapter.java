@@ -32,7 +32,12 @@ public class HistoryLineAdapter extends RecyclerView.Adapter<HistoryLineAdapter.
 
     @Override
     public void onBindViewHolder(HistoryLineViewHolder holder, final int position) {
-        holder.itemName.setText(bakeReports.get(position).getBeanInfoSimples().get(0).getBeanName());
+        if(bakeReports.get(position).getBeanInfoSimples().size() == 0){
+            holder.itemName.setText("没有豆种");
+        }else{
+            holder.itemName.setText(bakeReports.get(position).getBeanInfoSimples().get(0).getBeanName());
+        }
+
         holder.itemDate.setText(bakeReports.get(position).getDate());
         holder.layout.setOnClickListener(new View.OnClickListener() {
             @Override

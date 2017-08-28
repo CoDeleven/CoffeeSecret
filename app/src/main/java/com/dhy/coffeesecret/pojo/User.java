@@ -1,10 +1,13 @@
 package com.dhy.coffeesecret.pojo;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.io.Serializable;
 import java.util.Date;
 
-public class User implements Serializable{
-	
+public class User implements Parcelable{
+
 	private long uid;
 	private String username;
 	private String password;
@@ -107,5 +110,51 @@ public class User implements Serializable{
 				", regDate=" + regDate +
 				'}';
 	}
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeLong(this.uid);
+		dest.writeString(this.username);
+		dest.writeString(this.password);
+		dest.writeInt(this.sex);
+		dest.writeInt(this.age);
+		dest.writeString(this.mobilePhone);
+		dest.writeString(this.email);
+		dest.writeString(this.avatar);
+		dest.writeLong(this.lastLogin != null ? this.lastLogin.getTime() : -1);
+		dest.writeLong(this.regDate != null ? this.regDate.getTime() : -1);
+	}
+
+	protected User(Parcel in) {
+		this.uid = in.readLong();
+		this.username = in.readString();
+		this.password = in.readString();
+		this.sex = in.readInt();
+		this.age = in.readInt();
+		this.mobilePhone = in.readString();
+		this.email = in.readString();
+		this.avatar = in.readString();
+		long tmpLastLogin = in.readLong();
+		this.lastLogin = tmpLastLogin == -1 ? null : new Date(tmpLastLogin);
+		long tmpRegDate = in.readLong();
+		this.regDate = tmpRegDate == -1 ? null : new Date(tmpRegDate);
+	}
+
+	public static final Creator<User> CREATOR = new Creator<User>() {
+		@Override
+		public User createFromParcel(Parcel source) {
+			return new User(source);
+		}
+
+		@Override
+		public User[] newArray(int size) {
+			return new User[size];
+		}
+	};
 }
 

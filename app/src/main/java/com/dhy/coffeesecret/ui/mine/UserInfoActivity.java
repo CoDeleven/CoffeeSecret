@@ -38,6 +38,8 @@ import okhttp3.Callback;
 import okhttp3.Request;
 import okhttp3.Response;
 
+import static com.dhy.coffeesecret.model.UniExtraKey.EXTRA_USER_INFO;
+
 public class UserInfoActivity extends AppCompatActivity implements UsernameFragment.OnSuccessListener {
 
     public static final int DEFAULT = 0;
@@ -63,7 +65,7 @@ public class UserInfoActivity extends AppCompatActivity implements UsernameFragm
         setContentView(R.layout.activity_user_info);
         ButterKnife.bind(this);
         application = ((MyApplication) getApplication());
-        user = (User) getIntent().getSerializableExtra("user");
+        user =  getIntent().getParcelableExtra(EXTRA_USER_INFO.getKey());
         setupUserInfo();
     }
 
