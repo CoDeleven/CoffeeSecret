@@ -26,7 +26,7 @@ public class TemperatureSet implements Parcelable{
     private Map<String, String> events = new HashMap<>();
     private List<Float> timex = new ArrayList<>();
 
-    public List<Float> getTempratureByIndex(int index){
+    public List<Float> getTemperatureByIndex(int index){
         switch (index){
             case Model4Chart.BEANLINE:
                 return beanTemps;
@@ -241,4 +241,18 @@ public class TemperatureSet implements Parcelable{
             return new TemperatureSet[size];
         }
     };
+
+    @Override
+    public String toString() {
+        return "TemperatureSet{" +
+                "beanTemps=" + beanTemps +
+                ", inwindTemps=" + inwindTemps +
+                ", outwindTemps=" + outwindTemps +
+                ", accBeanTemps=" + accBeanTemps +
+                ", accInwindTemps=" + accInwindTemps +
+                ", accOutwindTemps=" + accOutwindTemps +
+                ", events=" + events +
+                ", timex=" + timex +
+                '}';
+    }
 }

@@ -481,7 +481,7 @@ public class BaseChart4Coffee extends LineChart implements IChartView {
         if (weightedObservedPointsMap.get(lineIndex).size() == 0) {
             // 获取对应lineIndex的点
             LinkedList obs = weightedObservedPointsMap.get(lineIndex);
-            List<Float> floats = set.getTempratureByIndex(lineIndex);
+            List<Float> floats = set.getTemperatureByIndex(lineIndex);
             List<Float> timex = set.getTimex();
             for (int i = 0; i < timex.size() && i < floats.size(); ++i) {
                 // 添加观测点

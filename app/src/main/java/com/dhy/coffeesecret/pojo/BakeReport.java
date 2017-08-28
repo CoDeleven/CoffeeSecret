@@ -3,8 +3,6 @@ package com.dhy.coffeesecret.pojo;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +22,6 @@ public class BakeReport implements Parcelable {
     private String cookedBeanWeight;
     // 烘焙度, 如果用户没有移动SeekBar导致这里为空,会引发错误
     private String roastDegree = "0";
-    @SerializedName("tempratureSet")
     private TemperatureSet temperatureSet;
     private float breakPointerTime;
     private float breakPointerTemperature;
@@ -340,4 +337,34 @@ public class BakeReport implements Parcelable {
             return new BakeReport[size];
         }
     };
+
+    @Override
+    public String toString() {
+        return "BakeReport{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", device='" + device + '\'' +
+                ", cookedBeanWeight='" + cookedBeanWeight + '\'' +
+                ", roastDegree='" + roastDegree + '\'' +
+                ", temperatureSet=" + temperatureSet +
+                ", breakPointerTime=" + breakPointerTime +
+                ", breakPointerTemperature=" + breakPointerTemperature +
+                ", avgDryTemperature=" + avgDryTemperature +
+                ", avgDryTime=" + avgDryTime +
+                ", avgFirstBurstTime=" + avgFirstBurstTime +
+                ", avgFirstBurstTemperature=" + avgFirstBurstTemperature +
+                ", avgEndTime=" + avgEndTime +
+                ", avgEndTemperature=" + avgEndTemperature +
+                ", avgAccBeanTemperature=" + avgAccBeanTemperature +
+                ", avgGlobalBeanTemperature=" + avgGlobalBeanTemperature +
+                ", developmentTime='" + developmentTime + '\'' +
+                ", developmentRate='" + developmentRate + '\'' +
+                ", ambientTemperature='" + ambientTemperature + '\'' +
+                ", endTemperature='" + endTemperature + '\'' +
+                ", startTemperature='" + startTemperature + '\'' +
+                ", date='" + date + '\'' +
+                ", beanInfoSimples=" + beanInfoSimples +
+                ", beanId=" + beanId +
+                '}';
+    }
 }
