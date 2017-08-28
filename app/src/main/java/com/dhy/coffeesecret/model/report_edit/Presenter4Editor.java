@@ -108,7 +108,7 @@ public class Presenter4Editor extends BaseBlePresenter<IEditView, Model4Editor> 
      *
      * @param weight 重量字符串
      */
-    public void setCookedWeight4BakeReport(String weight) {
+    public boolean setCookedWeight4BakeReport(String weight) {
         BakeReportProxy localProxy = null;
         if(mModelOperator.getCurBakingReport() == null){
             localProxy = tLocalBakeReport;
@@ -120,7 +120,7 @@ public class Presenter4Editor extends BaseBlePresenter<IEditView, Model4Editor> 
             // 填写的熟豆重量大于生豆重量时进行提示
             if (defaultWeight > localProxy.getRawBeanWeight()) {
                 super.mViewOperator.showToast(INVALIDATE_COOKED_WEIGHT, "填写不大于生豆重量的数值...");
-                return;
+                return false;
             }
             localProxy.setCookedBeanWeight(defaultWeight);
         } else {
@@ -129,6 +129,7 @@ public class Presenter4Editor extends BaseBlePresenter<IEditView, Model4Editor> 
         if (localProxy.getBeanInfos().size() != 1) {
             localProxy.setSingleBeanId(-1);
         }
+        return true;
     }
 
     /**

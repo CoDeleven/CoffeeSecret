@@ -324,7 +324,9 @@ public class EditBehindActivity extends AppCompatActivity implements CircleSeekB
     @OnClick(R.id.id_bake_behind_save)
     protected void onSave() {
         String weight = cookedWeight.getText().toString();
-        mPresenter.setCookedWeight4BakeReport(weight);
+        if(!mPresenter.setCookedWeight4BakeReport(weight)){
+            return;
+        }
 
         // 保存
         mPresenter.save(application.getToken());
