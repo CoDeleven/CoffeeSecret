@@ -44,15 +44,16 @@ public class HistoryReportSearchFragment extends SearchFragment {
             public void run() {
                 if (bakeReportTemp != null) {
                     bakeReports.clear();
-
-                    for (BakeReport bakeReport : bakeReportTemp) {
-                        if (bakeReport.getDate().toLowerCase().contains(searchKey)) {
-                            bakeReports.add(bakeReport);
+                    if(!"".equals(searchKey)){
+                        for (BakeReport bakeReport : bakeReportTemp) {
+                            if (bakeReport.getDate().toLowerCase().contains(searchKey)) {
+                                bakeReports.add(bakeReport);
+                            }
                         }
                     }
-
                     mLineListAdapter.notifyDataSetChanged();
                 }
+                showNoResultTips(bakeReports != null && bakeReports.size() == 0);
             }
         });
     }

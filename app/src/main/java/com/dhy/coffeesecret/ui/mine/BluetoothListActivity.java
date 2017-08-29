@@ -70,18 +70,32 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
                     mScanProgress.setVisibility(View.VISIBLE);
                     break;
                 case BluetoothProfile.STATE_CONNECTED:
-                    progressCircle.setVisibility(View.GONE);
-                    tick.setVisibility(View.VISIBLE);
+                    if(progressCircle != null){
+                        progressCircle.setVisibility(View.GONE);
+                    }
+                    if(tick != null){
+                        tick.setVisibility(View.VISIBLE);
+                    }
+
                     mCurConnectingView.setEnabled(true);
                     break;
                 case BluetoothProfile.STATE_CONNECTING:
-                    progressCircle.setVisibility(View.VISIBLE);
-                    tick.setVisibility(View.GONE);
+                    if(progressCircle != null){
+                        progressCircle.setVisibility(View.VISIBLE);
+                    }
+                    if(tick != null){
+                        tick.setVisibility(View.GONE);
+                    }
                     mCurConnectingView.setEnabled(false);
                     break;
                 case BluetoothProfile.STATE_DISCONNECTED:
-                    progressCircle.setVisibility(View.INVISIBLE);
-                    tick.setVisibility(View.GONE);
+
+                    if(progressCircle != null){
+                        progressCircle.setVisibility(View.INVISIBLE);
+                    }
+                    if(tick != null){
+                        tick.setVisibility(View.GONE);
+                    }
                     mCurConnectingView.setEnabled(true);
                     break;
             }

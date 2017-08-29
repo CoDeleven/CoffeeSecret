@@ -1,9 +1,11 @@
 package com.dhy.coffeesecret.ui.counters.fragments;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 
 import com.dhy.coffeesecret.ui.common.SearchFragment;
+import com.dhy.coffeesecret.ui.common.interfaces.OnItemClickListener;
 import com.dhy.coffeesecret.ui.counters.adapters.InfoListAdapter;
 
 import java.util.ArrayList;
@@ -12,8 +14,14 @@ import java.util.ArrayList;
  * Created by CoDeleven on 17-8-25.
  */
 
-public class SearchPlaceFragment extends SearchFragment {
+public class SearchPlaceFragment extends SearchFragment implements OnItemClickListener{
     private InfoListAdapter infoListAdapter;
+
+    @Override
+    public void onItemClick(Parcelable parcelable) {
+
+    }
+
     private ArrayList<String> infos;
     private OnSearchCallBack onSearchCallBack;
     private ArrayList<String> infoTemp;
@@ -50,13 +58,15 @@ public class SearchPlaceFragment extends SearchFragment {
     protected void handleDataBySearchKey(String searchKey) {
         if (infoTemp != null) {
             infos.clear();
-
-            for (String string : infoTemp) {
-                if (string.toLowerCase().contains(searchKey)) {
-                    infos.add(string);
+            if(!"".equals(searchKey)){
+                for (String string : infoTemp) {
+                    if (string.toLowerCase().contains(searchKey)) {
+                        infos.add(string);
+                    }
                 }
             }
             infoListAdapter.notifyDataSetChanged();
         }
+        showNoResultTips(infos != null && infos.size() == 0);
     }
 }

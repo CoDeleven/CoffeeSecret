@@ -21,14 +21,14 @@ import com.bigkoo.quicksidebar.QuickSideBarView;
 import com.bigkoo.quicksidebar.listener.OnQuickSideBarTouchListener;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.Species;
-import com.dhy.coffeesecret.ui.counters.adapters.InfoListAdapter;
 import com.dhy.coffeesecret.ui.common.SearchFragment;
+import com.dhy.coffeesecret.ui.common.views.DividerDecoration;
+import com.dhy.coffeesecret.ui.common.views.SearchEditText;
+import com.dhy.coffeesecret.ui.counters.adapters.InfoListAdapter;
 import com.dhy.coffeesecret.ui.counters.fragments.SearchPlaceFragment;
 import com.dhy.coffeesecret.utils.T;
 import com.dhy.coffeesecret.utils.TestData;
 import com.dhy.coffeesecret.utils.Utils;
-import com.dhy.coffeesecret.ui.common.views.DividerDecoration;
-import com.dhy.coffeesecret.ui.common.views.SearchEditText;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
 import java.lang.ref.WeakReference;

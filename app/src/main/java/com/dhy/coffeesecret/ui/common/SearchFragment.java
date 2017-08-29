@@ -12,13 +12,16 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.ui.common.interfaces.OnItemClickListener;
@@ -37,6 +40,9 @@ public abstract class SearchFragment extends Fragment {
     ImageButton clear;
     @Bind(R.id.search_list)
     RecyclerView searchList;
+    @Bind(R.id.id_no_result_tips)
+    TextView noResultTips;
+
     private View searchView;
     private InputMethodManager imm;
     private Context mContext;
@@ -54,8 +60,28 @@ public abstract class SearchFragment extends Fragment {
         ButterKnife.bind(this, searchView);
         mContext = getContext();
         Bundle bundle = getArguments();
+        editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if(actionId == EditorInfo.IME_ACTION_SEARCH){
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                    return true;
+                }
+                return false;
+            }
+        });
         initData(bundle);
         return searchView;
+    }
+
+    protected void showNoResultTips(boolean noResult){
+        if(noResult){
+            searchList.setVisibility(View.GONE);
+            noResultTips.setVisibility(View.VISIBLE);
+        }else{
+            searchList.setVisibility(View.VISIBLE);
+            noResultTips.setVisibility(View.GONE);
+        }
     }
 
     public OnItemClickListener getResultClickListenr() {
@@ -193,7 +219,6 @@ public abstract class SearchFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                Log.i(TAG, "afterTextChanged: " + System.currentTimeMillis());
                 String searchText = editable.toString();
 /*
                 Message msg = new Message();
@@ -214,8 +239,6 @@ public abstract class SearchFragment extends Fragment {
                 /*msg.obj = searchText;
                 mHandler.sendMessage(msg);*/
                 handleDataBySearchKey(searchText);
-
-                Log.i(TAG, "afterTextChanged: " + System.currentTimeMillis());
             }
         });
     }
@@ -375,4 +398,5 @@ public abstract class SearchFragment extends Fragment {
     public interface OnSearchCallBack {
         void onSearchCallBack(String info);
     }
+
 }

@@ -51,13 +51,16 @@ public class SearchCupInfoFragment extends SearchFragment implements OnItemClick
     protected void handleDataBySearchKey(String searchKey) {
         if (cuppingInfosTemp != null) {
             cuppingInfos.clear();
-            for (CuppingInfo cuppingInfo : cuppingInfosTemp) {
-                if (cuppingInfo.getName().toLowerCase().contains(searchKey)) {
-                    cuppingInfos.add(cuppingInfo);
+            if(!"".equals(searchKey)){
+                for (CuppingInfo cuppingInfo : cuppingInfosTemp) {
+                    if (cuppingInfo.getName().toLowerCase().contains(searchKey)) {
+                        cuppingInfos.add(cuppingInfo);
+                    }
                 }
             }
             cuppingListAdapter.notifyDataSetChanged();
         }
+        showNoResultTips(cuppingInfos != null && cuppingInfos.size() == 0);
     }
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {

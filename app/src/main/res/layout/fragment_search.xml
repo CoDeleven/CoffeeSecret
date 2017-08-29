@@ -32,6 +32,7 @@
                 android:focusable="true"
                 android:focusableInTouchMode="true"
                 android:hint="搜索"
+                android:imeOptions="actionSearch"
                 android:padding="5dp"
                 android:singleLine="true"
                 android:textSize="16sp"/>
@@ -63,4 +64,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/ll_1"/>
+    <TextView
+        android:id="@+id/id_no_result_tips"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="没有搜索到结果..."/>
 </RelativeLayout>
