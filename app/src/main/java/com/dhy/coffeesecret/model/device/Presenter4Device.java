@@ -102,6 +102,15 @@ public class Presenter4Device extends BaseBlePresenter<IDeviceView, Model4Device
 
         BakeReportProxy proxy = mModelOperator.getCurBakingReport();
         NLogger.i(TAG, "总共放入豆种数量为:" + temporaryBeanInfo.size());
+        if(temporaryBeanInfo.size() == 0){
+            BeanInfoSimple simpleBean = new BeanInfoSimple();
+            simpleBean.setBeanName("样品豆");
+            simpleBean.setUsage("0");
+            simpleBean.setSingleBeanId(-1);
+
+            temporaryBeanInfo.add(simpleBean);
+        }
+
         proxy.setBeanInfoSimples(temporaryBeanInfo);
 
         // 对于只有一个豆种的情况进行id特殊处理

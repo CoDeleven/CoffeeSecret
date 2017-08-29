@@ -96,7 +96,9 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
                     if(tick != null){
                         tick.setVisibility(View.GONE);
                     }
-                    mCurConnectingView.setEnabled(true);
+                    if(mCurConnectingView != null){
+                        mCurConnectingView.setEnabled(true);
+                    }
                     break;
             }
         }
@@ -223,10 +225,16 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
         if (mPresenter.isEnable()) {
             // 打开连接按钮
             switchButton.setChecked(true);
-            // 开始扫描
-            mPresenter.startScan();
-            // 设置进度条可见
-            mScanProgress.setVisibility(View.VISIBLE);
+            if(!mPresenter.isConnected()){
+                // 开始扫描
+                mPresenter.startScan();
+                // 设置进度条可见
+                mScanProgress.setVisibility(View.VISIBLE);
+            }else{
+                tick = (ImageView)mAdapter.getCurConnectedTick();
+                mCurConnectingView = mAdapter.getCorConnectedLayout();
+            }
+
         } else {
             // 打开连接按钮
             switchButton.setChecked(false);

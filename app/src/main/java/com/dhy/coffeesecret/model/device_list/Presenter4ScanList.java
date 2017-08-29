@@ -132,6 +132,7 @@ public class Presenter4ScanList extends BaseBlePresenter<IScanListView, Model4Sc
 
     public void disableBluetooth(){
         super.mBluetoothOperator.disableBle();
+        mAdapter.missConnected();
     }
 
     public void enableBluetooth(){

@@ -21,11 +21,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cn.jesse.nativelogger.NLogger;
+
 /**
  * Created by CoDeleven on 17-3-7.
  */
 
 public class BluetoothListAdapter extends RecyclerView.Adapter<BluetoothListAdapter.BluetoothViewHolder> {
+    private static final String TAG = BluetoothListAdapter.class.getSimpleName();
     private Context context;
     private BluetoothDevice mCurConnectedDevice;
     private LayoutInflater layoutInflater;
@@ -35,6 +38,7 @@ public class BluetoothListAdapter extends RecyclerView.Adapter<BluetoothListAdap
     private OnItemClickListener onItemClickListener;
     private Handler threadHandler = new Handler(Looper.getMainLooper());
     private int curIndex;
+    private BluetoothViewHolder mCurConnectedHolder;
     public BluetoothListAdapter(Context context) {
         this.context = context;
         this.layoutInflater = LayoutInflater.from(context);
@@ -79,12 +83,16 @@ public class BluetoothListAdapter extends RecyclerView.Adapter<BluetoothListAdap
         /*
             因ListActivity重新生成，所以判断上一次因连接成功关闭activity时，所设置地址是否和本次地址一致，true则直接默认该设备tick可见
           */
-        if (device == mCurConnectedDevice) {
+        NLogger.i(TAG, "绑定新的holder：targetDevice:" + device + ", mCurConnectedDevice:" + mCurConnectedDevice);
+        if (mCurConnectedDevice != null && device != null && mCurConnectedDevice.getAddress().equals(device.getAddress())) {
+            mCurConnectedHolder = holder;
+            mCurConnectedHolder.layout.setEnabled(false);
             // 默认设置tick可见
             holder.tick.setVisibility(View.VISIBLE);
         }else{
             // 默认设置tick不可见
             holder.tick.setVisibility(View.GONE);
+            holder.layout.setEnabled(true);
         }
         holder.machine.setText(device.getName());
         rssiTextView.put(device.getAddress(), holder.rssi);
@@ -164,5 +172,20 @@ public class BluetoothListAdapter extends RecyclerView.Adapter<BluetoothListAdap
         } else {
             threadHandler.post(runnable);
         }
+    }
+
+
+    public View getCurConnectedTick(){
+        if(mCurConnectedHolder != null){
+            return mCurConnectedHolder.tick;
+        }
+        return null;
+    }
+
+    public View getCorConnectedLayout(){
+        if(mCurConnectedHolder != null){
+            return mCurConnectedHolder.layout;
+        }
+        return null;
     }
 }
