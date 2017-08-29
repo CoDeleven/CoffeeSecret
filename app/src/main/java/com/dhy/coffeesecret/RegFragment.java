@@ -23,11 +23,11 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 
 import com.aliyuncs.exceptions.ClientException;
+import com.dhy.coffeesecret.ui.common.views.DisableButton;
 import com.dhy.coffeesecret.ui.mine.fragments.VerifyFragment;
 import com.dhy.coffeesecret.url.UrlLogin;
 import com.dhy.coffeesecret.utils.HttpUtils;
 import com.dhy.coffeesecret.utils.SmsUtils;
-import com.dhy.coffeesecret.ui.common.views.DisableButton;
 
 import java.io.IOException;
 
@@ -47,6 +47,7 @@ public class RegFragment extends Fragment implements View.OnClickListener, TextW
     private View mButton;
 
     private OnSuccessListener mOnSuccessListener;
+    private ProgressDialog mProgressDialog;
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -68,8 +69,8 @@ public class RegFragment extends Fragment implements View.OnClickListener, TextW
             }
         }
     };
-    private ProgressDialog mProgressDialog;
     private MyApplication application;
+    private String mCode = ""; //验证码
 
     public RegFragment() {
     }
@@ -109,8 +110,6 @@ public class RegFragment extends Fragment implements View.OnClickListener, TextW
             }
         });
     }
-
-    private String mCode = ""; //验证码
 
     private boolean sendCode() {
         final String tel = mEditTextTel.getText().toString().trim();
@@ -166,7 +165,7 @@ public class RegFragment extends Fragment implements View.OnClickListener, TextW
         String sec = mEditTextPwSec.getText().toString().trim();
         if (!fir.equals(sec)) {
             Snackbar.make(mContentView, "两次密码输入不一致。", Snackbar.LENGTH_LONG).show();
-        }else if(sec.length() < 6){
+        } else if (sec.length() < 6) {
             Snackbar.make(mContentView, "请输入6位以上密码。", Snackbar.LENGTH_LONG).show();
             return false;
         }
@@ -257,10 +256,6 @@ public class RegFragment extends Fragment implements View.OnClickListener, TextW
         }
     }
 
-    public interface OnSuccessListener {
-        void onRegSuccess(String result, String tel);
-    }
-
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -276,5 +271,9 @@ public class RegFragment extends Fragment implements View.OnClickListener, TextW
         mButton.setEnabled(
                 mEditTextCode.length() == 6 && mEditTextTel.length() == 11
                         && mEditTextPw.length() > 0 && mEditTextPwSec.length() > 0);
+    }
+
+    public interface OnSuccessListener {
+        void onRegSuccess(String result, String tel);
     }
 }

@@ -1,6 +1,8 @@
 package com.dhy.coffeesecret.ui.bake;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +17,7 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -29,13 +32,13 @@ import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.pojo.BakeReportProxy;
 import com.dhy.coffeesecret.pojo.BeanInfoSimple;
 import com.dhy.coffeesecret.ui.bake.fragments.SharedFragment;
+import com.dhy.coffeesecret.ui.common.views.BaseChart4Coffee;
+import com.dhy.coffeesecret.ui.common.views.ReportMarker;
+import com.dhy.coffeesecret.ui.common.views.ScrollViewContainer;
 import com.dhy.coffeesecret.utils.ConvertUtils;
 import com.dhy.coffeesecret.utils.FormatUtils;
 import com.dhy.coffeesecret.utils.FragmentTool;
 import com.dhy.coffeesecret.utils.Utils;
-import com.dhy.coffeesecret.ui.common.views.BaseChart4Coffee;
-import com.dhy.coffeesecret.ui.common.views.ReportMarker;
-import com.dhy.coffeesecret.ui.common.views.ScrollViewContainer;
 import com.facebook.rebound.ui.Util;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.Event;
@@ -127,6 +130,9 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
     TextView idAvgEndTime;
     @Bind(R.id.toolbar_device_activtiy)
     Toolbar toolbar;
+    @Bind(R.id.id_rl_score)
+    RelativeLayout scoreLayout;
+
     private Presenter4Report mPresenter = Presenter4Report.newInstance();
     private String weightUnit;
     private String tempratureUnit;
@@ -330,7 +336,7 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
         List<Entry> outwindTemps = proxy.getLineDataSetByIndex(OUTWINDLINE).getValues();
         List<Entry> accBeanTemps = proxy.getLineDataSetByIndex(ACCBEANLINE).getValues();
         List<Float> timex = proxy.getTimex();
-        for (int i = 0; i < beanTemps.size(); i += 30) {
+        for (int i = 0; i < beanTemps.size(); i += 29) {
             TableRow tableRow = new TableRow(this);
             tableRow.setPadding(10, 10, 10, 10);
             TableLayout.LayoutParams p = new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT);
@@ -458,9 +464,19 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
         List<TableRow> list = new LinkedList<>();
         for (Entry entry : entryWithEvents) {
             TableRow tableRow = new TableRow(this);
+            tableRow.setBackgroundColor(Color.BLACK);
+
             TextView type = new TextView(this);
+            type.setTextSize(12);
+            type.setBackgroundColor(Color.WHITE);
+
             TextView time = new TextView(this);
+            time.setBackgroundColor(Color.WHITE);
+            time.setTextSize(12);
+
             TextView supplyContent = new TextView(this);
+            supplyContent.setBackgroundColor(Color.WHITE);
+            supplyContent.setTextSize(12);
 
             Event event = entry.getEvent();
 
@@ -474,13 +490,20 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
             type.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
             time.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
             supplyContent.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-            TableRow.LayoutParams params = new TableRow.LayoutParams(WRAP_CONTENT, WRAP_CONTENT, 1.0f);
+            TableRow.LayoutParams params = new TableRow.LayoutParams(0, WRAP_CONTENT, 1.0f);
+            // 左右下各留一个像素的位置，用于显示黑色的背景以达到黑色线条的目的
+            params.setMargins(1, 0, 1, 1);
+            params.weight = 1;
 
             tableRow.addView(type, params);
 
-            tableRow.addView(time, params);
+            TableRow.LayoutParams params2 = new TableRow.LayoutParams(0, WRAP_CONTENT, 1.0f);
+            params2.setMargins(0, 0, 1, 1);
+            params2.weight = 1;
 
-            tableRow.addView(supplyContent, params);
+            tableRow.addView(time, params2);
+
+            tableRow.addView(supplyContent, params2);
 
             list.add(tableRow);
         }
@@ -523,9 +546,15 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
         date.setText("烘焙日期：" + proxy.getBakeDate());
         device.setText("设备：" + proxy.getDevice());
         Log.d(TAG, "init: deviceName -> " + proxy.getDevice());
+
+
         // FIXME
-        int toastValue = computeToastValue(Float.parseFloat(proxy.getBakeDegree()) / 50f * 360);
+        int toastValue = computeToastValue((Float.parseFloat(proxy.getBakeDegree()) / 50f ) * 360);
         score.setText((toastValue == Integer.MAX_VALUE ? "N/A" : (toastValue + "")));
+        GradientDrawable drawable = (GradientDrawable)getResources().getDrawable(R.drawable.bg_circle_edit_behind);
+        drawable.setColor(Utils.getColor(Float.parseFloat(proxy.getBakeDegree()) / 50f));
+        scoreLayout.setBackground(drawable);
+
 
         globalAccTemp.setText(ConvertUtils.getCrspTemperatureValue(proxy.getGlobalAccBeanTemp() + "") + tempratureUnit);
         idAvgDryTemperature.setText(ConvertUtils.getCrspTemperatureValue(proxy.getAvgDryTemprature() + "") + tempratureUnit);

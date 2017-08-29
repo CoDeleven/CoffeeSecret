@@ -118,6 +118,7 @@ public class ConvertUtils {
      */
     public static float getReversed2DefaultWeight(String value){
         String curUnit = MyApplication.weightUnit;
+        Log.d("GG", "getReversed2DefaultWeight: 当前的重量单位为" + value);
         float result = Float.parseFloat(value);
         if ("g".equals(curUnit)) {
             return Utils.get2PrecisionFloat(result / 1000);

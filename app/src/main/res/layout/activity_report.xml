@@ -126,18 +126,43 @@
                             android:layout_marginTop="10dp"
                             android:gravity="center">
 
-                            <ImageView
+                            <RelativeLayout
+                                android:id="@+id/id_rl_score"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_centerInParent="true"
-                                android:src="@drawable/ic_report_bakedegree"/>
+                                android:background="@drawable/bg_circle_edit_behind"
+                                android:orientation="vertical">
+                                <TextView
+                                    android:id="@+id/id_score_descriptor"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerInParent="true"
+                                    android:text="Green"
+                                    android:textStyle="bold"
+                                    android:paddingBottom="15dp"
+                                    android:textColor="#FFF"
+                                    android:textSize="15sp"/>
+                                <TextView
+                                    android:id="@+id/id_score"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerInParent="true"
+                                    android:paddingTop="15dp"
+                                    android:text="N/A"
+                                    android:textColor="#FFF"
+                                    android:textSize="13sp"/>
+                                <TextView
+                                    android:layout_below="@id/id_score"
+                                    android:layout_centerHorizontal="true"
+                                    android:paddingTop="18dp"
+                                    android:textColor="#FFF"
+                                    android:textSize="7sp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="(Agtron)"/>
 
-                            <TextView
-                                android:id="@+id/id_score"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_centerInParent="true"
-                                android:text="45"/>
+                            </RelativeLayout>
 
                         </RelativeLayout>
                     </LinearLayout>
@@ -246,6 +271,7 @@
                             android:layout_below="@id/id_report_lineOperator"
                             android:layout_centerHorizontal="true"></com.dhy.coffeesecret.ui.common.views.BaseChart4Coffee>
 
+
                         <TableLayout
                             android:id="@+id/id_tl_chart_descriptor"
                             android:layout_width="match_parent"
@@ -254,20 +280,28 @@
                             android:layout_marginBottom="10dp"
                             android:layout_marginTop="23dp">
 
-                            <TableRow>
+                            <TableRow
+                                android:background="@color/black">
                                 <TextView
+                                    android:background="@color/white"
                                     android:paddingTop="5dp"
                                     android:paddingBottom="5dp"
+                                    android:layout_marginTop="1px"
+                                    android:layout_marginBottom="1px"
+                                    android:layout_marginLeft="1px"
+                                    android:layout_marginRight="1px"
                                     android:textAlignment="center"
                                     android:layout_weight="10"
                                     android:text="图表简述"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"/>
                             </TableRow>
-                            <TableRow>
+                            <TableRow
+                                android:background="@color/black">
 
                                 <TextView
                                     style="@style/report_chart_descriptor"
+                                    android:layout_marginLeft="1px"
                                     android:text="环境温度"/>
 
                                 <TextView
@@ -279,32 +313,32 @@
                                     android:text="结束温度"/>
                             </TableRow>
 
-                            <TableRow>
+                            <TableRow
+                                android:background="@color/black">
 
                                 <TextView
-                                    android:layout_weight="1"
                                     android:id="@+id/id_envTemp"
-                                    android:textAlignment="center"
-                                    android:layout_width="wrap_content"
+                                    android:layout_marginLeft="1px"
+                                    style="@style/report_chart_descriptor"
                                     android:text="00.00xx"/>
-
-                                <TextView
-                                    android:layout_weight="1"
-                                    android:id="@+id/id_inputBeanTemp"
-                                    android:textAlignment="center"
-                                    android:text="00.00xx"/>
-
-                                <TextView
-                                    android:layout_weight="1"
-                                    android:id="@+id/id_endTemp"
-                                    android:textAlignment="center"
-                                    android:text="00.00xx"/>
-                            </TableRow>
-
-                            <TableRow>
 
                                 <TextView
                                     style="@style/report_chart_descriptor"
+                                    android:id="@+id/id_inputBeanTemp"
+                                    android:text="00.00xx"/>
+
+                                <TextView
+                                    style="@style/report_chart_descriptor"
+                                    android:id="@+id/id_endTemp"
+                                    android:text="00.00xx"/>
+                            </TableRow>
+
+                            <TableRow
+                                android:background="@color/black">
+
+                                <TextView
+                                    style="@style/report_chart_descriptor"
+                                    android:layout_marginLeft="1px"
                                     android:text="平均升温率"/>
 
                                 <TextView
@@ -316,8 +350,10 @@
                                     android:text="发展率"/>
                             </TableRow>
 
-                            <TableRow>
+                            <TableRow
+                                android:background="@color/black">
                                 <TextView
+                                    android:layout_marginLeft="1px"
                                     android:id="@+id/id_globalAcc"
                                     style="@style/report_chart_descriptor"
                                     android:text="00.00XX"/>
@@ -333,8 +369,10 @@
                                     android:text="00.00%"/>
                             </TableRow>
 
-                            <TableRow>
+                            <TableRow
+                                android:background="@color/black">
                                 <TextView
+                                    android:layout_marginLeft="1px"
                                     style="@style/report_chart_descriptor"
                                     android:text="回温点温度"/>
 
@@ -344,11 +382,16 @@
 
                                 <TextView
                                     style="@style/report_chart_descriptor"
+                                    android:layout_marginRight="0px"
+                                    android:paddingBottom="1px"
+                                    android:layout_marginBottom="-1px"
                                     android:text=""/>
                             </TableRow>
 
-                            <TableRow>
+                            <TableRow
+                                android:background="@color/black">
                                 <TextView
+                                    android:layout_marginLeft="1px"
                                     android:id="@+id/id_breakPointer_temp"
                                     style="@style/report_chart_descriptor"
                                     android:text="00.00XX"/>
@@ -359,24 +402,44 @@
 
                                 <TextView
                                     style="@style/report_chart_descriptor"
+                                    android:layout_marginBottom="-1px"
+                                    android:layout_marginRight="0px"
+                                    android:paddingBottom="1px"
                                     android:text=""/>
                             </TableRow>
 
 
-                            <TableRow>
+
+                        </TableLayout>
+                        <TableLayout
+                            android:id="@+id/id_tl_chart_descriptor2"
+                            android:layout_below="@id/id_tl_chart_descriptor"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                            <TableRow
+                                android:layout_marginTop="10dp"
+                                android:background="@color/black">
                                 <TextView
+                                    android:textSize="12sp"
                                     android:paddingTop="5dp"
                                     android:paddingBottom="5dp"
                                     android:textAlignment="center"
                                     android:layout_weight="10"
+                                    android:layout_marginLeft="1px"
+                                    android:layout_marginRight="1px"
+                                    android:layout_marginBottom="1px"
+                                    android:layout_marginTop="1px"
+                                    android:background="@color/white"
                                     android:text="开始至脱水结束"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"/>
                             </TableRow>
-                            <TableRow>
+                            <TableRow
+                                android:background="@color/black">
                                 <TextView
                                     style="@style/report_chart_descriptor"
                                     android:layout_weight="2"
+                                    android:layout_marginLeft="1px"
                                     android:text="平均升温速率"/>
 
                                 <TextView
@@ -384,36 +447,37 @@
                                     style="@style/report_chart_descriptor"
                                     android:text="时间"/>
                             </TableRow>
-                            <TableRow>
+                            <TableRow
+                                android:background="@color/black">
                                 <TextView
-                                    android:textAlignment="center"
+                                    style="@style/report_chart_descriptor"
                                     android:id="@+id/id_avgDry_temperature"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="00.00"
-                                    android:textSize="12sp"/>
+                                    android:layout_marginLeft="1px"
+                                    android:text="00.00"/>
                                 <TextView
-                                    android:textAlignment="center"
+                                    style="@style/report_chart_descriptor"
                                     android:id="@+id/id_avgDry_time"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
                                     android:text="00:00"/>
                             </TableRow>
 
-                            <TableRow>
+                            <TableRow
+                                android:background="@color/black">
                                 <TextView
+                                    android:textSize="12sp"
+                                    style="@style/report_chart_descriptor"
+                                    android:layout_marginLeft="1px"
+                                    android:layout_marginRight="1px"
+                                    android:background="@color/white"
                                     android:paddingTop="5dp"
                                     android:paddingBottom="5dp"
                                     android:textAlignment="center"
                                     android:layout_weight="10"
-                                    android:text="脱水结束至一爆开始"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"/>
+                                    android:text="脱水结束至一爆开始"/>
                             </TableRow>
-                            <TableRow>
+                            <TableRow
+                                android:background="@color/black">
                                 <TextView
+                                    android:layout_marginLeft="1px"
                                     style="@style/report_chart_descriptor"
                                     android:layout_weight="2"
                                     android:text="平均升温速率"/>
@@ -423,60 +487,54 @@
                                     style="@style/report_chart_descriptor"
                                     android:text="时间"/>
                             </TableRow>
-                            <TableRow>
+                            <TableRow
+                                android:background="@color/black">
                                 <TextView
-                                    android:textAlignment="center"
+                                    android:layout_marginLeft="1px"
+                                    style="@style/report_chart_descriptor"
                                     android:id="@+id/id_avgFirbu_temperature"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="00.00"
-                                    android:textSize="12sp"/>
+                                    android:text="00.00"/>
                                 <TextView
-                                    android:textAlignment="center"
                                     android:id="@+id/id_avgFirbu_time"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
+                                    style="@style/report_chart_descriptor"
                                     android:text="00:00"/>
                             </TableRow>
 
-                            <TableRow>
+                            <TableRow
+                                android:background="@color/black">
                                 <TextView
+                                    android:textSize="12sp"
                                     android:paddingTop="5dp"
                                     android:paddingBottom="5dp"
                                     android:textAlignment="center"
                                     android:layout_weight="10"
+                                    style="@style/report_chart_descriptor"
                                     android:text="一爆开始至结束"
+                                    android:layout_marginLeft="1px"
+                                    android:layout_marginRight="1px"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"/>
                             </TableRow>
-                            <TableRow>
+                            <TableRow
+                                android:background="@color/black">
                                 <TextView
                                     style="@style/report_chart_descriptor"
-                                    android:layout_weight="2"
+                                    android:layout_marginLeft="1px"
                                     android:text="平均升温速率"/>
-
                                 <TextView
-                                    android:layout_weight="2"
                                     style="@style/report_chart_descriptor"
                                     android:text="时间"/>
                             </TableRow>
-                            <TableRow>
+                            <TableRow
+                                android:background="@color/black">
                                 <TextView
-                                    android:textAlignment="center"
+                                    android:layout_marginLeft="1px"
+                                    style="@style/report_chart_descriptor"
                                     android:id="@+id/id_avgEnd_temperature"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="00.00"
-                                    android:textSize="12sp"/>
+                                    android:text="00.00"/>
                                 <TextView
-                                    android:textAlignment="center"
+                                    style="@style/report_chart_descriptor"
                                     android:id="@+id/id_avgEnd_time"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
                                     android:text="00:00"/>
                             </TableRow>
                         </TableLayout>
@@ -484,22 +542,29 @@
                             android:id="@+id/id_event_list"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_below="@id/id_tl_chart_descriptor"
-                            android:layout_marginBottom="10dp"
-                            android:layout_marginTop="23dp">
-                            <TableRow>
+                            android:layout_below="@id/id_tl_chart_descriptor2"
+                            android:layout_marginBottom="10dp">
+                            <TableRow
+                                android:layout_marginTop="10dp"
+                                android:background="@color/black">
                                 <TextView
                                     android:paddingTop="5dp"
                                     android:paddingBottom="5dp"
                                     android:textAlignment="center"
-                                    android:layout_weight="10"
                                     android:text="事件列表"
+                                    android:textSize="12sp"
+                                    android:layout_marginTop="1px"
+                                    android:layout_marginLeft="1px"
+                                    android:layout_marginRight="1px"
+                                    style="@style/report_chart_descriptor"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"/>
                             </TableRow>
-                            <TableRow>
+                            <TableRow
+                                android:background="@color/black">
 
                                 <TextView
+                                    android:layout_marginLeft="1px"
                                     style="@style/report_chart_descriptor"
                                     android:text="事件类型"/>
 

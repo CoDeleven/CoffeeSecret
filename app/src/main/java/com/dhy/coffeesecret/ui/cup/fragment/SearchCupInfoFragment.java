@@ -34,6 +34,7 @@ public class SearchCupInfoFragment extends SearchFragment implements OnItemClick
         intent.putExtra(TARGET, parcelable);
         intent.putExtra(VIEW_TYPE, SHOW_INFO);
         startActivityForResult(intent, REQ_CODE_EDIT);
+        this.remove();
     }
 
     @Override

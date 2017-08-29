@@ -20,27 +20,29 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import com.aliyuncs.exceptions.ClientException;
+import com.dhy.coffeesecret.ui.common.views.DisableButton;
 import com.dhy.coffeesecret.url.UrlLogin;
 import com.dhy.coffeesecret.utils.HttpUtils;
 import com.dhy.coffeesecret.utils.SmsUtils;
-import com.dhy.coffeesecret.ui.common.views.DisableButton;
 
 import java.io.IOException;
 
-public class LoginByTelFragment extends Fragment implements View.OnClickListener, TextWatcher{
+import cn.jesse.nativelogger.NLogger;
+
+public class LoginByTelFragment extends Fragment implements View.OnClickListener, TextWatcher {
 
 
     private static final int WAIT = 0x0;
     private static final int CANCEL = 0x1;
     private static final int SUCCESS = 0x2;
-
+    private static final String TAG = LoginByTelFragment.class.getSimpleName();
 
     private View mContentView;
     private EditText mEditTextTel;
     private EditText mEditTextCode;
     private View mButton;
     private OnSuccessListener mOnSuccessListener;
-
+    private ProgressDialog mProgressDialog;
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -62,8 +64,8 @@ public class LoginByTelFragment extends Fragment implements View.OnClickListener
             }
         }
     };
-    private ProgressDialog mProgressDialog;
     private MyApplication application;
+    private static String mCode = ""; //验证码
 
     public LoginByTelFragment() {
     }
@@ -103,23 +105,22 @@ public class LoginByTelFragment extends Fragment implements View.OnClickListener
         });
     }
 
-    private String mCode = ""; //验证码
     private boolean sendCode() {
         final String tel = mEditTextTel.getText().toString().trim();
-        if(tel.length() == 11){
-            new Thread(){
+        if (tel.length() == 11) {
+            new Thread() {
                 @Override
                 public void run() {
                     mCode = SmsUtils.getCode();
                     try {
-                        SmsUtils.sendSms(tel,mCode);
+                        SmsUtils.sendSms(tel, mCode);
                     } catch (ClientException e) {
                         e.printStackTrace();
                     }
                 }
             }.start();
             return true;
-        }else {
+        } else {
             return false;
         }
     }
@@ -168,6 +169,7 @@ public class LoginByTelFragment extends Fragment implements View.OnClickListener
                         try {
                             mHandler.sendEmptyMessage(WAIT);
                             String result = HttpUtils.getStringFromServer(url);
+                            NLogger.i(TAG, "验证码登陆：收到消息->" + result);
                             if (result != null && !result.startsWith("error")) {
                                 application.setToken(result);
                                 Message msg = Message.obtain();
@@ -175,8 +177,8 @@ public class LoginByTelFragment extends Fragment implements View.OnClickListener
                                 msg.obj = result;
                                 mHandler.sendMessage(msg);
 
-                                if(mOnSuccessListener != null){
-                                    mOnSuccessListener.onLoginSuccess(result,tel);
+                                if (mOnSuccessListener != null) {
+                                    mOnSuccessListener.onLoginSuccess(result, tel);
                                 }
                             } else {
                                 mHandler.sendEmptyMessage(CANCEL);
@@ -203,11 +205,6 @@ public class LoginByTelFragment extends Fragment implements View.OnClickListener
         getFragmentManager().popBackStack(getClass().getSimpleName(), 1);
     }
 
-    public interface OnSuccessListener {
-        void onLoginSuccess(String result,String tel);
-    }
-
-
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -221,5 +218,9 @@ public class LoginByTelFragment extends Fragment implements View.OnClickListener
     @Override
     public void afterTextChanged(Editable s) {
         mButton.setEnabled(mEditTextCode.length() == 6 && mEditTextTel.length() == 11);
+    }
+
+    public interface OnSuccessListener {
+        void onLoginSuccess(String result, String tel);
     }
 }

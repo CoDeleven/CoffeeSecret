@@ -27,8 +27,8 @@ public class SmsUtils {
     static final String domain = "dysmsapi.aliyuncs.com";
 
     // TODO 此处需要替换成开发者自己的AK(在阿里云访问控制台寻找)
-    static final String accessKeyId = "LTAIgGhyfrbuO6t3";
-    static final String accessKeySecret = "e4CTAO3fLMAQslpOWIqFmsCNVjXCJZ";
+    static final String accessKeyId = "LTAIfrWcdCTMelUK";
+    static final String accessKeySecret = "LEauGdldCTf9qR1ptMG6pTztpgOuOb";
 
     public static SendSmsResponse sendSms(String tel, String code) throws ClientException {
 
@@ -49,7 +49,7 @@ public class SmsUtils {
         //必填:短信签名-可在短信控制台中找到
         request.setSignName("爱趣焙");
         //必填:短信模板-可在短信控制台中找到
-        request.setTemplateCode("SMS_85755029");
+        request.setTemplateCode("SMS_90345035");
         //可选:模板中的变量替换JSON串,如模板内容为"亲爱的${name},您的验证码为${code}"时,此处的值为
         request.setTemplateParam("{\"number\":\"" + code + "\"}");
 

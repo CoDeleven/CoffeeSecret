@@ -82,6 +82,7 @@ public class AboutUsActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        finish();
         overridePendingTransition(R.anim.out_to_right, R.anim.in_from_left);
     }
 }

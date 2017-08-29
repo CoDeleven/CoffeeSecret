@@ -116,7 +116,7 @@ public class TransferControllerTask implements Runnable {
             }
             // 休眠
             try {
-                Thread.currentThread().sleep(1000 - durationTimeUntilNow);
+                Thread.currentThread().sleep(Math.abs(1000 - durationTimeUntilNow));
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

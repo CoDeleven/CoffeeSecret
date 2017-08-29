@@ -14,7 +14,7 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.dhy.coffeesecret.R;
@@ -22,57 +22,17 @@ import com.dhy.coffeesecret.model.UniExtraKey;
 import com.dhy.coffeesecret.pojo.BeanInfo;
 import com.dhy.coffeesecret.ui.MainActivity;
 import com.dhy.coffeesecret.ui.common.SearchFragment;
-import com.dhy.coffeesecret.ui.common.views.SearchEditText;
 import com.dhy.coffeesecret.ui.counters.fragments.BeanListFragment;
 import com.dhy.coffeesecret.ui.counters.fragments.SearchBeanInfoFragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ContainerFragment extends Fragment {
-
-    private static final String TAG = "ContainerFragment";
-    private static final int ADD_BEAN = 111;
-    private final String[] TITLES = {"全部", "中美", "南美", "大洋", "亚洲", "非洲", "其它"};
-
-    private View containerView;
-    private SearchEditText searchBeanET = null;
-    private LinearLayout btnAddBean = null;
-    private ViewPager containerPager = null;
-    private PagerSlidingTabStrip containerTabs = null;
-
-    private List<BeanListFragment> fragments = null;
-    private Context context;
-    private boolean isAddSearchFragment = false;
-    private SearchFragment searchFragment;
-
-    public ContainerFragment() {
-    }
-
+public class ContainerFragment extends Fragment implements View.OnClickListener{
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        containerView = inflater.inflate(R.layout.fragment_container, container, false);
-        context = getActivity();
-        initPagerData();
-        return containerView;
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        searchBeanET = (SearchEditText) containerView.findViewById(R.id.search_bean);
-        btnAddBean = (LinearLayout) containerView.findViewById(R.id.btn_add_bean);
-        containerTabs = (PagerSlidingTabStrip) containerView.findViewById(R.id.container_tabs);
-        containerPager = (ViewPager) containerView.findViewById(R.id.container_pager);
-        initView();
-    }
-
-    public void initView() {
-        searchBeanET.setSearchBarListener(new SearchEditText.SearchBarListener() {
-            @Override
-            public void startSearchPage() {
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.iv_search:
                 FragmentTransaction tx = ((MainActivity) context).getSupportFragmentManager().beginTransaction();
                 tx.setCustomAnimations(R.anim.in_from_right, R.anim.out_to_left);
                 if (searchFragment != null) {
@@ -89,17 +49,59 @@ public class ContainerFragment extends Fragment {
                     tx.show(searchFragment);
                 }
                 tx.commit();
-            }
-        });
-
-        btnAddBean.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+                break;
+            case R.id.iv_add:
                 Intent intent = new Intent(context, EditBeanActivity.class);
                 startActivityForResult(intent, ADD_BEAN);
                 getActivity().overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
-            }
-        });
+                break;
+        }
+    }
+
+    private static final String TAG = "ContainerFragment";
+    private static final int ADD_BEAN = 111;
+    private final String[] TITLES = {"全部", "中美", "南美", "大洋", "亚洲", "非洲", "其它"};
+
+    private View containerView;
+    // private SearchEditText searchBeanET = null;
+    // private LinearLayout btnAddBean = null;
+    private ViewPager containerPager = null;
+    private PagerSlidingTabStrip containerTabs = null;
+
+    private List<BeanListFragment> fragments = null;
+    private Context context;
+    private boolean isAddSearchFragment = false;
+    private SearchFragment searchFragment;
+
+    public ContainerFragment() {
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        containerView = inflater.inflate(R.layout.fragment_container, container, false);
+        context = getActivity();
+
+        containerView.findViewById(R.id.iv_add).setOnClickListener(this);
+        containerView.findViewById(R.id.iv_search).setOnClickListener(this);
+
+        initPagerData();
+        return containerView;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        // searchBeanET = (SearchEditText) containerView.findViewById(R.id.search_bean);
+        // btnAddBean = (LinearLayout) containerView.findViewById(R.id.btn_add_bean);
+        ((TextView)containerView.findViewById(R.id.tv_title)).setText("豆子");
+        containerTabs = (PagerSlidingTabStrip) containerView.findViewById(R.id.container_tabs);
+        containerPager = (ViewPager) containerView.findViewById(R.id.container_pager);
+        initView();
+    }
+
+    public void initView() {
 
         containerPager.setOffscreenPageLimit(6);
         containerPager.setAdapter(new MyPagerAdapter(((MainActivity) context).getSupportFragmentManager()));

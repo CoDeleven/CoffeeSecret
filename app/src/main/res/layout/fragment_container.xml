@@ -6,8 +6,11 @@
     android:orientation="vertical"
     tools:context=".ui.counters.ContainerFragment">
 
-    <include layout="@layout/title_container"/>
-
+    <!--<include layout="@layout/title_container"/>-->
+    <include
+        layout="@layout/include_title_cupping"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
     <com.astuetz.PagerSlidingTabStrip
         android:id="@+id/container_tabs"
         android:layout_width="match_parent"

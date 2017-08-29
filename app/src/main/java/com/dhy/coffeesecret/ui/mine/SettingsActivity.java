@@ -15,13 +15,13 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.NumberPicker;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.UniversalConfiguration;
-import com.dhy.coffeesecret.utils.ConvertUtils;
 import com.dhy.coffeesecret.utils.SettingTool;
 
 import java.lang.ref.WeakReference;
@@ -120,6 +120,7 @@ public class SettingsActivity extends AppCompatActivity {
             case R.id.btn_back:
                 this.finish();
                 overridePendingTransition(R.anim.in_from_left, R.anim.out_to_right);
+                break;
             case R.id.quick_start:
                 checkQuickStart.setChecked(!checkQuickStart.isChecked());
                 config.setQuickStart(checkQuickStart.isChecked());
@@ -138,7 +139,7 @@ public class SettingsActivity extends AppCompatActivity {
                 msg = new Message();
                 msg.what = SHOW_TEXT_DIALOG;
                 msg.arg1 = R.id.weight_unit;
-                msg.obj = new String[]{"克", "千克", "磅"};
+                msg.obj = new String[]{"g", "kg", "lb"};
                 mHandler.sendMessage(msg);
                 break;
             case R.id.temperature_unit:
@@ -201,8 +202,8 @@ public class SettingsActivity extends AppCompatActivity {
                         switch (viewId) {
                             case R.id.weight_unit:
                                 textWeightUnit.setText(whichItem);
-                                config.setWeightUnit(ConvertUtils.convertUnitCn2Eng(whichItem));
-                                ((MyApplication) getApplicationContext()).weightUnit = ConvertUtils.convertUnitCn2Eng(whichItem);
+                                config.setWeightUnit(whichItem);
+                                ((MyApplication) getApplicationContext()).weightUnit = whichItem;
                                 break;
                             case R.id.temperature_unit:
                                 textTemperatureUnit.setText(whichItem);
@@ -255,13 +256,55 @@ public class SettingsActivity extends AppCompatActivity {
         titleText.setText("时间轴");
         switch (viewId) {
             case R.id.time_shaft:
+                numberTen.setMinValue(1);
+                numberTen.setMaxValue(4);
+                numberTen.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+                    @Override
+                    public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                        if(newVal == 4){
+                            numberSingle.setValue(0);
+                            numberSingle.setMaxValue(0);
+                        }else{
+                            numberSingle.setMaxValue(9);
+                        }
+                    }
+                });
                 numberTen.setValue(config.getMaxX() / 10);
                 numberSingle.setValue(config.getMaxX() % 10);
-                itemUnit.setText("分");
+                itemUnit.setText("分钟");
                 break;
             case R.id.temperature_shaft:
+                numberHundred.setMinValue(2);
+                numberHundred.setMaxValue(4);
                 numberHundred.setValue(config.getMaxLeftY() / 100);
                 numberTen.setValue(config.getMaxLeftY() / 10 % 10);
+                numberHundred.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+                    @Override
+                    public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                        if(newVal == 4){
+                            numberTen.setMaxValue(5);
+                            numberSingle.setMaxValue(0);
+                            if(numberTen.getValue() > 5){
+                                numberTen.setValue(5);
+                                numberSingle.setValue(0);
+                            }
+                        }else {
+                            numberTen.setMaxValue(9);
+                            numberSingle.setMaxValue(9);
+                        }
+                    }
+                });
+                numberTen.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+                    @Override
+                    public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                        if(numberHundred.getValue() == 4 && newVal == 5){
+                            numberSingle.setMaxValue(0);
+                            numberSingle.setValue(0);
+                        }else{
+                            numberSingle.setMaxValue(9);
+                        }
+                    }
+                });
                 numberSingle.setValue(config.getMaxLeftY() % 10);
                 itemUnit.setText(config.getTempratureUnit());
                 break;

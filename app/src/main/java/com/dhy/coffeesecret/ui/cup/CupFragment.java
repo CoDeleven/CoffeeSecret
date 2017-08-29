@@ -398,13 +398,6 @@ public class CupFragment extends Fragment implements View.OnClickListener {
             searchFragment.setArguments(bundle);
             tx.add(R.id.activity_main, searchFragment, "search_cupping");
             isAddSearchFragment = true;
-
-/*            searchFragment.setOnResultClickListenr(new SearchFragment.OnResultClickListenr() {
-                @Override
-                public void onItemClick(Serializable serializable) {
-
-                }
-            });*/
         } else {
             tx.show(searchFragment);
         }

@@ -10,6 +10,7 @@ import android.util.AttributeSet;
  */
 
 public class ReSpinner extends AppCompatSpinner {
+    public boolean isDropDownMenuShown=false;//标志下拉列表是否正在显示
     public ReSpinner(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
@@ -32,8 +33,8 @@ public class ReSpinner extends AppCompatSpinner {
 
     @Override
     public void setSelection(int position, boolean animate) {
-        super.setSelection(position, animate);
         boolean sameSelected = position == getSelectedItemPosition();
+        super.setSelection(position, animate);
         if(sameSelected){
             getOnItemSelectedListener().onItemSelected(this, getSelectedView(), position, getSelectedItemId());
         }
@@ -41,10 +42,23 @@ public class ReSpinner extends AppCompatSpinner {
 
     @Override
     public void setSelection(int position) {
-        super.setSelection(position);
         boolean sameSelected = position == getSelectedItemPosition();
+        super.setSelection(position);
         if(sameSelected){
             getOnItemSelectedListener().onItemSelected(this, getSelectedView(), position, getSelectedItemId());
         }
+    }
+    @Override
+    public boolean performClick() {
+        this.isDropDownMenuShown = true;
+        return super.performClick();
+    }
+
+    public boolean isDropDownMenuShown(){
+        return isDropDownMenuShown;
+    }
+
+    public void setDropDownMenuShown(boolean isDropDownMenuShown){
+        this.isDropDownMenuShown=isDropDownMenuShown;
     }
 }

@@ -15,9 +15,9 @@
     <com.dhy.coffeesecret.ui.common.views.SearchEditText
         android:id="@+id/search_bean"
         style="@style/SearchBar"
-        android:cursorVisible="false"
         android:layout_gravity="center"
-        android:layout_weight="0.5">
+        android:layout_weight="0.5"
+        android:cursorVisible="false">
     </com.dhy.coffeesecret.ui.common.views.SearchEditText>
 
     <LinearLayout

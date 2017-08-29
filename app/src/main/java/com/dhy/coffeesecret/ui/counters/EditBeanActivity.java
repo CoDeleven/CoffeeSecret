@@ -24,12 +24,10 @@ import com.bigkoo.pickerview.TimePickerView;
 import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BeanInfo;
-import com.dhy.coffeesecret.utils.ConvertUtils;
 import com.dhy.coffeesecret.url.UrlBean;
 import com.dhy.coffeesecret.utils.HttpUtils;
-import com.dhy.coffeesecret.utils.SettingTool;
-import com.dhy.coffeesecret.utils.T;
 import com.dhy.coffeesecret.utils.SystemStatusBarUtils;
+import com.dhy.coffeesecret.utils.T;
 import com.dhy.coffeesecret.utils.Utils;
 
 import java.io.IOException;
@@ -229,7 +227,7 @@ public class EditBeanActivity extends AppCompatActivity {
         if ("0.0".equals(editWeight.getText().toString().trim())) {
             editWeight.setText("");
         }
-        editWeightUnit.setText(SettingTool.getConfig().getWeightUnit());
+        // editWeightUnit.setText(SettingTool.getConfig().getWeightUnit());
         editBuyDate.setText(formatDate(beanInfo.getDate()));
 
         editLevel.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -281,11 +279,13 @@ public class EditBeanActivity extends AppCompatActivity {
         editHandler.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                NLogger.i(TAG, "点击处理方式-> 选中第" + position + "个位置, 值为:" + handlerArray[position]);
                 if(count < 2){
                     ++count;
                     return;
                 }
                 currentHandler = handlerArray[position];
+                // 表示点击的时最后一个
                 if (position == handlerArray.length - 1) {
                     final EditText editText = new EditText(EditBeanActivity.this);
                     AlertDialog dialog = new AlertDialog.Builder(EditBeanActivity.this).setTitle("其他...")
@@ -321,6 +321,7 @@ public class EditBeanActivity extends AppCompatActivity {
 
             }
         });
+
     }
 
 
@@ -490,7 +491,11 @@ public class EditBeanActivity extends AppCompatActivity {
         beanInfo.setWaterContent(Float.parseFloat(editWaterContent.getText().toString()));
         beanInfo.setSupplier(editSupplier.getText().toString());
         beanInfo.setPrice(Double.parseDouble(editPrice.getText().toString()));
-        beanInfo.setStockWeight(ConvertUtils.getReversed2DefaultWeight(Float.parseFloat(editWeight.getText().toString()) + ""));
+        try{
+            beanInfo.setStockWeight(Float.parseFloat(editWeight.getText().toString() + ""));
+        }catch (NumberFormatException e){
+            beanInfo.setStockWeight(Float.parseFloat("0.0"));
+        }
         beanInfo.setDate(parseDate(editBuyDate.getText().toString()));
         // TODO 如果豆名为空字串或者为null，则默认给予国家+豆种格式
         beanInfo.setName(editName.getText().toString());

@@ -431,7 +431,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="80.5dp">
 
-                        <Spinner
+                        <com.dhy.coffeesecret.ui.common.views.ReSpinner
                             android:id="@+id/edit_handler"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
@@ -598,7 +598,7 @@
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="100dp"
-                        android:text="g"
+                        android:text="kg"
                         android:textColor="#7F7F7F"
                         android:textSize="12sp"/>
                 </RelativeLayout>
