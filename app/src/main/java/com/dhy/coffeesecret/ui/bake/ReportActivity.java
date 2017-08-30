@@ -393,11 +393,19 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
             }else{
                 // TODO 如果timeIndex 为-1
             }*/
-            NLogger.i(TAG, timeIndex + "的输出的豆温为：" + beanTemps.get(timeIndex).getY());
-            content[1] = ConvertUtils.getCrspTemperatureValue(beanTemps.get(timeIndex).getY() + "") + tempratureUnit;
-            content[2] = ConvertUtils.getCrspTemperatureValue(inwindTemps.get(timeIndex).getY() + "") + tempratureUnit;
-            content[3] = ConvertUtils.getCrspTemperatureValue(outwindTemps.get(timeIndex).getY() + "") + tempratureUnit;
-            content[4] = ConvertUtils.getCrspTemperatureValue(accBeanTemps.get(timeIndex).getY() + "") + tempratureUnit;
+            // 如果假数据和期待数据的时间相差6s以上，视为数据丢失
+            /*if(Math.abs(timex.get(timeIndex) - expectedNextTime) > 6){
+                content[1] = "数据丢失";
+                content[2] = "数据丢失";
+                content[3] = "数据丢失";
+                content[4] = "数据丢失";
+            }else{*/
+                content[1] = ConvertUtils.getCrspTemperatureValue(beanTemps.get(timeIndex).getY() + "") + tempratureUnit;
+                content[2] = ConvertUtils.getCrspTemperatureValue(inwindTemps.get(timeIndex).getY() + "") + tempratureUnit;
+                content[3] = ConvertUtils.getCrspTemperatureValue(outwindTemps.get(timeIndex).getY() + "") + tempratureUnit;
+                content[4] = ConvertUtils.getCrspTemperatureValue(accBeanTemps.get(timeIndex).getY() + "") + tempratureUnit;
+            // }
+
 
             for (int j = 0; j < 5; ++j) {
                 TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1);
