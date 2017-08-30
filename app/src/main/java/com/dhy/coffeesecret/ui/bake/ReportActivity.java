@@ -50,6 +50,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.jesse.nativelogger.NLogger;
 
 import static android.widget.LinearLayout.LayoutParams;
 import static android.widget.LinearLayout.LayoutParams.MATCH_PARENT;
@@ -330,23 +331,73 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
         }
     }
 
+    /**
+     * 矫正时间间隔，正常的时间间隔会有一两秒误差
+     * @param timex 时间
+     * @return
+     */
+    private int correct30InternalTime(List<Float> timex, int index4Loop, int nextTargetTime){
+        NLogger.i(TAG, "期待时间点为：" + nextTargetTime);
+        // 先获取当前循环下标的时间time1
+        // 将time1 - index * 30s， 获取到距离上一个时间点的时间间隔time2
+        // 将time2 进行 求余，判断余数是否为0
+        int surplus = getDistanceFromTargetTime(timex, index4Loop, nextTargetTime);
+        // 如果余数为0，那么直接返回循环下标，表示这个下标间隔正好为30s
+        if(surplus == 0){
+            return index4Loop;
+        }
+        return searchClosestIndex(timex, index4Loop, surplus, nextTargetTime);
+    }
+
+    private int searchClosestIndex(List<Float> timex, int index4Loop, int distance, int target){
+        int targetIndex = Integer.MAX_VALUE;
+        int minValue = Integer.MAX_VALUE;
+        // 如果distance是正数，说明获取到的数值过大，需要递减下标；相反，则需要递增下标
+        for (int i = 0; i <= Math.abs(distance); ++i){
+            int foo = index4Loop - (i * distance / Math.abs(distance));
+            if(foo > timex.size() || foo < 0){
+                continue;
+            }
+            if(getDistanceFromTargetTime(timex, foo, target) < minValue){
+                targetIndex = foo;
+            }
+        }
+        NLogger.i(TAG, "最终list下标为：" + Math.round(targetIndex) + ", 时间点为：" + Math.round(timex.get(targetIndex)));
+        return targetIndex;
+    }
+
+    private int getDistanceFromTargetTime(List<Float> timex, int index4Loop, int nextTargetTime){
+        return (Math.round(timex.get(index4Loop)) - nextTargetTime) % 30;
+    }
+
     private void generateProxyDetails(final BakeReportProxy proxy) {
         List<Entry> beanTemps = proxy.getLineDataSetByIndex(BEANLINE).getValues();
         List<Entry> inwindTemps = proxy.getLineDataSetByIndex(INWINDLINE).getValues();
         List<Entry> outwindTemps = proxy.getLineDataSetByIndex(OUTWINDLINE).getValues();
         List<Entry> accBeanTemps = proxy.getLineDataSetByIndex(ACCBEANLINE).getValues();
         List<Float> timex = proxy.getTimex();
-        for (int i = 0; i < beanTemps.size(); i += 29) {
+        int expectedNextTime = 0;
+        for(int i = 0; i < beanTemps.size(); i += 29){
             TableRow tableRow = new TableRow(this);
             tableRow.setPadding(10, 10, 10, 10);
             TableLayout.LayoutParams p = new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT);
             tableRow.setLayoutParams(p);
             String[] content = new String[5];
-            content[0] = FormatUtils.getTimeWithFormat(timex.get(i));
-            content[1] = ConvertUtils.getCrspTemperatureValue(beanTemps.get(i).getY() + "") + tempratureUnit;
-            content[2] = ConvertUtils.getCrspTemperatureValue(inwindTemps.get(i).getY() + "") + "";
-            content[3] = ConvertUtils.getCrspTemperatureValue(outwindTemps.get(i).getY() + "") + "";
-            content[4] = ConvertUtils.getCrspTemperatureValue(accBeanTemps.get(i).getY() + "") + "";
+            int timeIndex = correct30InternalTime(timex, i, expectedNextTime);
+
+            // if(Math.round(timex.get(timeIndex)) != expectedNextTime){
+            content[0] = FormatUtils.getTimeWithFormat(Math.round(expectedNextTime));
+            // }
+            /*if(timeIndex != -1){
+                content[0] = FormatUtils.getTimeWithFormat(Math.round(timeIndex));
+            }else{
+                // TODO 如果timeIndex 为-1
+            }*/
+            NLogger.i(TAG, timeIndex + "的输出的豆温为：" + beanTemps.get(timeIndex).getY());
+            content[1] = ConvertUtils.getCrspTemperatureValue(beanTemps.get(timeIndex).getY() + "") + tempratureUnit;
+            content[2] = ConvertUtils.getCrspTemperatureValue(inwindTemps.get(timeIndex).getY() + "") + tempratureUnit;
+            content[3] = ConvertUtils.getCrspTemperatureValue(outwindTemps.get(timeIndex).getY() + "") + tempratureUnit;
+            content[4] = ConvertUtils.getCrspTemperatureValue(accBeanTemps.get(timeIndex).getY() + "") + tempratureUnit;
 
             for (int j = 0; j < 5; ++j) {
                 TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1);
@@ -357,6 +408,7 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
             }
             tableRow.setGravity(Gravity.CENTER);
             tableLayout.addView(tableRow, p);
+            expectedNextTime += 30;
         }
     }
 
@@ -591,4 +643,5 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
             mTlEventList.addView(tableRow);
         }
     }
+
 }
