@@ -550,14 +550,14 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
             type.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
             time.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
             supplyContent.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-            TableRow.LayoutParams params = new TableRow.LayoutParams(0, WRAP_CONTENT, 1.0f);
+            TableRow.LayoutParams params = new TableRow.LayoutParams(0, MATCH_PARENT, 1.0f);
             // 左右下各留一个像素的位置，用于显示黑色的背景以达到黑色线条的目的
             params.setMargins(1, 0, 1, 1);
             params.weight = 1;
 
             tableRow.addView(type, params);
 
-            TableRow.LayoutParams params2 = new TableRow.LayoutParams(0, WRAP_CONTENT, 1.0f);
+            TableRow.LayoutParams params2 = new TableRow.LayoutParams(0, MATCH_PARENT, 1.0f);
             params2.setMargins(0, 0, 1, 1);
             params2.weight = 1;
 
@@ -587,6 +587,7 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
 
     @Override
     public void init(final BakeReportProxy proxy) {
+        NLogger.i(TAG, proxy.getBakeReport().toString());
         // 设置tempratureset，进行转换
         mChart.setTemperatureSet(proxy.getBakeReport().getTemperatureSet());
 

@@ -72,7 +72,7 @@ public class TransferControllerTask implements Runnable {
         // 因为收到了消息，表示还连接着,清0
         forcedCancelCombo = 0;
 
-        NLogger.i(TAG, Thread.currentThread().toString() + "->acknowledgeData():收到新数据:" + temperatureStr);
+        // NLogger.i(TAG, Thread.currentThread().toString() + "->acknowledgeData():收到新数据:" + temperatureStr);
         try {
             // 收到新数据，将期望ack递增
             mAck = ++mAck % 4;
