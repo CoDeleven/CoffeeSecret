@@ -218,12 +218,12 @@ public class FireWindDialog extends DialogFragment implements CircleSeekBar.OnSe
     void generateEvent() {
         Event event = new Event(Event.FIRE_WIND);
         if (isGroup) {
-            event.setDescription("FireValue:" + Utils.get2PrecisionFloat(fireValue) + ", WindValue:" + Utils.get2PrecisionFloat(windValue));
+            event.setDescription("火力:" + Utils.get2PrecisionFloat(fireValue) + ", 风门:" + Utils.get2PrecisionFloat(windValue));
         } else {
             if (curCircle == circle1) {
-                event.setDescription("WindValue:" + Utils.get2PrecisionFloat(windValue));
+                event.setDescription("风门:" + Utils.get2PrecisionFloat(windValue));
             } else {
-                event.setDescription("FireValue:" + Utils.get2PrecisionFloat(fireValue));
+                event.setDescription("火力:" + Utils.get2PrecisionFloat(fireValue));
             }
         }
         onFireWindAddListener.onFireWindChanged(event);

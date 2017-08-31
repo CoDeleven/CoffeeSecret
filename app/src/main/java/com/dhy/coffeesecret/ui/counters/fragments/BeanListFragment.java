@@ -56,6 +56,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import cn.jesse.nativelogger.NLogger;
+
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 /**
@@ -109,8 +111,14 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        mHandler.sendEmptyMessage(INIT_POPUP_WINDOW);
         init();
-        mHandler.sendEmptyMessageDelayed(INIT_POPUP_WINDOW, 1000);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mHandler.sendEmptyMessage(GET_BEAN_INFOS);
     }
 
     private void init() {
@@ -157,6 +165,7 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
                 mHandler.sendEmptyMessage(GET_BEAN_INFOS);
             }
         });
+
     }
 
     @TargetApi(Build.VERSION_CODES.CUPCAKE)
@@ -238,27 +247,6 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
 
         Log.i(TAG, "------------------开始加载豆种信息------------------");
         mHandler.sendEmptyMessage(LOADING);
-/*
-       FormBody body = new FormBody.Builder()
-               .add("username", "Simo")
-               .add("action", "getBeanList")
-               .build();
-       Request request = new Request.Builder()
-                .url(Global.DOMAIN + Global.ENTRANCE_1)
-               .url("http://httpbin.org/post")
-               .post(body)
-               .build();
-       new OkHttpClient().newCall(request).enqueue(new Callback() {
-           @Override
-           public void onFailure(Call call, IOException e) {
-               mHandler.sendEmptyMessage(TOAST_1);
-           }
-
-           @Override
-           public void onResponse(Call call, Response response) throws IOException {
-
-           }
-       });*/
 
         Gson gson = new Gson();
         String beanInfoListJson = "";
@@ -269,6 +257,7 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
             e.printStackTrace();
             mHandler.sendEmptyMessage(TOAST_3);
         }
+        NLogger.i(TAG, "BeanInfoList->" + beanInfoListJson);
         String[] beanLists = null;
         // beanInfoListJson = TestData.beaninfos;
         ArrayList<BeanInfo> beanInfoss = null;
@@ -286,28 +275,27 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
         } else {
             beanInfoss = sortByArea(beanInfoss);
             getLetters(beanInfoss);
-            if(coffeeBeanInfoTemp != null){
+            if (coffeeBeanInfoTemp != null) {
                 coffeeBeanInfoTemp.clear();
-            }else{
+            } else {
                 coffeeBeanInfoTemp = new LinkedList<>();
             }
-            for (BeanInfo b : beanInfoss) {
+            coffeeBeanInfoTemp.addAll(beanInfoss);
+/*            for (BeanInfo b : beanInfoss) {
                 if (b.getContinent().equals(title)) {
                     coffeeBeanInfoTemp.add(b);
-                } else if (title.equals("全部")) {
-                    coffeeBeanInfoTemp.add(b);
                 }
-            }
+            }*/
         }
 
         if (coffeeBeanInfos != null) {
             coffeeBeanInfos.clear();
             coffeeBeanInfos.addAll(coffeeBeanInfoTemp);
         }
-
+        NLogger.i(TAG, "------------------title:" + title + "豆种信息加载结束------------------");
+        NLogger.i(TAG, title + "->当前coffeeBeanInfoTemp.size():" + coffeeBeanInfoTemp.size());
         mHandler.sendEmptyMessage(NO_LOADING);
         mHandler.sendEmptyMessage(START_SCREEN);
-        Log.i(TAG, "------------------豆种信息加载结束------------------");
     }
 
     private ArrayList<BeanInfo> sortByArea(ArrayList<BeanInfo> beanInfoss) {
@@ -491,7 +479,6 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
 
     public void setTitle(String title) {
         this.title = title;
-        mHandler.sendEmptyMessage(GET_BEAN_INFOS);
     }
 
     @Nullable
@@ -522,45 +509,107 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
     }
 
     private void startScreen() {
-        ArrayList<BeanInfo> beanInfos = new ArrayList<>();
-        beanInfos.addAll(coffeeBeanInfoTemp);
-        if ("全部".equals(screenHandler) || "".equals(screenHandler)) {
-            coffeeBeanInfos.clear();
-            coffeeBeanInfos.addAll(coffeeBeanInfoTemp);
-        } else if (!screenHandler.equals("")) {
-            coffeeBeanInfos.clear();
-            for (BeanInfo beanInfo : beanInfos) {
-                if (beanInfo.getProcess().equals(screenHandler)) {
-                    coffeeBeanInfos.add(beanInfo);
-                }
-            }
+        coffeeBeanInfos.clear();
+        coffeeBeanInfos.addAll(coffeeBeanInfoTemp);
+
+        sortContinentOfStartScreen();
+
+        sortProcessOfStartScreen();
+
+        sortPriceOfStartScreen();
+
+        sortWeightOfStartScreen();
+
+        if (!doSortByScreen()) {
+            return;
         }
-        Log.i(TAG, "startScreen: infos1 = " + coffeeBeanInfos.size());
-        beanInfos.clear();
-        beanInfos.addAll(coffeeBeanInfos);
-        if ((screenPrice[0] > 0 || screenPrice[1] < maxPrice - 1)) {
-            coffeeBeanInfos.clear();
-            for (BeanInfo beanInfo : beanInfos) {
-                if (beanInfo.getPrice() >= screenPrice[0]
-                        && (screenPrice[1] > 1000 ? true : beanInfo.getPrice() <= screenPrice[1])) {
-                    coffeeBeanInfos.add(beanInfo);
-                }
-            }
-        }
-        Log.i(TAG, "startScreen: infos2 = " + coffeeBeanInfos.size());
-        beanInfos.clear();
-        beanInfos.addAll(coffeeBeanInfos);
-        if (screenWeight[0] > 0 || screenWeight[1] < maxWeight - 1) {
-            coffeeBeanInfos.clear();
-            for (BeanInfo beanInfo : beanInfos) {
-                Log.i(TAG, "startScreen: weight = " + beanInfo.getStockWeight());
-                if (beanInfo.getStockWeight() >= screenWeight[0] && beanInfo.getStockWeight() <= screenWeight[1]) {
-                    coffeeBeanInfos.add(beanInfo);
-                }
-            }
-        }
+        // coffeeBeanInfos.clear();
+        // coffeeBeanInfos.addAll(coffeeBeanInfoTemp);
 
         beanListAdapter.notifyDataSetChanged();
+    }
+
+    /**
+     * 分解startScreen 方法
+     * 划分地区
+     */
+    private void sortContinentOfStartScreen() {
+        List<BeanInfo> foo = new LinkedList<>();
+        if (!doSortByScreen()) {
+            return;
+        }
+        for (BeanInfo beanInfo : coffeeBeanInfos) {
+            if (title.equals(beanInfo.getContinent()) || "全部".equals(title)) {
+                foo.add(beanInfo);
+            }
+        }
+        coffeeBeanInfos.clear();
+        coffeeBeanInfos.addAll(foo);
+    }
+
+    /**
+     * 分解startScreen 方法
+     * 划分处理方法
+     */
+    private void sortProcessOfStartScreen() {
+        if (!doSortByScreen()) {
+            return;
+        }
+        if ("全部".equals(screenHandler) || "".equals(screenHandler)) {
+            return;
+        }
+        ArrayList<BeanInfo> foo = new ArrayList<>();
+        for (BeanInfo beanInfo : coffeeBeanInfos) {
+            if (beanInfo.getProcess().equals(screenHandler)) {
+                foo.add(beanInfo);
+            }
+        }
+        coffeeBeanInfos.clear();
+        coffeeBeanInfos.addAll(foo);
+    }
+
+    /**
+     * 分解startScreen 方法
+     * 划分 价格 方法
+     */
+    private void sortPriceOfStartScreen() {
+        if (!doSortByScreen()) {
+            return;
+        }
+        List<BeanInfo> foo = new ArrayList<>();
+
+        // if ((screenPrice[0] > 0 || screenPrice[1] < maxPrice - 1)) {
+            for (BeanInfo beanInfo : coffeeBeanInfos) {
+                if (beanInfo.getPrice() >= screenPrice[0]
+                        && (screenPrice[1] > 1000 ? true : beanInfo.getPrice() <= screenPrice[1])) {
+                    foo.add(beanInfo);
+                }
+            }
+        // }
+        coffeeBeanInfos.clear();
+        coffeeBeanInfos.addAll(foo);
+    }
+
+    private void sortWeightOfStartScreen() {
+        if (!doSortByScreen()) {
+            return;
+        }
+        List<BeanInfo> foo = new ArrayList<>();
+
+        // if (screenWeight[0] > 0 || screenWeight[1] < maxWeight - 1) {
+            for (BeanInfo beanInfo : coffeeBeanInfos) {
+                Log.i(TAG, "startScreen: weight = " + beanInfo.getStockWeight());
+                if (beanInfo.getStockWeight() >= screenWeight[0] && beanInfo.getStockWeight() <= screenWeight[1]) {
+                    foo.add(beanInfo);
+                }
+            }
+        // }
+        coffeeBeanInfos.clear();
+        coffeeBeanInfos.addAll(foo);
+    }
+
+    private boolean doSortByScreen() {
+        return coffeeBeanInfoTemp.size() > 0;
     }
 
     @Override
@@ -591,7 +640,6 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
                         @Override
                         public void run() {
                             activity.getBeanInfos();
-
                         }
                     }).start();
                     break;
@@ -604,13 +652,14 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
                     if (refreshBeanList != null && refreshBeanList.isRefreshing()) {
                         activity.refreshBeanList.setRefreshing(false);
                     }
-                    if(countryName != null){
+                    if (countryName != null) {
                         countryName.setText("全部");
                     }
 
                     beanListAdapter.notifyDataSetChanged();
                     break;
                 case INIT_POPUP_WINDOW:
+                    Log.d(TAG, "INIT_POPUP_WINDOW");
                     initCountryPopupWindow();
                     initScreenPopupWindow();
                     break;
