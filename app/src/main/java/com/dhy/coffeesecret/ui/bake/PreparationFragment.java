@@ -273,7 +273,7 @@ public class PreparationFragment extends Fragment implements IDeviceView {
         } else {
             NLogger.i(TAG, "OnStart():正常安装Presenter...");
             ((MainActivity) getActivity()).revertBakingTab();
-            if(mPresenter.getTemporaryBeanInfo() == null && mPresenter.getTemporaryReferTemperatures() == null){
+            if(mPresenter.getCurBakingReport() == null){
                 mBtModifyBeanInfo.setVisibility(View.VISIBLE);
             }
 

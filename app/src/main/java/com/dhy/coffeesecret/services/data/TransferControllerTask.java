@@ -168,6 +168,7 @@ public class TransferControllerTask implements Runnable {
                     } catch (InterruptedException e) {
                         // e.printStackTrace();
                         NLogger.w(TAG, "等待中的线程被中断...即将退出run方法");
+                        continueToWrite = false;
                         return;
                     }
                 } finally {
