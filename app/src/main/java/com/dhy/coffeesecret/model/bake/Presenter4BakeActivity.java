@@ -9,12 +9,13 @@ import com.dhy.coffeesecret.model.chart.Presenter4Chart;
 import com.dhy.coffeesecret.pojo.BakeReportProxy;
 import com.dhy.coffeesecret.pojo.Temperature;
 import com.dhy.coffeesecret.ui.bake.BakeActivity;
+import com.dhy.coffeesecret.ui.bake.record.AbstractTimeSystem;
 import com.dhy.coffeesecret.ui.bake.record.BreakPointerRecorder;
 import com.dhy.coffeesecret.ui.bake.record.RecorderSystem;
+import com.dhy.coffeesecret.ui.common.views.DevelopBar;
 import com.dhy.coffeesecret.utils.ConvertUtils;
 import com.dhy.coffeesecret.utils.FormatUtils;
 import com.dhy.coffeesecret.utils.Utils;
-import com.dhy.coffeesecret.ui.common.views.DevelopBar;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.Event;
 
@@ -298,6 +299,11 @@ public class Presenter4BakeActivity extends BaseBlePresenter<IBakeView, Model4Ba
                 }
             }
         }
+
+        // 设置整个烘焙过程所花费的时间
+        long globalBakeTime = System.currentTimeMillis() - AbstractTimeSystem.getStartTime();
+        localProxy.setTotalBakeTime(globalBakeTime);
+
 
         localProxy.setGlobalAccBeanTemp(recorderSystem.getGlobalAccTemprature());
         localProxy.setEndTemp(curBeanEntry.getY());

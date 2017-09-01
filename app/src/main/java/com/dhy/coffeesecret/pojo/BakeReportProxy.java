@@ -346,4 +346,11 @@ public class BakeReportProxy implements Serializable{
     public void setGlobalAccBeanTemp(float globalAccBeanTemp) {
         this.bakeReport.setAvgGlobalBeanTemperature(globalAccBeanTemp);
     }
+
+    public void setTotalBakeTime(long bakeTime) {
+        this.bakeReport.setTotalBakeTime(bakeTime);
+    }
+    public long getTotalBakeTime(){
+        return this.bakeReport.getTotalBakeTime();
+    }
 }

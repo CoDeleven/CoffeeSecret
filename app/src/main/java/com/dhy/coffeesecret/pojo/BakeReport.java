@@ -52,6 +52,16 @@ public class BakeReport implements Parcelable {
 //     private CuppingInfo cuppingInfo;
     //当烘焙报告中只有一种豆子的话 烘焙报告上添加 bean的ID
     private long beanId = -1;
+    // 整个烘焙过程所花费的事件
+    private long totalBakeTime;
+
+    public long getTotalBakeTime() {
+        return totalBakeTime;
+    }
+
+    public void setTotalBakeTime(long totalBakeTime) {
+        this.totalBakeTime = totalBakeTime;
+    }
 
     public BakeReport() {
     }
@@ -297,6 +307,7 @@ public class BakeReport implements Parcelable {
         dest.writeString(this.date);
         dest.writeTypedList(this.beanInfoSimples);
         dest.writeLong(this.beanId);
+        dest.writeLong(this.totalBakeTime);
     }
 
     protected BakeReport(Parcel in) {
@@ -324,6 +335,7 @@ public class BakeReport implements Parcelable {
         this.date = in.readString();
         this.beanInfoSimples = in.createTypedArrayList(BeanInfoSimple.CREATOR);
         this.beanId = in.readLong();
+        this.totalBakeTime = in.readLong();
     }
 
     public static final Creator<BakeReport> CREATOR = new Creator<BakeReport>() {
@@ -346,7 +358,6 @@ public class BakeReport implements Parcelable {
                 ", device='" + device + '\'' +
                 ", cookedBeanWeight='" + cookedBeanWeight + '\'' +
                 ", roastDegree='" + roastDegree + '\'' +
-                ", temperatureSet=" + temperatureSet +
                 ", breakPointerTime=" + breakPointerTime +
                 ", breakPointerTemperature=" + breakPointerTemperature +
                 ", avgDryTemperature=" + avgDryTemperature +
@@ -365,6 +376,7 @@ public class BakeReport implements Parcelable {
                 ", date='" + date + '\'' +
                 ", beanInfoSimples=" + beanInfoSimples +
                 ", beanId=" + beanId +
+                ", totalBakeTime=" + totalBakeTime +
                 '}';
     }
 }

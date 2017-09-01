@@ -15,6 +15,7 @@ public class FormatUtils {
         return String.format("%1$02d", minutes) + ":" + String.format("%1$02d", seconds);
     }
 
+
     public static long date2IdWithoutTimestamp(String date) {
         SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
         long result = -1;

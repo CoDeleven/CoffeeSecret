@@ -106,7 +106,8 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
     TextView avgFirbu;
     @Bind(R.id.id_avgEnd)
     TextView avgEnd;*/
-
+    @Bind(R.id.id_total_bake_time)
+    TextView totalBakeTime;
     @Bind(R.id.id_breakPointer_temp)
     TextView breakPointerTemp;
     @Bind(R.id.id_breakPointer_time)
@@ -203,6 +204,7 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
 
         // 检测是否存在该参数
         BakeReport mLocalBakeReport = getIntent().getParcelableExtra(UniExtraKey.EXTRA_BAKE_REPORT.getKey());
+        Log.d(TAG, mLocalBakeReport.toString());
         mPresenter.setLocalBakeReport(mLocalBakeReport);
 
         mPresenter.initViewWithProxy();
@@ -629,6 +631,8 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
 
         breakPointerTemp.setText(ConvertUtils.getCrspTemperatureValue(proxy.getBreakPointerTemprature() + "") + tempratureUnit);
         breakPointerTime.setText(FormatUtils.getTimeWithFormat(proxy.getBreakPointerTime()));
+
+        totalBakeTime.setText(FormatUtils.getTimeWithFormat(proxy.getTotalBakeTime() / 1000));
 
         float cooked = Float.parseFloat(proxy.getBakeReport().getCookedBeanWeight());
         float raw = proxy.getRawBeanWeight();

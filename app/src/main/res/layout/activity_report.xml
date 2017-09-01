@@ -382,10 +382,8 @@
 
                                 <TextView
                                     style="@style/report_chart_descriptor"
-                                    android:layout_marginRight="0px"
-                                    android:paddingBottom="1px"
-                                    android:layout_marginBottom="-1px"
-                                    android:text=""/>
+                                    android:layout_marginRight="1px"
+                                    android:text="烘焙时长"/>
                             </TableRow>
 
                             <TableRow
@@ -402,9 +400,8 @@
 
                                 <TextView
                                     style="@style/report_chart_descriptor"
-                                    android:layout_marginBottom="-1px"
-                                    android:layout_marginRight="0px"
-                                    android:paddingBottom="1px"
+                                    android:id="@+id/id_total_bake_time"
+                                    android:layout_marginRight="1px"
                                     android:text=""/>
                             </TableRow>
 
