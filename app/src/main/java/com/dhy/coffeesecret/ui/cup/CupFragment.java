@@ -244,7 +244,7 @@ public class CupFragment extends Fragment implements View.OnClickListener {
 //                int leftIndex = rangeBar.getLeftIndex();
 //                int rightIndex = rangeBar.getRightIndex();
                 int leftIndex = min < 3 ? 0: min - 3;
-                int rightIndex = max > 83 ? 80 : max - 3;
+                int rightIndex = max > 103 ? 100 : max - 3;
 
                 firView.setText(leftIndex + "");
                 secView.setText(rightIndex + "");
@@ -408,8 +408,10 @@ public class CupFragment extends Fragment implements View.OnClickListener {
         List<CuppingInfo> temp = new ArrayList<>();
         if (allCuppingInfos == null) {
             allCuppingInfos = new ArrayList<>();
-            allCuppingInfos.addAll(cuppingInfos);
+        }else{
+            allCuppingInfos.clear();
         }
+        allCuppingInfos.addAll(cuppingInfos);
         for (CuppingInfo cuppingInfo : allCuppingInfos) {
             if (filter.doFilter(cuppingInfo)) {
                 temp.add(cuppingInfo);

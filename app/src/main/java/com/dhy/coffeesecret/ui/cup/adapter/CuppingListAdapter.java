@@ -66,7 +66,7 @@ public class CuppingListAdapter extends RecyclerView.Adapter implements StickyRe
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         CuppingViewHolder cuppingViewHolder = (CuppingViewHolder) holder;
         final CuppingInfo info = cuppingInfos.get(position);
-        float score = info.getScore() / 16f;
+        float score = info.getScore() / 20f;
         cuppingViewHolder.itemTitle.setText(info.getName());
         cuppingViewHolder.ratingBar.setStar(score);
         cuppingViewHolder.itemView.setOnClickListener(new View.OnClickListener() {

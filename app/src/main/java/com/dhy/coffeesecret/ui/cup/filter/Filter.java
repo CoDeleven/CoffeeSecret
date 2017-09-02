@@ -18,7 +18,7 @@ public class Filter {
     public final static long DAY = 24 * 60;
 
     public int min = 0;
-    public int max = 80;
+    public int max = 100;
     public int dateSelection;
 
     public boolean doFilter(CuppingInfo info) {

@@ -51,7 +51,7 @@ public class CuppingInfoFragment extends Fragment implements InputDialogFragment
     private static final String[] FLAW_TITLES = {"发展不充分", "过度发展", "烤焙味", "自焙烫伤", "胚芽烫伤", "豆表烫伤"};
     private static final int[] FLAW_ICONS = {ic_underdev, ic_overdev, ic_baked, ic_scorched, ic_tipped, ic_faced};
 
-    private static final int FEEL_SCORE_MAX = 80;
+    private static final int FEEL_SCORE_MAX = 100;
     private static final int FLAW_SCORE_MAX = 30;
 
     private static final String FLAW_SCORES_ARRAY = "flawScores";
@@ -206,7 +206,7 @@ public class CuppingInfoFragment extends Fragment implements InputDialogFragment
         }
 
         if (feelScores == null) {
-            feelScores = new float[]{10f, 10f, 10f, 10f, 10f, 10f, 10f, 10f};
+            feelScores = new float[]{5f, 5f, 10f, 20f, 20f, 20f, 10f, 10f};
             flawScores = new float[]{0, 0, 0, 0, 0, 0};
             roastDegree = 0;
             isNewCupping = true;
@@ -214,6 +214,7 @@ public class CuppingInfoFragment extends Fragment implements InputDialogFragment
 
         mData = new HashMap<>();
         for (int i = 0; i < FEEL_TITLES.length; i++) {
+
             mData.put(FEEL_TITLES[i], feelScores[i]);
         }
         for (int i = 0; i < FLAW_TITLES.length; i++) {
@@ -274,7 +275,13 @@ public class CuppingInfoFragment extends Fragment implements InputDialogFragment
         }
 
         public void setScore(int index, float value) {
-            date.put(titles[index], value);
+            if(index == 0 || index == 1){
+                date.put(titles[index], value / 2);
+            }
+            if(index == 3 || index == 4 || index == 5){
+                date.put(titles[index], value * 2);
+            }
+
             notifyDataSetChanged();
         }
 
@@ -301,7 +308,14 @@ public class CuppingInfoFragment extends Fragment implements InputDialogFragment
             TextView score = (TextView) inflate.findViewById(R.id.score);
             tv.setText(titles[i]);
             iv.setImageDrawable(getResources().getDrawable(icons[i]));
-            score.setText(mData.get(titles[i]) + "");
+            // "干湿香", "风味", "余韵", "酸质", "口感", "甜感", "均衡度", "整体感受"
+            /*if(i == 0 || i == 1){
+                score.setText((mData.get(titles[i]) / 2) + "");
+            }else if(i == 3 || i == 4 || i == 5){
+                score.setText(mData.get(titles[i]) * 2 + "");
+            }else{*/
+                score.setText(mData.get(titles[i]) + "");
+            // }
             return inflate;
         }
     }
