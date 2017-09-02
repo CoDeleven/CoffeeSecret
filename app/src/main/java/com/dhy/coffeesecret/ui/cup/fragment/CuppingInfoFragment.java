@@ -14,9 +14,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.dhy.coffeesecret.R;
+import com.dhy.coffeesecret.ui.common.views.BakeDegreeShowBar;
 import com.dhy.coffeesecret.ui.cup.listener.GridViewItemClickListener;
 import com.dhy.coffeesecret.utils.ArrayUtil;
-import com.dhy.coffeesecret.ui.common.views.BakeDegreeShowBar;
 import com.dinuscxj.progressbar.CircleProgressBar;
 
 import java.util.HashMap;
@@ -112,6 +112,8 @@ public class CuppingInfoFragment extends Fragment implements InputDialogFragment
         finalProgressBar = (CircleProgressBar) cuppingInfoView.findViewById(R.id.cpb_final);
         mDeleteButton = (Button) cuppingInfoView.findViewById(R.id.btn_delete);
         mShowBar = (BakeDegreeShowBar) cuppingInfoView.findViewById(R.id.id_show_bake_degree);
+
+
         mShowBar.setCurProcess(roastDegree);
 
         mScoresCircles = cuppingInfoView.findViewById(R.id.line_result);

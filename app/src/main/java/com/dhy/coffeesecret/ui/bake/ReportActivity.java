@@ -90,6 +90,8 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
     TextView device;
     @Bind(R.id.id_score)
     TextView score;
+    @Bind(R.id.id_score_descriptor)
+    TextView descriptor;
     @Bind(R.id.id_report_home)
     TextView home;
     @Bind(R.id.id_share)
@@ -612,8 +614,10 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
 
 
         // FIXME
-        int toastValue = computeToastValue((Float.parseFloat(proxy.getBakeDegree()) / 50f ) * 360);
+        float angle = (Float.parseFloat(proxy.getBakeDegree()) / 50f ) * 360;
+        int toastValue = computeToastValue(angle);
         score.setText((toastValue == Integer.MAX_VALUE ? "N/A" : (toastValue + "")));
+        descriptor.setText(computeColorBlock4Toast(angle));
         GradientDrawable drawable = (GradientDrawable)getResources().getDrawable(R.drawable.bg_circle_edit_behind);
         drawable.setColor(Utils.getColor(Float.parseFloat(proxy.getBakeDegree()) / 50f));
         scoreLayout.setBackground(drawable);
@@ -656,5 +660,24 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
             mTlEventList.addView(tableRow);
         }
     }
-
+    private String computeColorBlock4Toast(double angle){
+        if(angle < 45 && angle >= 0){
+            return "Green";
+        }else if(angle >= 45 && angle < 90){
+            return "Light";
+        }else if(angle >= 90 && angle <135){
+            return "Cinnamon";
+        }else if(angle >= 135 && angle < 180){
+            return "Medium";
+        }else if(angle >= 180 && angle < 225){
+            return "High";
+        }else if(angle >= 225 && angle < 270){
+            return "City";
+        }else if(angle >= 270 && angle < 315){
+            return "Full City";
+        }else if(angle >= 315 && angle < 360){
+            return "French";
+        }
+        return "";
+    }
 }

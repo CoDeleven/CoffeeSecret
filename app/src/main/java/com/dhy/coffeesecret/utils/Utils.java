@@ -1,12 +1,19 @@
 package com.dhy.coffeesecret.utils;
 
 
+import android.content.res.Resources;
 import android.graphics.Color;
+import android.os.Environment;
 
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.ui.common.views.BakeDegreeCircleSeekBar;
 
 import net.sourceforge.pinyin4j.PinyinHelper;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Properties;
 
 /**
  * Created by CoDeleven on 17-2-9.
@@ -168,5 +175,32 @@ public class Utils {
         int greed = (int) (greenStart + ((greenEnd - greenStart) * radio + 0.5));
         int blue = (int) (blueStart + ((blueEnd - blueStart) * radio + 0.5));
         return Color.rgb(red, greed, blue);
+    }
+    public static int sp2px(Resources res, float spValue) {
+        final float fontScale = res.getDisplayMetrics().scaledDensity;
+        return (int) (spValue * fontScale + 0.5f);
+    }
+    public static int dip2px(Resources res, float dipValue) {
+        final float scale = res.getDisplayMetrics().density;
+        return (int) (dipValue * scale + 0.5f);
+    }
+    public static boolean isMIUI() {
+        return getBuildProperties().containsKey("ro.miui.ui.version.name");
+    }
+    private static Properties sBuildProperties;
+    private static final Object sBuildPropertiesLock = new Object();
+    private static final File BUILD_PROP_FILE = new File(Environment.getRootDirectory(), "build.prop");
+    private static Properties getBuildProperties() {
+        synchronized (sBuildPropertiesLock) {
+            if (sBuildProperties == null) {
+                sBuildProperties = new Properties();
+                try {
+                    sBuildProperties.load(new FileInputStream(BUILD_PROP_FILE));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return sBuildProperties;
     }
 }
