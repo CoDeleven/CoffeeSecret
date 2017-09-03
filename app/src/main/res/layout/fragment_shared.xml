@@ -53,9 +53,9 @@
 
     </LinearLayout>
     <ImageView
+        android:id="@+id/id_iv_qrcode"
         android:layout_gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@mipmap/ic_barcode"/>
+        android:layout_width="250dp"
+        android:layout_height="250dp"/>
 
 </LinearLayout>

@@ -8,10 +8,13 @@ import android.os.Environment;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.ui.common.views.BakeDegreeCircleSeekBar;
 
+import net.iharder.Base64;
 import net.sourceforge.pinyin4j.PinyinHelper;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -202,5 +205,20 @@ public class Utils {
             }
         }
         return sBuildProperties;
+    }
+    public static void convertBase64StringToImage(String base64ImageString, File file) {
+        FileOutputStream os;
+        try {
+            byte[] bs = Base64.decode(base64ImageString);
+            os = new FileOutputStream(file.getAbsolutePath());
+            os.write(bs);
+            os.close();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
     }
 }

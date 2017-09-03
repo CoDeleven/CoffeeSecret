@@ -38,4 +38,19 @@ public final class UrlBake extends UrlBase {
                 .toString();
     }
 
+    public final static String share(String token, long itemId){
+        return new StringBuffer(URL_COMMON).append(root)
+                .append(URL_SEPARATOR).append(token)
+                .append(URL_SEPARATOR).append("share")
+                .append(URL_SEPARATOR).append(itemId)
+                .toString();
+    }
+
+    public final static String scanSuccess(String token, String data){
+        return new StringBuffer(URL_COMMON).append(root)
+                .append(URL_SEPARATOR).append(token)
+                .append(URL_SEPARATOR).append("copy")
+                .append("?data=" + data)
+                .toString();
+    }
 }

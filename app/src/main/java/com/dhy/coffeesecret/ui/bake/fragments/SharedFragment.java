@@ -8,12 +8,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.dhy.coffeesecret.R;
+import com.dhy.coffeesecret.url.UrlBake;
+import com.facebook.rebound.ui.Util;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+
+import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 /**
  * Created by CoDeleven on 17-3-15.
@@ -22,8 +28,11 @@ import butterknife.ButterKnife;
 public class SharedFragment extends DialogFragment {
     public static final String BEAN_NAME = "bean_name";
     public static final String BAKE_DEGREE = "bake_degree";
-    public static final String DEVELOP_RATE = "develop_rate";
+    public static final String BAKE_TIME = "bake_time";
     public static final String SPECIES = "species";
+    public static final String REPORT_ID = "report_id";
+    public static final String TOKEN = "token";
+
 
     @Bind(R.id.id_shared_beanName)
     TextView beanNameView;
@@ -33,9 +42,11 @@ public class SharedFragment extends DialogFragment {
     TextView developRateView;
     @Bind(R.id.id_shared_species)
     TextView speciesView;
+    @Bind(R.id.id_iv_qrcode)
+    ImageView imageView;
     private Context mContext;
-    private String beanName, bakeDegree, developRate, species;
-
+    private String beanName, bakeDegree, bakeTime, species, token;
+    private long id;
     public SharedFragment(){
 
     }
@@ -45,8 +56,10 @@ public class SharedFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
         beanName = getArguments().getString(BEAN_NAME);
         bakeDegree = getArguments().getString(BAKE_DEGREE);
-        developRate = getArguments().getString(DEVELOP_RATE);
+        bakeTime = getArguments().getString(BAKE_TIME);
         species = getArguments().getString(SPECIES);
+        id = getArguments().getLong(REPORT_ID);
+        token = getArguments().getString(TOKEN);
     }
 
     @Nullable
@@ -58,9 +71,23 @@ public class SharedFragment extends DialogFragment {
         ButterKnife.bind(this, view);
         beanNameView.setText("豆名：" + beanName);
         bakeDegreeView.setText("烘焙度：" + bakeDegree);
-        developRateView.setText("发展率：" + developRate);
+        developRateView.setText("烘焙时间：" + bakeTime);
         speciesView.setText("豆种：" + species);
 
+        loadingData();
+
+
         return view;
+}
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getDialog().getWindow().setLayout(Util.dpToPx(300, getResources()), WRAP_CONTENT);
     }
+
+    private void loadingData(){
+        ImageLoader.getInstance().displayImage(UrlBake.share(token, id), imageView);
+    }
+
 }

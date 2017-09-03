@@ -23,6 +23,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.model.UniExtraKey;
 import com.dhy.coffeesecret.model.chart.Model4Chart;
@@ -119,7 +120,9 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
     String _bean_;
     String _species_;
     String _bakeDegree_;
-    String _developRate_;
+    // String _developRate_;
+    String _bakeTime_;
+
     @Bind(R.id.id_avgDry_temperature)
     TextView idAvgDryTemperature;
     @Bind(R.id.id_avgDry_time)
@@ -286,7 +289,9 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
         bundle.putString(SharedFragment.BEAN_NAME, _bean_);
         bundle.putString(SharedFragment.SPECIES, _species_);
         bundle.putString(SharedFragment.BAKE_DEGREE, _bakeDegree_);
-        bundle.putString(SharedFragment.DEVELOP_RATE, _developRate_);
+        bundle.putString(SharedFragment.BAKE_TIME, _bakeTime_);
+        bundle.putLong(SharedFragment.REPORT_ID, mPresenter.getBakeReport().getBakeReport().getId());
+        bundle.putString(SharedFragment.TOKEN, ((MyApplication)getApplication()).getToken());
 
         shared.setArguments(bundle);
         FragmentTool.getFragmentToolInstance(this).showDialogFragmen("dialogFragment", shared);
@@ -297,7 +302,7 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
         Intent intent = new Intent(this, EditBehindActivity.class);
         intent.putExtra(EditBehindActivity.MODE_KEY, EditBehindActivity.MODE_EDITOR);
         if(mPresenter.getCurBakingReport() == null){
-            intent.putExtra(UniExtraKey.EXTRA_BAKE_REPORT.getKey(), mPresenter.gettLocalBakeReport().getBakeReport());
+            intent.putExtra(UniExtraKey.EXTRA_BAKE_REPORT.getKey(), mPresenter.getBakeReport().getBakeReport());
         }
         startActivity(intent);
         finish();
@@ -637,6 +642,9 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
         breakPointerTime.setText(FormatUtils.getTimeWithFormat(proxy.getBreakPointerTime()));
 
         totalBakeTime.setText(FormatUtils.getTimeWithFormat(proxy.getTotalBakeTime() / 1000));
+
+        _bakeDegree_ = String.valueOf(toastValue);
+        _bakeTime_ = FormatUtils.getTimeWithFormat(proxy.getTotalBakeTime() / 1000);
 
         float cooked = Float.parseFloat(proxy.getBakeReport().getCookedBeanWeight());
         float raw = proxy.getRawBeanWeight();
