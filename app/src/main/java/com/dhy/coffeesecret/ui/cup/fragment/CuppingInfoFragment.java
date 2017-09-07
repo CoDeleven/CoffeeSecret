@@ -251,7 +251,6 @@ public class CuppingInfoFragment extends Fragment implements InputDialogFragment
 
     @Override
     public void onValueChange(int position, float value) {
-        
         if (position < 8) {
             if(position == 0 || position == 1){
                 mFeelAdapter.setScore(position, value / 2);

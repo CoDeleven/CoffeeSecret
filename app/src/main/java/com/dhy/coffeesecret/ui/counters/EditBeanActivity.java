@@ -223,7 +223,7 @@ public class EditBeanActivity extends AppCompatActivity {
         if ("0.0".equals(editPrice.getText().toString().trim())) {
             editPrice.setText("");
         }
-        editWeight.setText(beanInfo.getStockWeight() + "");
+        editWeight.setText(Utils.get2PrecisionFloat((float)beanInfo.getStockWeight()) + "");
         if ("0.0".equals(editWeight.getText().toString().trim())) {
             editWeight.setText("");
         }

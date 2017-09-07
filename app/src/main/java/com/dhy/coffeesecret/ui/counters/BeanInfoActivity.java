@@ -143,7 +143,7 @@ public class BeanInfoActivity extends AppCompatActivity {
         infoSupplier.setText(beanInfo.getSupplier());
         infoPrice.setText("" + beanInfo.getPrice());
         // 数值的单位kg转换为当前单位
-        infoWeight.setText(beanInfo.getStockWeight() + "kg");
+        infoWeight.setText(Utils.get2PrecisionFloat((float)beanInfo.getStockWeight()) + "kg");
         infoBuyDate.setText(String.format("%1$tY-%1$tm-%1$te", beanInfo.getDate()));
         btnCurve.setEnabled(beanInfo.hasBakeReports());
     }
