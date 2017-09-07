@@ -13,6 +13,7 @@ import android.webkit.WebViewClient;
 
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.Global;
+import com.dhy.coffeesecret.ui.MainActivity;
 import com.dhy.coffeesecret.utils.SPPrivateUtils;
 
 /**
@@ -37,7 +38,7 @@ public class GuidanceActivity extends AppCompatActivity{
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 if ("http://start/".equals(url)) {
-                    Intent intent = new Intent(GuidanceActivity.this, FirstConnectedActivity.class);
+                    Intent intent = new Intent(GuidanceActivity.this, MainActivity.class);
                     GuidanceActivity.this.startActivity(intent);
                     GuidanceActivity.this.finish();
                 }
