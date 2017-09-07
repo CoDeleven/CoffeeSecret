@@ -499,7 +499,7 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
             beanArea.setLayoutParams(temp);
 
             TextView beanRawWeight = new TextView(this);
-            beanRawWeight.setText("生豆重量：" + ConvertUtils.getCrspWeightValue(beanInfo.getUsage()) + weightUnit);
+            beanRawWeight.setText("生豆重量：" + ConvertUtils.convertKg2Other(beanInfo.getUsage(), weightUnit) + weightUnit);
             beanRawWeight.setLayoutParams(temp);
 
             content[0].addView(beanName);
@@ -654,7 +654,7 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
                 raw += Float.parseFloat(simple.getUsage());
             }
         }
-        species.setText("品种 （" + "熟豆重量：" + ConvertUtils.getCrspWeightValue(cooked + "") + weightUnit + "，" + "脱水率：" + Utils.get2PrecisionFloat((cooked * 100) / raw) + "% ）");
+        species.setText("品种 （" + "熟豆重量：" + ConvertUtils.convertKg2Other(cooked + "", weightUnit) + weightUnit + "，" + "脱水率：" + Utils.get2PrecisionFloat((cooked * 100) / raw) + "% ）");
 
         generateProxyDetails(proxy);
 

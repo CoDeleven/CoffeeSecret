@@ -85,8 +85,8 @@ public class ConvertUtils {
      * @param value 默认单位是kg的任何数值均可以转换
      * @return
      */
-    public static float getCrspWeightValue(String value) {
-        String curUnit = MyApplication.weightUnit;
+    public static float convertKg2Other(String value, String curUnit) {
+        // String curUnit = MyApplication.weightUnit;
         float result = Float.parseFloat(value);
         if ("g".equals(curUnit)) {
             return Utils.get2PrecisionFloat(result * 1000);
@@ -95,6 +95,13 @@ public class ConvertUtils {
         }
         return Utils.get2PrecisionFloat(result);
     }
+
+    public static float convertWeight(String oldUnit, String newUnit, float value){
+        float value4Kg = getDefaultUnitWeight(value + "", oldUnit);
+        return convertKg2Other(value4Kg + "", newUnit);
+    }
+
+
 
     /**
      * 将文件数值（默认摄氏度）转换成当前温度设置
@@ -116,9 +123,8 @@ public class ConvertUtils {
      * @param value
      * @return
      */
-    public static float getReversed2DefaultWeight(String value){
-        String curUnit = MyApplication.weightUnit;
-        Log.d("GG", "getReversed2DefaultWeight: 当前的重量单位为" + value);
+    public static float getDefaultUnitWeight(String value, String curUnit){
+        Log.d("GG", "getDefaultUnitWeight: 当前的重量单位为" + value);
         float result = Float.parseFloat(value);
         if ("g".equals(curUnit)) {
             return Utils.get2PrecisionFloat(result / 1000);

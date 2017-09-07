@@ -2,6 +2,7 @@ package com.dhy.coffeesecret.model.report_edit;
 
 import android.util.Log;
 
+import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.model.BaseBlePresenter;
 import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.pojo.BakeReportProxy;
@@ -116,7 +117,7 @@ public class Presenter4Editor extends BaseBlePresenter<IEditView, Model4Editor> 
             localProxy = mModelOperator.getCurBakingReport();
         }
         if (!"".equals(weight) && weight != null) {
-            float defaultWeight = ConvertUtils.getReversed2DefaultWeight(Float.parseFloat(weight) + "");
+            float defaultWeight = ConvertUtils.getDefaultUnitWeight(Float.parseFloat(weight) + "", MyApplication.weightUnit);
             // 填写的熟豆重量大于生豆重量时进行提示
             if (defaultWeight > localProxy.getRawBeanWeight()) {
                 super.mViewOperator.showToast(INVALIDATE_COOKED_WEIGHT, "填写不大于生豆重量的数值...");

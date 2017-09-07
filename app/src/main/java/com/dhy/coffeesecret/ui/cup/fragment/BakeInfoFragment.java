@@ -179,7 +179,7 @@ public class BakeInfoFragment extends Fragment implements View.OnClickListener {
                 TextView tv_process = (TextView) inflate.findViewById(R.id.tv_process);
 
                 tv_name.setText(simple.getBeanName());
-                tv_use.setText(ConvertUtils.getCrspWeightValue(simple.getUsage()) + MyApplication.weightUnit);
+                tv_use.setText(ConvertUtils.convertKg2Other(simple.getUsage(), MyApplication.weightUnit) + MyApplication.weightUnit);
                 tv_country.setText(simple.getCountry());
                 tv_manor.setText(simple.getManor());
                 tv_altitude.setText(simple.getAltitude());

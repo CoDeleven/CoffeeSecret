@@ -280,7 +280,7 @@ public class EditBehindActivity extends AppCompatActivity implements CircleSeekB
                 return false;
             }
         });
-        cookedWeight.setHint("当前生豆为" + proxy.getRawBeanWeight() + MyApplication.weightUnit);
+        cookedWeight.setHint("当前生豆为" + ConvertUtils.convertKg2Other(proxy.getRawBeanWeight() + "", mPresenter.getAppWeightUnit()) + mPresenter.getAppWeightUnit());
         if (mEditorMode == MODE_EDITOR) {
             reportDelete.setVisibility(View.VISIBLE);
             cookedWeight.setText(proxy.getBakeReport().getCookedBeanWeight());
@@ -483,7 +483,7 @@ public class EditBehindActivity extends AppCompatActivity implements CircleSeekB
             params = new LinearLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT);
             params.gravity = Gravity.CENTER_VERTICAL;
             // 设置已添加豆子的重量
-            editText.setHint(ConvertUtils.getCrspWeightValue(temp.getUsage()) + mPresenter.getAppWeightUnit());
+            editText.setHint(ConvertUtils.convertKg2Other(temp.getUsage(), mPresenter.getAppWeightUnit()) + mPresenter.getAppWeightUnit());
             // 设置不允许进行修改
             editText.setEnabled(false);
             params.leftMargin = Util.dpToPx(12, getResources());

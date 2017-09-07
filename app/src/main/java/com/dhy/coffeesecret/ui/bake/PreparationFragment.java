@@ -34,6 +34,7 @@ import com.dhy.coffeesecret.services.NewBleService;
 import com.dhy.coffeesecret.services.interfaces.IBluetoothOperator;
 import com.dhy.coffeesecret.ui.MainActivity;
 import com.dhy.coffeesecret.ui.bake.fragments.BakeDialog;
+import com.dhy.coffeesecret.ui.common.interfaces.OnWeightUnitChangedListener;
 import com.dhy.coffeesecret.ui.common.views.ArcProgress;
 import com.dhy.coffeesecret.ui.mine.BluetoothListActivity;
 import com.dhy.coffeesecret.utils.ConvertUtils;
@@ -55,7 +56,7 @@ import static com.dhy.coffeesecret.model.UniExtraKey.EXTRA_BAKE_REPORT_LIST;
 
 // TODO 待重构,重构对象-> 统一符号处理、统一handler处理、统一dialog的生成方式
 
-public class PreparationFragment extends Fragment implements IDeviceView {
+public class PreparationFragment extends Fragment implements IDeviceView, OnWeightUnitChangedListener {
     public static final int AUTO_CONNECTION_TIPS = 0x100;
     public static final int UPDATE_TEMPERATURE_TEXT = 0x111;
     public static final int FINISH_DEVICE_FRAGMENT_TASK = 0x123;
@@ -250,7 +251,7 @@ public class PreparationFragment extends Fragment implements IDeviceView {
             NLogger.i(TAG, "OnCreate():首次连接，创建Presenter4DeviceFragment...");
             mPresenter = Presenter4Device.newInstance(new NewBleService(getContext()));
         }
-
+        ((MyApplication)getContext().getApplicationContext()).addOnWeightUnitChangedListener(this);
     }
 
     @Override
@@ -274,9 +275,8 @@ public class PreparationFragment extends Fragment implements IDeviceView {
             NLogger.i(TAG, "OnStart():正常安装Presenter...");
             ((MainActivity) getActivity()).revertBakingTab();
             if(mPresenter.getCurBakingReport() == null){
-                mBtModifyBeanInfo.setVisibility(View.VISIBLE);
+                // mBtModifyBeanInfo.setVisibility(View.VISIBLE);
             }
-
             setupPresenter();
         }
     }
@@ -401,5 +401,15 @@ public class PreparationFragment extends Fragment implements IDeviceView {
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
+        ((MyApplication)(getContext().getApplicationContext())).removeListener(this);
+    }
+
+    @Override
+    public void onWeightUnitChanged(String oldUnit, String newUnit) {
+        List<BeanInfoSimple> info = mPresenter.getTemporaryBeanInfo();
+        for (BeanInfoSimple simple : info) {
+            simple.setUsage(ConvertUtils.convertWeight(oldUnit, newUnit, Float.parseFloat(simple.getUsage())) + "");
+        }
+        showSimpleBeanInfo2Fragment();
     }
 }

@@ -11,12 +11,16 @@ import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.pojo.BakeReportProxy;
 import com.dhy.coffeesecret.pojo.UniversalConfiguration;
 import com.dhy.coffeesecret.services.BluetoothService;
+import com.dhy.coffeesecret.ui.common.interfaces.OnWeightUnitChangedListener;
 import com.dhy.coffeesecret.utils.SPPrivateUtils;
 import com.dhy.coffeesecret.utils.SettingTool;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.qiniu.pili.droid.streaming.StreamingEnv;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import cn.jesse.nativelogger.Logger;
 import cn.jesse.nativelogger.NLogger;
@@ -36,6 +40,20 @@ public class MyApplication extends Application {
     private static SQLiteDatabase country2Continent;
     private String token;
     private String user;
+    private Set<OnWeightUnitChangedListener> weightUnitListeners = new HashSet<>();
+
+    public void addOnWeightUnitChangedListener(OnWeightUnitChangedListener listener){
+        weightUnitListeners.add(listener);
+    }
+
+    public Set<OnWeightUnitChangedListener> getOnWeightUniChangedListener(){
+        return weightUnitListeners;
+    }
+
+
+    public void removeListener(Object removedTarget){
+        weightUnitListeners.remove(removedTarget);
+    }
 
     public MyApplication() {
         super();

@@ -3,6 +3,7 @@ package com.dhy.coffeesecret.model.device;
 import android.util.Log;
 
 import com.clj.fastble.data.ScanResult;
+import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.model.BaseBlePresenter;
 import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.pojo.BakeReportProxy;
@@ -111,7 +112,7 @@ public class Presenter4Device extends BaseBlePresenter<IDeviceView, Model4Device
             temporaryBeanInfo.add(simpleBean);
         }
 
-        proxy.setBeanInfoSimples(temporaryBeanInfo);
+
 
         // 对于只有一个豆种的情况进行id特殊处理
         if (temporaryBeanInfo.size() == 1) {
@@ -119,8 +120,10 @@ public class Presenter4Device extends BaseBlePresenter<IDeviceView, Model4Device
         }
         // 转换为统一单位kg
         for (BeanInfoSimple simple : temporaryBeanInfo) {
-            simple.setUsage(ConvertUtils.getReversed2DefaultWeight(simple.getUsage()) + "");
+            simple.setUsage(ConvertUtils.getDefaultUnitWeight(simple.getUsage(), MyApplication.weightUnit) + "");
         }
+        // 务必在转换为统一单位后进行调用
+        proxy.setBeanInfoSimples(temporaryBeanInfo);
         // 设置设备名
         proxy.setDevice(mBluetoothOperator.getConnectedDevice().getName());
         // 启动BakeActivity
