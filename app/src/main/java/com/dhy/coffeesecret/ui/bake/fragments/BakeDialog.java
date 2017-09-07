@@ -64,6 +64,8 @@ public class BakeDialog extends DialogFragment implements BeanSelectAdapter.MyBu
     RecyclerView mListView;
     @Bind(R.id.id_bake_dialog_add)
     Button mAdd;
+    @Bind(R.id.id_refer_line_descriptor)
+    TextView mReferDescriptor;
     private OnBeaninfosConfirmListener beaninfosConfirmListener;
     private BakeReport referTempratures;
     private String unit;
@@ -192,6 +194,7 @@ public class BakeDialog extends DialogFragment implements BeanSelectAdapter.MyBu
             }
             if (bakeReport != null) {
                 referTempratures = bakeReport;
+                mReferDescriptor.setText("当前选择的曲线:" + bakeReport.getSingleBeanName());
             }
              mListView.getAdapter().notifyDataSetChanged();
         }
@@ -205,7 +208,6 @@ public class BakeDialog extends DialogFragment implements BeanSelectAdapter.MyBu
                 //TODO 完成历史参考曲线
                 intent = new Intent(getContext(), ReferReportFromHistoryActivity.class);
                 // intent.putExtra(LINE_PARAMETER_KEY, SET_BAKE_REPORT);
-
                 startActivityForResult(intent, GET_HISTORY);
                 break;
             case R.id.id_bake_dialog_refer_collection:

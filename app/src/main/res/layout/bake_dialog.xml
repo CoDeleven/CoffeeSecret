@@ -102,13 +102,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone">
-
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="#DBDCD8"></View>
 
+            <TextView
+                android:id="@+id/id_refer_line_descriptor"
+                android:paddingTop="12dp"
+                android:layout_marginBottom="4dp"
+                android:layout_centerHorizontal="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="当前选择的曲线:"/>
+
             <LinearLayout
+                android:paddingTop="32dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
