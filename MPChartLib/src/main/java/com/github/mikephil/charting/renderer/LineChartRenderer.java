@@ -176,7 +176,7 @@ public class LineChartRenderer extends LineRadarRenderer {
         if(dataSet.getLabel().equals("")){
             mRenderPaint.setStrokeWidth(1f);
         }else{
-            mRenderPaint.setStrokeWidth(2f);
+            mRenderPaint.setStrokeWidth(3f);
         }
         trans.pathValueToPixel(cubicPath);
 
