@@ -59,11 +59,11 @@ public abstract class LineSelectedActivity extends AppCompatActivity implements
         ButterKnife.bind(this);
         application = (MyApplication) getApplication();
         init();
-        initTitle();
+        initTitle(toolbarTitle);
         mHandler.sendEmptyMessage(DefaultViewHandler.GET_DATA);
     }
 
-    protected void initTitle(){
+    protected void initTitle(TextView title){
     }
 
 

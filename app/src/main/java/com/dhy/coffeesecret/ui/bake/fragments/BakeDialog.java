@@ -203,14 +203,14 @@ public class BakeDialog extends DialogFragment implements BeanSelectAdapter.MyBu
         switch (view.getId()) {
             case R.id.id_bake_dialog_refer_history:
                 //TODO 完成历史参考曲线
-                intent = new Intent(getContext(), ReferReportSelectedActivity.class);
+                intent = new Intent(getContext(), ReferReportFromHistoryActivity.class);
                 // intent.putExtra(LINE_PARAMETER_KEY, SET_BAKE_REPORT);
 
                 startActivityForResult(intent, GET_HISTORY);
                 break;
             case R.id.id_bake_dialog_refer_collection:
                 //TODO 完成收藏参考曲线
-                intent = new Intent(getContext(), ReferReportSelectedActivity.class);
+                intent = new Intent(getContext(), ReferReportFromCollectionActivity.class);
                 // intent.putExtra(LINE_PARAMETER_KEY, SET_BAKE_REPORT);
                 startActivityForResult(intent, GET_COLLECTION);
         }

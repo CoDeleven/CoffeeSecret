@@ -10,7 +10,7 @@ import com.dhy.coffeesecret.ui.mine.HistoryReportEntranceActivity;
  * Created by CoDeleven on 17-8-26.
  */
 
-public class ReferReportSelectedActivity extends HistoryReportEntranceActivity {
+public class ReferReportFromHistoryActivity extends HistoryReportEntranceActivity {
 
     @Override
     public void onItemClick(Parcelable parcelable) {
@@ -25,4 +25,5 @@ public class ReferReportSelectedActivity extends HistoryReportEntranceActivity {
         removeSearchFragment();
         finish();
     }
+
 }

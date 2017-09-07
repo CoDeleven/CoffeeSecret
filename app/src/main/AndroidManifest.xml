@@ -98,7 +98,12 @@
         <activity
             android:name=".ui.community.live.player.LiveListActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".ui.bake.fragments.ReferReportSelectedActivity"
+        <activity android:name=".ui.bake.fragments.ReferReportFromHistoryActivity"
+                  android:screenOrientation="portrait">
+
+        </activity>
+
+        <activity android:name=".ui.bake.fragments.ReferReportFromCollectionActivity"
                   android:screenOrientation="portrait">
 
         </activity>
