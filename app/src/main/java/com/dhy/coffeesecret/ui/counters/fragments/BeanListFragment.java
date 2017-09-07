@@ -245,7 +245,7 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
 
     private void getBeanInfos() {
 
-        Log.i(TAG, "------------------开始加载豆种信息------------------");
+        NLogger.d(TAG, "------------------开始加载豆种信息------------------");
         mHandler.sendEmptyMessage(LOADING);
 
         Gson gson = new Gson();
@@ -253,12 +253,12 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
         try {
             MyApplication application = (MyApplication) getActivity().getApplication();
             beanInfoListJson = HttpUtils.getStringFromServer(UrlBean.getAll(application.getToken()));
+            NLogger.d(TAG, "BeanInfoList->" + beanInfoListJson);
         } catch (IOException e) {
             e.printStackTrace();
             mHandler.sendEmptyMessage(TOAST_3);
         }
-        NLogger.i(TAG, "BeanInfoList->" + beanInfoListJson);
-        String[] beanLists = null;
+
         // beanInfoListJson = TestData.beaninfos;
         ArrayList<BeanInfo> beanInfoss = null;
         try {
@@ -266,8 +266,8 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
             }.getType());
         } catch (Exception e) {
             e.printStackTrace();
-            Log.i(TAG, "beanInfoListJson" + beanInfoListJson);
-            Log.i(TAG, "getBeanInfos: " + beanInfoss);
+            NLogger.d(TAG, "beanInfoListJson" + beanInfoListJson);
+            NLogger.d(TAG, "getBeanInfos: " + beanInfoss);
         }
 
         if (beanInfoss == null) {
@@ -292,8 +292,8 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
             coffeeBeanInfos.clear();
             coffeeBeanInfos.addAll(coffeeBeanInfoTemp);
         }
-        NLogger.i(TAG, "------------------title:" + title + "豆种信息加载结束------------------");
-        NLogger.i(TAG, title + "->当前coffeeBeanInfoTemp.size():" + coffeeBeanInfoTemp.size());
+        NLogger.d(TAG, "------------------title:" + title + "豆种信息加载结束------------------");
+        NLogger.d(TAG, title + "->当前coffeeBeanInfoTemp.size():" + coffeeBeanInfoTemp.size());
         mHandler.sendEmptyMessage(NO_LOADING);
         mHandler.sendEmptyMessage(START_SCREEN);
     }

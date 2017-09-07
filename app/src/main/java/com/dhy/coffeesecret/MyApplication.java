@@ -44,6 +44,7 @@ public class MyApplication extends Application {
         if(token == null){
             token = SPPrivateUtils.getString(this,"token",null);
         }
+        NLogger.i(TAG, "token:" + token);
         return token;
     }
 

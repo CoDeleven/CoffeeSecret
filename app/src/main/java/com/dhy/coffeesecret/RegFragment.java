@@ -6,10 +6,10 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -45,7 +45,6 @@ public class RegFragment extends Fragment implements View.OnClickListener, TextW
     private EditText mEditTextPw;
     private EditText mEditTextPwSec;
     private View mButton;
-
     private OnSuccessListener mOnSuccessListener;
     private ProgressDialog mProgressDialog;
     private Handler mHandler = new Handler() {
@@ -92,7 +91,6 @@ public class RegFragment extends Fragment implements View.OnClickListener, TextW
         mEditTextPw = (EditText) mContentView.findViewById(R.id.et_pw);
         mEditTextPwSec = (EditText) mContentView.findViewById(R.id.et_pw_sec);
         mEditTextTel = (EditText) mContentView.findViewById(R.id.et_tel);
-
         mEditTextTel.addTextChangedListener(this);
         mEditTextPw.addTextChangedListener(this);
         mEditTextPwSec.addTextChangedListener(this);
@@ -222,9 +220,14 @@ public class RegFragment extends Fragment implements View.OnClickListener, TextW
     }
 
     private void remove() {
-        SystemClock.sleep(500);
+/*        SystemClock.sleep(500);
         getFragmentManager()
-                .popBackStack(getClass().getSimpleName(), 1);
+                .popBackStack(getClass().getSimpleName(), 1);*/
+        FragmentTransaction tx = getFragmentManager().beginTransaction();
+        tx.setCustomAnimations(R.anim.in_from_left, R.anim.out_to_right);
+        tx.remove(RegFragment.this);
+
+        tx.commit();
     }
 
     @Override

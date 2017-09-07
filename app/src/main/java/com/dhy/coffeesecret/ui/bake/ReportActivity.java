@@ -209,7 +209,6 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
 
         // 检测是否存在该参数
         BakeReport mLocalBakeReport = getIntent().getParcelableExtra(UniExtraKey.EXTRA_BAKE_REPORT.getKey());
-        Log.d(TAG, mLocalBakeReport.toString());
         mPresenter.setLocalBakeReport(mLocalBakeReport);
 
         mPresenter.initViewWithProxy();

@@ -53,7 +53,7 @@ public class QRCodeActivity extends AppCompatActivity implements QRCodeView.Dele
                 try {
                     String response = HttpUtils.getStringFromServer(UrlBake.scanSuccess(token, result));
                     Log.d("QRCodeActivity", response);
-                    if(!"warn".equals(response)){
+                    if(!"null".equals(response)){
                         final BakeReport report = new Gson().fromJson(response, BakeReport.class);
                         runOnUiThread(new Runnable() {
                             @Override
