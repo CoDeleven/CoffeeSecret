@@ -7,4 +7,6 @@ import com.dhy.coffeesecret.model.base.IBaseView;
  */
 
 public interface IBakeView extends IBaseView{
+    void skipDry();
+    void skipFirstBurst();
 }

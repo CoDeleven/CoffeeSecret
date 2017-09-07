@@ -69,6 +69,27 @@ import static com.github.mikephil.charting.data.Event.SECOND_BURST_END;
 
 public class BakeActivity extends AppCompatActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener,
         Other.OnOtherAddListener, FireWindDialog.OnFireWindAddListener, IBakeView {
+    @Override
+    public void skipDry() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                switchBtnStatus(Event.DRY);
+            }
+        });
+    }
+
+    @Override
+    public void skipFirstBurst() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                switchBtnStatus(Event.FIRST_BURST);
+                switchBtnStatus(Event.FIRST_BURST_END);
+            }
+        });
+    }
+
     public static final String ENABLE_REFERLINE = "com.dhy.coffeesercret.ui.bake.BakeActivity.REFER_LINE";
     public static final int UPDATE_TEMPERATURE_TEXT = 0x123, UPDATE_TIME_TEXT = 0x112;
     private static final String TAG = BakeActivity.class.getSimpleName();
@@ -506,6 +527,8 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
                     switchBtnStatus(Event.FIRST_BURST);
                     // 准备记录一爆开始到结束的记录
                     mPresenter.startNewRecordEvent();
+                    // 跳过first_burst之前的步骤
+                    mPresenter.skipSomeStage(FIRST_BURST);
                 }
                 break;
             case R.id.id_baking_secondBurst:
@@ -517,6 +540,8 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
                     mPresenter.updateBeanEntryEvent(SECOND_BURST, "二爆");
                     // 切换状态为 二爆结束 状态
                     switchBtnStatus(SECOND_BURST);
+                    // 跳过second_burst之前的步骤
+                    mPresenter.skipSomeStage(SECOND_BURST);
                 }
                 break;
             case R.id.id_baking_end:

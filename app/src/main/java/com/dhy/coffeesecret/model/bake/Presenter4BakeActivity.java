@@ -33,6 +33,7 @@ import static com.dhy.coffeesecret.model.chart.Model4Chart.INWINDLINE;
 import static com.dhy.coffeesecret.model.chart.Model4Chart.OUTWINDLINE;
 import static com.dhy.coffeesecret.ui.common.views.DevelopBar.AFTER160;
 import static com.dhy.coffeesecret.ui.common.views.DevelopBar.RAW_BEAN;
+import static com.github.mikephil.charting.data.Event.SECOND_BURST;
 
 /**
  * Created by CoDeleven on 17-8-2.
@@ -62,6 +63,22 @@ public class Presenter4BakeActivity extends BaseBlePresenter<IBakeView, Model4Ba
     private Presenter4BakeActivity() {
         super(Model4Bake.newInstance());
         NLogger.i(TAG, "当前使用的烘焙报告：" + mModelOperator.getCurBakingReport());
+    }
+
+    public void skipSomeStage(int curStatus){
+        switch (curStatus){
+            case Event.SECOND_BURST:
+                mViewOperator.skipFirstBurst();
+                if(!enabledFirstBurst){
+                    updateDevelopStatus(DevelopBar.FIRST_BURST);
+                    // 没有进行点数据的保存
+                    // 这里本来就属于二爆的，不能一爆二爆一起记录把
+                    enabledFirstBurst = true;
+                }
+            case Event.FIRST_BURST:
+                mViewOperator.skipDry();
+                break;
+        }
     }
 
     /**
@@ -214,7 +231,7 @@ public class Presenter4BakeActivity extends BaseBlePresenter<IBakeView, Model4Ba
     private void recordMiddleBtnStatus(int btnStatus) {
         if (btnStatus == Event.FIRST_BURST) {
             enabledFirstBurst = true;
-        } else if (btnStatus == Event.SECOND_BURST) {
+        } else if (btnStatus == SECOND_BURST) {
             enabledSecondBurst = true;
         }
     }
