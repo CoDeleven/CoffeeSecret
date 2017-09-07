@@ -251,8 +251,15 @@ public class CuppingInfoFragment extends Fragment implements InputDialogFragment
 
     @Override
     public void onValueChange(int position, float value) {
+        
         if (position < 8) {
-            mFeelAdapter.setScore(position, value);
+            if(position == 0 || position == 1){
+                mFeelAdapter.setScore(position, value / 2);
+            } else if(position == 3 || position == 4 || position == 5){
+                mFeelAdapter.setScore(position, value * 2);
+            }else{
+                mFeelAdapter.setScore(position, value);
+            }
         } else {
             mFlawAdapter.setScore(position - 8, value);
         }
@@ -275,13 +282,7 @@ public class CuppingInfoFragment extends Fragment implements InputDialogFragment
         }
 
         public void setScore(int index, float value) {
-            if(index == 0 || index == 1){
-                date.put(titles[index], value / 2);
-            }
-            if(index == 3 || index == 4 || index == 5){
-                date.put(titles[index], value * 2);
-            }
-
+            date.put(titles[index], value);
             notifyDataSetChanged();
         }
 
