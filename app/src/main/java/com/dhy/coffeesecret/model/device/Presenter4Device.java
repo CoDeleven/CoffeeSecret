@@ -26,6 +26,7 @@ public class Presenter4Device extends BaseBlePresenter<IDeviceView, Model4Device
     private static final String TAG = Presenter4Device.class.getSimpleName();
     private static Presenter4Device mSelf;
     private boolean isStart = false;
+    private boolean isBeanAdded = false;
     private List<BeanInfoSimple> temporaryBeanInfo = new ArrayList<>();
     private BakeReport temporaryReferTemperatures;
     private Presenter4Device() {
@@ -82,6 +83,14 @@ public class Presenter4Device extends BaseBlePresenter<IDeviceView, Model4Device
             // 停止扫描
             BaseBlePresenter.mBluetoothOperator.stopScanDevice();
         }
+    }
+
+    public boolean isBeanAdded() {
+        return isBeanAdded;
+    }
+
+    public void setBeanAdded(boolean beanAdded) {
+        isBeanAdded = beanAdded;
     }
 
     public boolean isConnected() {
@@ -141,5 +150,7 @@ public class Presenter4Device extends BaseBlePresenter<IDeviceView, Model4Device
         temporaryReferTemperatures = null;
         resetBluetoothListener();
         mViewOperator.updateText(PreparationFragment.FINISH_DEVICE_FRAGMENT_TASK, "");
+        // 清除bean
+        isBeanAdded = false;
     }
 }

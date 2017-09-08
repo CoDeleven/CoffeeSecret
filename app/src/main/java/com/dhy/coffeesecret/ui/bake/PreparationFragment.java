@@ -274,8 +274,8 @@ public class PreparationFragment extends Fragment implements IDeviceView, OnWeig
         } else {
             NLogger.i(TAG, "OnStart():正常安装Presenter...");
             ((MainActivity) getActivity()).revertBakingTab();
-            if(mPresenter.getCurBakingReport() == null){
-                // mBtModifyBeanInfo.setVisibility(View.VISIBLE);
+            if(!mPresenter.isBeanAdded()){
+                mBtModifyBeanInfo.setVisibility(View.VISIBLE);
             }
             setupPresenter();
         }
@@ -327,6 +327,7 @@ public class PreparationFragment extends Fragment implements IDeviceView, OnWeig
             public void setBeanInfos(List<BeanInfoSimple> beanInfos) {
                 // PreparationFragment.this.beanInfos = beanInfos;
                 mPresenter.setTemporaryBeanInfo(beanInfos);
+                mPresenter.setBeanAdded(true);
                 // 隐藏ModifyBeanInfo的按钮
                 mBtModifyBeanInfo.setVisibility(View.GONE);
                 // 显示豆种信息列表
