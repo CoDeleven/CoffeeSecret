@@ -45,6 +45,7 @@ public class BaseChart4Coffee extends LineChart implements IChartView {
     // 剩余留白长度, 用于缩小x轴的触发条件
     private static final int REMAINDER_SPACE_LEN = 10;
     private static Map<Integer, String> labels = new HashMap<>();
+
     static {
         labels.put(Model4Chart.BEANLINE, "豆温");
         labels.put(Model4Chart.ACCBEANLINE, "豆升温");
@@ -85,12 +86,15 @@ public class BaseChart4Coffee extends LineChart implements IChartView {
 
 
     }
+
     public BaseChart4Coffee(Context context) {
         this(context, null);
     }
+
     public BaseChart4Coffee(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
+
     public BaseChart4Coffee(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         mConfig = SettingTool.getConfig();
@@ -110,7 +114,7 @@ public class BaseChart4Coffee extends LineChart implements IChartView {
 
         // 在一定缩放比例下，如果曲线填满了视图，这里选择不跳转
         // 即将视图拉回去看细节的情况下
-        if(newEntryX > viewportOffset){
+        if (newEntryX > viewportOffset) {
             return;
         }
 
@@ -202,9 +206,10 @@ public class BaseChart4Coffee extends LineChart implements IChartView {
 
     /**
      * 添加一个曲线到图表内
+     *
      * @param set
      */
-    private void addLine2Chart(LineDataSet set){
+    private void addLine2Chart(LineDataSet set) {
         // setData(new LineData(new ArrayList<>(lines.values())));
         // 获取图表的数据 DataLine
         LineData selfDataLine = getData();
@@ -215,6 +220,7 @@ public class BaseChart4Coffee extends LineChart implements IChartView {
         }
         selfDataLine.addDataSet(set);
     }
+
     @Override
     public void updateText(int index, Object updateContent) {
 

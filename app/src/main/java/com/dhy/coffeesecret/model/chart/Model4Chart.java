@@ -24,7 +24,10 @@ public class Model4Chart extends BaseModel implements IChartModel {
     public final static int OUTWINDLINE = 3;
     public final static int ACCOUTWINDLINE = 6;
     public final static int REFERLINE = 7;
-    private static final int MAX_QUEUE_SIZE = 10;
+    private static final int DEFAULT_QUEUE_SIZE = 10;
+    private static final int DEFAULT_ACC_QUEUE_SIZE = 5;
+    private int queueSize = -1;
+    private int accQueueSize = -1;
     private Map<Integer, LinkedList<WeightedObservedPoint>> weightedObservedPointsMap = new HashMap<>();
     private Map<Integer, PolynomialCurveFitter> fitters = new HashMap<>();
 
@@ -45,8 +48,8 @@ public class Model4Chart extends BaseModel implements IChartModel {
 
     public double getMockData(Entry nextData, int lineIndex) {
         Queue<WeightedObservedPoint> queue = weightedObservedPointsMap.get(new Integer(lineIndex));
-        // 维持queue为 MAX_QUEUE_SIZE 的大小
-        if (queue.size() >= MAX_QUEUE_SIZE) {
+        // 维持queue为 DEFAULT_QUEUE_SIZE 的大小
+        if (queue.size() >= (queueSize == -1 ? DEFAULT_QUEUE_SIZE :queueSize)) {
             queue.poll();
         }
         queue.offer(new WeightedObservedPoint(1d, nextData.getX(), nextData.getY()));
@@ -55,4 +58,20 @@ public class Model4Chart extends BaseModel implements IChartModel {
         return new PolynomialFunction(params).value(nextData.getX());
     }
 
+    public double getMockAccData(Entry nextData, int lineIndex){
+        LinkedList<WeightedObservedPoint> queue = weightedObservedPointsMap.get(new Integer(lineIndex));
+        int curQueueSize = (accQueueSize == -1 ? DEFAULT_ACC_QUEUE_SIZE:accQueueSize);
+        if (queue.size() >= curQueueSize) {
+            queue.poll();
+        }
+        queue.offer(new WeightedObservedPoint(1d, nextData.getX(), nextData.getY()));
+        // 默认获取第一个数据的y
+        double result = queue.getLast().getY();
+        // 如果队列长度等于5，那么将第五个减去第一个并乘上 60s / 间隔
+        if(queue.size() == 5){
+            result = (result - queue.getFirst().getY()) * (60 / curQueueSize);
+        }
+
+        return result;
+    }
 }

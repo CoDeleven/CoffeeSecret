@@ -1,6 +1,7 @@
 package com.dhy.coffeesecret.model.chart;
 
 import com.dhy.coffeesecret.model.base.BasePresenter;
+import com.dhy.coffeesecret.utils.SettingTool;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
@@ -12,6 +13,7 @@ import java.util.Map;
 
 /**
  * Created by CoDeleven on 17-8-14.
+ *
  */
 
 public class Presenter4Chart extends BasePresenter<IChartView, Model4Chart>{
@@ -42,7 +44,7 @@ public class Presenter4Chart extends BasePresenter<IChartView, Model4Chart>{
     }
 
     public Presenter4Chart(){
-        super(new Model4Chart(4, 4));
+        super(new Model4Chart(SettingTool.getConfig().getTempratureSmooth(), SettingTool.getConfig().getTempratureAccSmooth()));
         // FIXME 手动设置 -> 读取配置文件
     }
 
@@ -94,7 +96,12 @@ public class Presenter4Chart extends BasePresenter<IChartView, Model4Chart>{
      * @param lineIndex
      */
     public void dynamicAddDataImm(Entry immData, int lineIndex, boolean toRefresh) {
-        double mockTemperature = mModelOperator.getMockData(immData, lineIndex);
+        double mockTemperature;
+        if(lineIndex < 4){
+             mockTemperature = mModelOperator.getMockData(immData, lineIndex);
+        }else{
+            mockTemperature = mModelOperator.getMockAccData(immData, lineIndex);
+        }
         immData.setY((float) mockTemperature);
         // 设置新的Entry去line里面
         lines.get(new Integer(lineIndex)).addEntry(immData);
