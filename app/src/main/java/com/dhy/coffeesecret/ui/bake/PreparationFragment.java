@@ -2,13 +2,10 @@ package com.dhy.coffeesecret.ui.bake;
 
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothProfile;
-import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.IBinder;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -29,9 +26,7 @@ import com.dhy.coffeesecret.model.device.Presenter4Device;
 import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.pojo.BeanInfoSimple;
 import com.dhy.coffeesecret.pojo.Temperature;
-import com.dhy.coffeesecret.services.BluetoothService;
 import com.dhy.coffeesecret.services.NewBleService;
-import com.dhy.coffeesecret.services.interfaces.IBluetoothOperator;
 import com.dhy.coffeesecret.ui.MainActivity;
 import com.dhy.coffeesecret.ui.bake.fragments.BakeDialog;
 import com.dhy.coffeesecret.ui.common.interfaces.OnWeightUnitChangedListener;
@@ -193,7 +188,7 @@ public class PreparationFragment extends Fragment implements IDeviceView, OnWeig
             return false;
         }
     });
-    private ServiceConnection conn = new ServiceConnection() {
+/*    private ServiceConnection conn = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             // 获取蓝牙服务
@@ -213,7 +208,7 @@ public class PreparationFragment extends Fragment implements IDeviceView, OnWeig
         public void onServiceDisconnected(ComponentName name) {
 
         }
-    };
+    };*/
 
     /**
      * 用于更新温度显示

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -30,7 +31,7 @@ import butterknife.OnClick;
 public class BluetoothListActivity extends AppCompatActivity implements BluetoothListAdapter.OnItemClickListener,
         CompoundButton.OnCheckedChangeListener, BluetoothService.ViewControllerListener, SwipeRefreshLayout.OnRefreshListener,
         IScanListView {
-    public static final int DEVICE_CONNECTED = 2, CANCEL_REFRESH = -1, REFRESH = 0x77;
+    public static final int CANCEL_REFRESH = -1, REFRESH = 0x77, AUTO_RECONNECT = 0x898, CANCEL_SHOW_DIALOG = 0x171;
     private static final String TAG = BluetoothListActivity.class.getSimpleName();
     @Bind(R.id.srl)
     SwipeRefreshLayout refreshLayout;
@@ -48,6 +49,7 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
     private ProgressBar progressCircle = null;
     private BluetoothListAdapter mAdapter;
     private Presenter4ScanList mPresenter;
+    private AlertDialog mCurShowDialog;
     private Handler toastHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -100,13 +102,33 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
                         mCurConnectingView.setEnabled(true);
                     }
                     break;
+                case BluetoothProfile.GATT_SERVER:
+
             }
         }
     };
+    private Handler mDialogHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what){
+                case AUTO_RECONNECT:
+                    AlertDialog.Builder builder = new AlertDialog.Builder(BluetoothListActivity.this)
+                            .setMessage("连接遇到了错误...正在重连 0/5")
+                            .setTitle("错误o(TヘTo)")
+                            .setCancelable(false);
+                    mCurShowDialog = builder.create();
+                    mCurShowDialog.show();
+                    break;
+                case CANCEL_SHOW_DIALOG:
+                    mCurShowDialog.cancel();
+                    break;
+            }
 
+        }
+    };
     @Override
     public void showWarnDialog(int index) {
-
+        mDialogHandler.sendEmptyMessage(index);
     }
 
     /**

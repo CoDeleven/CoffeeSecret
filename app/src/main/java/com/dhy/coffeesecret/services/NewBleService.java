@@ -21,8 +21,6 @@ import com.dhy.coffeesecret.services.interfaces.IBleScanCallback;
 import com.dhy.coffeesecret.services.interfaces.IBluetoothOperator;
 import com.dhy.coffeesecret.utils.ConvertUtils;
 
-import java.util.concurrent.locks.ReentrantLock;
-
 import cn.jesse.nativelogger.NLogger;
 
 import static com.dhy.coffeesecret.services.BluetoothService.PRIMARY_SERVICE;
@@ -34,7 +32,6 @@ import static com.dhy.coffeesecret.services.BluetoothService.TAG_WRITE;
  */
 
 public class NewBleService implements IBluetoothOperator, DataDigger4Ble.IBleWROperator, TransferControllerTask.IConnEmergencyListener {
-    private ReentrantLock lock = new ReentrantLock();
     private static final String TAG = NewBleService.class.getSimpleName();
     private Context context;
     private volatile IBleScanCallback mScanCallback;
@@ -49,6 +46,7 @@ public class NewBleService implements IBluetoothOperator, DataDigger4Ble.IBleWRO
     private String mLastConnectedDevice;
     // 这里自己加这个字段，因为框架的有问题
     private boolean isConnected;
+    private ScanResult expectedConnectDevice;
     // 自行检测的是否断开连接
     // private boolean mSelfDetectedDisconned = false;
     private BleGattCallback mGattCallback4Conn = new BleGattCallback() {
@@ -92,23 +90,24 @@ public class NewBleService implements IBluetoothOperator, DataDigger4Ble.IBleWRO
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
             NLogger.i(TAG, "BleGattCallback::onServicesDiscovered():发现服务...");
             if (status == 129) {
-                String targetDeviceMac = gatt.getDevice().getAddress();
+                // String targetDeviceMac = gatt.getDevice().getAddress();
                 // 如果遇到129状态，那么一直重连，直到成功
                 mBleOperator.closeBluetoothGatt();
-                // T.showShort(context, "服务状态129，重连...");
                 NLogger.e(TAG, "BleGattCallback::onServicesDiscovered():服务状态129，正在重连...");
-                connect(targetDeviceMac);
+                connect(expectedConnectDevice);
                 return;
             }
             NLogger.i(TAG, "BleGattCallback::onServicesDiscovered():服务状态正常...");
+            // 设置发现服务
+            mConnStatusCallback.discoveryServices(status);
             enableListener();
         }
 
         @Override
         public void onConnecting(BluetoothGatt gatt, int status) {
-            if(mConnStatusCallback != null){
+/*            if(mConnStatusCallback != null){
                 mConnStatusCallback.toConnecting();
-            }
+            }*/
         }
 
         @Override
@@ -202,6 +201,8 @@ public class NewBleService implements IBluetoothOperator, DataDigger4Ble.IBleWRO
     @Override
     public boolean connect(ScanResult device) {
         NLogger.i(TAG, "connect():开始连接设备：" + device.getDevice().getName());
+        // 设置期望连接的设备，用于遇到129状态时的解决方案
+        expectedConnectDevice = device;
         mBleOperator.connectDevice(device, false, mGattCallback4Conn);
         return false;
     }

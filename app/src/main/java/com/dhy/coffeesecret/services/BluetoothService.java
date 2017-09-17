@@ -33,7 +33,6 @@ import java.util.UUID;
 import static android.bluetooth.BluetoothProfile.STATE_CONNECTED;
 import static android.bluetooth.BluetoothProfile.STATE_CONNECTING;
 import static android.bluetooth.BluetoothProfile.STATE_DISCONNECTED;
-import static android.bluetooth.BluetoothProfile.STATE_DISCONNECTING;
 import static com.dhy.coffeesecret.utils.ConvertUtils.hexString2String;
 
 //                            _ooOoo_
@@ -187,13 +186,6 @@ public class BluetoothService extends Service implements IBluetoothOperator {
             }
             if (newState == BluetoothProfile.STATE_CONNECTING) {
                 mConnectionListener.toConnected();
-            } else if (newState == STATE_DISCONNECTING) {
-/*                if (mRunThread != null) {
-                    mRunThread.clearData();
-                    // 阻断
-                    mRunThread.interrupt();
-                }*/
-                mConnectionListener.toDisconnecting();
             }
             // 如果当前状态是已连接
             if (newState == BluetoothProfile.STATE_CONNECTED) {

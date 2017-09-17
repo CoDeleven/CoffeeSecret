@@ -70,10 +70,6 @@ public abstract class BaseBlePresenter<V extends IBaseView, M extends BaseModel>
 
     }
 
-    @Override
-    public void toConnecting() {
-
-    }
 
     @Override
     public void toConnected() {
@@ -87,10 +83,6 @@ public abstract class BaseBlePresenter<V extends IBaseView, M extends BaseModel>
         mViewOperator.updateText(BluetoothProfile.STATE_DISCONNECTED, "");
     }
 
-    @Override
-    public void toDisconnecting() {
-        toDisconnected();
-    }
 
     public boolean isConnected(){
         return mBluetoothOperator.isConnected();
@@ -104,4 +96,10 @@ public abstract class BaseBlePresenter<V extends IBaseView, M extends BaseModel>
     public void toUrgentDisconnected() {
 
     }
+
+    @Override
+    public void discoveryServices(int code) {
+
+    }
+
 }

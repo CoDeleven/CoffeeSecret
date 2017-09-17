@@ -9,8 +9,8 @@ import com.dhy.coffeesecret.model.BaseBlePresenter;
 import com.dhy.coffeesecret.ui.bake.adapter.BluetoothListAdapter;
 import com.dhy.coffeesecret.utils.SettingTool;
 
+import static com.dhy.coffeesecret.ui.mine.BluetoothListActivity.AUTO_RECONNECT;
 import static com.dhy.coffeesecret.ui.mine.BluetoothListActivity.CANCEL_REFRESH;
-import static com.dhy.coffeesecret.ui.mine.BluetoothListActivity.DEVICE_CONNECTED;
 
 /**
  * Created by CoDeleven on 17-8-2.
@@ -76,10 +76,7 @@ public class Presenter4ScanList extends BaseBlePresenter<IScanListView, Model4Sc
         getView().updateText(CANCEL_REFRESH, null);
     }
 
-    @Override
-    public void toConnecting() {
 
-    }
 
     @Override
     public void toDisconnected() {
@@ -98,24 +95,6 @@ public class Presenter4ScanList extends BaseBlePresenter<IScanListView, Model4Sc
         getView().updateText(BluetoothProfile.STATE_DISCONNECTED, null);
         // getView().showToast(BluetoothProfile.STATE_DISCONNECTED, "连接失败，请重新尝试...");
     }
-
-    @Override
-    public void toDisconnecting() {
-        toDisconnected();
-    }
-
-    @Override
-    public void toConnected() {
-        // 设置已经连接状态
-        getView().updateText(DEVICE_CONNECTED, null);
-        // 保存连接设备地址到配置文件,方便启动时读取并直接连接
-        SettingTool.saveAddress(mBluetoothOperator.getLatestAddress());
-        super.resetBluetoothListener();
-        // 连接成功后结束并跳转回首页
-        getView().finishActivity();
-
-    }
-
 
 
     public boolean isEnable() {
@@ -155,4 +134,22 @@ public class Presenter4ScanList extends BaseBlePresenter<IScanListView, Model4Sc
         getView().updateText(CANCEL_REFRESH, null);
     }
 
+    /**
+     * 对于连接来说在发现服务之后才能算真正连接成功
+     */
+    @Override
+    public void discoveryServices(int code) {
+        if(code == 129){
+            getView().showWarnDialog(AUTO_RECONNECT);
+            return;
+        }
+
+        // 设置已经连接状态
+        getView().updateText(BluetoothProfile.STATE_CONNECTED, null);
+        // 保存连接设备地址到配置文件,方便启动时读取并直接连接
+        SettingTool.saveAddress(mBluetoothOperator.getLatestAddress());
+        super.resetBluetoothListener();
+        // 连接成功后结束并跳转回首页
+        getView().finishActivity();
+    }
 }

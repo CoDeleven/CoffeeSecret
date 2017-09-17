@@ -13,13 +13,15 @@ public interface IBleConnCallback {
     /**
      * 去连接
      */
-    void toConnecting();
+    // void toConnecting();
 
     /**
      * 连接完成
      */
     void toConnected();
 
+
+    void discoveryServices(int code);
     /**
      * 断开连接
      */
@@ -28,7 +30,7 @@ public interface IBleConnCallback {
     /**
      * 正在断开连接
      */
-    void toDisconnecting();
+    // void toDisconnecting();
 
     /**
      * 蓝牙不可用
