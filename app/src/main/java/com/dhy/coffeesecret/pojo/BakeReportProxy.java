@@ -46,6 +46,8 @@ public class BakeReportProxy implements Serializable{
         if (bakeReport != null) {
             // 将获取到的基本数据类型转换为终端可以直接使用的类型
             deseriData();
+            computeRawBeanWeight(bakeReport.getBeanInfoSimples());
+            this.bakeReport.setRawBeanWeight(rawBeanWeight + "");
         }
     }
 
@@ -82,6 +84,7 @@ public class BakeReportProxy implements Serializable{
     public void setTempratureSet(TemperatureSet temperatureSet) {
         this.bakeReport.setTemperatureSet(temperatureSet);
         deseriData();
+
     }
 
     public LineDataSet getLineDataSetByIndex(int index) {
@@ -178,10 +181,13 @@ public class BakeReportProxy implements Serializable{
     public void setBeanInfoSimples(List<BeanInfoSimple> beanInfoSimples) {
         bakeReport.setBeanInfoSimples(beanInfoSimples);
         computeRawBeanWeight(beanInfoSimples);
+        bakeReport.setRawBeanWeight(rawBeanWeight + "");
     }
     private void computeRawBeanWeight(List<BeanInfoSimple> beanInfoSimples){
-        for(BeanInfoSimple simple:beanInfoSimples){
-            rawBeanWeight += Float.parseFloat(simple.getUsage());
+        if(beanInfoSimples != null){
+            for(BeanInfoSimple simple:beanInfoSimples){
+                rawBeanWeight += Float.parseFloat(simple.getUsage());
+            }
         }
     }
     public void setDevelopmentTime(String developmentTime) {
@@ -224,6 +230,7 @@ public class BakeReportProxy implements Serializable{
         this.bakeReport = bakeReport;
         deseriData();
         computeRawBeanWeight(bakeReport.getBeanInfoSimples());
+        this.bakeReport.setRawBeanWeight(rawBeanWeight + "");
     }
 
     public List<Float> getTimex(){

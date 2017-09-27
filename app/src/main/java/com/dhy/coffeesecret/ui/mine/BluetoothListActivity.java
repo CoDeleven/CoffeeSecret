@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.clj.fastble.data.ScanResult;
+import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.model.device_list.IScanListView;
 import com.dhy.coffeesecret.model.device_list.Presenter4ScanList;
@@ -112,23 +113,33 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
         public void handleMessage(Message msg) {
             switch (msg.what){
                 case AUTO_RECONNECT:
+                    Object[] args = (Object[])msg.obj;
                     AlertDialog.Builder builder = new AlertDialog.Builder(BluetoothListActivity.this)
-                            .setMessage("连接遇到了错误...正在重连 0/5")
+                            .setMessage("连接遇到了错误...正在重连...\n重连次数:" + args[0] + "")
                             .setTitle("错误o(TヘTo)")
                             .setCancelable(false);
+                    if(mCurShowDialog != null){
+                        mCurShowDialog.cancel();
+                    }
                     mCurShowDialog = builder.create();
                     mCurShowDialog.show();
                     break;
                 case CANCEL_SHOW_DIALOG:
-                    mCurShowDialog.cancel();
+                    if(mCurShowDialog != null){
+                        mCurShowDialog.cancel();
+                        mCurShowDialog = null;
+                    }
                     break;
             }
 
         }
     };
     @Override
-    public void showWarnDialog(int index) {
-        mDialogHandler.sendEmptyMessage(index);
+    public void showWarnDialog(int index, Object... param) {
+        Message msg = new Message();
+        msg.what = index;
+        msg.obj = param;
+        mDialogHandler.sendMessage(msg);
     }
 
     /**
@@ -263,6 +274,8 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
             mAdapter.clearDevices();
         }
         refreshLayout.setOnRefreshListener(this);
+
+        ((MyApplication)getApplication()).addActivity(this);
     }
 
     @Override
@@ -349,6 +362,7 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
         // mPresenter.resetBluetoothListener();
         // mTextHandler = null;
         mCurConnectingView = null;
+        ((MyApplication)getApplication()).removeActivity(this);
     }
 
 }

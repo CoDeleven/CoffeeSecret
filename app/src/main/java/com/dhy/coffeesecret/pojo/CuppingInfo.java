@@ -168,7 +168,22 @@ public class CuppingInfo implements Parcelable {
     }
 
     public float getScore() {
-        score = getFeel() - getFlaw();
+        float feelScore = 0;
+        float flawScore = 0;
+        float[] feelScores = getFeelArr();
+        float[] flawScores = getFlawArr();
+        feelScores[0] /= 2;
+        feelScores[1] /= 2;
+        feelScores[3] *= 2;
+        feelScores[4] *= 2;
+        feelScores[5] *= 2;
+        for (float score : feelScores) {
+            feelScore += score;
+        }
+        for (float score : flawScores) {
+            flawScore += score;
+        }
+        score = feelScore - flawScore;
         return score;
     }
 
@@ -209,7 +224,14 @@ public class CuppingInfo implements Parcelable {
                 + afterTaste + taste + sweetness + balance + overall;
         return feel;
     }
+    public float[] getFeelArr(){
+        return new float[]{dryAndFragrant, flavor, afterTaste, acidity, taste, sweetness, balance, overall};
+    }
 
+    public float[] getFlawArr(){
+        // underdevelopment + overdevelopment + baked + tipped + faced+ scorched;
+        return new float[]{underdevelopment, overdevelopment, baked, tipped, faced, scorched};
+    }
 
     @Override
     public boolean equals(Object obj) {

@@ -119,6 +119,7 @@ public class Presenter4Editor extends BaseBlePresenter<IEditView, Model4Editor> 
         if (!"".equals(weight) && weight != null) {
             float defaultWeight = ConvertUtils.getDefaultUnitWeight(Float.parseFloat(weight) + "", MyApplication.weightUnit);
             // 填写的熟豆重量大于生豆重量时进行提示
+            Log.d(TAG, "生豆重量：" + localProxy.getRawBeanWeight());
             if (defaultWeight > localProxy.getRawBeanWeight()) {
                 super.mViewOperator.showToast(INVALIDATE_COOKED_WEIGHT, "填写不大于生豆重量的数值...");
                 return false;

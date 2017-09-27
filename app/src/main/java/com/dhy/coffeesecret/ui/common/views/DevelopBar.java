@@ -45,7 +45,7 @@ public class DevelopBar extends View implements IDevelopBarView{
     }
 
     @Override
-    public void showWarnDialog(int index) {
+    public void showWarnDialog(int index, Object... param) {
 
     }
 

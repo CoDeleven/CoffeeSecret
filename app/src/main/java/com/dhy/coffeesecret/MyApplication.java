@@ -1,7 +1,7 @@
 package com.dhy.coffeesecret;
 
+import android.app.Activity;
 import android.app.Application;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -10,7 +10,6 @@ import com.bugtags.library.BugtagsOptions;
 import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.pojo.BakeReportProxy;
 import com.dhy.coffeesecret.pojo.UniversalConfiguration;
-import com.dhy.coffeesecret.services.BluetoothService;
 import com.dhy.coffeesecret.ui.common.interfaces.OnWeightUnitChangedListener;
 import com.dhy.coffeesecret.utils.SPPrivateUtils;
 import com.dhy.coffeesecret.utils.SettingTool;
@@ -19,7 +18,9 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.qiniu.pili.droid.streaming.StreamingEnv;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import cn.jesse.nativelogger.Logger;
@@ -39,7 +40,7 @@ public class MyApplication extends Application {
     private static BakeReportProxy BAKE_REPORT;
     private static SQLiteDatabase country2Continent;
     private String token;
-    private String user;
+
     private Set<OnWeightUnitChangedListener> weightUnitListeners = new HashSet<>();
 
     public void addOnWeightUnitChangedListener(OnWeightUnitChangedListener listener){
@@ -104,10 +105,13 @@ public class MyApplication extends Application {
                     @Override
                     public void uncaughtException(Thread thread, Throwable ex) {
                         NLogger.e("uncaughtException", ex);
-                        android.os.Process.killProcess(android.os.Process.myPid());
+                        for (Activity activity : activities) {
+                            activity.finish();
+                        }
+                        // android.os.Process.killProcess(android.os.Process.myPid());
+                        System.exit(1);
                     }
-                })
-                .build();
+                }).build();
     }
 
     @Override
@@ -166,8 +170,8 @@ public class MyApplication extends Application {
     @Override
     public void onTerminate() {
         super.onTerminate();
-        Intent intent = new Intent(this, BluetoothService.class);
-        stopService(intent);
+        // Intent intent = new Intent(this, BluetoothService.class);
+        // stopService(intent);
         // TODO 关闭蓝牙
         // BluetoothService.BLUETOOTH_OPERATOR.disableBluetooth();
     }
@@ -176,5 +180,13 @@ public class MyApplication extends Application {
         UniversalConfiguration config = SettingTool.getConfig();
         weightUnit = config.getWeightUnit();
         temperatureUnit = config.getTempratureUnit();
+    }
+
+    private List<Activity> activities = new ArrayList<>();
+    public void addActivity(Activity activity){
+        activities.add(activity);
+    }
+    public void removeActivity(Activity activity){
+        activities.remove(activity);
     }
 }

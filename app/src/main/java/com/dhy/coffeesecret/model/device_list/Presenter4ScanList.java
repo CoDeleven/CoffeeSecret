@@ -9,8 +9,11 @@ import com.dhy.coffeesecret.model.BaseBlePresenter;
 import com.dhy.coffeesecret.ui.bake.adapter.BluetoothListAdapter;
 import com.dhy.coffeesecret.utils.SettingTool;
 
+import cn.jesse.nativelogger.NLogger;
+
 import static com.dhy.coffeesecret.ui.mine.BluetoothListActivity.AUTO_RECONNECT;
 import static com.dhy.coffeesecret.ui.mine.BluetoothListActivity.CANCEL_REFRESH;
+import static com.dhy.coffeesecret.ui.mine.BluetoothListActivity.CANCEL_SHOW_DIALOG;
 
 /**
  * Created by CoDeleven on 17-8-2.
@@ -20,7 +23,7 @@ public class Presenter4ScanList extends BaseBlePresenter<IScanListView, Model4Sc
     private static final String TAG = Presenter4ScanList.class.getSimpleName();
     private static Presenter4ScanList mSelf;
     private BluetoothListAdapter mAdapter;
-
+    private int serviceCode129Count = 0;
     public void setDeviceListAdapter(BluetoothListAdapter adapter){
         this.mAdapter = adapter;
 
@@ -40,6 +43,7 @@ public class Presenter4ScanList extends BaseBlePresenter<IScanListView, Model4Sc
         if (mSelf == null) {
             mSelf = new Presenter4ScanList();
         }
+        mSelf.serviceCode129Count = 0;
         return mSelf;
     }
 
@@ -134,18 +138,28 @@ public class Presenter4ScanList extends BaseBlePresenter<IScanListView, Model4Sc
         getView().updateText(CANCEL_REFRESH, null);
     }
 
+
+    @Override
+    public void toConnected() {
+    }
+
     /**
      * 对于连接来说在发现服务之后才能算真正连接成功
      */
     @Override
     public void discoveryServices(int code) {
         if(code == 129){
-            getView().showWarnDialog(AUTO_RECONNECT);
+            NLogger.e(TAG, "discoveryServices -> 129状态...显示Dialog" + serviceCode129Count);
+            getView().showWarnDialog(AUTO_RECONNECT, serviceCode129Count);
+            serviceCode129Count++;
             return;
         }
 
+        serviceCode129Count = 0;
         // 设置已经连接状态
         getView().updateText(BluetoothProfile.STATE_CONNECTED, null);
+        getView().showWarnDialog(CANCEL_SHOW_DIALOG);
+        NLogger.i(TAG, "discoveryServices -> 正常状态...取消Dialog");
         // 保存连接设备地址到配置文件,方便启动时读取并直接连接
         SettingTool.saveAddress(mBluetoothOperator.getLatestAddress());
         super.resetBluetoothListener();

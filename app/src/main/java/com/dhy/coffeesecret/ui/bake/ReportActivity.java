@@ -589,7 +589,7 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
     }
 
     @Override
-    public void showWarnDialog(int index) {
+    public void showWarnDialog(int index, Object... param) {
 
     }
 

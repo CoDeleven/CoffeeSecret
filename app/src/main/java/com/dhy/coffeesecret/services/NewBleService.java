@@ -90,6 +90,7 @@ public class NewBleService implements IBluetoothOperator, DataDigger4Ble.IBleWRO
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
             NLogger.i(TAG, "BleGattCallback::onServicesDiscovered():发现服务...");
             if (status == 129) {
+                mConnStatusCallback.discoveryServices(status);
                 // String targetDeviceMac = gatt.getDevice().getAddress();
                 // 如果遇到129状态，那么一直重连，直到成功
                 mBleOperator.closeBluetoothGatt();

@@ -225,7 +225,7 @@ public class EditBehindActivity extends AppCompatActivity implements CircleSeekB
     }
 
     @Override
-    public void showWarnDialog(int index) {
+    public void showWarnDialog(int index, Object... param) {
 
     }
 

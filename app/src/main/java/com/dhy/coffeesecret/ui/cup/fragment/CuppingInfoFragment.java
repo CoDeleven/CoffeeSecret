@@ -182,13 +182,22 @@ public class CuppingInfoFragment extends Fragment implements InputDialogFragment
     public void updateProgressBar(final float[] feelScores, final float[] flawScores) {
         float feelScore = 0;
         float flawScore = 0;
+
+        feelScores[0] /= 2;
+        feelScores[1] /= 2;
+        feelScores[3] *= 2;
+        feelScores[4] *= 2;
+        feelScores[5] *= 2;
+
         for (float score : feelScores) {
+            System.out.println(score);
             feelScore += score;
         }
 
         for (float score : flawScores) {
             flawScore += score;
         }
+
         updateProgressBar((int)feelScore, (int)flawScore);
     }
 
@@ -206,7 +215,7 @@ public class CuppingInfoFragment extends Fragment implements InputDialogFragment
         }
 
         if (feelScores == null) {
-            feelScores = new float[]{5f, 5f, 10f, 20f, 20f, 20f, 10f, 10f};
+            feelScores = new float[]{10f, 10f, 10f, 10f, 10f, 10f, 10f, 10f};
             flawScores = new float[]{0, 0, 0, 0, 0, 0};
             roastDegree = 0;
             isNewCupping = true;
@@ -252,13 +261,7 @@ public class CuppingInfoFragment extends Fragment implements InputDialogFragment
     @Override
     public void onValueChange(int position, float value) {
         if (position < 8) {
-            if(position == 0 || position == 1){
-                mFeelAdapter.setScore(position, value / 2);
-            } else if(position == 3 || position == 4 || position == 5){
-                mFeelAdapter.setScore(position, value * 2);
-            }else{
-                mFeelAdapter.setScore(position, value);
-            }
+            mFeelAdapter.setScore(position, value);
         } else {
             mFlawAdapter.setScore(position - 8, value);
         }
@@ -309,11 +312,6 @@ public class CuppingInfoFragment extends Fragment implements InputDialogFragment
             tv.setText(titles[i]);
             iv.setImageDrawable(getResources().getDrawable(icons[i]));
             // "干湿香", "风味", "余韵", "酸质", "口感", "甜感", "均衡度", "整体感受"
-            /*if(i == 0 || i == 1){
-                score.setText((mData.get(titles[i]) / 2) + "");
-            }else if(i == 3 || i == 4 || i == 5){
-                score.setText(mData.get(titles[i]) * 2 + "");
-            }else{*/
                 score.setText(mData.get(titles[i]) + "");
             // }
             return inflate;

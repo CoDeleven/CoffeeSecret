@@ -20,6 +20,16 @@ public class BakeReport implements Parcelable {
     private String device;
     // 熟豆重量
     private String cookedBeanWeight;
+    private String rawBeanWeight;
+
+    public String getRawBeanWeight() {
+        return rawBeanWeight;
+    }
+
+    public void setRawBeanWeight(String rawBeanWeight) {
+        this.rawBeanWeight = rawBeanWeight;
+    }
+
     // 烘焙度, 如果用户没有移动SeekBar导致这里为空,会引发错误
     private String roastDegree = "0";
     private TemperatureSet temperatureSet;

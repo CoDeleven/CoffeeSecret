@@ -224,7 +224,7 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    public void showWarnDialog(int index) {
+    public void showWarnDialog(int index, Object... param) {
         mDialogHandler.sendEmptyMessage(index);
     }
 

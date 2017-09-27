@@ -365,7 +365,7 @@ public class PreparationFragment extends Fragment implements IDeviceView, OnWeig
     }
 
     @Override
-    public void showWarnDialog(int index) {
+    public void showWarnDialog(int index, Object... param) {
         mDialogHandler.sendEmptyMessage(index);
     }
 

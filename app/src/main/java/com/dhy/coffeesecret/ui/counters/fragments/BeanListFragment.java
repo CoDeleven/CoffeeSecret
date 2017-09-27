@@ -253,7 +253,7 @@ public class BeanListFragment extends Fragment implements OnQuickSideBarTouchLis
         try {
             MyApplication application = (MyApplication) getActivity().getApplication();
             beanInfoListJson = HttpUtils.getStringFromServer(UrlBean.getAll(application.getToken()));
-            NLogger.d(TAG, "BeanInfoList->" + beanInfoListJson);
+            Log.d(TAG, "BeanInfoList->" + beanInfoListJson);
         } catch (IOException e) {
             e.printStackTrace();
             mHandler.sendEmptyMessage(TOAST_3);

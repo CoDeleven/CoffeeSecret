@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
+import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.ui.bake.PreparationFragment;
 import com.dhy.coffeesecret.ui.counters.ContainerFragment;
@@ -48,6 +49,8 @@ public class MainActivity extends AppCompatActivity {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         SystemStatusBarUtils.steepToolBar(this);
+
+        ((MyApplication)getApplication()).addActivity(this);
     }
 
     public void changeBakingTab() {
@@ -166,5 +169,11 @@ public class MainActivity extends AppCompatActivity {
             this.finish();
             overridePendingTransition(R.anim.in_from_bottom, R.anim.out_to_top);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ((MyApplication)getApplication()).removeActivity(this);
     }
 }

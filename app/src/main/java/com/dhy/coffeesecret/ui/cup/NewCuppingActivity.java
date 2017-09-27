@@ -63,6 +63,7 @@ public class NewCuppingActivity extends AppCompatActivity
     public static final String SHOW_INFO = "showInfo";
     public static final String VIEW_TYPE = "viewType";
     public static final String TARGET = "target";
+    public static final String EMPTY_SINGLE_BEANNAME = "没有豆子";
 
     private static final int UPDATE = 0x3;
     private static final int DELETE = 0x2;
@@ -170,7 +171,7 @@ public class NewCuppingActivity extends AppCompatActivity
 
         if (cuppingInfoFragment != null) {
             cuppingInfoFragment.setEditable(false);
-            cuppingInfoFragment.updateProgressBar((int) mCuppingInfo.getFeel(), (int) mCuppingInfo.getFlaw());
+            cuppingInfoFragment.updateProgressBar(mCuppingInfo.getFeelArr(), mCuppingInfo.getFlawArr());
         }
         viewType = SHOW_INFO;
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -286,7 +287,15 @@ public class NewCuppingActivity extends AppCompatActivity
         bakeInfoFragment.setOnBakeInfoLoadedListener(new BakeInfoFragment.OnBakeInfoLoadedListener() {
             @Override
             public void onLoaded(BakeReport report) {
+                if(report != null){
+                    String beanName = report.getSingleBeanName();
+                    if(beanName.trim().isEmpty()){
+                        beanName = EMPTY_SINGLE_BEANNAME;
+                    }
+                    editToolBar.setTitle(beanName);
+                }
                 mBakeReport = report;
+
             }
         });
 
@@ -354,7 +363,7 @@ public class NewCuppingActivity extends AppCompatActivity
 
         final Map<String, Float> data = cuppingInfoFragment.getData();
         map2Bean(data, mCuppingInfo);
-        cuppingInfoFragment.updateProgressBar((int) mCuppingInfo.getFeel(), (int) mCuppingInfo.getFlaw());
+        cuppingInfoFragment.updateProgressBar(mCuppingInfo.getFeelArr(), mCuppingInfo.getFlawArr());
 
         if (NEW_CUPPING.equals(viewType) || isNew) {
             mCuppingInfo.setBakeReport(mBakeReport);

@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -102,7 +103,17 @@ public class LauncherActivity extends AppCompatActivity{
         ((MyApplication) getApplicationContext()).setCountry2Continent(helper.getReadableDatabase());
         ((MyApplication) getApplicationContext()).initUnit();
 
-        checkPermission();
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            checkPermission();
+        }else{
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    waitMinutes2StartMainActivity.sendEmptyMessage(0);
+                }
+            }, 1500);
+        }
+
     }
 
     @Override
