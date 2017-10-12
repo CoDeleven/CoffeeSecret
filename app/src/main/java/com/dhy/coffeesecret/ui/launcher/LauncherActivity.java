@@ -52,9 +52,7 @@ public class LauncherActivity extends AppCompatActivity{
             Intent intent;
             if (SPPrivateUtils.getBoolean(LauncherActivity.this, Global.IS_FIRST_TIME, true)) {
                 intent = new Intent(LauncherActivity.this, GuidanceActivity.class);
-            } /*else if ("".equals(SPPrivateUtils.getString(LauncherActivity.this, "address", ""))) {
-                intent = new Intent(LauncherActivity.this, FirstConnectedActivity.class);
-            }*/ else {
+            } else {
                 // intent = new Intent(LauncherActivity.this, MainActivity.class);
                 intent = new Intent(LauncherActivity.this, LoginActivity.class);
             }

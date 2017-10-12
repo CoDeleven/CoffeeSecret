@@ -135,9 +135,6 @@
         <activity
             android:name=".ui.launcher.GuidanceActivity"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.launcher.FirstConnectedActivity"
-            android:windowSoftInputMode="adjustPan" />
         <activity android:name=".ui.launcher.ConnectedActivity" />
         <activity android:name=".ui.mine.QRCodeActivity" />
         <activity android:name=".LoginActivity" />

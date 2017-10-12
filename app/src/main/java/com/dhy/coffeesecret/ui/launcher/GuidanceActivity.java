@@ -11,6 +11,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.dhy.coffeesecret.LoginActivity;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.Global;
 import com.dhy.coffeesecret.ui.MainActivity;
@@ -52,7 +53,7 @@ public class GuidanceActivity extends AppCompatActivity{
     public void onClick(View view) {
         Log.i(TAG, "skip");
         SPPrivateUtils.put(this, Global.IS_FIRST_TIME, false);
-        Intent intent = new Intent(this, FirstConnectedActivity.class);
+        Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
         this.finish();
     }

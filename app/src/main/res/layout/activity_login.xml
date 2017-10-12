@@ -36,6 +36,9 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/login_input_above"
                 android:hint="手机号"
+                android:singleLine="true"
+                android:maxLines="1"
+                android:lines="1"
                 android:padding="10dp"
                 android:textSize="15dp" />
 
@@ -80,6 +83,9 @@
             android:layout_height="wrap_content"
             android:background="@drawable/login_input_below"
             android:hint="密码"
+            android:singleLine="true"
+            android:maxLines="1"
+            android:lines="1"
             android:inputType="textPassword"
             android:padding="10dp"
             android:textSize="15dp" />

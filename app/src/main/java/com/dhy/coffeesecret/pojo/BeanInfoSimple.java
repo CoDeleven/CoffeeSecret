@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 public class BeanInfoSimple implements Parcelable {
 
-    private transient long singleBeanId;
+    private long singleBeanId;
     private String beanName;
     // 豆种
     private String species;
@@ -139,6 +139,7 @@ public class BeanInfoSimple implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(this.singleBeanId);
         dest.writeString(this.beanName);
         dest.writeString(this.species);
         dest.writeString(this.country);
@@ -152,6 +153,7 @@ public class BeanInfoSimple implements Parcelable {
     }
 
     protected BeanInfoSimple(Parcel in) {
+        this.singleBeanId = in.readLong();
         this.beanName = in.readString();
         this.species = in.readString();
         this.country = in.readString();

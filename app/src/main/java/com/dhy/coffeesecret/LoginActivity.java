@@ -23,11 +23,9 @@ import android.widget.PopupWindow;
 
 import com.dhy.coffeesecret.ui.MainActivity;
 import com.dhy.coffeesecret.ui.common.views.DividerDecoration;
-import com.dhy.coffeesecret.ui.launcher.FirstConnectedActivity;
 import com.dhy.coffeesecret.ui.mine.adapter.AccountAdapter;
 import com.dhy.coffeesecret.url.UrlLogin;
 import com.dhy.coffeesecret.utils.HttpUtils;
-import com.dhy.coffeesecret.utils.SPPrivateUtils;
 import com.dhy.coffeesecret.utils.SystemStatusBarUtils;
 
 import java.io.IOException;
@@ -134,11 +132,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mHandler.sendEmptyMessage(SUCCESS);
         myApplication.setToken(result);
         Intent intent ;
-        if("".equals(SPPrivateUtils.getString(LoginActivity.this, "address", ""))){
-            intent = new Intent(this,FirstConnectedActivity.class);
-        }else{
-            intent= new Intent(this,MainActivity.class);
-        }
+        // 不需要跳到第一次连接的界面
+        intent= new Intent(this,MainActivity.class);
+
         startActivity(intent);
         finish();
     }
