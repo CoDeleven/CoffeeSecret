@@ -70,7 +70,7 @@ public class LiveListActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         try {
-                            String playUrl = HttpUtils.getStringFromServer(UrlLogin.GET_LIVE_PLAY_PATH);
+                            String playUrl = HttpUtils.getStringFromServer(UrlLogin.GET_LIVE_PLAY_PATH, null, null);
                             Intent intent = new Intent(context, LivePlayActivity.class);
                             SPPrivateUtils.put(context, "liveName", list.get(position));
                             intent.putExtra("play_url", playUrl);

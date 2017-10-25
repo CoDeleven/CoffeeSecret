@@ -293,8 +293,9 @@ public class EditBehindActivity extends AppCompatActivity implements CircleSeekB
             reportDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String delete = UrlBake.delete(application.getToken(), proxy.getBakeReport().getId());
-                    HttpUtils.enqueue(delete, null, new Callback() {
+                    String token = application.getToken();
+                    String delete = UrlBake.delete(token, proxy.getBakeReport().getId());
+                    HttpUtils.enqueue(EditBehindActivity.this,token,delete, null, new Callback() {
                         @Override
                         public void onFailure(Call call, IOException e) {
 
@@ -329,7 +330,9 @@ public class EditBehindActivity extends AppCompatActivity implements CircleSeekB
         }
 
         // 保存
-        mPresenter.save(application.getToken());
+        String token = application.getToken();
+        HttpUtils.checkOnline(this,token);
+        mPresenter.save(token);
         Intent other = new Intent(this, ReportActivity.class);
         if(mPresenter.getCurBakingReport() == null){
             other.putExtra(UniExtraKey.EXTRA_BAKE_REPORT.getKey(), mPresenter.gettLocalBakeReport().getBakeReport());

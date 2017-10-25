@@ -9,6 +9,13 @@ public final class UrlLogin extends UrlBase {
 
     private static final String U = "/u";
 
+    public final static String online(String token) {
+        return new StringBuffer(URL_COMMON).append(U)
+                .append(URL_SEPARATOR).append(token)
+                .append(URL_SEPARATOR).append("online")
+                .toString();
+    }
+
     public final static String loginByTel(String tel) {
         return new StringBuffer(URL_COMMON).append(U)
                 .append(URL_SEPARATOR).append(tel)

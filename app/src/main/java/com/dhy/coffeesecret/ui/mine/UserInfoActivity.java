@@ -134,6 +134,8 @@ public class UserInfoActivity extends AppCompatActivity implements UsernameFragm
             String token = application.getToken();
             String url = UrlLogin.updateAvatar(token);
             Request request = HttpUtils.getRequest(url, new File(pathList.get(0)));
+
+            HttpUtils.checkOnline(this,token);
             HttpUtils.enqueue(request, new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {

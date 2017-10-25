@@ -1,7 +1,12 @@
 package com.dhy.coffeesecret.utils;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.dhy.coffeesecret.LoginActivity;
+import com.dhy.coffeesecret.url.UrlLogin;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -56,13 +61,44 @@ public class HttpUtils {
         return request;
     }
 
+    /**
+     * 验证是否在线
+     * @param current 当前所在的activity
+     * @param token
+     */
+    public static void checkOnline(Activity current, String token) {
+        try {
+            if(current != null && token != null){
+                isOnline(current, token);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void isOnline(final Activity current, String token) throws IOException {
+        String url = UrlLogin.online(token);
+        String result = getStringFromServer(url);
+        if (!Boolean.valueOf(result)) {
+            current.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(current, "您的账号在别处登录，您已被迫下线！", Toast.LENGTH_SHORT).show();
+                }
+            });
+            Intent intent = new Intent(current, LoginActivity.class);
+            current.startActivity(intent);
+            current.finish();
+        }
+    }
+
     public static Request getRequest(String url, File file) {
         RequestBody fileBody = RequestBody.create(MediaType.parse("application/octet-stream"), file);
         RequestBody body = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
-                .addPart(Headers.of("Content-Disposition","form-data; name=\"file\"; filename=\"" + file.getName() + "\""), fileBody)
+                .addPart(Headers.of("Content-Disposition", "form-data; name=\"file\"; filename=\"" + file.getName() + "\""), fileBody)
                 .build();
-        Log.d(TAG,"form-data; name=\"file\"; filename=\"" + file.getName() + "\"");
+        Log.d(TAG, "form-data; name=\"file\"; filename=\"" + file.getName() + "\"");
         Request request = new Request.Builder().url(url).post(body).build();
         return request;
     }
@@ -100,6 +136,12 @@ public class HttpUtils {
         mOkHttpClient.newCall(request).enqueue(responseCallback);
     }
 
+
+    public static void enqueue(Activity current, String token, String url, Object obj, Callback responseCallback) {
+        checkOnline(current,token);
+        enqueue(url,obj,responseCallback);
+    }
+
     /**
      * 异步访问网络
      *
@@ -107,7 +149,7 @@ public class HttpUtils {
      * @param obj
      * @param responseCallback
      */
-    public static void enqueue(String url, Object obj, Callback responseCallback) {
+    private static void enqueue(String url, Object obj, Callback responseCallback) {
         Request request = getRequest(url, obj);
         mOkHttpClient.newCall(request).enqueue(responseCallback);
     }
@@ -132,7 +174,12 @@ public class HttpUtils {
         });
     }
 
-    public static String getStringFromServer(String url) throws IOException {
+    public static String getStringFromServer(String url, String token, Activity current) throws IOException {
+        checkOnline(current, token);
+        return getStringFromServer(url);
+    }
+
+    private static String getStringFromServer(String url) throws IOException {
         Request request = new Request.Builder().url(url).build();
         Response response = execute(request);
         if (response.isSuccessful()) {

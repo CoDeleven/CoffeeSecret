@@ -121,7 +121,7 @@ public class MineFragment extends Fragment {
                 String token = ((MyApplication) getActivity().getApplication()).getToken();
                 String info = UrlLogin.getUserInfo(token);
                 try {
-                    String userInfo = HttpUtils.getStringFromServer(info);
+                    String userInfo = HttpUtils.getStringFromServer(info,token,getActivity());
                     Gson gson = new GsonBuilder()
                             .setDateFormat("yyyy-MM-dd").setExclusionStrategies().create();
                     user = gson.fromJson(userInfo, User.class);

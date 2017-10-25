@@ -332,7 +332,9 @@ public class CupFragment extends Fragment implements View.OnClickListener {
             @Override
             public void run() {
                 try {
-                    String str = HttpUtils.getStringFromServer(UrlCupping.getAll(application.getToken()));
+                    String token = application.getToken();
+                    String url = UrlCupping.getAll(token);
+                    String str = HttpUtils.getStringFromServer(url,token,getActivity());
                     Type type = new TypeToken<ArrayList<CuppingInfo>>() {
                     }.getType();
                     Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();

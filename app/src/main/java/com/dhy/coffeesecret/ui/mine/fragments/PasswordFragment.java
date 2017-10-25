@@ -184,7 +184,7 @@ public class PasswordFragment extends Fragment implements View.OnClickListener, 
                         String url = UrlLogin.updatePassword(token, sec);
                         try {
                             mHandler.sendEmptyMessage(WAIT);
-                            String result = HttpUtils.getStringFromServer(url);
+                            String result = HttpUtils.getStringFromServer(url,token,getActivity());
                             if (result != null && !result.startsWith("error")) {
                                 application.setToken(result);
                                 Message msg = Message.obtain();
