@@ -14,6 +14,7 @@ import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.ui.bake.ReportActivity;
 import com.dhy.coffeesecret.url.UrlBake;
 import com.dhy.coffeesecret.utils.HttpUtils;
+import com.dhy.coffeesecret.utils.T;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -62,6 +63,15 @@ public class QRCodeActivity extends AppCompatActivity implements QRCodeView.Dele
                             public void run() {
                                 mProgress.cancel();
                                 toNextActivity(report);
+                                QRCodeActivity.this.finish();
+                            }
+                        });
+                    }else{
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                mProgress.cancel();
+                                T.showLong(QRCodeActivity.this, "发生错误，无法添加对应曲线到该账号...");
                                 QRCodeActivity.this.finish();
                             }
                         });
