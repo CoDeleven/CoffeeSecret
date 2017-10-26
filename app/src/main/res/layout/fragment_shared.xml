@@ -53,6 +53,7 @@
 
     </LinearLayout>
     <ImageView
+        android:padding="25dp"
         android:id="@+id/id_iv_qrcode"
         android:layout_gravity="center"
         android:layout_width="250dp"

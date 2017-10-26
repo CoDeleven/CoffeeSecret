@@ -80,7 +80,6 @@ public class QRCodeActivity extends AppCompatActivity implements QRCodeView.Dele
         // 设置bakereport
         TestData.setBakeReport(proxy);*/
 
-
     }
 
     @Override

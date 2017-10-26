@@ -1,6 +1,8 @@
 package com.dhy.coffeesecret.ui.bake.fragments;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -13,11 +15,14 @@ import android.widget.TextView;
 
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.url.UrlBake;
+import com.dhy.coffeesecret.utils.HttpUtils;
 import com.facebook.rebound.ui.Util;
-import com.nostra13.universalimageloader.core.ImageLoader;
+
+import java.io.IOException;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import cn.bingoogolapple.qrcode.zxing.QRCodeEncoder;
 
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
@@ -47,7 +52,8 @@ public class SharedFragment extends DialogFragment {
     private Context mContext;
     private String beanName, bakeDegree, bakeTime, species, token;
     private long id;
-    public SharedFragment(){
+
+    public SharedFragment() {
 
     }
 
@@ -74,11 +80,18 @@ public class SharedFragment extends DialogFragment {
         developRateView.setText("烘焙时间：" + bakeTime);
         speciesView.setText("豆种：" + species);
 
-        loadingData();
-
-
+        new Thread() {
+            @Override
+            public void run() {
+                try {
+                    loadingData();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }.start();
         return view;
-}
+    }
 
     @Override
     public void onResume() {
@@ -86,8 +99,16 @@ public class SharedFragment extends DialogFragment {
         getDialog().getWindow().setLayout(Util.dpToPx(300, getResources()), WRAP_CONTENT);
     }
 
-    private void loadingData(){
-        ImageLoader.getInstance().displayImage(UrlBake.share(token, id), imageView);
+    private void loadingData() throws IOException {
+//        ImageLoader.getInstance().displayImage(UrlBake.share(token, id), imageView);
+        String data = HttpUtils.getStringFromServer(UrlBake.share(token, id), token, getActivity());
+        final Bitmap bitmap = QRCodeEncoder.syncEncodeQRCode(data, 150, Color.parseColor("#936743"));
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                imageView.setImageBitmap(bitmap);
+            }
+        });
     }
 
 }

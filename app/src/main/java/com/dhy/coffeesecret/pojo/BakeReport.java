@@ -41,7 +41,7 @@ public class BakeReport implements Parcelable {
     private float avgFirstBurstTemperature;
     private float avgEndTime;
     private float avgEndTemperature;
-    private float avgAccBeanTemperature;
+    private float avgAccBeanTemperature = 0;
     private float avgGlobalBeanTemperature;
     // 发展时间
     private String developmentTime;

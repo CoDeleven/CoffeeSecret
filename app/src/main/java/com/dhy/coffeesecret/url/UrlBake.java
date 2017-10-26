@@ -40,9 +40,9 @@ public final class UrlBake extends UrlBase {
 
     public final static String share(String token, long itemId){
         return new StringBuffer(URL_COMMON).append(root)
+                .append(URL_SEPARATOR).append(itemId)
                 .append(URL_SEPARATOR).append(token)
                 .append(URL_SEPARATOR).append("share")
-                .append(URL_SEPARATOR).append(itemId)
                 .toString();
     }
 

@@ -17,7 +17,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="25dp"
         android:scaleType="centerCrop"
-        android:src="@mipmap/this_year_brave"
+        android:src="@mipmap/logo"
         app:riv_corner_radius="30dip"
         app:riv_oval="true" />
 

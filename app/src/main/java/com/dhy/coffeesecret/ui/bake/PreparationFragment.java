@@ -336,7 +336,7 @@ public class PreparationFragment extends Fragment implements IDeviceView, OnWeig
                 mPresenter.setTemporaryReferTemperatures(temperatures);
             }
         });
-        FragmentTool.getFragmentToolInstance(getContext()).showDialogFragmen("dialogFragment", dialogFragment);
+        FragmentTool.getFragmentToolInstance(getContext()).showDialogFragment("dialogFragment", dialogFragment);
     }
 
     @Override

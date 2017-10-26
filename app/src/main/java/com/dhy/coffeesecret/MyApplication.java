@@ -151,7 +151,6 @@ public class MyApplication extends Application {
         DisplayImageOptions _options = new DisplayImageOptions.Builder().cacheOnDisk(true).cacheInMemory(true).build();
         ImageLoaderConfiguration configuration = new ImageLoaderConfiguration.Builder(this)
                 .defaultDisplayImageOptions(_options).build();
-
         ImageLoader.getInstance().init(configuration);
     }
 

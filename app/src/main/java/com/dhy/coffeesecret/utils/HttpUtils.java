@@ -38,6 +38,8 @@ public class HttpUtils {
     private static final long TIMEOUT = 4;
     private static final String CHARSET_NAME = "UTF-8";
 
+    private static boolean checking = false;
+
     public static final MediaType TYPE = MediaType.parse("application/json; charset=utf-8");
 
     static {
@@ -66,10 +68,12 @@ public class HttpUtils {
      * @param current 当前所在的activity
      * @param token
      */
-    public static void checkOnline(Activity current, String token) {
+    public static synchronized void checkOnline(Activity current, String token) {
         try {
-            if(current != null && token != null){
+            if(current != null && token != null && !checking){
+                checking = true;
                 isOnline(current, token);
+                checking = false;
             }
         } catch (IOException e) {
             e.printStackTrace();

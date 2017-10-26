@@ -330,8 +330,13 @@ public class EditBehindActivity extends AppCompatActivity implements CircleSeekB
         }
 
         // 保存
-        String token = application.getToken();
-        HttpUtils.checkOnline(this,token);
+        final String token = application.getToken();
+        new Thread(){
+            @Override
+            public void run() {
+                HttpUtils.checkOnline(EditBehindActivity.this,token);
+            }
+        }.start();
         mPresenter.save(token);
         Intent other = new Intent(this, ReportActivity.class);
         if(mPresenter.getCurBakingReport() == null){

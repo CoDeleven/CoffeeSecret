@@ -566,14 +566,14 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
                 fireWind.setOnFireWindAddListener(this);
                 // 设置等待结点
                 mPresenter.setAwaitEntry();
-                fragmentTool.showDialogFragmen("fireWindFragment", fireWind);
+                fragmentTool.showDialogFragment("fireWindFragment", fireWind);
                 break;
             case R.id.id_baking_other:
                 Other other = new Other();
                 other.setOnOtherAddListener(this);
                 // 设置等待结点
                 mPresenter.setAwaitEntry();
-                fragmentTool.showDialogFragmen("otherFragment", other);
+                fragmentTool.showDialogFragment("otherFragment", other);
                 break;
             case R.id.id_baking_exit:
                 onBackPressed();

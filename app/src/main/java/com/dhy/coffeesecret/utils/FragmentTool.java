@@ -30,7 +30,7 @@ public class FragmentTool {
         return managerMap.get(context);
     }
 
-    public void showDialogFragmen(String tag, DialogFragment dialogFragment) {
+    public void showDialogFragment(String tag, DialogFragment dialogFragment) {
         FragmentTransaction mFragTransaction = fragmentManager.beginTransaction();
         Fragment fragment = fragmentManager.findFragmentByTag(tag);
         if (fragment != null) {

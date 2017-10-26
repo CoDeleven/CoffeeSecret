@@ -66,6 +66,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     if(progressDialog != null){
                         progressDialog.dismiss();
                     }
+                    break;
                 case ERROR:
                     if(progressDialog != null){
                         progressDialog.dismiss();
@@ -110,7 +111,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             mHandler.sendEmptyMessage(WAIT);
             String url = UrlLogin.loginByToken(token);
             String result = HttpUtils.getStringFromServer(url,null,null);
-            Log.d(TAG,"token:"+result);
             if(result!= null && !result.startsWith("error")){
                 loginSuccess(result);
             }else {

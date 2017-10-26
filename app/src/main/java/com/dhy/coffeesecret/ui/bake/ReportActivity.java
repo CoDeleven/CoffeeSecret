@@ -293,7 +293,7 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
         bundle.putString(SharedFragment.TOKEN, ((MyApplication)getApplication()).getToken());
 
         shared.setArguments(bundle);
-        FragmentTool.getFragmentToolInstance(this).showDialogFragmen("dialogFragment", shared);
+        FragmentTool.getFragmentToolInstance(this).showDialogFragment("dialogFragment", shared);
     }
 
     @OnClick(R.id.id_edit)
