@@ -140,7 +140,6 @@ public class UserInfoActivity extends AppCompatActivity implements UsernameFragm
                 @Override
                 public void run() {
                     HttpUtils.checkOnline(UserInfoActivity.this,token);
-
                     HttpUtils.enqueue(request, new Callback() {
                         @Override
                         public void onFailure(Call call, IOException e) {
@@ -153,7 +152,6 @@ public class UserInfoActivity extends AppCompatActivity implements UsernameFragm
                                 String token = response.body().string();
 
                                 if (token != null && !token.startsWith("error")) {
-                                    Log.d("xx", token);
                                     application.setToken(token);
                                     UserInfoActivity.this.resultCode = UPDATE;
                                     runOnUiThread(new Runnable() {
