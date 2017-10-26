@@ -131,38 +131,45 @@ public class UserInfoActivity extends AppCompatActivity implements UsernameFragm
         if (requestCode == ImageSelector.IMAGE_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
             // Get Image Path List
             final List<String> pathList = data.getStringArrayListExtra(ImageSelectorActivity.EXTRA_RESULT);
-            String token = application.getToken();
+            final String token = application.getToken();
             String url = UrlLogin.updateAvatar(token);
-            Request request = HttpUtils.getRequest(url, new File(pathList.get(0)));
+            final Request request = HttpUtils.getRequest(url, new File(pathList.get(0)));
 
-            HttpUtils.checkOnline(this,token);
-            HttpUtils.enqueue(request, new Callback() {
+
+            new Thread(new Runnable(){
                 @Override
-                public void onFailure(Call call, IOException e) {
-                    Log.d("xx", e.getMessage());
-                }
+                public void run() {
+                    HttpUtils.checkOnline(UserInfoActivity.this,token);
 
-                @Override
-                public void onResponse(Call call, Response response) throws IOException {
-                    if (response.isSuccessful()) {
-                        String token = response.body().string();
-
-                        if (token != null && !token.startsWith("error")) {
-                            Log.d("xx", token);
-                            application.setToken(token);
-                            UserInfoActivity.this.resultCode = UPDATE;
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Glide.with(UserInfoActivity.this)
-                                            .load(pathList.get(0))
-                                            .into(headImg);
-                                }
-                            });
+                    HttpUtils.enqueue(request, new Callback() {
+                        @Override
+                        public void onFailure(Call call, IOException e) {
+                            Log.d("xx", e.getMessage());
                         }
-                    }
+
+                        @Override
+                        public void onResponse(Call call, Response response) throws IOException {
+                            if (response.isSuccessful()) {
+                                String token = response.body().string();
+
+                                if (token != null && !token.startsWith("error")) {
+                                    Log.d("xx", token);
+                                    application.setToken(token);
+                                    UserInfoActivity.this.resultCode = UPDATE;
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            Glide.with(UserInfoActivity.this)
+                                                    .load(pathList.get(0))
+                                                    .into(headImg);
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                    });
                 }
-            });
+            }).start();
         }
     }
 
