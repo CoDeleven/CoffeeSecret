@@ -244,8 +244,9 @@ public class NewCuppingActivity extends AppCompatActivity
             public void run() {
                 mHandler.sendEmptyMessage(UPDATE);
 
-                String update = UrlCupping.update(application.getToken());
-                HttpUtils.enqueue(update, mCuppingInfo, new Callback() {
+                String token = application.getToken();
+                String update = UrlCupping.update(token);
+                HttpUtils.enqueue(NewCuppingActivity.this, token, update, mCuppingInfo, new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
                         mHandler.sendEmptyMessage(ERROR);
@@ -274,9 +275,9 @@ public class NewCuppingActivity extends AppCompatActivity
                     mCuppingInfo.getAcidity(), mCuppingInfo.getTaste(), mCuppingInfo.getSweetness(), mCuppingInfo.getBalance(), mCuppingInfo.getOverall()};
             float[] flawScores = new float[]{mCuppingInfo.getUnderdevelopment(), mCuppingInfo.getOverdevelopment(), mCuppingInfo.getBaked(), mCuppingInfo.getScorched(), mCuppingInfo.getTipped(), mCuppingInfo.getFaced()};
             int roastDegree = 0;
-            try{
-                roastDegree = (int)Float.parseFloat(mBakeReport.getRoastDegree());
-            }catch (Exception e){
+            try {
+                roastDegree = (int) Float.parseFloat(mBakeReport.getRoastDegree());
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             cuppingInfoFragment = CuppingInfoFragment.newInstance(flawScores, feelScores, roastDegree);
@@ -287,9 +288,9 @@ public class NewCuppingActivity extends AppCompatActivity
         bakeInfoFragment.setOnBakeInfoLoadedListener(new BakeInfoFragment.OnBakeInfoLoadedListener() {
             @Override
             public void onLoaded(BakeReport report) {
-                if(report != null){
+                if (report != null) {
                     String beanName = report.getSingleBeanName();
-                    if(beanName.trim().isEmpty()){
+                    if (beanName.trim().isEmpty()) {
                         beanName = EMPTY_SINGLE_BEANNAME;
                     }
                     editToolBar.setTitle(beanName);
@@ -375,8 +376,9 @@ public class NewCuppingActivity extends AppCompatActivity
                     @Override
                     public void run() {
                         mHandler.sendEmptyMessage(SAVING);
-                        String update = UrlCupping.add(application.getToken());
-                        HttpUtils.enqueue(update, mCuppingInfo, new Callback() {
+                        String token = application.getToken();
+                        String update = UrlCupping.add(token);
+                        HttpUtils.enqueue(NewCuppingActivity.this,token,update, mCuppingInfo, new Callback() {
                             @Override
                             public void onFailure(Call call, IOException e) {
                                 mHandler.sendEmptyMessage(ERROR);
@@ -405,9 +407,10 @@ public class NewCuppingActivity extends AppCompatActivity
                 @Override
                 public void run() {
                     mHandler.sendEmptyMessage(UPDATE);
-                    String update = UrlCupping.add(application.getToken());
+                    String token = application.getToken();
+                    String update = UrlCupping.add(token);
 
-                    HttpUtils.enqueue(update, mCuppingInfo, new Callback() {
+                    HttpUtils.enqueue(NewCuppingActivity.this,token,update, mCuppingInfo, new Callback() {
                         @Override
                         public void onFailure(Call call, IOException e) {
                             mHandler.sendEmptyMessage(ERROR);
@@ -430,9 +433,10 @@ public class NewCuppingActivity extends AppCompatActivity
 
     private void delete() {
 
-        String url = UrlCupping.delete(application.getToken(),mCuppingInfo.getId());
+        String token = application.getToken();
+        String url = UrlCupping.delete(token, mCuppingInfo.getId());
         mHandler.sendEmptyMessage(DELETE);
-        HttpUtils.enqueue(url, mCuppingInfo, new Callback() {
+        HttpUtils.enqueue(NewCuppingActivity.this,token,url, mCuppingInfo, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 finish();

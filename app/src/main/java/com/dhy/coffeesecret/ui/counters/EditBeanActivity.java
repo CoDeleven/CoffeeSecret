@@ -223,7 +223,7 @@ public class EditBeanActivity extends AppCompatActivity {
         if ("0.0".equals(editPrice.getText().toString().trim())) {
             editPrice.setText("");
         }
-        editWeight.setText(Utils.get2PrecisionFloat((float)beanInfo.getStockWeight()) + "");
+        editWeight.setText(Utils.get2PrecisionFloat((float) beanInfo.getStockWeight()) + "");
         if ("0.0".equals(editWeight.getText().toString().trim())) {
             editWeight.setText("");
         }
@@ -233,7 +233,7 @@ public class EditBeanActivity extends AppCompatActivity {
         editLevel.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(count < 2){
+                if (count < 2) {
                     ++count;
                     return;
                 }
@@ -280,7 +280,7 @@ public class EditBeanActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 NLogger.i(TAG, "点击处理方式-> 选中第" + position + "个位置, 值为:" + handlerArray[position]);
-                if(count < 2){
+                if (count < 2) {
                     ++count;
                     return;
                 }
@@ -446,8 +446,8 @@ public class EditBeanActivity extends AppCompatActivity {
         beanInfo.setId(id);
 
         String token = application.getToken();
-        Log.e(TAG, UrlBean.delete(token,id));
-        HttpUtils.enqueue(UrlBean.delete(token,id), null, new Callback() {
+        Log.e(TAG, UrlBean.delete(token, id));
+        HttpUtils.enqueue(this, token, UrlBean.delete(token, id), null, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.e(TAG, "输出错误");
@@ -491,9 +491,9 @@ public class EditBeanActivity extends AppCompatActivity {
         beanInfo.setWaterContent(Float.parseFloat(editWaterContent.getText().toString()));
         beanInfo.setSupplier(editSupplier.getText().toString());
         beanInfo.setPrice(Double.parseDouble(editPrice.getText().toString()));
-        try{
+        try {
             beanInfo.setStockWeight(Float.parseFloat(editWeight.getText().toString() + ""));
-        }catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             beanInfo.setStockWeight(Float.parseFloat("0.0"));
         }
         beanInfo.setDate(parseDate(editBuyDate.getText().toString()));
@@ -511,10 +511,12 @@ public class EditBeanActivity extends AppCompatActivity {
 
     private void updateBeanInfo(final BeanInfo beanInfo) {
 
-        HttpUtils.enqueue(UrlBean.add(application.getToken()), beanInfo, new Callback() {
+        String token = application.getToken();
+        String url = UrlBean.add(token);
+        HttpUtils.enqueue(EditBeanActivity.this, token, url, beanInfo, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                NLogger.e(TAG,  "更新豆种信息错误：" + e);
+                NLogger.e(TAG, "更新豆种信息错误：" + e);
                 mHandler.sendEmptyMessage(TOAST_2);
 
             }

@@ -168,7 +168,7 @@ public class LoginByTelFragment extends Fragment implements View.OnClickListener
                         String url = UrlLogin.loginByTel(tel);
                         try {
                             mHandler.sendEmptyMessage(WAIT);
-                            String result = HttpUtils.getStringFromServer(url);
+                            String result = HttpUtils.getStringFromServer(url,null,null);
                             NLogger.i(TAG, "验证码登陆：收到消息->" + result);
                             if (result != null && !result.startsWith("error")) {
                                 application.setToken(result);

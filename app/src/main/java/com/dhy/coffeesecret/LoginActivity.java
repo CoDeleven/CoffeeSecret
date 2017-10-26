@@ -109,7 +109,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             // 请求登录 登录成功则将返回的token存入
             mHandler.sendEmptyMessage(WAIT);
             String url = UrlLogin.loginByToken(token);
-            String result = HttpUtils.getStringFromServer(url);
+            String result = HttpUtils.getStringFromServer(url,null,null);
             Log.d(TAG,"token:"+result);
             if(result!= null && !result.startsWith("error")){
                 loginSuccess(result);
@@ -120,7 +120,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void loginByTel(String tel) throws IOException {
-        String result = HttpUtils.getStringFromServer("");
+        String result = HttpUtils.getStringFromServer(tel,null,null);
         if(result!= null && !result.startsWith("error")){
             loginSuccess(result);
         }else {
@@ -143,7 +143,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mHandler.sendEmptyMessage(WAIT);
         String url = UrlLogin.loginByPw(tel, password);
         Log.d(TAG,"url:"+url);
-        String result = HttpUtils.getStringFromServer(url);
+        String result = HttpUtils.getStringFromServer(url,null,null);
         if(result!= null && !result.startsWith("error")){
             loginSuccess(result);
         }else {

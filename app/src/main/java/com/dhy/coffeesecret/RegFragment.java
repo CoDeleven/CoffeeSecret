@@ -185,7 +185,7 @@ public class RegFragment extends Fragment implements View.OnClickListener, TextW
                         String url = UrlLogin.register(tel, password);
                         try {
                             mHandler.sendEmptyMessage(WAIT);
-                            String result = HttpUtils.getStringFromServer(url);
+                            String result = HttpUtils.getStringFromServer(url, null, null);
                             if (result != null && !result.startsWith("error")) {
                                 application.setToken(result);
                                 Message msg = Message.obtain();

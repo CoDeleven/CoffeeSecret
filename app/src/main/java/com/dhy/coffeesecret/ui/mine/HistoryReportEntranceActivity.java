@@ -76,7 +76,8 @@ public class HistoryReportEntranceActivity extends LineSelectedActivity{
             public void run() {
                 try {
                     String token = application.getToken();
-                    String temp = HttpUtils.getStringFromServer(UrlBake.getAll(token));
+                    String url = UrlBake.getAll(token);
+                    String temp = HttpUtils.getStringFromServer(url,token,HistoryReportEntranceActivity.this);
                     // NLogger.i(TAG, "从服务器获取豆种信息：" + temp);
                     Type type = new TypeToken<Map<String, BakeReport>>() {
                     }.getType();

@@ -27,6 +27,7 @@ public class QRCodeActivity extends AppCompatActivity implements QRCodeView.Dele
     private ZXingView zv;
     private String token;
     private ProgressDialog mProgress;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,9 +53,10 @@ public class QRCodeActivity extends AppCompatActivity implements QRCodeView.Dele
             @Override
             public void run() {
                 try {
-                    String response = HttpUtils.getStringFromServer(UrlBake.scanSuccess(token, result));
+                    String url = UrlBake.scanSuccess(token, result);
+                    String response = HttpUtils.getStringFromServer(url, token, QRCodeActivity.this);
                     Log.d("QRCodeActivity", response);
-                    if(!"null".equals(response)){
+                    if (!"null".equals(response)) {
                         final BakeReport report = new Gson().fromJson(response, BakeReport.class);
                         runOnUiThread(new Runnable() {
                             @Override
@@ -79,7 +81,6 @@ public class QRCodeActivity extends AppCompatActivity implements QRCodeView.Dele
                 }
             }
         }).start();
-
 
 
         // TODO 需要跳转

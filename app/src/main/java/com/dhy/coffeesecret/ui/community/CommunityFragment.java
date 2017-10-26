@@ -64,7 +64,7 @@ public class CommunityFragment extends Fragment implements View.OnClickListener 
                         String videoUrl = "";
                         try {
 
-                            videoUrl = HttpUtils.getStringFromServer(UrlLogin.GET_LIVE_PUBLISH_PATH);
+                            videoUrl = HttpUtils.getStringFromServer(UrlLogin.GET_LIVE_PUBLISH_PATH,null,null);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
