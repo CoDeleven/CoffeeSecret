@@ -27,6 +27,7 @@ import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.model.UniExtraKey;
 import com.dhy.coffeesecret.model.chart.Model4Chart;
+import com.dhy.coffeesecret.model.chart.Presenter4Chart;
 import com.dhy.coffeesecret.model.report.IReportView;
 import com.dhy.coffeesecret.model.report.Presenter4Report;
 import com.dhy.coffeesecret.pojo.BakeReport;
@@ -141,6 +142,7 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
     RelativeLayout scoreLayout;
 
     private Presenter4Report mPresenter = Presenter4Report.newInstance();
+    private Presenter4Chart mChartPresenter = Presenter4Chart.newInstance();
     private String weightUnit;
     private String tempratureUnit;
     private TableLayout tableLayout;
@@ -188,7 +190,13 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
         });
         mChart.setDrawMarkers(true);
         mChart.setMarker(new ReportMarker(this, R.layout.report_marker));
-        mChart.initLine();
+
+
+        mChartPresenter.setView(mChart);
+        mChartPresenter.initLines();
+
+        /*
+        mChart.initLine();*/
 
         tableLayout = (TableLayout) findViewById(R.id.id_report_table);
 
@@ -597,14 +605,24 @@ public class ReportActivity extends AppCompatActivity implements CompoundButton.
     public void init(final BakeReportProxy proxy) {
         NLogger.i(TAG, proxy.getBakeReport().toString());
         // 设置tempratureset，进行转换
-        mChart.setTemperatureSet(proxy.getBakeReport().getTemperatureSet());
+        // mChart.setTemperatureSet(proxy.getBakeReport().getTemperatureSet());
 
+/*
         mChart.addNewDatas(proxy.getLineDataSetByIndex(BEANLINE).getValues(), BEANLINE);
         mChart.addNewDatas(proxy.getLineDataSetByIndex(INWINDLINE).getValues(), INWINDLINE);
         mChart.addNewDatas(proxy.getLineDataSetByIndex(OUTWINDLINE).getValues(), OUTWINDLINE);
         mChart.addNewDatas(proxy.getLineDataSetByIndex(ACCBEANLINE).getValues(), ACCBEANLINE);
         mChart.addNewDatas(proxy.getLineDataSetByIndex(ACCINWINDLINE).getValues(), ACCINWINDLINE);
         mChart.addNewDatas(proxy.getLineDataSetByIndex(ACCOUTWINDLINE).getValues(), ACCOUTWINDLINE);
+*/
+
+        mChartPresenter.addBatchData(proxy.getLineDataSetByIndex(BEANLINE).getValues(), BEANLINE);
+        mChartPresenter.addBatchData(proxy.getLineDataSetByIndex(INWINDLINE).getValues(), INWINDLINE);
+        mChartPresenter.addBatchData(proxy.getLineDataSetByIndex(OUTWINDLINE).getValues(), OUTWINDLINE);
+        mChartPresenter.addBatchData(proxy.getLineDataSetByIndex(ACCBEANLINE).getValues(), ACCBEANLINE);
+        mChartPresenter.addBatchData(proxy.getLineDataSetByIndex(ACCINWINDLINE).getValues(), ACCINWINDLINE);
+        mChartPresenter.addBatchData(proxy.getLineDataSetByIndex(ACCOUTWINDLINE).getValues(), ACCOUTWINDLINE);
+
 
         envTemp.setText(ConvertUtils.getCrspTemperatureValue(proxy.getEnvTemp() + "") + tempratureUnit);
         startTemp.setText(ConvertUtils.getCrspTemperatureValue(proxy.getStartTemp() + "") + tempratureUnit);

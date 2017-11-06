@@ -97,11 +97,12 @@ public class Presenter4Chart extends BasePresenter<IChartView, Model4Chart>{
      */
     public void dynamicAddDataImm(Entry immData, int lineIndex, boolean toRefresh) {
         double mockTemperature = immData.getY();
-        if(lineIndex < 4){
-             mockTemperature = mModelOperator.getMockData(immData, lineIndex);
-        }/*else{
-            mockTemperature = mModelOperator.getMockAccData(immData, lineIndex);
-        }*/
+        // 只需要对升温速率进行拟合
+        if(lineIndex >= 4){
+             mockTemperature = mModelOperator.getMockAccData(immData, lineIndex);
+        }else{
+            mockTemperature = mModelOperator.getMockData(immData, lineIndex);
+        }
         immData.setY((float) mockTemperature);
         // 设置新的Entry去line里面
         lines.get(new Integer(lineIndex)).addEntry(immData);

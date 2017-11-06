@@ -318,7 +318,7 @@ public class BakeActivity extends AppCompatActivity implements View.OnClickListe
         // 考虑是否添加参考曲线,用完即删，哈哈
         // BakeReport bakeReport = mPresenter.getNoBakingBakeReport(true);
 
-        BakeReport bakeReport = (BakeReport)getIntent().getParcelableExtra(ENABLE_REFERLINE);
+        BakeReport bakeReport = getIntent().getParcelableExtra(ENABLE_REFERLINE);
 
         if (bakeReport != null) {
             referTempratures = new BakeReportProxy(bakeReport);
