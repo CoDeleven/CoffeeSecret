@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -19,6 +18,7 @@ import android.widget.NumberPicker;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.dhy.coffeesecret.BaseActivity;
 import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.UniversalConfiguration;
@@ -32,7 +32,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class SettingsActivity extends AppCompatActivity {
+public class SettingsActivity extends BaseActivity {
 
     private static final String TAG = "SettingsActivity";
     private static final int SHOW_TEXT_DIALOG = 111;

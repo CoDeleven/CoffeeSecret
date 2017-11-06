@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -12,12 +11,13 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.dhy.coffeesecret.BaseActivity;
 import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.ui.common.interfaces.OnItemClickListener;
-import com.dhy.coffeesecret.utils.SystemStatusBarUtils;
 import com.dhy.coffeesecret.ui.common.views.DividerDecoration;
 import com.dhy.coffeesecret.ui.common.views.SearchEditText;
+import com.dhy.coffeesecret.utils.SystemStatusBarUtils;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
@@ -30,9 +30,11 @@ import cn.jesse.nativelogger.NLogger;
  * Created by CoDeleven on 17-3-12.
  */
 
-public abstract class LineSelectedActivity extends AppCompatActivity implements
-        SearchEditText.SearchBarListener, OnItemClickListener,DefaultViewHandler.Handling {
+public abstract class LineSelectedActivity extends BaseActivity implements
+        SearchEditText.SearchBarListener, OnItemClickListener, DefaultViewHandler.Handling {
     private static final String TAG = LineSelectedActivity.class.getSimpleName();
+    protected DefaultViewHandler mHandler;
+    protected MyApplication application;
     @Bind(R.id.id_lines_list)
     RecyclerView listView;
     @Bind(R.id.id_swipeRefresh)
@@ -44,10 +46,8 @@ public abstract class LineSelectedActivity extends AppCompatActivity implements
     @Bind(R.id.id_toolbar_title)
     TextView toolbarTitle;
     private SearchFragment searchFragment;
-    protected DefaultViewHandler mHandler;
     private RecyclerView.Adapter mAdapter;
     private boolean isAddSearchFragment = false;
-    protected MyApplication application;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -63,7 +63,7 @@ public abstract class LineSelectedActivity extends AppCompatActivity implements
         mHandler.sendEmptyMessage(DefaultViewHandler.GET_DATA);
     }
 
-    protected void initTitle(TextView title){
+    protected void initTitle(TextView title) {
     }
 
 
@@ -87,8 +87,8 @@ public abstract class LineSelectedActivity extends AppCompatActivity implements
         // mAdapter = new HistoryLineAdapter(this, getBatchData(getIntent().getExtras()), this);
         mAdapter = initAdapter();
         listView.setAdapter(mAdapter);
-        if(mAdapter instanceof StickyRecyclerHeadersAdapter){
-            StickyRecyclerHeadersDecoration decoration = new StickyRecyclerHeadersDecoration((StickyRecyclerHeadersAdapter)mAdapter);
+        if (mAdapter instanceof StickyRecyclerHeadersAdapter) {
+            StickyRecyclerHeadersDecoration decoration = new StickyRecyclerHeadersDecoration((StickyRecyclerHeadersAdapter) mAdapter);
             listView.addItemDecoration(decoration);
         }
         listView.addItemDecoration(new DividerDecoration(this));
@@ -112,7 +112,7 @@ public abstract class LineSelectedActivity extends AppCompatActivity implements
 
     @OnClick({R.id.lines_selected_srh, R.id.id_back})
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.lines_selected_srh:
                 searchBar.setText("");
                 break;
@@ -131,22 +131,17 @@ public abstract class LineSelectedActivity extends AppCompatActivity implements
         if (searchFragment != null) {
             isAddSearchFragment = !searchFragment.isRemoved();
         }
-        if(!isAddSearchFragment){
+        if (!isAddSearchFragment) {
             searchFragment = newSearchFragment();
             tx.add(R.id.id_lines_container, searchFragment, "search_line");
             isAddSearchFragment = true;
-        }else {
+        } else {
             tx.show(searchFragment);
         }
         tx.commit();
     }
 
     abstract protected SearchFragment newSearchFragment();
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
 
     @Override
     public void doDataHandle() {

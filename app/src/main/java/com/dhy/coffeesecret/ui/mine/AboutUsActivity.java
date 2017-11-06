@@ -2,12 +2,12 @@ package com.dhy.coffeesecret.ui.mine;
 
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.dhy.coffeesecret.BaseActivity;
 import com.dhy.coffeesecret.R;
 import com.makeramen.roundedimageview.RoundedImageView;
 
@@ -15,7 +15,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class AboutUsActivity extends AppCompatActivity {
+public class AboutUsActivity extends BaseActivity {
 
     @Bind(R.id.btn_back)
     ImageView btnBack;

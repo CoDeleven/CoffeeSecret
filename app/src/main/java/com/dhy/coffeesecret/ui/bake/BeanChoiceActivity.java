@@ -10,12 +10,12 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 
 import com.astuetz.PagerSlidingTabStrip;
+import com.dhy.coffeesecret.BaseActivity;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.model.UniExtraKey;
 import com.dhy.coffeesecret.pojo.BeanInfo;
@@ -31,7 +31,7 @@ import java.util.List;
 
 import static com.dhy.coffeesecret.ui.bake.fragments.BakeDialog.SELECT_BEAN;
 
-public class BeanChoiceActivity extends AppCompatActivity implements
+public class BeanChoiceActivity extends BaseActivity implements
         BakeBeanListFragment.OnBeanSelected, OnItemClickListener {
     @Override
     public void onItemClick(Parcelable parcelable) {

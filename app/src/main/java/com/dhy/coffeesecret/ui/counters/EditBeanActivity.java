@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -21,6 +20,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.bigkoo.pickerview.TimePickerView;
+import com.dhy.coffeesecret.BaseActivity;
 import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BeanInfo;
@@ -46,7 +46,7 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-public class EditBeanActivity extends AppCompatActivity {
+public class EditBeanActivity extends BaseActivity {
     private static final String TAG = "EditBeanActivity";
     private static final int COUNTRY = 1234;
     private static final int AREA = 2345;

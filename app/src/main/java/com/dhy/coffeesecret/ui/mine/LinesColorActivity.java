@@ -3,7 +3,6 @@ package com.dhy.coffeesecret.ui.mine;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -13,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.dhy.coffeesecret.BaseActivity;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.Global;
 import com.dhy.coffeesecret.pojo.LinesColor;
@@ -28,7 +28,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class LinesColorActivity extends AppCompatActivity {
+public class LinesColorActivity extends BaseActivity {
 
     @Bind(R.id.btn_back)
     ImageView btnBack;

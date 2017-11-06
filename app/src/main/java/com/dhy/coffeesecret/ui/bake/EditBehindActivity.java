@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -26,6 +25,7 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.dhy.coffeesecret.BaseActivity;
 import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.model.UniExtraKey;
@@ -35,13 +35,13 @@ import com.dhy.coffeesecret.pojo.BakeReport;
 import com.dhy.coffeesecret.pojo.BakeReportProxy;
 import com.dhy.coffeesecret.pojo.BeanInfo;
 import com.dhy.coffeesecret.pojo.BeanInfoSimple;
+import com.dhy.coffeesecret.ui.common.views.CircleSeekBar;
 import com.dhy.coffeesecret.url.UrlBake;
 import com.dhy.coffeesecret.utils.ConvertUtils;
 import com.dhy.coffeesecret.utils.FormatUtils;
 import com.dhy.coffeesecret.utils.HttpUtils;
 import com.dhy.coffeesecret.utils.T;
 import com.dhy.coffeesecret.utils.Utils;
-import com.dhy.coffeesecret.ui.common.views.CircleSeekBar;
 import com.facebook.rebound.ui.Util;
 import com.github.mikephil.charting.data.Entry;
 
@@ -60,7 +60,7 @@ import static android.widget.LinearLayout.LayoutParams.MATCH_PARENT;
 import static android.widget.LinearLayout.LayoutParams.WRAP_CONTENT;
 import static com.dhy.coffeesecret.ui.bake.fragments.BakeDialog.SELECT_BEAN;
 
-public class EditBehindActivity extends AppCompatActivity implements CircleSeekBar.OnSeekBarChangeListener, IEditView {
+public class EditBehindActivity extends BaseActivity implements CircleSeekBar.OnSeekBarChangeListener, IEditView {
     private static final String TAG = EditBehindActivity.class.getSimpleName();
     public static final int RERANGE_BEAN_INFO = 111;
     public static final int GENERATE_BEAN_INFO = 222;

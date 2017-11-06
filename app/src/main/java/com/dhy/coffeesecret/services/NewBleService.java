@@ -304,7 +304,9 @@ public class NewBleService implements IBluetoothOperator, DataDigger4Ble.IBleWRO
                                         } catch (InterruptedException e) {
                                             e.printStackTrace();
                                         }
-                                        writeData2Device(command);
+                                        if(mBleOperator.isBlueEnable()){
+                                            writeData2Device(command);
+                                        }
                                         break;
                                 }
                             }

@@ -3,7 +3,6 @@ package com.dhy.coffeesecret.ui.counters;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -11,6 +10,7 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.dhy.coffeesecret.BaseActivity;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.model.UniExtraKey;
 import com.dhy.coffeesecret.pojo.BakeReport;
@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class BeanInfoActivity extends AppCompatActivity {
+public class BeanInfoActivity extends BaseActivity {
 
     private static final String TAG = "BeanInfoActivity";
     @Bind(R.id.image)

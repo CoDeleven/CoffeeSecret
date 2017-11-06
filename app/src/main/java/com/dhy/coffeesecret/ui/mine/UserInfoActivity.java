@@ -4,13 +4,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.dhy.coffeesecret.BaseActivity;
 import com.dhy.coffeesecret.LoginActivity;
 import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
@@ -40,7 +40,7 @@ import okhttp3.Response;
 
 import static com.dhy.coffeesecret.model.UniExtraKey.EXTRA_USER_INFO;
 
-public class UserInfoActivity extends AppCompatActivity implements UsernameFragment.OnSuccessListener {
+public class UserInfoActivity extends BaseActivity implements UsernameFragment.OnSuccessListener {
 
     public static final int DEFAULT = 0;
     public static final int UPDATE = 1;

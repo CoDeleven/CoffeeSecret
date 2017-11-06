@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.dhy.coffeesecret.BaseActivity;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.UniversalConfiguration;
 import com.dhy.coffeesecret.ui.mine.adapter.QuickEventAdapter;
@@ -28,7 +28,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class QuickEventActivity extends AppCompatActivity {
+public class QuickEventActivity extends BaseActivity {
 
     @Bind(R.id.btn_back)
     ImageView btnBack;

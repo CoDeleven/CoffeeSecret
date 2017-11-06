@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,11 +18,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.dhy.coffeesecret.BaseActivity;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.model.line_color.Presenter4ColorLine;
 import com.dhy.coffeesecret.pojo.LinesColor;
-import com.dhy.coffeesecret.utils.T;
 import com.dhy.coffeesecret.ui.common.views.ColorChooseDialog;
+import com.dhy.coffeesecret.utils.T;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.lang.ref.WeakReference;
@@ -36,7 +36,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class CustomPackageActivity extends AppCompatActivity {
+public class CustomPackageActivity extends BaseActivity {
     private static final String TAG = "CustomPackageActivity";
     private static final int SHOW_COLORS_DIALOG = 111;
     private static final int SHOW_EDIT_DIALOG = 222;

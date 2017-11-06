@@ -7,7 +7,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -16,7 +15,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.clj.fastble.data.ScanResult;
-import com.dhy.coffeesecret.MyApplication;
+import com.dhy.coffeesecret.BaseActivity;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.model.device_list.IScanListView;
 import com.dhy.coffeesecret.model.device_list.Presenter4ScanList;
@@ -29,7 +28,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class BluetoothListActivity extends AppCompatActivity implements BluetoothListAdapter.OnItemClickListener,
+public class BluetoothListActivity extends BaseActivity implements BluetoothListAdapter.OnItemClickListener,
         CompoundButton.OnCheckedChangeListener, BluetoothService.ViewControllerListener, SwipeRefreshLayout.OnRefreshListener,
         IScanListView {
     public static final int CANCEL_REFRESH = -1, REFRESH = 0x77, AUTO_RECONNECT = 0x898, CANCEL_SHOW_DIALOG = 0x171;
@@ -73,33 +72,33 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
                     mScanProgress.setVisibility(View.VISIBLE);
                     break;
                 case BluetoothProfile.STATE_CONNECTED:
-                    if(progressCircle != null){
+                    if (progressCircle != null) {
                         progressCircle.setVisibility(View.GONE);
                     }
-                    if(tick != null){
+                    if (tick != null) {
                         tick.setVisibility(View.VISIBLE);
                     }
 
                     mCurConnectingView.setEnabled(true);
                     break;
                 case BluetoothProfile.STATE_CONNECTING:
-                    if(progressCircle != null){
+                    if (progressCircle != null) {
                         progressCircle.setVisibility(View.VISIBLE);
                     }
-                    if(tick != null){
+                    if (tick != null) {
                         tick.setVisibility(View.GONE);
                     }
                     mCurConnectingView.setEnabled(false);
                     break;
                 case BluetoothProfile.STATE_DISCONNECTED:
 
-                    if(progressCircle != null){
+                    if (progressCircle != null) {
                         progressCircle.setVisibility(View.INVISIBLE);
                     }
-                    if(tick != null){
+                    if (tick != null) {
                         tick.setVisibility(View.GONE);
                     }
-                    if(mCurConnectingView != null){
+                    if (mCurConnectingView != null) {
                         mCurConnectingView.setEnabled(true);
                     }
                     break;
@@ -108,24 +107,24 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
             }
         }
     };
-    private Handler mDialogHandler = new Handler(){
+    private Handler mDialogHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            switch (msg.what){
+            switch (msg.what) {
                 case AUTO_RECONNECT:
-                    Object[] args = (Object[])msg.obj;
+                    Object[] args = (Object[]) msg.obj;
                     AlertDialog.Builder builder = new AlertDialog.Builder(BluetoothListActivity.this)
                             .setMessage("连接遇到了错误...正在重连...\n重连次数:" + args[0] + "")
                             .setTitle("错误o(TヘTo)")
                             .setCancelable(false);
-                    if(mCurShowDialog != null){
+                    if (mCurShowDialog != null) {
                         mCurShowDialog.cancel();
                     }
                     mCurShowDialog = builder.create();
                     mCurShowDialog.show();
                     break;
                 case CANCEL_SHOW_DIALOG:
-                    if(mCurShowDialog != null){
+                    if (mCurShowDialog != null) {
                         mCurShowDialog.cancel();
                         mCurShowDialog = null;
                     }
@@ -134,6 +133,7 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
 
         }
     };
+
     @Override
     public void showWarnDialog(int index, Object... param) {
         Message msg = new Message();
@@ -258,13 +258,13 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
         if (mPresenter.isEnable()) {
             // 打开连接按钮
             switchButton.setChecked(true);
-            if(!mPresenter.isConnected()){
+            if (!mPresenter.isConnected()) {
                 // 开始扫描
                 mPresenter.startScan();
                 // 设置进度条可见
                 mScanProgress.setVisibility(View.VISIBLE);
-            }else{
-                tick = (ImageView)mAdapter.getCurConnectedTick();
+            } else {
+                tick = (ImageView) mAdapter.getCurConnectedTick();
                 mCurConnectingView = mAdapter.getCorConnectedLayout();
             }
 
@@ -274,8 +274,6 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
             mAdapter.clearDevices();
         }
         refreshLayout.setOnRefreshListener(this);
-
-        ((MyApplication)getApplication()).addActivity(this);
     }
 
     @Override
@@ -362,7 +360,6 @@ public class BluetoothListActivity extends AppCompatActivity implements Bluetoot
         // mPresenter.resetBluetoothListener();
         // mTextHandler = null;
         mCurConnectingView = null;
-        ((MyApplication)getApplication()).removeActivity(this);
     }
 
 }

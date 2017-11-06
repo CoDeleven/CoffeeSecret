@@ -148,7 +148,6 @@ public class TransferControllerTask implements Runnable {
             } finally {
                 lock.unlock();
             }
-
         }
         while (continueToWrite) {
             // 以后会由mAck驱动mSeq

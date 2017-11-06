@@ -6,23 +6,22 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
-import com.dhy.coffeesecret.MyApplication;
+import com.dhy.coffeesecret.BaseActivity;
 import com.dhy.coffeesecret.R;
+import com.dhy.coffeesecret.ui.bake.BakeActivity;
 import com.dhy.coffeesecret.ui.bake.PreparationFragment;
 import com.dhy.coffeesecret.ui.counters.ContainerFragment;
 import com.dhy.coffeesecret.ui.cup.CupFragment;
-import com.dhy.coffeesecret.ui.bake.BakeActivity;
 import com.dhy.coffeesecret.ui.mine.MineFragment;
-import com.dhy.coffeesecret.utils.T;
 import com.dhy.coffeesecret.utils.SystemStatusBarUtils;
+import com.dhy.coffeesecret.utils.T;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     // 默认图标id  删除R.drawable.nav_community_selector,
     private static final int[] IMG_SELECTOR_IDS = {R.drawable.nav_container_selector, R.drawable.nav_cup_selector, R.drawable.nav_device_selector, R.drawable.nav_mine_selector};
@@ -50,7 +49,6 @@ public class MainActivity extends AppCompatActivity {
 
         SystemStatusBarUtils.steepToolBar(this);
 
-        ((MyApplication)getApplication()).addActivity(this);
     }
 
     public void changeBakingTab() {
@@ -171,9 +169,4 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        ((MyApplication)getApplication()).removeActivity(this);
-    }
 }

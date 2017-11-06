@@ -2,7 +2,6 @@ package com.dhy.coffeesecret.ui.launcher;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -11,6 +10,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.dhy.coffeesecret.BaseActivity;
 import com.dhy.coffeesecret.LoginActivity;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.Global;
@@ -20,7 +20,7 @@ import com.dhy.coffeesecret.utils.SPPrivateUtils;
 /**
  * Created by mxf on 2017/3/27.
  */
-public class GuidanceActivity extends AppCompatActivity{
+public class GuidanceActivity extends BaseActivity{
     private static final String TAG = "GuidanceActivity";
 
     private WebView mWebView;

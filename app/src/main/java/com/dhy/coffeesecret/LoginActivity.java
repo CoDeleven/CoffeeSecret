@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -35,7 +34,7 @@ import java.util.Set;
 
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener, TextWatcher, RegFragment.OnSuccessListener, LoginByTelFragment.OnSuccessListener {
+public class LoginActivity extends BaseActivity implements View.OnClickListener, TextWatcher, RegFragment.OnSuccessListener, LoginByTelFragment.OnSuccessListener {
 
     private static final int WAIT = 0;
     private static final int SUCCESS = 1;

@@ -11,11 +11,11 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.RadioGroup;
 
+import com.dhy.coffeesecret.BaseActivity;
 import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.pojo.BakeReport;
@@ -54,7 +54,7 @@ import static com.dhy.coffeesecret.R.string.taste;
 import static com.dhy.coffeesecret.R.string.tipped;
 import static com.dhy.coffeesecret.R.string.underdev;
 
-public class NewCuppingActivity extends AppCompatActivity
+public class NewCuppingActivity extends BaseActivity
         implements RadioGroup.OnCheckedChangeListener, CuppingInfoFragment.OnDeleteListener,
         EditToolBar.OnSaveListener {
 

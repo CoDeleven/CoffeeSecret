@@ -1,18 +1,18 @@
 package com.dhy.coffeesecret.ui.launcher;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Button;
 
-import com.dhy.coffeesecret.ui.MainActivity;
+import com.dhy.coffeesecret.BaseActivity;
 import com.dhy.coffeesecret.R;
+import com.dhy.coffeesecret.ui.MainActivity;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class ConnectedActivity extends AppCompatActivity {
+public class ConnectedActivity extends BaseActivity {
     @Bind(R.id.id_first_confirm)
     Button confirm;
     @Override

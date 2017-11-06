@@ -10,10 +10,10 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.WindowManager;
 
+import com.dhy.coffeesecret.BaseActivity;
 import com.dhy.coffeesecret.LoginActivity;
 import com.dhy.coffeesecret.MyApplication;
 import com.dhy.coffeesecret.R;
@@ -35,7 +35,7 @@ import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.RECORD_AUDIO;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
-public class LauncherActivity extends AppCompatActivity{
+public class LauncherActivity extends BaseActivity{
     private static final String TAG = LauncherActivity.class.getSimpleName();
     private static final int REQUEST_CODE = 0x777;
     private static String[] permissions = new String[]{

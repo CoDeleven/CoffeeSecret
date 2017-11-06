@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -21,6 +20,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.dhy.coffeesecret.BaseActivity;
 import com.dhy.coffeesecret.R;
 import com.dhy.coffeesecret.model.bake.IBakeView;
 import com.dhy.coffeesecret.model.bake.Presenter4BakeActivity;
@@ -32,12 +32,12 @@ import com.dhy.coffeesecret.pojo.Temperature;
 import com.dhy.coffeesecret.ui.bake.fragments.FireWindDialog;
 import com.dhy.coffeesecret.ui.bake.fragments.Other;
 import com.dhy.coffeesecret.ui.bake.record.RecorderSystem;
+import com.dhy.coffeesecret.ui.common.views.BaseChart4Coffee;
+import com.dhy.coffeesecret.ui.common.views.DevelopBar;
 import com.dhy.coffeesecret.utils.ConvertUtils;
 import com.dhy.coffeesecret.utils.FormatUtils;
 import com.dhy.coffeesecret.utils.FragmentTool;
 import com.dhy.coffeesecret.utils.Utils;
-import com.dhy.coffeesecret.ui.common.views.BaseChart4Coffee;
-import com.dhy.coffeesecret.ui.common.views.DevelopBar;
 import com.facebook.rebound.ui.Util;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.Event;
@@ -67,7 +67,7 @@ import static com.github.mikephil.charting.data.Event.FIRST_BURST_END;
 import static com.github.mikephil.charting.data.Event.SECOND_BURST;
 import static com.github.mikephil.charting.data.Event.SECOND_BURST_END;
 
-public class BakeActivity extends AppCompatActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener,
+public class BakeActivity extends BaseActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener,
         Other.OnOtherAddListener, FireWindDialog.OnFireWindAddListener, IBakeView {
     @Override
     public void skipDry() {
